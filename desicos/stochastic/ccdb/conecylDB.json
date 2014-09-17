@@ -1,0 +1,19 @@
+{
+    "conecylDB": "v0.1_test", 
+    "files": {
+        "z26": "conecylData/z26.json", 
+        "z25": "conecylData/z25.json", 
+        "z24": "conecylData/z24.json", 
+        "z23": "conecylData/z23.json", 
+        "z22": "conecylData/z22.json", 
+        "z21": "conecylData/z21.json", 
+        "z20": "conecylData/z20.json", 
+        "DELETE_25_July_2013_14_56_16_UTC": "conecylData\\DELETE_25_July_2013_14_56_16_UTC.json", 
+        "TEST_25_July_2013_13_49_06_UTC": "conecylData/TEST_25_July_2013_13_49_06_UTC.json", 
+        "TEST_25_July_2013_14_00_05_UTC": "conecylData/TEST_25_July_2013_14_00_05_UTC.json", 
+        "CCG_25_July_2013_14_32_09_UTC": "conecylData\\CCG_25_July_2013_14_32_09_UTC.json", 
+        "CCG_25_July_2013_14_34_49_UTC": "conecylData\\CCG_25_July_2013_14_34_49_UTC.json", 
+        "DELETE_25_July_2013_14_58_36_UTC": "conecylData\\DELETE_25_July_2013_14_58_36_UTC.json", 
+        "CCG_25_July_2013_14_38_00_UTC": "conecylData\\CCG_25_July_2013_14_38_00_UTC.json"
+    }
+}

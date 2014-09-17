@@ -1,0 +1,15 @@
+Pre-build packages
+===================
+
+Alternatively to making your own extensions for abaqus-python you can use pre-build packages.
+
+Currently following abaqus versions are supported:
+
+
+==================        ====================      ===================
+ABAQUS version             Platform                  Download link
+------------------        --------------------      -------------------
+6.11-3                     WINDOWS 7 64bit           :download:`desicosDist.zip <../data/desicosDist.zip>`
+
+==================        ====================      ===================
+

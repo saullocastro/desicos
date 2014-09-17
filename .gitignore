@@ -22,6 +22,10 @@ afp
 # ABAQUS replay files
 *.rec*
 *.rpy*
+# DESICOS plug-in for Abaqus output files
+*.gaps
+
+
 # Generic files to ignore
 #########################
 #
@@ -49,6 +53,7 @@ lib64
 
 # Temporary files
 #################
+~*.*
 old_*.*
 tmp*.*
 temp*.*
