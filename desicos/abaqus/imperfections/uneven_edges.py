@@ -168,6 +168,7 @@ class UnevenBottomEdge(object):
         # contributions from measured edge imperfection
         if self.measured_u3s!=None:
             measured_u3s = np.asarray(self.measured_u3s)
+            measured_u3s[0, :] %= 360
         else:
             measured_u3s = np.zeros((2, 100))
             measured_u3s[0, :] = np.linspace(0, 360, 100)
@@ -387,6 +388,7 @@ class UnevenTopEdge(object):
         # contributions from measured edge imperfection
         if self.measured_u3s!=None:
             measured_u3s = np.asarray(self.measured_u3s)
+            measured_u3s[0, :] %= 360
         else:
             measured_u3s = np.zeros((2, 100))
             measured_u3s[0, :] = np.linspace(0, 360, 100)
