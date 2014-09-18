@@ -696,11 +696,266 @@ class ConeCyl(object):
         import _plot
         return _plot.plot_xy(self, xs, ys, **kwargs)
 
-    def plot_opened_conecyl(self, **kwargs):
-        #NOTE requires matplotlib do not move the import below
-        import plot
-        #outside this function
-        return plot.plot_opened_conecyl(self, **kwargs)
+    def plot_opened(self, frame, fieldOutputKey, vec, nodes, numel_cir,
+            elem_type='S4R', ignore=[], ax=None, figsize=(3.3, 3.3),
+            save=True, aspect='equal', clean=True, plot_type=1, outpath='',
+            filename='', npzname='', pyname='', num_levels=400):
+        r"""Print a field output for a cylinder/cone model from Abaqus
+
+        The ``frame`` and ``nodes`` input types are described in
+        `Abaqus Scripting Reference Manual
+        <http://abaqus.me.chalmers.se/v6.11/books/ker/default.htm>`_ and
+        they can be obtained through::
+
+            frame = session.odbs['odb_name.odb'].steps['step_name'].frames[0]
+            nodes = mdb.models['model_name'].parts['part_name'].nodes
+
+        Parameters
+        ----------
+        frame : OdbFrame
+            The frame from where the field output will be taken from.
+        fieldOutputKey : str
+            The field output key to be used. It must be available in
+            ``frame.fieldOutputs.keys()``. This function was tested with
+            ``'UT'`` and ``'U'`` only.
+        vec : str
+            The displacement vector to be plotted:
+            ``'u'``, ``'v'`` or ``'w'``.
+        nodes : MeshNodeArray
+            The part nodes.
+        numel_cir : int
+            The number of elements around the circumference.
+        elem_type : str, optional
+            The element type. The elements ``'S4R', 'S4R5'`` where tested.
+        ignore : list, optional
+            A list with the node ids to be ignored. It must contain any nodes
+            outside the mapped mesh included in ``parts['part_name'].nodes``.
+        ax : AxesSubplot, optional
+            When ``ax`` is given, the contour plot will be created inside it.
+        figsize : tuple, optional
+            The figure size given by ``(width, height)``.
+        save : bool, optional
+            Flag telling whether the contour should be saved to an image file.
+        aspect : str, optional
+            String that will be passed to the ``AxesSubplot.set_aspect()``
+            method.
+        clean : bool, optional
+            Clean axes ticks, grids, spines etc.
+        plot_type : int, optional
+            See :meth:`plot`.
+        outpath : str, optional
+            Output path where the data from Abaqus and the plots are
+            saved (see notes).
+        filename : str, optional
+            The file name for the generated image file.
+        npzname : str, optional
+            The file name for the generated npz file.
+        pyname : str, optional
+            The file name for the generated Python file.
+        num_levels : int, optional
+            Number of contour levels (higher values make the contour smoother).
+
+        Returns
+        -------
+        out : tuple
+            Where ``out[0]`` and ``out[1]`` contain the circumferential and
+            meridional grids of coordinates and ``out[2]`` the corresponding
+            field output.
+
+        Notes
+        -----
+        The data is saved using ``np.savez()`` into ``outpath`` as
+        ``abaqus_output.npz`` with an accompanying script for plotting
+        ``abaqus_output_plot.py``, very handy when Matplotlib is not
+        importable from Abaqus.
+
+        """
+        workingplt = True
+        if not npzname:
+            npzname = 'abaqus_output.npz'
+        npzname = os.path.join(outpath, npzname)
+        if not pyname:
+            pyname = 'abaqus_output_plot.py'
+        pyname = os.path.join(outpath, pyname)
+        if not filename:
+            filename = 'plot_from_abaqus.png'
+        filename = os.path.join(outpath, filename)
+        try:
+            import matplotlib.pyplot as plt
+            import matplotlib
+        except:
+            workingplt = False
+        try:
+            if not frame:
+                frame = utils.get_current_frame()
+            if not frame:
+                raise ValueError('A frame must be selected!')
+            frame_num = int(frame.frameValue)
+            coords = np.array([n.coordinates for n in nodes
+                               if n.label not in ignore])
+            #TODO include more outputs like stress etc
+            field = frame.fieldOutputs[fieldOutputKey]
+
+            uvw_rec = np.array([val.data for val in field.values
+                if getattr(val.instance, 'name', None)=='INSTANCECYLINDER'])
+            u_rec = uvw_rec[:,0]
+            v_rec = uvw_rec[:,1]
+            w_rec = uvw_rec[:,2]
+
+            res_alpha = np.arctan2(v_rec, u_rec)
+
+            thetas = np.arctan2(coords[:, 1], coords[:, 0])
+
+            sina = sin(self.alpharad)
+            cosa = cos(self.alpharad)
+
+            ucyl = -w_rec
+            vcyl = v_rec*cos(thetas) - u_rec*sin(thetas)
+            wcyl = v_rec*sin(thetas) + u_rec*cos(thetas)
+            u = wcyl*sina + ucyl*cosa
+            v = vcyl
+            w = wcyl*cosa - ucyl*sina
+
+            displ_vecs = {'u':u, 'v':v, 'w':w}
+            uvw = displ_vecs[vec]
+
+            zs = coords[:, 2]
+
+            nt = numel_cir
+            if 'S8' in elem_type:
+                raise NotImplementedError('{0} elements!'.format(elem_type))
+                #nt *= 2
+
+            #first sort
+            asort = zs.argsort()
+            zs = zs[asort].reshape(-1, nt)
+            thetas = thetas[asort].reshape(-1, nt)
+            uvw = uvw[asort].reshape(-1, nt)
+
+            #second sort
+            asort = thetas.argsort(axis=1)
+            for i, asorti in enumerate(asort):
+                zs[i,:] = zs[i,:][asorti]
+                thetas[i,:] = thetas[i,:][asorti]
+                uvw[i,:] = uvw[i,:][asorti]
+
+            H = self.H
+            rtop = self.rtop
+            rbot = self.rbot
+            L = H/cosa
+
+            def fr(z):
+                return rbot - z*sina/cosa
+
+            if self.alpharad==0.:
+                plot_type=4
+            if plot_type==1:
+                r_plot = fr(zs)
+                if self.alpharad==0.:
+                    r_plot_max = L
+                else:
+                    r_plot_max = rtop/sina + L
+                y = r_plot_max - r_plot*cos(thetas*sina)
+                x = r_plot*sin(thetas*sina)
+            elif plot_type==2:
+                r_plot = fr(zs)
+                y = r_plot*cos(thetas*sina)
+                x = r_plot*sin(thetas*sina)
+            elif plot_type==3:
+                r_plot = fr(zs)
+                r_plot_max = rtop/sina + L
+                y = r_plot_max - r_plot*cos(thetas)
+                x = r_plot*sin(thetas)
+            elif plot_type==4:
+                x = fr(zs)*thetas
+                y = zs
+            elif plot_type==5:
+                x = thetas
+                y = zs
+
+            cir = x
+            mer = y
+            field = uvw
+
+            if workingplt:
+                levels = np.linspace(field.min(), field.max(), num_levels)
+                if ax==None:
+                    fig = plt.figure(figsize=figsize)
+                    ax = fig.add_subplot(111)
+                else:
+                    if isinstance(ax, matplotlib.axes.Axes):
+                        ax = ax
+                        fig = ax.figure
+                        save = False
+                    else:
+                        raise ValueError('"ax" must be an Axes object')
+                ax.contourf(cir, mer, field, levels=levels)
+                ax.grid(False)
+                ax.set_aspect(aspect)
+                ax.xaxis.set_ticks_position('bottom')
+                ax.yaxis.set_ticks_position('left')
+                #lim = self.rtop*pi
+                #ax.xaxis.set_ticks([-lim, 0, lim])
+                #ax.xaxis.set_ticklabels([r'$-\pi$', '$0$', r'$+\pi$'])
+                #ax.set_title(
+                    #r'$PL=20 N$, $F_{{C}}=50 kN$, $w_{{PL}}=\beta$, $mm$')
+                if clean:
+                    ax.xaxis.set_ticks_position('none')
+                    ax.yaxis.set_ticks_position('none')
+                    ax.xaxis.set_ticklabels([])
+                    ax.yaxis.set_ticklabels([])
+                    ax.set_frame_on(False)
+                if save:
+                    log('Plot saved at: {0}'.format(filename))
+                    plt.tight_layout()
+                    plt.savefig(filename, transparent=True,
+                                bbox_inches='tight', pad_inches=0.05,
+                                dpi=400)
+
+            else:
+                print('Matplotlib cannot be imported from Abaqus')
+            np.savez(npzname, cir=cir, mer=mer, field=field)
+            with open(pyname, 'w') as f:
+                f.write("import os\n")
+                f.write("import numpy as np\n")
+                f.write("import matplotlib.pyplot as plt\n")
+                f.write("tmp = np.load('abaqus_output.npz')\n")
+                f.write("cir = tmp['cir']\n")
+                f.write("mer = tmp['mer']\n")
+                f.write("field = tmp['field']\n")
+                f.write("clean = {0}\n".format(clean))
+                f.write("filename = '{0}'\n".format(filename))
+                f.write("plt.figure(figsize={0})\n".format(figsize))
+                f.write("ax = plt.gca()\n")
+                f.write("levels = np.linspace(field.min(), field.max(), {0})\n".format(
+                        num_levels))
+                f.write("ax.contourf(cir, mer, field, levels=levels)\n")
+                f.write("ax.grid(b=None)\n")
+                f.write("ax.set_aspect('{0}')\n".format(aspect))
+                f.write("ax.xaxis.set_ticks_position('bottom')\n")
+                f.write("ax.yaxis.set_ticks_position('left')\n")
+                f.write("ax.xaxis.set_ticks([{0}, 0, {1}])\n".format(
+                        -self.rtop*pi, self.rtop*pi))
+                f.write("ax.xaxis.set_ticklabels([r'$-\pi$', '$0$', r'$+\pi$'])\n")
+                f.write("ax.set_title(r'Abaqus, $PL=20 N$, $F_{{C}}=50 kN$, $w_{{PL}}=\beta$, $mm$')\n")
+                f.write("if clean:\n")
+                f.write("    ax.xaxis.set_ticks_position('none')\n")
+                f.write("    ax.yaxis.set_ticks_position('none')\n")
+                f.write("    ax.xaxis.set_ticklabels([])\n")
+                f.write("    ax.yaxis.set_ticklabels([])\n")
+                f.write("    ax.set_frame_on(False)\n")
+                f.write("if not filename:\n")
+                f.write("    filename = 'abaqus_result.png'\n")
+                f.write("plt.savefig(filename, transparent=True,\n")
+                f.write("            bbox_inches='tight', pad_inches=0.05, dpi=400)\n")
+                f.write("plt.show()\n")
+            print('Output exported to "{0}"'.format(npzname))
+            print('Please run the file "{0}" to plot the output'.format(
+                  pyname))
+            return cir, mer, field
+        except:
+            traceback.print_exc()
+            print('Opened plot could not be generated! :(')
 
     def check_completed(self, wait=False, print_found=False):
         if not self.rebuilt:

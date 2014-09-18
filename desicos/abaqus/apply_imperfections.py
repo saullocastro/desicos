@@ -39,8 +39,8 @@ def calc_translations_ABAQUS(imperfection_file_name,
                              power_parameter=2,
                              num_sec_z=50,
                              use_theta_z_format=True,
-                             ignore_bot_h=None,
-                             ignore_top_h=None,
+                             ignore_bot_h=False,
+                             ignore_top_h=False,
                              sample_size=None):
     r"""Reads an imperfection file and calculates the nodal translations
 
@@ -111,9 +111,9 @@ def calc_translations_ABAQUS(imperfection_file_name,
     part_nodes = np.array(part.nodes)
     coords = np.array([n.coordinates for n in part_nodes], dtype=FLOAT)
     if ignore_bot_h<=0:
-        ignore_bot_h = None
+        ignore_bot_h = False
     if ignore_top_h<=0:
-        ignore_top_h = None
+        ignore_top_h = False
     if ignore_bot_h:
         mask = coords[:, 2] > ignore_bot_h
         coords = coords[mask]
@@ -210,8 +210,8 @@ def translate_nodes_ABAQUS(imperfection_file_name,
                            num_sec_z=50,
                            nodal_translations=None,
                            use_theta_z_format=False,
-                           ignore_bot_h=None,
-                           ignore_top_h=None,
+                           ignore_bot_h=False,
+                           ignore_top_h=False,
                            sample_size=None):
     r"""Translates the nodes in Abaqus based on imperfection data
 
@@ -310,9 +310,9 @@ def translate_nodes_ABAQUS(imperfection_file_name,
     part_nodes = np.array(part.nodes)
     coords = np.array([n.coordinates for n in part_nodes])
     if ignore_bot_h<=0:
-        ignore_bot_h = None
+        ignore_bot_h = False
     if ignore_top_h<=0:
-        ignore_top_h = None
+        ignore_top_h = False
     if ignore_bot_h:
         log('Applying ignore_bot_h: ignoring nodes with z <= {0}'.format(
             ignore_bot_h))
@@ -429,8 +429,8 @@ def translate_nodes_ABAQUS_c0(m0, n0, c0, funcnum,
                               semi_angle=0.,
                               scaling_factor=1.,
                               fem_meridian_bot2top=True,
-                              ignore_bot_h=None,
-                              ignore_top_h=None):
+                              ignore_bot_h=False,
+                              ignore_top_h=False):
     r"""Translates the nodes in Abaqus based on a Fourier series
 
     The Fourier Series can be a half-sine, half-cosine or a complete Fourier
@@ -496,9 +496,9 @@ def translate_nodes_ABAQUS_c0(m0, n0, c0, funcnum,
     part_nodes = np.array(part.nodes)
     coords = np.array([n.coordinates for n in part_nodes])
     if ignore_bot_h<=0:
-        ignore_bot_h = None
+        ignore_bot_h = False
     if ignore_top_h<=0:
-        ignore_top_h = None
+        ignore_top_h = False
     if ignore_bot_h:
         log('Applying ignore_bot_h: ignoring nodes with z <= {0}'.format(
             ignore_bot_h))
@@ -521,6 +521,7 @@ def translate_nodes_ABAQUS_c0(m0, n0, c0, funcnum,
         xs_norm = (H_eff-(coords[:, 2]-ignore_bot_h))/H_eff
     else:
         xs_norm = (coords[:, 2]-ignore_bot_h)/H_eff
+
     thetas = arctan2(coords[:, 1], coords[:, 0])
 
     alpharad = deg2rad(semi_angle)
