@@ -919,11 +919,11 @@ ccs = {
         'database': 'nasa',
         },
     'hilburger_2014_c1': {
-        'rbot': 406.4,
+        'rbot': 406.4 + in2mm(0.032)/2, # radius at the mid-surface
         'plyt': in2mm(0.032),
         'H': 1219.2,
-        'numel_r': 128,
-        'elem_type': 'S8R5',
+        'numel_r': 240,
+        'elem_type': 'S4R',
         'laminapropKey': 'hilburger_2014_AlLi',
         'stack': [0],
         'allowablesKey': 'hilburger_2014_AlLi',
