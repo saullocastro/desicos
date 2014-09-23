@@ -1,4 +1,5 @@
 import os
+import traceback
 import multiprocessing
 
 import numpy as np
@@ -697,9 +698,10 @@ class ConeCyl(object):
         return _plot.plot_xy(self, xs, ys, **kwargs)
 
     def plot_opened(self, frame, fieldOutputKey, vec, nodes, numel_cir,
-            elem_type='S4R', ignore=[], ax=None, figsize=(3.3, 3.3),
-            save=True, aspect='equal', clean=True, plot_type=1, outpath='',
-            filename='', npzname='', pyname='', num_levels=400):
+            elem_type='S4R', ignore=[], create_npz_only=False, ax=None,
+            figsize=(3.3, 3.3), save_png=True, aspect='equal', clean=True,
+            plot_type=1, outpath='', pngname='', npzname='', pyname='',
+            num_levels=400):
         r"""Print a field output for a cylinder/cone model from Abaqus
 
         The ``frame`` and ``nodes`` input types are described in
@@ -730,11 +732,14 @@ class ConeCyl(object):
         ignore : list, optional
             A list with the node ids to be ignored. It must contain any nodes
             outside the mapped mesh included in ``parts['part_name'].nodes``.
+        create_npz_only : bool, optional
+            If ``True`` only the data belonging to the desired field output
+            will be saved in a ``.npz`` file, and no plotting is performed.
         ax : AxesSubplot, optional
             When ``ax`` is given, the contour plot will be created inside it.
         figsize : tuple, optional
             The figure size given by ``(width, height)``.
-        save : bool, optional
+        save_png : bool, optional
             Flag telling whether the contour should be saved to an image file.
         aspect : str, optional
             String that will be passed to the ``AxesSubplot.set_aspect()``
@@ -746,7 +751,7 @@ class ConeCyl(object):
         outpath : str, optional
             Output path where the data from Abaqus and the plots are
             saved (see notes).
-        filename : str, optional
+        pngname : str, optional
             The file name for the generated image file.
         npzname : str, optional
             The file name for the generated npz file.
@@ -770,26 +775,24 @@ class ConeCyl(object):
         importable from Abaqus.
 
         """
-        workingplt = True
         if not npzname:
             npzname = 'abaqus_output.npz'
+        npzname = npzname.split('.npz')[0] + '.npz'
         npzname = os.path.join(outpath, npzname)
         if not pyname:
             pyname = 'abaqus_output_plot.py'
         pyname = os.path.join(outpath, pyname)
-        if not filename:
-            filename = 'plot_from_abaqus.png'
-        filename = os.path.join(outpath, filename)
+        if not pngname:
+            pngname = 'plot_from_abaqus.png'
+        pngname = pngname.split('.png')[0] + '.png'
+        pngname = os.path.join(outpath, pngname)
+        if not create_npz_only:
+            try:
+                import matplotlib.pyplot as plt
+                import matplotlib
+            except:
+                create_npz_only = True
         try:
-            import matplotlib.pyplot as plt
-            import matplotlib
-        except:
-            workingplt = False
-        try:
-            if not frame:
-                frame = utils.get_current_frame()
-            if not frame:
-                raise ValueError('A frame must be selected!')
             frame_num = int(frame.frameValue)
             coords = np.array([n.coordinates for n in nodes
                                if n.label not in ignore])
@@ -797,7 +800,7 @@ class ConeCyl(object):
             field = frame.fieldOutputs[fieldOutputKey]
 
             uvw_rec = np.array([val.data for val in field.values
-                if getattr(val.instance, 'name', None)=='INSTANCECYLINDER'])
+                if getattr(val.instance, 'name', None)=='INST_SHELL'])
             u_rec = uvw_rec[:,0]
             v_rec = uvw_rec[:,1]
             w_rec = uvw_rec[:,2]
@@ -806,12 +809,12 @@ class ConeCyl(object):
 
             thetas = np.arctan2(coords[:, 1], coords[:, 0])
 
-            sina = sin(self.alpharad)
-            cosa = cos(self.alpharad)
+            sina = np.sin(self.alpharad)
+            cosa = np.cos(self.alpharad)
 
             ucyl = -w_rec
-            vcyl = v_rec*cos(thetas) - u_rec*sin(thetas)
-            wcyl = v_rec*sin(thetas) + u_rec*cos(thetas)
+            vcyl = v_rec*np.cos(thetas) - u_rec*np.sin(thetas)
+            wcyl = v_rec*np.sin(thetas) + u_rec*np.cos(thetas)
             u = wcyl*sina + ucyl*cosa
             v = vcyl
             w = wcyl*cosa - ucyl*sina
@@ -855,17 +858,17 @@ class ConeCyl(object):
                     r_plot_max = L
                 else:
                     r_plot_max = rtop/sina + L
-                y = r_plot_max - r_plot*cos(thetas*sina)
-                x = r_plot*sin(thetas*sina)
+                y = r_plot_max - r_plot*np.cos(thetas*sina)
+                x = r_plot*np.sin(thetas*sina)
             elif plot_type==2:
                 r_plot = fr(zs)
-                y = r_plot*cos(thetas*sina)
-                x = r_plot*sin(thetas*sina)
+                y = r_plot*np.cos(thetas*sina)
+                x = r_plot*np.sin(thetas*sina)
             elif plot_type==3:
                 r_plot = fr(zs)
                 r_plot_max = rtop/sina + L
-                y = r_plot_max - r_plot*cos(thetas)
-                x = r_plot*sin(thetas)
+                y = r_plot_max - r_plot*np.cos(thetas)
+                x = r_plot*np.sin(thetas)
             elif plot_type==4:
                 x = fr(zs)*thetas
                 y = zs
@@ -877,7 +880,7 @@ class ConeCyl(object):
             mer = y
             field = uvw
 
-            if workingplt:
+            if not create_npz_only:
                 levels = np.linspace(field.min(), field.max(), num_levels)
                 if ax==None:
                     fig = plt.figure(figsize=figsize)
@@ -886,7 +889,7 @@ class ConeCyl(object):
                     if isinstance(ax, matplotlib.axes.Axes):
                         ax = ax
                         fig = ax.figure
-                        save = False
+                        save_png = False
                     else:
                         raise ValueError('"ax" must be an Axes object')
                 ax.contourf(cir, mer, field, levels=levels)
@@ -894,7 +897,7 @@ class ConeCyl(object):
                 ax.set_aspect(aspect)
                 ax.xaxis.set_ticks_position('bottom')
                 ax.yaxis.set_ticks_position('left')
-                #lim = self.rtop*pi
+                #lim = self.rtop*np.pi
                 #ax.xaxis.set_ticks([-lim, 0, lim])
                 #ax.xaxis.set_ticklabels([r'$-\pi$', '$0$', r'$+\pi$'])
                 #ax.set_title(
@@ -905,10 +908,10 @@ class ConeCyl(object):
                     ax.xaxis.set_ticklabels([])
                     ax.yaxis.set_ticklabels([])
                     ax.set_frame_on(False)
-                if save:
-                    log('Plot saved at: {0}'.format(filename))
+                if save_png:
+                    log('Plot saved at: {0}'.format(pngname))
                     plt.tight_layout()
-                    plt.savefig(filename, transparent=True,
+                    plt.savefig(pngname, transparent=True,
                                 bbox_inches='tight', pad_inches=0.05,
                                 dpi=400)
 
@@ -924,7 +927,7 @@ class ConeCyl(object):
                 f.write("mer = tmp['mer']\n")
                 f.write("field = tmp['field']\n")
                 f.write("clean = {0}\n".format(clean))
-                f.write("filename = '{0}'\n".format(filename))
+                f.write("pngname = '{0}'\n".format(pngname))
                 f.write("plt.figure(figsize={0})\n".format(figsize))
                 f.write("ax = plt.gca()\n")
                 f.write("levels = np.linspace(field.min(), field.max(), {0})\n".format(
@@ -935,7 +938,7 @@ class ConeCyl(object):
                 f.write("ax.xaxis.set_ticks_position('bottom')\n")
                 f.write("ax.yaxis.set_ticks_position('left')\n")
                 f.write("ax.xaxis.set_ticks([{0}, 0, {1}])\n".format(
-                        -self.rtop*pi, self.rtop*pi))
+                        -self.rtop*np.pi, self.rtop*np.pi))
                 f.write("ax.xaxis.set_ticklabels([r'$-\pi$', '$0$', r'$+\pi$'])\n")
                 f.write("ax.set_title(r'Abaqus, $PL=20 N$, $F_{{C}}=50 kN$, $w_{{PL}}=\beta$, $mm$')\n")
                 f.write("if clean:\n")
@@ -944,9 +947,9 @@ class ConeCyl(object):
                 f.write("    ax.xaxis.set_ticklabels([])\n")
                 f.write("    ax.yaxis.set_ticklabels([])\n")
                 f.write("    ax.set_frame_on(False)\n")
-                f.write("if not filename:\n")
-                f.write("    filename = 'abaqus_result.png'\n")
-                f.write("plt.savefig(filename, transparent=True,\n")
+                f.write("if not pngname:\n")
+                f.write("    pngname = 'abaqus_result.png'\n")
+                f.write("plt.savefig(pngname, transparent=True,\n")
                 f.write("            bbox_inches='tight', pad_inches=0.05, dpi=400)\n")
                 f.write("plt.show()\n")
             print('Output exported to "{0}"'.format(npzname))
