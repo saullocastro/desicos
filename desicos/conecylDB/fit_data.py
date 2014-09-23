@@ -212,8 +212,9 @@ def best_fit_cylinder(path, H, R_expected=10., save=True, errorRtol=1.e-9,
                 output_pts=output_pts,
                 T=T, Tinv=Tinv)
 
-def calc_c0(path, m0=50, n0=50, funcnum=2, inverted_z=False, rotatedeg=0.,
-            filter_m0=None, filter_n0=None, sample_size=None, maxmem=8):
+def calc_c0(path, m0=50, n0=50, funcnum=2, fem_meridian_bot2top=True,
+        rotatedeg=0., filter_m0=None, filter_n0=None, sample_size=None,
+        maxmem=8):
     r"""Find the coefficients that best fit the `w_0` imperfection
 
     The measured data will be fit using one of the following functions,
@@ -279,11 +280,9 @@ def calc_c0(path, m0=50, n0=50, funcnum=2, inverted_z=False, rotatedeg=0.,
     funcnum : int, optional
         As explained above, selects the base functions used for
         the approximation.
-    inverted_z : bool, optional
-        The :ref:`default coordinate system <default_coordsys>` has the `z`
-        axis starting at the center of the bottom circumference pointing to
-        the top.  If the `z` axis of the imperfection file is inverted this
-        boolean should be ``True``.
+    fem_meridian_bot2top : bool, optional
+        A boolean indicating if the finite element has the `x` axis starting
+        at the bottom or at the top.
     rotatedeg : float, optional
         Rotation angle in degrees telling how much the imperfection pattern
         should be rotated about the `X_3` (or `Z`) axis.
@@ -361,7 +360,7 @@ def calc_c0(path, m0=50, n0=50, funcnum=2, inverted_z=False, rotatedeg=0.,
     #NOTE using `H_measured` did not allow a good fitting result
     #zs /= H_measured
     zs = (zs - zs.min())/(zs.max() - zs.min())
-    if inverted_z:
+    if not fem_meridian_bot2top:
         #TODO
         zs *= -1
         zs += 1
