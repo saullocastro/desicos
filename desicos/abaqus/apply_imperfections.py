@@ -518,9 +518,9 @@ def translate_nodes_ABAQUS_c0(m0, n0, c0, funcnum,
         ignore_top_h = 0
     H_eff = H_model - (ignore_bot_h + ignore_top_h)
     if fem_meridian_bot2top:
-        xs_norm = (H_eff-(coords[:, 2]-ignore_bot_h))/H_eff
-    else:
         xs_norm = (coords[:, 2]-ignore_bot_h)/H_eff
+    else:
+        xs_norm = (H_eff-(coords[:, 2]-ignore_bot_h))/H_eff
 
     thetas = arctan2(coords[:, 1], coords[:, 0])
 
