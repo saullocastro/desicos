@@ -163,6 +163,74 @@ def inv_weighted(data, mesh, num_sub, col, ncp=5, power_parameter=2):
 
     return ans
 
+def interp_polar(t, tp, fp, degrees=False, smooth=False):
+    """One-dimensional linear interpolation for polar coordinates
+
+    This function supports angular inputs at any range, and uses a
+    spatial-based interpolation to overcome angle discontinuities.
+
+    Parameters
+    ----------
+    t : np.ndarray
+        The angular coordinates of the interpolated values.
+    tp : np.ndarray
+        The angular coordinates of the data points.
+    fp : np.ndarray
+        The response being interpolated, same length as ``tp``.
+    degrees : bool, optional
+        If the input angles are in degrees.
+    smooth : bool, optional
+        If ``True`` uses the linear distance instead of the arc distance to
+        compute the linear interpolation, resulting in a smoothed pattern.
+
+    Returns
+    -------
+    f : {float, ndarray}
+        The interpolated values, same shape as `t`.
+
+    """
+    r = 1.e3 # any arbitrary float within the machine limits can be used here
+    t = np.asarray(t)
+    tp = np.asarray(tp)
+    fp = np.asarray(fp)
+    if degrees:
+        t = np.deg2rad(t)
+        tp = np.deg2rad(tp)
+    x = r*np.cos(t)
+    y = r*np.sin(t)
+    xp = r*np.cos(tp)
+    yp = r*np.sin(tp)
+    dist = np.subtract.outer(x, xp)**2
+    dist += np.subtract.outer(y, yp)**2
+    asort = np.argsort(dist, axis=1)
+    sdist = np.sort(dist, axis=1)
+    fp1 = fp[asort[:,0]]
+    fp2 = fp[asort[:,1]]
+    if smooth:
+        # linear distance
+        d1 = sdist[:,0]
+        d2 = sdist[:,1]
+    else:
+        # arc distance
+        x1 = xp[asort[:,0]]
+        x2 = xp[asort[:,1]]
+        y1 = yp[asort[:,0]]
+        y2 = yp[asort[:,1]]
+        def calc_arc(x1, y1, x2, y2):
+            xm = 0.5*(x1 + x2)
+            ym = 0.5*(y1 + y2)
+            posm = (xm**2 + ym**2)**0.5
+            pos1 = (x1**2 + y1**2)**0.5
+            theta = 2*np.arccos(posm/pos1)
+            return r*theta
+        d1 = calc_arc(x1, y1, x, y)
+        d2 = calc_arc(x, y, x2, y2)
+    den = (d1+d2)
+    den[den==0] = 1.e-15
+    factor = d1/den
+    f = fp1*(1-factor) + fp2*factor
+    return f
+
 def interp_theta_z_imp(data, mesh, semi_angle, H_measured, H_model, R_model,
         stretch_H=False, z_offset_bot=None, rotatedeg=0., num_sub=200, ncp=5,
         power_parameter=2):
