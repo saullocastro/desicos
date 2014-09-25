@@ -8,8 +8,7 @@ This module includes some interpolation utilities that will be used in other
 modules.
 
 """
-import os
-import __main__
+from collections import Iterable
 
 import numpy as np
 from numpy import sin, cos, tan
@@ -163,87 +162,112 @@ def inv_weighted(data, mesh, num_sub, col, ncp=5, power_parameter=2):
 
     return ans
 
-def interp_polar(theta, thetap, yp, degrees=False):
-    """One-dimensional linear interpolation for angular coordinates
+def interp(x, xp, fp, left=None, right=None, period=None):
+    """
+    One-dimensional linear interpolation
 
-    This function supports only angular coordinates at any range and uses a
-    spatial-based interpolation to overcome angle discontinuities.
+    Returns the one-dimensional piecewise linear interpolant to a function
+    with given values at discrete data-points.
 
     Parameters
     ----------
-    theta : np.ndarray
-        The angular theta-coordinates of the interpolated values.
-    thetap : np.ndarray
-        The angular theta-coordinates of the data points. At least two data
-        points are required.
-    yp : np.ndarray
-        The response being interpolated, same length as ``thetap``.
-    degrees : bool, optional
-        If the input angles are in degrees.
+    x : array_like
+        The x-coordinates of the interpolated values.
+
+    xp : 1-D sequence of floats
+        The x-coordinates of the data points, must be increasing if
+        ``period==None``.
+
+    fp : 1-D sequence of floats
+        The y-coordinates of the data points, same length as ``xp``.
+
+    left : float, optional
+        Value to return for ``x < xp[0]``, default is ``fp[0]``.
+
+    right : float, optional
+        Value to return for ``x > xp[-1]``, default is ``fp[-1]``.
+
+    period : float, optional
+        A period for the x-coordinates. This parameter allows the proper
+        interpolation of angular x-coordinates. Parameters ``left`` and
+        ``right`` are ignored if ``period`` is specified.
 
     Returns
     -------
-    y : np.ndarray
-        The interpolated values, same shape as ``theta``.
+    y : {float, ndarray}
+        The interpolated values, same shape as ``x``.
+
+    Raises
+    ------
+    ValueError
+        If ``xp`` and ``fp`` have different length
+
+    Notes
+    -----
+    Does not check that the x-coordinate sequence ``xp`` is increasing.
+    If ``xp`` is not increasing, the results are nonsense.
+    A simple check for increasing is::
+
+        np.all(np.diff(xp) > 0)
+
 
     Examples
     --------
-    >>> interp_polar([-180, -170, -185, 185, -10, -5, 0, 365],
-    ...              [190, -190, 350, -350], [5, 10, 3, 4], degrees=True)
+    >>> xp = [1, 2, 3]
+    >>> fp = [3, 2, 0]
+    >>> interp(2.5, xp, fp)
+    1.0
+    >>> interp([0, 1, 1.5, 2.72, 3.14], xp, fp)
+    array([ 3. ,  3. ,  2.5 ,  0.56,  0. ])
+    >>> UNDEF = -99.0
+    >>> interp(3.14, xp, fp, right=UNDEF)
+    -99.0
+
+    Plot an interpolant to the sine function:
+
+    >>> x = np.linspace(0, 2*np.pi, 10)
+    >>> y = np.sin(x)
+    >>> xvals = np.linspace(0, 2*np.pi, 50)
+    >>> yinterp = interp(xvals, x, y)
+    >>> import matplotlib.pyplot as plt
+    >>> plt.plot(x, y, 'o')
+    [<matplotlib.lines.Line2D object at 0x...>]
+    >>> plt.plot(xvals, yinterp, '-x')
+    [<matplotlib.lines.Line2D object at 0x...>]
+    >>> plt.show()
+
+    Interpolation with periodic x-coordinates:
+
+    >>> x = [-180, -170, -185, 185, -10, -5, 0, 365]
+    >>> xp = [190, -190, 350, -350]
+    >>> fp = [5, 10, 3, 4]
+    >>> interp(x, xp, fp, period=360)
     array([7.5, 5., 8.75, 6.25, 3., 3.25, 3.5, 3.75])
 
     """
-    # input checks
-    theta = np.asarray(theta)
-    thetap = np.asarray(thetap)
-    yp = np.asarray(yp)
-    if theta.ndim!=1 or thetap.ndim!=1 or yp.ndim!=1:
-        raise ValueError('Inputs must be 1-D sequences')
-    if thetap.shape[0] != yp.shape[0]:
-        raise ValueError('Inputs `thetap` and `yp` must have the same shape')
-    if thetap.shape[0]<2:
-        raise ValueError('At least two data points are required')
-    if not degrees and (theta.max() > 4*np.pi or thetap.max() > 4*np.pi):
-        warn('high input angles found and treated as radians')
-    if degrees:
-        theta = np.deg2rad(theta)
-        thetap = np.deg2rad(thetap)
-
-    # eliminating discontinuity between 360 and 0
-    theta = theta % (2*np.pi)
-    theta[theta>=np.pi] -= 2*np.pi
-    check = thetap>=np.pi
-    thetap = np.hstack((thetap, thetap[check] - 2*np.pi))
-    yp = np.hstack((yp, yp[check]))
-
-    # recovering continuity between +180 and -180
-    check = thetap<0
-    thetap = np.hstack((thetap, thetap[check] + 2*np.pi))
-    yp = np.hstack((yp, yp[check]))
-
-    # getting indices used in the interpolation
-    asort_thetap = np.argsort(thetap)
-    thetap = thetap[asort_thetap]
-    yp = yp[asort_thetap]
-    a = np.searchsorted(thetap, theta)
-
-    # closing the cycle
-    thetap = np.hstack((thetap, thetap[0:1]))
-    yp = np.hstack((yp, yp[0:1]))
-
-    # indices for the first and second points
-    k0 = a-1
-    k1 = a
-
-    # interpolating
-    d0 = np.abs(theta - thetap[k0])
-    d1 = np.abs(theta - thetap[k1])
-    den = (d0+d1)
-    den[den==0] = 1.e-15
-    factor = d0/den
-    yp1 = yp[k0]
-    yp2 = yp[k1]
-    return yp1*(1-factor) + yp2*factor
+    if period==None:
+        return np.interp(x, xp, fp, left, right)
+    else:
+        if not isinstance(x, Iterable):
+            x = [x]
+        x = np.ascontiguousarray(x)
+        xp = np.asarray(xp)
+        fp = np.asarray(fp)
+        xshape = x.shape
+        x = x.ravel()
+        if xp.ndim != 1 or fp.ndim != 1:
+            raise ValueError('Data points must be 1-D sequences')
+        if xp.shape[0] != fp.shape[0]:
+            raise ValueError('Inputs `xp` and `fp` must have the same shape')
+        # eliminating discontinuity between periods
+        x = x % period
+        xp = xp % period
+        asort_xp = np.argsort(xp)
+        xp = xp[asort_xp]
+        fp = fp[asort_xp]
+        xp = np.hstack((xp[-1:]-period, xp, xp[0:1]+period))
+        fp = np.hstack((fp[-1:], fp, fp[0:1]))
+        return np.interp(x.reshape(xshape), xp, fp)
 
 def interp_theta_z_imp(data, mesh, semi_angle, H_measured, H_model, R_model,
         stretch_H=False, z_offset_bot=None, rotatedeg=0., num_sub=200, ncp=5,

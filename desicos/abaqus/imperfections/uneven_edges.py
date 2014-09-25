@@ -1,6 +1,6 @@
 import numpy as np
 
-from desicos.conecylDB.interpolate import interp_polar
+from desicos.conecylDB.interpolate import interp
 
 class Shim(object):
     """Represents a shim added to one of the edges
@@ -174,8 +174,8 @@ class UnevenBottomEdge(object):
             measured_u3s = np.zeros((2, 100))
             measured_u3s[0, :] = np.linspace(0, 360, 100)
         #   calculating u3 for each node
-        u3_nodes = interp_polar(np.rad2deg(theta_nodes), measured_u3s[0, :],
-                measured_u3s[1, :], degrees=True)
+        u3_nodes = interp(np.rad2deg(theta_nodes), measured_u3s[0, :],
+                measured_u3s[1, :], period=360)
 
         # contributions from shims
         hs = np.zeros_like(theta_nodes)
@@ -392,8 +392,8 @@ class UnevenTopEdge(object):
             measured_u3s = np.zeros((2, 100))
             measured_u3s[0, :] = np.linspace(0, 360, 100)
         #   calculating u3 for each node
-        u3_nodes = interp_polar(np.rad2deg(theta_nodes), measured_u3s[0, :],
-                measured_u3s[1, :], degrees=True)
+        u3_nodes = interp(np.rad2deg(theta_nodes), measured_u3s[0, :],
+                measured_u3s[1, :], period=360)
         #   applying load asymmetry according to cc.betarad and omega
         betarad = np.deg2rad(cc.betadeg)
         omegarad = np.deg2rad(cc.omegadeg)
