@@ -173,20 +173,16 @@ def interp(x, xp, fp, left=None, right=None, period=None):
     ----------
     x : array_like
         The x-coordinates of the interpolated values.
-
     xp : 1-D sequence of floats
-        The x-coordinates of the data points, must be increasing if
-        ``period==None``.
-
+        The x-coordinates of the data points, must be increasing if argument
+        ``period`` is not specified. Otherwise, ``xp`` is internally sorted
+        after normalizing the periodic boundaries with ``xp = xp % period``.
     fp : 1-D sequence of floats
         The y-coordinates of the data points, same length as ``xp``.
-
     left : float, optional
         Value to return for ``x < xp[0]``, default is ``fp[0]``.
-
     right : float, optional
         Value to return for ``x > xp[-1]``, default is ``fp[-1]``.
-
     period : float, optional
         A period for the x-coordinates. This parameter allows the proper
         interpolation of angular x-coordinates. Parameters ``left`` and
@@ -201,6 +197,8 @@ def interp(x, xp, fp, left=None, right=None, period=None):
     ------
     ValueError
         If ``xp`` and ``fp`` have different length
+        If ``xp`` or ``fp`` are not 1-D sequences
+        If ``period==0``
 
     Notes
     -----
@@ -245,16 +243,17 @@ def interp(x, xp, fp, left=None, right=None, period=None):
     array([7.5, 5., 8.75, 6.25, 3., 3.25, 3.5, 3.75])
 
     """
-    if period==None:
+    if period is None:
         return np.interp(x, xp, fp, left, right)
     else:
+        if period==0:
+            raise ValueError('Argument `period` must be a non-zero value')
+        period = abs(period)
         if not isinstance(x, Iterable):
             x = [x]
-        x = np.ascontiguousarray(x)
+        x = np.asarray(x)
         xp = np.asarray(xp)
         fp = np.asarray(fp)
-        xshape = x.shape
-        x = x.ravel()
         if xp.ndim != 1 or fp.ndim != 1:
             raise ValueError('Data points must be 1-D sequences')
         if xp.shape[0] != fp.shape[0]:
@@ -265,9 +264,9 @@ def interp(x, xp, fp, left=None, right=None, period=None):
         asort_xp = np.argsort(xp)
         xp = xp[asort_xp]
         fp = fp[asort_xp]
-        xp = np.hstack((xp[-1:]-period, xp, xp[0:1]+period))
-        fp = np.hstack((fp[-1:], fp, fp[0:1]))
-        return np.interp(x.reshape(xshape), xp, fp)
+        xp = np.concatenate((xp[-1:]-period, xp, xp[0:1]+period))
+        fp = np.concatenate((fp[-1:], fp, fp[0:1]))
+        return np.interp(x, xp, fp)
 
 def interp_theta_z_imp(data, mesh, semi_angle, H_measured, H_model, R_model,
         stretch_H=False, z_offset_bot=None, rotatedeg=0., num_sub=200, ncp=5,
