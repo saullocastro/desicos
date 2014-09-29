@@ -177,7 +177,8 @@ def best_fit_cylinder(path, H, R_expected=10., save=True, errorRtol=1.e-9,
         T = fT(popt)
         output_pts = T.dot(pts)
         x, y, z = output_pts
-        R_best_fit = np.sqrt(x**2 + y**2).mean()
+        mask = (z>=0) & (z<=H)
+        R_best_fit = np.sqrt(x[mask]**2 + y[mask]**2).mean()
         errorR = abs(R_best_fit - R)/R_best_fit
 
         log('Iteration: {0}, R_best_fit: {1}, errorR: {2}'.format(
