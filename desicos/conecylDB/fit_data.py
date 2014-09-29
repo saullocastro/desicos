@@ -121,16 +121,19 @@ def best_fit_cylinder(path, H, R_expected=10., save=True, errorRtol=1.e-9,
 
     def fT(p):
         a, b, x0, y0, z0 = p
+        a %= 2*np.pi
+        b %= 2*np.pi
         if False:
+            #NOTE kept for reference only...
             g = 0.
             # rotation in x, y, z
             T = np.array([[cos(b)*cos(g),
                            (sin(a)*sin(b)*cos(g) + cos(a)*sin(g)),
-                           (sin(a)*sin(g) - cos(a)*sin(b)*cos(g))],
+                           (sin(a)*sin(g) - cos(a)*sin(b)*cos(g)), x0],
                           [-cos(b)*sin(g),
                            (cos(a)*cos(g) - sin(a)*sin(b)*sin(g)),
-                           (sin(a)*cos(g) + cos(a)*sin(b)*sin(g))],
-                          [sin(b), -sin(a)*cos(b),  cos(a)*cos(b)]])
+                           (sin(a)*cos(g) + cos(a)*sin(b)*sin(g)), y0],
+                          [sin(b), -sin(a)*cos(b),  cos(a)*cos(b), z0]])
         if True:
             # rotation in x, y
             T = np.array([[cos(b),  sin(a)*sin(b), -cos(a)*sin(b), x0],
@@ -146,10 +149,10 @@ def best_fit_cylinder(path, H, R_expected=10., save=True, errorRtol=1.e-9,
             T = fT(p)
             xn, yn, zn = T.dot(pts)
             dz = np.zeros_like(zn)
-
+            factor = 0.1
             # point below the bottom edge
             mask = zn < 0
-            dz[mask] = -zn[mask]
+            dz[mask] = -zn[mask]*factor
 
             # point inside the cylinder
             pass
@@ -157,7 +160,7 @@ def best_fit_cylinder(path, H, R_expected=10., save=True, errorRtol=1.e-9,
 
             # point above the top edge
             mask = zn > H
-            dz[mask] = zn[mask] - H
+            dz[mask] = (zn[mask] - H)*factor
 
             dr = R - np.sqrt(xn**2 + yn**2)
             dist = np.sqrt(dr**2 + dz**2)
@@ -166,7 +169,7 @@ def best_fit_cylinder(path, H, R_expected=10., save=True, errorRtol=1.e-9,
         # initial guess for the optimization variables
         # the variables are alpha, beta, x0, y0, z0
         x, y, z = input_pts
-        p = [1., 1., 2*x.mean(), 2*y.mean(), 2*z.mean()]
+        p = [0.5, 0.5, 2*x.mean(), 2*y.mean(), 2*z.mean()]
 
         # performing the leastsq analysis
         popt, pcov = leastsq(func=calc_dist, x0=p, args=(pts,),
@@ -188,6 +191,8 @@ def best_fit_cylinder(path, H, R_expected=10., save=True, errorRtol=1.e-9,
         warn('The maximum number of iterations was achieved!')
 
     alpha, beta = popt[:2]
+    alpha %= 2*np.pi
+    beta %= 2*np.pi
     log('')
     log('Transformation matrix:\n{0}'.format(T))
     log('')
