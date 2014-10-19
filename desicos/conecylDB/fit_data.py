@@ -121,16 +121,19 @@ def best_fit_cylinder(path, H, R_expected=10., save=True, errorRtol=1.e-9,
 
     def fT(p):
         a, b, x0, y0, z0 = p
+        a %= 2*np.pi
+        b %= 2*np.pi
         if False:
+            #NOTE kept for reference only...
             g = 0.
             # rotation in x, y, z
             T = np.array([[cos(b)*cos(g),
                            (sin(a)*sin(b)*cos(g) + cos(a)*sin(g)),
-                           (sin(a)*sin(g) - cos(a)*sin(b)*cos(g))],
+                           (sin(a)*sin(g) - cos(a)*sin(b)*cos(g)), x0],
                           [-cos(b)*sin(g),
                            (cos(a)*cos(g) - sin(a)*sin(b)*sin(g)),
-                           (sin(a)*cos(g) + cos(a)*sin(b)*sin(g))],
-                          [sin(b), -sin(a)*cos(b),  cos(a)*cos(b)]])
+                           (sin(a)*cos(g) + cos(a)*sin(b)*sin(g)), y0],
+                          [sin(b), -sin(a)*cos(b),  cos(a)*cos(b), z0]])
         if True:
             # rotation in x, y
             T = np.array([[cos(b),  sin(a)*sin(b), -cos(a)*sin(b), x0],
@@ -146,10 +149,10 @@ def best_fit_cylinder(path, H, R_expected=10., save=True, errorRtol=1.e-9,
             T = fT(p)
             xn, yn, zn = T.dot(pts)
             dz = np.zeros_like(zn)
-
+            factor = 0.1
             # point below the bottom edge
             mask = zn < 0
-            dz[mask] = -zn[mask]
+            dz[mask] = -zn[mask]*factor
 
             # point inside the cylinder
             pass
@@ -157,7 +160,7 @@ def best_fit_cylinder(path, H, R_expected=10., save=True, errorRtol=1.e-9,
 
             # point above the top edge
             mask = zn > H
-            dz[mask] = zn[mask] - H
+            dz[mask] = (zn[mask] - H)*factor
 
             dr = R - np.sqrt(xn**2 + yn**2)
             dist = np.sqrt(dr**2 + dz**2)
@@ -166,7 +169,7 @@ def best_fit_cylinder(path, H, R_expected=10., save=True, errorRtol=1.e-9,
         # initial guess for the optimization variables
         # the variables are alpha, beta, x0, y0, z0
         x, y, z = input_pts
-        p = [1., 1., 2*x.mean(), 2*y.mean(), 2*z.mean()]
+        p = [0.5, 0.5, 2*x.mean(), 2*y.mean(), 2*z.mean()]
 
         # performing the leastsq analysis
         popt, pcov = leastsq(func=calc_dist, x0=p, args=(pts,),
@@ -188,6 +191,8 @@ def best_fit_cylinder(path, H, R_expected=10., save=True, errorRtol=1.e-9,
         warn('The maximum number of iterations was achieved!')
 
     alpha, beta = popt[:2]
+    alpha %= 2*np.pi
+    beta %= 2*np.pi
     log('')
     log('Transformation matrix:\n{0}'.format(T))
     log('')
@@ -212,8 +217,9 @@ def best_fit_cylinder(path, H, R_expected=10., save=True, errorRtol=1.e-9,
                 output_pts=output_pts,
                 T=T, Tinv=Tinv)
 
-def calc_c0(path, m0=50, n0=50, funcnum=2, inverted_z=False, rotatedeg=0.,
-            filter_m0=None, filter_n0=None, sample_size=None, maxmem=8):
+def calc_c0(path, m0=50, n0=50, funcnum=2, fem_meridian_bot2top=True,
+        rotatedeg=0., filter_m0=None, filter_n0=None, sample_size=None,
+        maxmem=8):
     r"""Find the coefficients that best fit the `w_0` imperfection
 
     The measured data will be fit using one of the following functions,
@@ -279,11 +285,9 @@ def calc_c0(path, m0=50, n0=50, funcnum=2, inverted_z=False, rotatedeg=0.,
     funcnum : int, optional
         As explained above, selects the base functions used for
         the approximation.
-    inverted_z : bool, optional
-        The :ref:`default coordinate system <default_coordsys>` has the `z`
-        axis starting at the center of the bottom circumference pointing to
-        the top.  If the `z` axis of the imperfection file is inverted this
-        boolean should be ``True``.
+    fem_meridian_bot2top : bool, optional
+        A boolean indicating if the finite element has the `x` axis starting
+        at the bottom or at the top.
     rotatedeg : float, optional
         Rotation angle in degrees telling how much the imperfection pattern
         should be rotated about the `X_3` (or `Z`) axis.
@@ -361,7 +365,7 @@ def calc_c0(path, m0=50, n0=50, funcnum=2, inverted_z=False, rotatedeg=0.,
     #NOTE using `H_measured` did not allow a good fitting result
     #zs /= H_measured
     zs = (zs - zs.min())/(zs.max() - zs.min())
-    if inverted_z:
+    if not fem_meridian_bot2top:
         #TODO
         zs *= -1
         zs += 1

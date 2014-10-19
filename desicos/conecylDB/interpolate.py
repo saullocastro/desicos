@@ -8,8 +8,7 @@ This module includes some interpolation utilities that will be used in other
 modules.
 
 """
-import os
-import __main__
+from collections import Iterable
 
 import numpy as np
 from numpy import sin, cos, tan
@@ -162,6 +161,112 @@ def inv_weighted(data, mesh, num_sub, col, ncp=5, power_parameter=2):
     log('Interpolation completed!')
 
     return ans
+
+def interp(x, xp, fp, left=None, right=None, period=None):
+    """
+    One-dimensional linear interpolation
+
+    Returns the one-dimensional piecewise linear interpolant to a function
+    with given values at discrete data-points.
+
+    Parameters
+    ----------
+    x : array_like
+        The x-coordinates of the interpolated values.
+    xp : 1-D sequence of floats
+        The x-coordinates of the data points, must be increasing if argument
+        ``period`` is not specified. Otherwise, ``xp`` is internally sorted
+        after normalizing the periodic boundaries with ``xp = xp % period``.
+    fp : 1-D sequence of floats
+        The y-coordinates of the data points, same length as ``xp``.
+    left : float, optional
+        Value to return for ``x < xp[0]``, default is ``fp[0]``.
+    right : float, optional
+        Value to return for ``x > xp[-1]``, default is ``fp[-1]``.
+    period : float, optional
+        A period for the x-coordinates. This parameter allows the proper
+        interpolation of angular x-coordinates. Parameters ``left`` and
+        ``right`` are ignored if ``period`` is specified.
+
+    Returns
+    -------
+    y : {float, ndarray}
+        The interpolated values, same shape as ``x``.
+
+    Raises
+    ------
+    ValueError
+        If ``xp`` and ``fp`` have different length
+        If ``xp`` or ``fp`` are not 1-D sequences
+        If ``period==0``
+
+    Notes
+    -----
+    Does not check that the x-coordinate sequence ``xp`` is increasing.
+    If ``xp`` is not increasing, the results are nonsense.
+    A simple check for increasing is::
+
+        np.all(np.diff(xp) > 0)
+
+
+    Examples
+    --------
+    >>> xp = [1, 2, 3]
+    >>> fp = [3, 2, 0]
+    >>> interp(2.5, xp, fp)
+    1.0
+    >>> interp([0, 1, 1.5, 2.72, 3.14], xp, fp)
+    array([ 3. ,  3. ,  2.5 ,  0.56,  0. ])
+    >>> UNDEF = -99.0
+    >>> interp(3.14, xp, fp, right=UNDEF)
+    -99.0
+
+    Plot an interpolant to the sine function:
+
+    >>> x = np.linspace(0, 2*np.pi, 10)
+    >>> y = np.sin(x)
+    >>> xvals = np.linspace(0, 2*np.pi, 50)
+    >>> yinterp = interp(xvals, x, y)
+    >>> import matplotlib.pyplot as plt
+    >>> plt.plot(x, y, 'o')
+    [<matplotlib.lines.Line2D object at 0x...>]
+    >>> plt.plot(xvals, yinterp, '-x')
+    [<matplotlib.lines.Line2D object at 0x...>]
+    >>> plt.show()
+
+    Interpolation with periodic x-coordinates:
+
+    >>> x = [-180, -170, -185, 185, -10, -5, 0, 365]
+    >>> xp = [190, -190, 350, -350]
+    >>> fp = [5, 10, 3, 4]
+    >>> interp(x, xp, fp, period=360)
+    array([7.5, 5., 8.75, 6.25, 3., 3.25, 3.5, 3.75])
+
+    """
+    if period is None:
+        return np.interp(x, xp, fp, left, right)
+    else:
+        if period==0:
+            raise ValueError('Argument `period` must be a non-zero value')
+        period = abs(period)
+        if not isinstance(x, Iterable):
+            x = [x]
+        x = np.asarray(x)
+        xp = np.asarray(xp)
+        fp = np.asarray(fp)
+        if xp.ndim != 1 or fp.ndim != 1:
+            raise ValueError('Data points must be 1-D sequences')
+        if xp.shape[0] != fp.shape[0]:
+            raise ValueError('Inputs `xp` and `fp` must have the same shape')
+        # eliminating discontinuity between periods
+        x = x % period
+        xp = xp % period
+        asort_xp = np.argsort(xp)
+        xp = xp[asort_xp]
+        fp = fp[asort_xp]
+        xp = np.concatenate((xp[-1:]-period, xp, xp[0:1]+period))
+        fp = np.concatenate((fp[-1:], fp, fp[0:1]))
+        return np.interp(x, xp, fp)
 
 def interp_theta_z_imp(data, mesh, semi_angle, H_measured, H_model, R_model,
         stretch_H=False, z_offset_bot=None, rotatedeg=0., num_sub=200, ncp=5,

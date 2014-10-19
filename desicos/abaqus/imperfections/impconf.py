@@ -180,7 +180,8 @@ class ImpConf(object):
 
     def add_msi(self, imp_ms='', scaling_factor=1., R_best_fit=None,
                 H_measured=None, path=None, use_theta_z_format=True,
-                rotatedeg=0., ignore_bot_h=0., ignore_top_h=0., c0=None,
+                rotatedeg=0., ignore_bot_h=True, ignore_top_h=True,
+                stretch_H=False, c0=None,
                 m0=None, n0=None, funcnum=None):
         r"""Adds a Mid-Surface Imperfection (MSI)
 
@@ -219,9 +220,15 @@ class ImpConf(object):
             Rotation angle in degrees telling how much the imperfection
             pattern should be rotated about the `X_3` (or `Z`) axis.
         ignore_bot_h : float, optional
-            Used to ignore nodes from the bottom resin ring.
+            Used to ignore nodes from the bottom resin ring. The default value
+            ``True`` will use data from the bottom resin ring, if it exists.
         ignore_top_h : float, optional
-            Used to ignore nodes from the top resin ring.
+            Used to ignore nodes from the top resin ring. The default value
+            ``True`` will use data from the top resin ring, if it exists.
+        stretch_H : bool, optional
+            If the measured imperfection does not cover the whole height it
+            will be stretched. If ``stretch_H==True``, ``ignore_bot_h`` and
+            ``ignore_top_h`` are automatically set to ``False``.
         c0 : str or np.ndarray, optional
             The coefficients representing the imperfection pattern. If
             supplied will overwrite the imperfection data passed using the
@@ -251,6 +258,7 @@ class ImpConf(object):
         msi.rotatedeg = rotatedeg
         msi.ignore_bot_h = ignore_bot_h
         msi.ignore_top_h = ignore_top_h
+        msi.stretch_H = stretch_H
 
         if c0!=None and not (m0 and n0 and funcnum):
             raise ValueError('Parameter "c0" must be supplied with ' +

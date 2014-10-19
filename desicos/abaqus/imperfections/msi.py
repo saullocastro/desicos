@@ -83,6 +83,23 @@ class MSI(object):
                          the imperfection amplitude
     ===================  =====================================================
 
+    Additional parameters that govern how the imperfection pattern will look
+    like in the finite element model:
+
+    ===================  =====================================================
+    Attribute            Description
+    ===================  =====================================================
+    ``ignore_bot_h``     Used to ignore nodes from the bottom resin ring. The
+                         default value ``True`` will automatically obtain the
+                         resin ring dimensions. Set to ``False`` or ``None``
+                         if an imperfection pattern "extruded" to both edges
+                         is the desired behavior
+    ``ignore_top_h``     Similar to ``ignore_bot_h``, but for the top edge.
+    ``stretch_H``        If the measured imperfection does not cover the whole
+                         height it will be stretched. If ``stretch_H==True``,
+                         ``ignore_bot_h`` and ``ignore_top_h`` are
+                         automatically set to ``False``
+    ===================  =====================================================
 
     """
     def __init__(self):
@@ -105,8 +122,8 @@ class MSI(object):
         self.funcnum = None
         self.H_measured = None
         self.R_best_fit = None
-        self.ignore_bot_h = None
-        self.ignore_top_h = None
+        self.ignore_bot_h = True
+        self.ignore_top_h = True
         self.sample_size = 2000000
         #TODO: include z_offset_bottom to calculate ignore_bot_h and
         #      ignore_top_h
@@ -136,12 +153,19 @@ class MSI(object):
             self.H_measured = H_measured[self.imp_ms]
         if self.imp_ms in R_best_fit.keys():
             self.R_best_fit = R_best_fit[self.imp_ms]
-        if not self.ignore_bot_h:
+        if self.stretch_H:
+            self.ignore_bot_h = False
+            self.ignore_top_h = False
+        if self.ignore_bot_h==True:
             if cc.resin_ring_bottom:
                 self.ignore_bot_h = cc.resin_bot_h
-        if not self.ignore_top_h:
+            else:
+                self.ignore_bot_h = False
+        if self.ignore_top_h==True:
             if cc.resin_ring_top:
                 self.ignore_top_h = cc.resin_top_h
+            else:
+                self.ignore_top_h = False
 
     def calc_amplitude(self):
         """Calculates the geometric imperfection of the finite element model

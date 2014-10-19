@@ -1124,7 +1124,6 @@ def _create_loads_bcs(cc):
                                           toName='shell_outputs')
         mod.fieldOutputRequests['shell_outputs'].setValues(
                                variables=('U',),
-                               createStepName=cc.step2Name,
                                region=set_shell_faces)
         if cc.resin_ring_bottom:
             set_Bottom_IR = ra.sets['resin_ring_Bottom_IR']

@@ -234,6 +234,7 @@ def xyz2thetazimp(path,
                   use_best_fit=True,
                   sample_size=None,
                   best_fit_output=False,
+                  errorRtol=1.e-9,
                   stretch_H=False,
                   z_offset_bot=None,
                   r_TOL=1.,
@@ -283,6 +284,8 @@ def xyz2thetazimp(path,
         case ``True`` the output of this function will be a tuple with
         ``(mps, out)``. For a description of ``out`` see
         :func:`.best_fit_cylinder`.
+    errorRtol : float, optional
+        The error tolerance for the best-fit radius to stop the iterations.
     sample_size : int, optional
         If the input file containing the measured data is too large it may
         become convenient to use only a sample of it in order to calculate
@@ -322,12 +325,12 @@ def xyz2thetazimp(path,
         log('Finding the best-fit ...')
         if alphadeg_measured==0.:
             out = best_fit_cylinder(path, R_expected=R_expected, H=H_measured,
-                    save=False, sample_size=sample_size)
+                    save=False, sample_size=sample_size,
+                    errorRtol=errorRtol)
             R_best_fit = out['R_best_fit']
             input_pts = np.loadtxt(path, unpack=True)
             pts = np.vstack((input_pts, np.ones_like(input_pts[0, :])))
             x, y, z = out['T'].dot(pts)
-            print 'DEBUG read_write.py', x.shape
             zmin = z.min()
             zmax = z.max()
             z -= zmin
