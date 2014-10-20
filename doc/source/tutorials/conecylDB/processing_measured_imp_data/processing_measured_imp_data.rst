@@ -25,9 +25,12 @@ with three columns::
     xn yn zn
 
 
-The following sample has been used to illustrate this tutorial:
+The `following sample
+<https://raw.githubusercontent.com/desicos/desicos/master/doc/source/tutorials/conecylDB/processing_measured_imp_data/sample.txt>`_
+has been used to illustrate this tutorial (first 10 lines shown below):
 
 .. literalinclude:: sample.txt
+    :lines: 1-10
 
 The following script is used to plot the sample with the imperfection
 exagerated. Note that :ref:`best_fit_raw_data.py <best_fit_raw_data>` has to
@@ -66,7 +69,9 @@ imperfection data is stored in the format::
 
 where ``thetai`` and ``zi`` are the coordinates `\theta` and `z`, while
 ``impi`` represents the imperfection amplitude at this coordinate. An example
-of the transformed imperfection files is:
+of the transformed imperfection data is given below (first 10 lines), and
+`the full output is given here
+<https://raw.githubusercontent.com/desicos/desicos/master/doc/source/tutorials/conecylDB/processing_measured_imp_data/sample_theta_z_imp.txt>`_:
 
 .. literalinclude:: sample_theta_z_imp.txt
     :lines: 1-10
