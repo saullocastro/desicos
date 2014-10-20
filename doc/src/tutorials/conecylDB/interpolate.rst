@@ -1,1 +1,0 @@
-.. automodule:: desicos.conecylDB.interpolate

@@ -17,6 +17,7 @@ from desicos.logger import *
 from desicos.constants import FLOAT
 from read_write import read_theta_z_imp
 
+
 def inv_weighted(data, mesh, num_sub, col, ncp=5, power_parameter=2):
     r"""Interpolates the values taken at one group of points into
     another using an inverse-weighted algorithm
@@ -162,6 +163,7 @@ def inv_weighted(data, mesh, num_sub, col, ncp=5, power_parameter=2):
 
     return ans
 
+
 def interp(x, xp, fp, left=None, right=None, period=None):
     """
     One-dimensional linear interpolation
@@ -268,20 +270,20 @@ def interp(x, xp, fp, left=None, right=None, period=None):
         fp = np.concatenate((fp[-1:], fp, fp[0:1]))
         return np.interp(x, xp, fp)
 
+
 def interp_theta_z_imp(data, mesh, semi_angle, H_measured, H_model, R_model,
         stretch_H=False, z_offset_bot=None, rotatedeg=0., num_sub=200, ncp=5,
-        power_parameter=2):
+        power_parameter=2, ignore_bot_h=None, ignore_top_h=None):
     r"""Interpolates a data set in the `\theta, z, imp` format
 
     This function uses the inverse-weighted algorithm (:func:`.inv_weighted`).
 
     Parameters
     ----------
-    data : str or numpy.ndarray, shape (N, ndim+1)
+    data : str or numpy.ndarray, shape (N, 3)
         The data or an array containing the imperfection file in the `(\theta,
-        Z, imp)` format. The values to be interpolated must be in the last
-        column.
-    mesh : numpy.ndarray, shape (M, ndim)
+        Z, imp)` format.
+    mesh : numpy.ndarray, shape (M, 2)
         The new coordinates `(\theta, Z)` where the values will be
         interpolated to.
     semi_angle : float
@@ -315,6 +317,12 @@ def interp_theta_z_imp(data, mesh, semi_angle, H_measured, H_model, R_model,
         Number of closest points used in the inverse-weighted interpolation.
     power_parameter : float, optional
         Power of inverse weighted interpolation function.
+    ignore_bot_h : None or float, optional
+        Nodes close to the bottom edge are ignored according to this
+        meridional distance.
+    ignore_top_h : None or float, optional
+        Nodes close to the top edge are ignored according to this meridional
+        distance.
 
     Returns
     -------
@@ -334,8 +342,11 @@ def interp_theta_z_imp(data, mesh, semi_angle, H_measured, H_model, R_model,
         else:
             data[:, 1] /= H_measured
 
-    if mesh.shape[1] != data.shape[1]-1:
-        raise ValueError('Invalid input: mesh.shape[1] != data.shape[1]')
+    if data.shape[1] != 3:
+        raise ValueError('data must have shape (N, 3)')
+
+    if mesh.shape[1] != 2:
+        raise ValueError('Mesh must have shape (M, 2)')
 
     data3D = np.zeros((data.shape[0], 4), dtype=FLOAT)
 
@@ -347,8 +358,10 @@ def interp_theta_z_imp(data, mesh, semi_angle, H_measured, H_model, R_model,
 
     alpharad = np.deg2rad(semi_angle)
     tana = tan(alpharad)
+
     def r_local(z):
         return R_model - z*tana
+
     data3D[:, 0] = r_local(z)*cos(data[:, 0])
     data3D[:, 1] = r_local(z)*sin(data[:, 0])
     data3D[:, 2] = z
@@ -364,7 +377,14 @@ def interp_theta_z_imp(data, mesh, semi_angle, H_measured, H_model, R_model,
     ans = inv_weighted(data3D, coords, col=2, ncp=ncp, num_sub=num_sub,
             power_parameter=power_parameter)
 
+    zrav = mesh[:, 1]
+    if ignore_bot_h is not None:
+        ans[(zrav - zrav.min()) <= ignore_bot_h] = 0.
+    if ignore_top_h is not None:
+        ans[(zrav.max() - zrav) <= ignore_top_h] = 0.
+
     return ans
+
 
 if __name__=='__main__':
     a = np.array([[1.1, 1.2, 10],

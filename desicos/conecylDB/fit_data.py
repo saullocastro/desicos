@@ -16,14 +16,67 @@ from numpy import sin, cos, pi
 from desicos.logger import *
 from desicos.constants import FLOAT
 
+
 def best_fit_cylinder(path, H, R_expected=10., save=True, errorRtol=1.e-9,
                       maxNumIter=1000, sample_size=None):
     r"""Fit a best cylinder for a given set of measured data
 
-    The routine will transform the points to a new coordinate system based on
-    a best fit cylinder with radius ``R_expected`` and height ``H``.  The best
-    fit is calculated using the least square method from SciPy
-    (``scipy.optimize.leastsq``).
+    The coordinate transformation which must be performed in order to adjust
+    the raw data to the finite element coordinate system is illustrated below:
+
+    .. figure:: ../../../figures/modules/conecylDB/fit_data/coord_sys_trans.png
+        :width: 400
+
+    This transformation can be represented in matrix form as:
+
+    .. math::
+     [T] = \begin{bmatrix}
+     cos(\beta) &  sin(\alpha)sin(\beta) & -cos(\alpha)sin(\beta) & \Delta x_0
+     \\
+              0 &            cos(\alpha) &            sin(\alpha) & \Delta y_0
+     \\
+     sin(\beta) & -sin(\alpha)cos(\beta) &  cos(\alpha)cos(\beta) & \Delta x_0
+     \\
+           \end{bmatrix}
+
+    Note that **five** variables are unknowns:
+
+    - the rotation angles `\alpha` and `\beta`
+    - the three components of the translation `\Delta x_0`, `\Delta y_0` and
+      `\Delta z_0`
+
+    The five unknowns are calculated iteratively in a non-linear least-sqares
+    problem (solved with ``scipy.optimize.leastsq``), where the measured data
+    is transformed to the reference coordinate system and there compared with
+    a reference cylinder in order to compute the residual error using:
+
+    .. math::
+        \begin{Bmatrix} x_{ref} \\ y_{ref} \\ z_{ref} \end{Bmatrix} =
+        [T]
+        \begin{Bmatrix} x_m \\ y_m \\ z_m \\ 1 \end{Bmatrix}
+        \\
+        Error = \sqrt{(\Delta r)^2 + (\Delta z)^2}
+
+    where:
+
+    - `x_m`, `y_m` and `z_m` are the data coordinates in the data coordinate
+      system
+    - `x_{ref}` `x_{ref}` are the data coordinates in the :ref:`reference
+      coordinate system <figure_conecyl>`
+    - `\Delta r` and `\Delta z` are defined as:
+
+        .. math::
+            \Delta r = R - \sqrt{x_{ref}^2 + y_{ref}^2}
+            \\
+            \Delta z = \begin{cases}
+                            -z_{ref}, & \text{if } z_{ref} < 0 \\
+                                   0, & \text{if } 0 <= z_{ref} <= H \\
+                         z_{ref} - H, & \text{if } z_{ref} > H \\
+                       \end{cases}
+
+    Since the measured data may have an unknown radius `R`, the solution of
+    these equations has to be performed iteratively with one additional
+    external loop in order to update `R`.
 
     Parameters
     ----------
@@ -145,6 +198,7 @@ def best_fit_cylinder(path, H, R_expected=10., save=True, errorRtol=1.e-9,
     R = R_expected
     while i <= maxNumIter:
         i += 1
+
         def calc_dist(p, pts):
             T = fT(p)
             xn, yn, zn = T.dot(pts)
@@ -218,6 +272,17 @@ def best_fit_cylinder(path, H, R_expected=10., save=True, errorRtol=1.e-9,
                 output_pts=output_pts,
                 T=T, Tinv=Tinv)
 
+
+def best_fit_cone(path, H, alphadeg, R_expected=10., save=True,
+        errorRtol=1.e-9, maxNumIter=1000, sample_size=None):
+    r"""Fit a best cone for a given set of measured data
+
+    .. note:: NOT IMPLEMENTED YET
+
+    """
+    raise NotImplementedError('Function not implemented yet!')
+
+
 def calc_c0(path, m0=50, n0=50, funcnum=2, fem_meridian_bot2top=True,
         rotatedeg=0., filter_m0=None, filter_n0=None, sample_size=None,
         maxmem=8):
@@ -226,21 +291,21 @@ def calc_c0(path, m0=50, n0=50, funcnum=2, fem_meridian_bot2top=True,
     The measured data will be fit using one of the following functions,
     selected using the ``funcnum`` parameter:
 
-    1)
+    1) Half-Sine Function
 
     .. math::
         w_0 = \sum_{i=1}^{m_0}{ \sum_{j=0}^{n_0}{
                  {c_0}_{ij}^a sin{b_z} sin{b_\theta}
                 +{c_0}_{ij}^b sin{b_z} cos{b_\theta} }}
 
-    2) (default)
+    2) Half-Cosine Function (default)
 
     .. math::
         w_0 = \sum_{i=0}^{m_0}{ \sum_{j=0}^{n_0}{
                 {c_0}_{ij}^a cos{b_z} sin{b_\theta}
                 +{c_0}_{ij}^b cos{b_z} cos{b_\theta} }}
 
-    3)
+    3) Complete Fourier Series
 
     .. math::
         w_0 = \sum_{i=0}^{m_0}{ \sum_{j=0}^{n_0}{
@@ -381,6 +446,7 @@ def calc_c0(path, m0=50, n0=50, funcnum=2, fem_meridian_bot2top=True,
 
     return c0, residues
 
+
 def filter_c0(m0, n0, c0, filter_m0, filter_n0, funcnum=2):
     r"""Apply filter to the imperfection coefficients `\{c_0\}`
 
@@ -442,6 +508,7 @@ def filter_c0(m0, n0, c0, filter_m0, filter_n0, funcnum=2):
     log('Filter applied!')
     return c0_filtered
 
+
 def fa(m0, n0, zs_norm, thetas, funcnum=2):
     """Calculates the matrix with the base functions for `w_0`
 
@@ -498,6 +565,7 @@ def fa(m0, n0, zs_norm, thetas, funcnum=2):
             a = a.swapaxes(0,2).swapaxes(1,2).reshape(n,-1)
     return a
 
+
 def fw0(m0, n0, c0, xs_norm, ts, funcnum=2):
     r"""Calculates the imperfection field `w_0` for a given input
 
@@ -551,6 +619,7 @@ def fw0(m0, n0, c0, xs_norm, ts, funcnum=2):
         a = fa(m0, n0, xs_norm.ravel(), ts.ravel(), funcnum)
         w0s = a.dot(c0)
     return w0s.reshape(xs_norm.shape)
+
 
 if __name__=='__main__':
     import matplotlib.pyplot as plt

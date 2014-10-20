@@ -22,6 +22,7 @@ from desicos.conecylDB.read_write import read_theta_z_imp
 from desicos.conecylDB.interpolate import inv_weighted
 from desicos.abaqus.utils import vec_calc_elem_cg, index_within_linspace
 
+
 def calc_translations_ABAQUS(imperfection_file_name,
                              model_name,
                              part_name,
@@ -39,8 +40,8 @@ def calc_translations_ABAQUS(imperfection_file_name,
                              power_parameter=2,
                              num_sec_z=50,
                              use_theta_z_format=True,
-                             ignore_bot_h=False,
-                             ignore_top_h=False,
+                             ignore_bot_h=None,
+                             ignore_top_h=None,
                              sample_size=None):
     r"""Reads an imperfection file and calculates the nodal translations
 
@@ -93,9 +94,9 @@ def calc_translations_ABAQUS(imperfection_file_name,
     use_theta_z_format : bool, optional
         If the new format `\theta, Z, imp` should be used instead of the old
         `X, Y, Z`.
-    ignore_bot_h : float, optional
+    ignore_bot_h : None or float, optional
         Used to ignore nodes from the bottom resin ring.
-    ignore_top_h : float, optional
+    ignore_top_h : None or float, optional
         Used to ignore nodes from the top resin ring.
     sample_size : int, optional
         If the input file containing the measured data is too large it may be
@@ -110,18 +111,22 @@ def calc_translations_ABAQUS(imperfection_file_name,
     part = mod.parts[part_name]
     part_nodes = np.array(part.nodes)
     coords = np.array([n.coordinates for n in part_nodes], dtype=FLOAT)
-    if ignore_bot_h<=0:
-        ignore_bot_h = False
-    if ignore_top_h<=0:
-        ignore_top_h = False
-    if ignore_bot_h:
-        mask = coords[:, 2] > ignore_bot_h
-        coords = coords[mask]
-        part_nodes = part_nodes[mask]
-    if ignore_top_h:
-        mask = coords[:, 2] < (H_model - ignore_top_h)
-        coords = coords[mask]
-        part_nodes = part_nodes[mask]
+
+    if ignore_bot_h is not None:
+        if ignore_bot_h <= 0:
+            ignore_bot_h = None
+        else:
+            mask = coords[:, 2] > ignore_bot_h
+            coords = coords[mask]
+            part_nodes = part_nodes[mask]
+
+    if ignore_top_h is not None:
+        if ignore_top_h <= 0:
+            ignore_top_h = None
+        else:
+            mask = coords[:, 2] < (H_model - ignore_top_h)
+            coords = coords[mask]
+            part_nodes = part_nodes[mask]
 
     if use_theta_z_format:
         d, d, data = read_theta_z_imp(path=imperfection_file_name,
@@ -192,6 +197,7 @@ def calc_translations_ABAQUS(imperfection_file_name,
 
         return trans
 
+
 def translate_nodes_ABAQUS(imperfection_file_name,
                            model_name,
                            part_name,
@@ -210,8 +216,8 @@ def translate_nodes_ABAQUS(imperfection_file_name,
                            num_sec_z=50,
                            nodal_translations=None,
                            use_theta_z_format=False,
-                           ignore_bot_h=False,
-                           ignore_top_h=False,
+                           ignore_bot_h=None,
+                           ignore_top_h=None,
                            sample_size=None):
     r"""Translates the nodes in Abaqus based on imperfection data
 
@@ -283,9 +289,9 @@ def translate_nodes_ABAQUS(imperfection_file_name,
     use_theta_z_format : bool, optional
         A boolean to indicate whether the imperfection file contains ``x, y,
         z`` positions or ``theta, z, amplitude``.
-    ignore_bot_h : float, optional
+    ignore_bot_h : None or float, optional
         Used to ignore nodes from the bottom resin ring.
-    ignore_top_h : float, optional
+    ignore_top_h : None or float, optional
         Used to ignore nodes from the top resin ring.
     sample_size : int, optional
         If the input file containing the measured data is too large it may be
@@ -309,22 +315,26 @@ def translate_nodes_ABAQUS(imperfection_file_name,
 
     part_nodes = np.array(part.nodes)
     coords = np.array([n.coordinates for n in part_nodes])
-    if ignore_bot_h<=0:
-        ignore_bot_h = False
-    if ignore_top_h<=0:
-        ignore_top_h = False
-    if ignore_bot_h:
-        log('Applying ignore_bot_h: ignoring nodes with z <= {0}'.format(
-            ignore_bot_h))
-        mask = coords[:, 2] > ignore_bot_h
-        coords = coords[mask]
-        part_nodes = part_nodes[mask]
-    if ignore_top_h:
-        log('Applying ignore_top_h: ignoring nodes with z >= {0}'.format(
-            ignore_top_h))
-        mask = coords[:, 2] < (H_model - ignore_top_h)
-        coords = coords[mask]
-        part_nodes = part_nodes[mask]
+
+    if ignore_bot_h is not None:
+        if ignore_bot_h <= 0:
+            ignore_bot_h = None
+        else:
+            log('Applying ignore_bot_h: ignoring nodes with z <= {0}'.format(
+                ignore_bot_h))
+            mask = coords[:, 2] > ignore_bot_h
+            coords = coords[mask]
+            part_nodes = part_nodes[mask]
+
+    if ignore_top_h is not None:
+        if ignore_top_h <= 0:
+            ignore_top_h = None
+        else:
+            log('Applying ignore_top_h: ignoring nodes with z >= {0}'.format(
+                ignore_top_h))
+            mask = coords[:, 2] < (H_model - ignore_top_h)
+            coords = coords[mask]
+            part_nodes = part_nodes[mask]
 
     if use_theta_z_format:
         if nodal_translations == None:
@@ -422,6 +432,7 @@ def translate_nodes_ABAQUS(imperfection_file_name,
 
         return nodal_translations
 
+
 def translate_nodes_ABAQUS_c0(m0, n0, c0, funcnum,
                               model_name,
                               part_name,
@@ -429,8 +440,8 @@ def translate_nodes_ABAQUS_c0(m0, n0, c0, funcnum,
                               semi_angle=0.,
                               scaling_factor=1.,
                               fem_meridian_bot2top=True,
-                              ignore_bot_h=False,
-                              ignore_top_h=False):
+                              ignore_bot_h=None,
+                              ignore_top_h=None):
     r"""Translates the nodes in Abaqus based on a Fourier series
 
     The Fourier Series can be a half-sine, half-cosine or a complete Fourier
@@ -466,9 +477,9 @@ def translate_nodes_ABAQUS_c0(m0, n0, c0, funcnum,
     fem_meridian_bot2top : bool, optional
         A boolean indicating if the finite element has the `x` axis starting
         at the bottom or at the top.
-    ignore_bot_h : float, optional
+    ignore_bot_h : None or float, optional
         Used to ignore nodes from the bottom resin ring.
-    ignore_top_h : float, optional
+    ignore_top_h : None or float, optional
         Used to ignore nodes from the top resin ring.
 
     Returns
@@ -495,26 +506,30 @@ def translate_nodes_ABAQUS_c0(m0, n0, c0, funcnum,
 
     part_nodes = np.array(part.nodes)
     coords = np.array([n.coordinates for n in part_nodes])
-    if ignore_bot_h<=0:
-        ignore_bot_h = False
-    if ignore_top_h<=0:
-        ignore_top_h = False
-    if ignore_bot_h:
-        log('Applying ignore_bot_h: ignoring nodes with z <= {0}'.format(
-            ignore_bot_h))
-        mask = coords[:, 2] > ignore_bot_h
-        coords = coords[mask]
-        part_nodes = part_nodes[mask]
-    if ignore_top_h:
-        log('Applying ignore_top_h: ignoring nodes with z >= {0}'.format(
-            ignore_top_h))
-        mask = coords[:, 2] < (H_model - ignore_top_h)
-        coords = coords[mask]
-        part_nodes = part_nodes[mask]
 
-    if not ignore_bot_h:
+    if ignore_bot_h is not None:
+        if ignore_bot_h <= 0:
+            ignore_bot_h = None
+        else:
+            log('Applying ignore_bot_h: ignoring nodes with z <= {0}'.format(
+                ignore_bot_h))
+            mask = coords[:, 2] > ignore_bot_h
+            coords = coords[mask]
+            part_nodes = part_nodes[mask]
+
+    if ignore_top_h is not None:
+        if ignore_top_h <= 0:
+            ignore_top_h = None
+        else:
+            log('Applying ignore_top_h: ignoring nodes with z >= {0}'.format(
+                ignore_top_h))
+            mask = coords[:, 2] < (H_model - ignore_top_h)
+            coords = coords[mask]
+            part_nodes = part_nodes[mask]
+
+    if ignore_bot_h is None:
         ignore_bot_h = 0
-    if not ignore_top_h:
+    if ignore_top_h is None:
         ignore_top_h = 0
     H_eff = H_model - (ignore_bot_h + ignore_top_h)
     if fem_meridian_bot2top:
@@ -771,6 +786,7 @@ def change_thickness_ABAQUS(imperfection_file_name,
     original_layup.suppress()
 
     return elems_t, t_set
+
 
 if __name__=='__main__':
     cc = stds['desicos_study'].ccs[1]

@@ -19,8 +19,6 @@ file had been made available.
 
    static.rst
    dynamic.rst
-   interpolate.rst
-   fit_data.rst
-   raw_file.rst
+   processing_measured_imp_data/processing_measured_imp_data.rst
    add_file.rst
    table_old_new.rst
