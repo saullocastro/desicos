@@ -1,0 +1,172 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Cone / Cylinder DataBase (desicos.conecylDB) &mdash; DESICOS 2.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '2.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../../_static/desicos.png"/>
+    <link rel="top" title="DESICOS 2.0.0 documentation" href="../../index.html" />
+    <link rel="up" title="Tutorials" href="../index.html" />
+    <link rel="next" title="Static Databases" href="static.html" />
+    <link rel="prev" title="Python API" href="../abaqus/python_API.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../../np-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="static.html" title="Static Databases"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../abaqus/python_API.html" title="Python API"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">DESICOS 2.0.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Tutorials</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="cone-cylinder-database-desicos-conecyldb">
+<span id="tutorials-conecyldb"></span><h1>Cone / Cylinder DataBase (<a class="reference internal" href="../../modules/conecylDB/index.html#module-desicos.conecylDB" title="desicos.conecylDB"><tt class="xref py py-mod docutils literal"><span class="pre">desicos.conecylDB</span></tt></a>)<a class="headerlink" href="#cone-cylinder-database-desicos-conecyldb" title="Permalink to this headline">¶</a></h1>
+<p>The <a class="reference internal" href="../../modules/conecylDB/index.html#module-desicos.conecylDB" title="desicos.conecylDB"><tt class="xref py py-mod docutils literal"><span class="pre">desicos.conecylDB</span></tt></a> module includes all the information about cones
+and cylinders required to reproduce structures that were investigated
+by many publications and in the context of DESICOS.</p>
+<p>It also includes the tools necessary to work with the Imperfection DataBase.
+Unfortunately, the files composing this database cannot be available with
+the repository, but all the tools required to post process an imperfection
+file had been made available.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="static.html">Static Databases</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="static.html#ccs-py">ccs.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="static.html#laminaprops-py">laminaprops.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="static.html#allowables-py">allowables.py</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="dynamic.html">Dynamic Database</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="dynamic.html#creating-a-material">Creating a material</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic.html#creating-an-allowable">Creating an allowable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic.html#creating-a-cone-cylinder-sample">Creating a cone / cylinder sample</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic.html#deleting">Deleting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="processing_measured_imp_data/processing_measured_imp_data.html">Processing Geometric Imperfection Data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="processing_measured_imp_data/processing_measured_imp_data.html#raw-data-from-mesurement-systems">Raw Data from Mesurement Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processing_measured_imp_data/processing_measured_imp_data.html#inverse-weighted-interpolation">Inverse-Weighted Interpolation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processing_measured_imp_data/processing_measured_imp_data.html#half-cosine-function">Half-Cosine Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processing_measured_imp_data/processing_measured_imp_data.html#additional-examples-using-the-half-cosine-function">Additional Examples using the Half-Cosine Function</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="processing_measured_imp_data/processing_measured_imp_data.html#processing-measured-thickness-imperfection-data">Processing Measured Thickness Imperfection Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="add_file.html">Adding New Imperfection Files</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="add_file.html#mid-surface-imperfections-msi">Mid-Surface Imperfections (MSI)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="add_file.html#thickness-imperfections-ti">Thickness Imperfections (TI)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="table_old_new.html">Old / new best fit radii</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="table_old_new.html#for-mid-surface-imperfection-msi">For Mid-Surface Imperfection (MSI)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="table_old_new.html#for-thickness-imperfection-ti">For Thickness Imperfection (TI)</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/desicos.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../abaqus/python_API.html"
+                        title="previous chapter">Python API</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="static.html"
+                        title="next chapter">Static Databases</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../_sources/tutorials/conecylDB/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../../np-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="static.html" title="Static Databases"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../abaqus/python_API.html" title="Python API"
+             >previous</a> |</li>
+        <li><a href="../../index.html">DESICOS 2.0.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Tutorials</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012-2015 Desicos Improved Software Team.
+      Last updated on Oct 20, 2014.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

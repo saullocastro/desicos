@@ -1,0 +1,305 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Old / new best fit radii &mdash; DESICOS 2.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '2.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../../_static/desicos.png"/>
+    <link rel="top" title="DESICOS 2.0.0 documentation" href="../../index.html" />
+    <link rel="up" title="Cone / Cylinder DataBase (desicos.conecylDB)" href="index.html" />
+    <link rel="next" title="Cone Ply Piece Optimization Tool (CPPOT)" href="../cppot/index.html" />
+    <link rel="prev" title="Adding New Imperfection Files" href="add_file.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../../np-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../cppot/index.html" title="Cone Ply Piece Optimization Tool (CPPOT)"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="add_file.html" title="Adding New Imperfection Files"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">DESICOS 2.0.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Tutorials</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Cone / Cylinder DataBase (<tt class="docutils literal"><span class="pre">desicos.conecylDB</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="old-new-best-fit-radii">
+<h1>Old / new best fit radii<a class="headerlink" href="#old-new-best-fit-radii" title="Permalink to this headline">¶</a></h1>
+<p>The implementation of <a class="reference internal" href="../../modules/conecylDB/index.html#module-desicos.conecylDB.fit_data" title="desicos.conecylDB.fit_data"><tt class="xref py py-mod docutils literal"><span class="pre">the</span> <span class="pre">new</span> <span class="pre">best</span> <span class="pre">fit</span> <span class="pre">algorithms</span></tt></a> allowed
+an improvement of the database by storing the mid-surface imperfections in a
+&#8220;<img class="math" src="../../_images/math/4dc4789b8e2f448615b3e2c2bdc22fb9267f7cd8.png" alt="\theta"/> <img class="math" src="../../_images/math/eb4fcf2ea15c365948abb172ed3693fbc10b3b4a.png" alt="z"/> <img class="math" src="../../_images/math/1dbe4518c654678ac4ebe72ffe8850d2bcad90dc.png" alt="imperfection"/>&#8221; format instead of a &#8220;<img class="math" src="../../_images/math/fcbaa2ea1c6a047f151a45849927929823fc5d88.png" alt="x"/> <img class="math" src="../../_images/math/5a1161c9b9bf6a6addc18ade0f7fe8bb5ce0ba95.png" alt="y"/> <img class="math" src="../../_images/math/eb4fcf2ea15c365948abb172ed3693fbc10b3b4a.png" alt="z"/>&#8221; format and the
+thickness imperfections in a &#8220;<img class="math" src="../../_images/math/4dc4789b8e2f448615b3e2c2bdc22fb9267f7cd8.png" alt="\theta"/> <img class="math" src="../../_images/math/eb4fcf2ea15c365948abb172ed3693fbc10b3b4a.png" alt="z"/> <img class="math" src="../../_images/math/f4a8bb70b73ef02b02700035daacd0eb39a325df.png" alt="thickness"/>&#8221; format instead of a
+&#8220;<img class="math" src="../../_images/math/fcbaa2ea1c6a047f151a45849927929823fc5d88.png" alt="x"/> <img class="math" src="../../_images/math/5a1161c9b9bf6a6addc18ade0f7fe8bb5ce0ba95.png" alt="y"/> <img class="math" src="../../_images/math/eb4fcf2ea15c365948abb172ed3693fbc10b3b4a.png" alt="z"/> <img class="math" src="../../_images/math/f4a8bb70b73ef02b02700035daacd0eb39a325df.png" alt="thickness"/>&#8221; file. This showed to be more convenient to
+interchange imperfections between cones and cylinders and requires less stored
+information.</p>
+<p>The previous files with  &#8220;<img class="math" src="../../_images/math/fcbaa2ea1c6a047f151a45849927929823fc5d88.png" alt="x"/> <img class="math" src="../../_images/math/5a1161c9b9bf6a6addc18ade0f7fe8bb5ce0ba95.png" alt="y"/> <img class="math" src="../../_images/math/eb4fcf2ea15c365948abb172ed3693fbc10b3b4a.png" alt="z"/>&#8221; had been compared with the new
+generated files and the respective best fit radius, which <strong>for
+cones</strong> should be taken as <strong>the radius at the bottom</strong>. Below the old
+radius is compared with the new radius, showing that the files that
+were in the database had already been treated by a best fit algorithm.</p>
+<div class="section" id="for-mid-surface-imperfection-msi">
+<h2>For Mid-Surface Imperfection (MSI)<a class="headerlink" href="#for-mid-surface-imperfection-msi" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="51%" />
+<col width="24%" />
+<col width="24%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Name</th>
+<th class="head">old (mm)</th>
+<th class="head">new (mm)</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>degenhardt_2010_z15</td>
+<td>250.78039</td>
+<td>250.77990</td>
+</tr>
+<tr class="row-odd"><td>degenhardt_2010_z17</td>
+<td>250.77277</td>
+<td>250.77294</td>
+</tr>
+<tr class="row-even"><td>degenhardt_2010_z18</td>
+<td>250.77991</td>
+<td>250.77989</td>
+</tr>
+<tr class="row-odd"><td>degenhardt_2010_z20</td>
+<td>250.72453</td>
+<td>250.72452</td>
+</tr>
+<tr class="row-even"><td>degenhardt_2010_z21</td>
+<td>250.71667</td>
+<td>250.71765</td>
+</tr>
+<tr class="row-odd"><td>degenhardt_2010_z22</td>
+<td>250.78368</td>
+<td>250.78307</td>
+</tr>
+<tr class="row-even"><td>degenhardt_2010_z23</td>
+<td>250.70771</td>
+<td>250.70775</td>
+</tr>
+<tr class="row-odd"><td>degenhardt_2010_z24</td>
+<td>250.71796</td>
+<td>250.71792</td>
+</tr>
+<tr class="row-even"><td>degenhardt_2010_z25</td>
+<td>250.70585</td>
+<td>250.70509</td>
+</tr>
+<tr class="row-odd"><td>degenhardt_2010_z26</td>
+<td>250.74842</td>
+<td>250.74841</td>
+</tr>
+<tr class="row-even"><td>zimmermann_1992_z33</td>
+<td>250.00000</td>
+<td>250.00015</td>
+</tr>
+<tr class="row-odd"><td>awcyl111</td>
+<td>203.34475</td>
+<td>203.34541</td>
+</tr>
+<tr class="row-even"><td>awcyl9201</td>
+<td>203.20508</td>
+<td>202.06214</td>
+</tr>
+<tr class="row-odd"><td>awcyl9202</td>
+<td>201.95339</td>
+<td>202.04195</td>
+</tr>
+<tr class="row-even"><td>awcyl9203</td>
+<td>202.14465</td>
+<td>202.18147</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="for-thickness-imperfection-ti">
+<h2>For Thickness Imperfection (TI)<a class="headerlink" href="#for-thickness-imperfection-ti" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="51%" />
+<col width="24%" />
+<col width="24%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Name</th>
+<th class="head">old (mm)</th>
+<th class="head">new (mm)</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>degenhardt_2010_z15</td>
+<td>250.27002</td>
+<td>250.26986</td>
+</tr>
+<tr class="row-odd"><td>degenhardt_2010_z17</td>
+<td>250.35001</td>
+<td>250.34982</td>
+</tr>
+<tr class="row-even"><td>degenhardt_2010_z18</td>
+<td>250.30003</td>
+<td>250.29986</td>
+</tr>
+<tr class="row-odd"><td>degenhardt_2010_z20</td>
+<td>250.30000</td>
+<td>250.29983</td>
+</tr>
+<tr class="row-even"><td>degenhardt_2010_z21</td>
+<td>250.23999</td>
+<td>250.23985</td>
+</tr>
+<tr class="row-odd"><td>degenhardt_2010_z22</td>
+<td>250.29997</td>
+<td>250.29979</td>
+</tr>
+<tr class="row-even"><td>degenhardt_2010_z23</td>
+<td>250.23001</td>
+<td>250.22987</td>
+</tr>
+<tr class="row-odd"><td>degenhardt_2010_z24</td>
+<td>250.21999</td>
+<td>250.21986</td>
+</tr>
+<tr class="row-even"><td>degenhardt_2010_z25</td>
+<td>250.23999</td>
+<td>250.23985</td>
+</tr>
+<tr class="row-odd"><td>degenhardt_2010_z26</td>
+<td>250.27000</td>
+<td>250.26985</td>
+</tr>
+<tr class="row-even"><td>awcyl111</td>
+<td>203.34464</td>
+<td>250.34530</td>
+</tr>
+<tr class="row-odd"><td>awcyl9201</td>
+<td>202.05996</td>
+<td>202.06213</td>
+</tr>
+<tr class="row-even"><td>awcyl9202</td>
+<td>201.95397</td>
+<td>202.04193</td>
+</tr>
+<tr class="row-odd"><td>awcyl9203</td>
+<td>202.14463</td>
+<td>202.18145</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/desicos.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Old / new best fit radii</a><ul>
+<li><a class="reference internal" href="#for-mid-surface-imperfection-msi">For Mid-Surface Imperfection (MSI)</a></li>
+<li><a class="reference internal" href="#for-thickness-imperfection-ti">For Thickness Imperfection (TI)</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="add_file.html"
+                        title="previous chapter">Adding New Imperfection Files</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../cppot/index.html"
+                        title="next chapter">Cone Ply Piece Optimization Tool (CPPOT)</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../_sources/tutorials/conecylDB/table_old_new.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../../np-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../cppot/index.html" title="Cone Ply Piece Optimization Tool (CPPOT)"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="add_file.html" title="Adding New Imperfection Files"
+             >previous</a> |</li>
+        <li><a href="../../index.html">DESICOS 2.0.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Tutorials</a> &raquo;</li>
+          <li><a href="index.html" >Cone / Cylinder DataBase (<tt class="docutils literal"><span class="pre">desicos.conecylDB</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012-2015 Desicos Improved Software Team.
+      Last updated on Oct 20, 2014.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

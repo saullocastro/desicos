@@ -1,0 +1,563 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>desicos.abaqus.imperfections.uneven_edges &mdash; DESICOS 2.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../../../../_static/desicos.png"/>
+    <link rel="top" title="DESICOS 2.0.0 documentation" href="../../../../index.html" />
+    <link rel="up" title="Module code" href="../../../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../../../../np-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../../index.html">DESICOS 2.0.0 documentation</a> &raquo;</li>
+          <li><a href="../../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for desicos.abaqus.imperfections.uneven_edges</h1><div class="highlight"><pre>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">desicos.conecylDB.interpolate</span> <span class="kn">import</span> <span class="n">interp</span>
+
+<div class="viewcode-block" id="Shim"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.uneven_edges.Shim">[docs]</a><span class="k">class</span> <span class="nc">Shim</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Represents a shim added to one of the edges</span>
+
+<span class="sd">    ============== =========================================================</span>
+<span class="sd">    Attributes     Description</span>
+<span class="sd">    ============== =========================================================</span>
+<span class="sd">    edge           An object of the class :class:`.UnevenTopEdge`</span>
+<span class="sd">    thetadeg       The circumferential position where the shim starts</span>
+<span class="sd">    thick          The shim thickness</span>
+<span class="sd">    width          The shim perimetrical width (along the shell perimeter)</span>
+<span class="sd">    ============== =========================================================</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">thetadeg</span><span class="p">,</span> <span class="n">thick</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">edge</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thetadeg</span> <span class="o">=</span> <span class="n">thetadeg</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thick</span> <span class="o">=</span> <span class="n">thick</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">edge</span> <span class="o">=</span> <span class="n">edge</span>
+        <span class="k">if</span> <span class="n">edge</span><span class="o">!=</span><span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">edge</span><span class="o">.</span><span class="n">shims</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="UnevenBottomEdge"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.uneven_edges.UnevenBottomEdge">[docs]</a><span class="k">class</span> <span class="nc">UnevenBottomEdge</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Uneven Bottom Edge</span>
+
+<span class="sd">    The following attributes are taken into account:</span>
+<span class="sd">    - misalignment of the bottom edge</span>
+<span class="sd">    - presence of shims</span>
+<span class="sd">    - measured uneven edge points</span>
+
+<span class="sd">    ============== =========================================================</span>
+<span class="sd">    Attributes     Description</span>
+<span class="sd">    ============== =========================================================</span>
+<span class="sd">    betadeg        Misalignment of the bottom edge in degrees</span>
+<span class="sd">    omegadeg       Azimuth angle of the bottom edge misalignment in degrees.</span>
+<span class="sd">    shims          ``list`` of shims included to this edge</span>
+<span class="sd">    measured_u3s   Measured points describing the edge imperfection</span>
+<span class="sd">    ============== =========================================================</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">betadeg</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">omegadeg</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39;uneven_bottom_edge&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">impconf</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thetadegs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pts</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shims</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">measured_u3s</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="c"># plotting options</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xaxis</span> <span class="o">=</span> <span class="s">&#39;scaling_factor&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xaxis_label</span> <span class="o">=</span> <span class="s">&#39;Scaling factor&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__nonzero__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="c"># in Python 3 this method was renamed to __bool__</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__bool__</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__bool__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">cc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">conecyl</span>
+        <span class="k">return</span> <span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shims</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">measured_u3s</span><span class="o">!=</span><span class="bp">None</span><span class="p">)</span> <span class="ow">or</span>
+                <span class="nb">bool</span><span class="p">(</span><span class="n">cc</span><span class="o">.</span><span class="n">bc_gaps_bottom_edge</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">rebuild</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">cc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">conecyl</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thetadegs</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">thetadeg</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">shims</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thetadegs</span> <span class="o">+=</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">thetadeg</span> <span class="o">+</span> <span class="mi">360</span><span class="o">*</span><span class="n">s</span><span class="o">.</span><span class="n">width</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">cc</span><span class="o">.</span><span class="n">rbot</span><span class="p">)</span>
+                           <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">shims</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pts</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="UnevenBottomEdge.add_measured_u3s"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.uneven_edges.UnevenBottomEdge.add_measured_u3s">[docs]</a>    <span class="k">def</span> <span class="nf">add_measured_u3s</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thetadegs</span><span class="p">,</span> <span class="n">u3s</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Adds measured data to the uneven bottom edge</span>
+
+<span class="sd">        The edge imperfection that actually goes for each node is a linear</span>
+<span class="sd">        interpolation of the measured values.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        thetadegs : list</span>
+<span class="sd">            The circumferential positions where the imperfect bottom edge was</span>
+<span class="sd">            measured, in degrees.</span>
+<span class="sd">        u3s : list</span>
+<span class="sd">            The measured imperfections representing displacements along the</span>
+<span class="sd">            `X_3` axis :ref:`of the adopted model &lt;figure_conecyl&gt;`.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">thetadegs</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">u3s</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;thetadegs must have the same length of u3s!&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">measured_u3s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">thetadegs</span><span class="p">,</span> <span class="n">u3s</span><span class="p">])</span>
+</div>
+<div class="viewcode-block" id="UnevenBottomEdge.add_shim"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.uneven_edges.UnevenBottomEdge.add_shim">[docs]</a>    <span class="k">def</span> <span class="nf">add_shim</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thetadeg</span><span class="p">,</span> <span class="n">thick</span><span class="p">,</span> <span class="n">width</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Adds a shim to the uneven bottom edge</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        thetadeg : float</span>
+<span class="sd">            Circumferential position where the shim starts.</span>
+<span class="sd">        thick : float</span>
+<span class="sd">            Thickness of the shim.</span>
+<span class="sd">        width : float</span>
+<span class="sd">            Perimetrical width of the shim (along the shell perimeter).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        shim : :class:`.Shim` object.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">shim</span> <span class="o">=</span> <span class="n">Shim</span><span class="p">(</span><span class="n">thetadeg</span><span class="p">,</span> <span class="n">thick</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">edge</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">shim</span>
+</div>
+    <span class="k">def</span> <span class="nf">calc_amplitude</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">amplitude</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scaling_factor</span>
+
+<div class="viewcode-block" id="UnevenBottomEdge.create"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.uneven_edges.UnevenBottomEdge.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">r&quot;&quot;&quot;Creates the uneven bottom edge imperfections</span>
+
+<span class="sd">        The uneven bottom edge will be represented by many GAP elements</span>
+<span class="sd">        created in such a way to consider all the imperfections contained in</span>
+<span class="sd">        the current :class:`.UnevenBottomEdge` object.</span>
+
+<span class="sd">        The output file ``cc.model_name + &#39;_bottom_edge.gaps&#39;`` will be</span>
+<span class="sd">        created, where ``cc`` is the :class:`.ConeCyl` object that contains</span>
+<span class="sd">        this :class:`.UnevenBottomEdge` object.</span>
+
+<span class="sd">        The following steps are executed:</span>
+
+<span class="sd">        - get the `\theta` coordinate of the bottom nodes from the shell and</span>
+<span class="sd">          bottom resin rings</span>
+
+<span class="sd">        - get imperfection from the ``shims`` attribute</span>
+
+<span class="sd">        - get any additional imperfection of the bottom edge represented by</span>
+<span class="sd">          ``measured_u3s``</span>
+
+<span class="sd">        Assumptions:</span>
+
+<span class="sd">        - for a given `\theta` coordinate the uneven displacement is the same</span>
+<span class="sd">          for all the shell and resin ring nodes</span>
+
+<span class="sd">        .. note:: Must be called from Abaqus</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">abaqus</span> <span class="kn">import</span> <span class="n">mdb</span>
+        <span class="kn">from</span> <span class="nn">abaqusConstants</span> <span class="kn">import</span> <span class="p">(</span><span class="n">PIN_MPC</span><span class="p">,</span> <span class="n">DOF_MODE_MPC</span><span class="p">)</span>
+        <span class="kn">from</span> <span class="nn">regionToolset</span> <span class="kn">import</span> <span class="n">Region</span>
+
+        <span class="kn">from</span> <span class="nn">desicos.abaqus.abaqus_functions</span> <span class="kn">import</span> <span class="n">edit_keywords</span>
+
+        <span class="n">cc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">conecyl</span>
+        <span class="n">mod</span> <span class="o">=</span> <span class="n">mdb</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="n">cc</span><span class="o">.</span><span class="n">model_name</span><span class="p">]</span>
+        <span class="n">ra</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">rootAssembly</span>
+        <span class="n">nodes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ra</span><span class="o">.</span><span class="n">sets</span><span class="p">[</span><span class="s">&#39;shell_bottom_edges&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
+        <span class="n">tshell</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">cc</span><span class="o">.</span><span class="n">plyts</span><span class="p">)</span>
+        <span class="n">cosa</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">cc</span><span class="o">.</span><span class="n">alpharad</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cc</span><span class="o">.</span><span class="n">resin_ring_bottom</span><span class="p">:</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ra</span><span class="o">.</span><span class="n">sets</span><span class="p">[</span><span class="s">&#39;Bottom_IR_faces&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">tmp</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ra</span><span class="o">.</span><span class="n">sets</span><span class="p">[</span><span class="s">&#39;Bottom_OR_faces&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">nodes</span><span class="p">)))</span>
+            <span class="n">coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">n</span><span class="o">.</span><span class="n">coordinates</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">tmp</span><span class="p">])</span>
+            <span class="n">r_nodes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">coords</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">coords</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+            <span class="c"># ignoring nodes that are already pinned to the shell</span>
+            <span class="n">check</span> <span class="o">=</span> <span class="p">((</span><span class="n">r_nodes</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">cc</span><span class="o">.</span><span class="n">rbot</span> <span class="o">-</span> <span class="n">cosa</span><span class="o">*</span><span class="mf">0.51</span><span class="o">*</span><span class="n">tshell</span><span class="p">))</span> <span class="o">|</span>
+                     <span class="p">(</span><span class="n">r_nodes</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">cc</span><span class="o">.</span><span class="n">rbot</span> <span class="o">+</span> <span class="n">cosa</span><span class="o">*</span><span class="mf">0.51</span><span class="o">*</span><span class="n">tshell</span><span class="p">)))</span>
+            <span class="n">nodes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">nodes</span><span class="p">,</span> <span class="n">tmp</span><span class="p">[</span><span class="n">check</span><span class="p">]))</span>
+        <span class="n">coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">n</span><span class="o">.</span><span class="n">coordinates</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">])</span>
+        <span class="n">r_nodes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">coords</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">coords</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">theta_nodes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">coords</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">coords</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span>
+        <span class="c">#</span>
+        <span class="c"># calculating gaps</span>
+        <span class="c">#</span>
+        <span class="c"># contributions from measured edge imperfection</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">measured_u3s</span><span class="o">!=</span><span class="bp">None</span><span class="p">:</span>
+            <span class="n">measured_u3s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">measured_u3s</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">measured_u3s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
+            <span class="n">measured_u3s</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">360</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+        <span class="c">#   calculating u3 for each node</span>
+        <span class="n">u3_nodes</span> <span class="o">=</span> <span class="n">interp</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">theta_nodes</span><span class="p">),</span> <span class="n">measured_u3s</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:],</span>
+                <span class="n">measured_u3s</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:],</span> <span class="n">period</span><span class="o">=</span><span class="mi">360</span><span class="p">)</span>
+
+        <span class="c"># contributions from shims</span>
+        <span class="n">hs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">theta_nodes</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">shims</span><span class="p">:</span>
+            <span class="n">thetarad1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">thetadeg</span><span class="p">)</span>
+            <span class="n">thetarad2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">thetadeg</span> <span class="o">+</span> <span class="mi">360</span><span class="o">*</span><span class="n">s</span><span class="o">.</span><span class="n">width</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">cc</span><span class="o">.</span><span class="n">rbot</span><span class="p">))</span>
+            <span class="n">check</span> <span class="o">=</span> <span class="p">((</span><span class="n">theta_nodes</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="n">thetarad1</span><span class="o">-</span><span class="mf">0.01</span><span class="p">))</span>
+                     <span class="o">&amp;</span> <span class="p">(</span><span class="n">theta_nodes</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="n">thetarad2</span><span class="o">+</span><span class="mf">0.01</span><span class="p">)))</span>
+            <span class="n">hs</span><span class="p">[</span><span class="n">check</span><span class="p">]</span> <span class="o">+=</span> <span class="n">s</span><span class="o">.</span><span class="n">thick</span>
+        <span class="n">u3_nodes</span> <span class="o">+=</span> <span class="n">hs</span>
+
+        <span class="c"># calculating gap values</span>
+        <span class="n">gaps</span> <span class="o">=</span> <span class="n">u3_nodes</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">u3_nodes</span>
+        <span class="c"># creating GAP elements</span>
+        <span class="n">rps_gap</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+        <span class="k">for</span> <span class="n">node</span><span class="p">,</span> <span class="n">gap</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">gaps</span><span class="p">):</span>
+            <span class="n">coord</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">coordinates</span><span class="p">)</span>
+            <span class="n">coord</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-=</span> <span class="n">gap</span>
+            <span class="n">rp</span> <span class="o">=</span> <span class="n">ra</span><span class="o">.</span><span class="n">ReferencePoint</span><span class="p">(</span><span class="n">point</span><span class="o">=</span><span class="n">coord</span><span class="p">)</span>
+            <span class="n">inst_name</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">instanceName</span>
+            <span class="c">#FIXME TODO really bad approach, but couldn&#39; find any other way to</span>
+            <span class="c">#           get the actual node id that is printed in the .inp</span>
+            <span class="c">#           file</span>
+            <span class="n">rp_id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">rp</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;-&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="mi">2</span>
+            <span class="c">#</span>
+            <span class="n">rps_gap</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rp</span><span class="p">)</span>
+            <span class="n">gap_name</span> <span class="o">=</span> <span class="s">&#39;gap_{0}_{1:d}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">inst_name</span><span class="p">,</span> <span class="mi">1000000</span><span class="o">+</span><span class="n">node</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
+            <span class="n">inst_node</span> <span class="o">=</span> <span class="s">&#39;{0}.{1:d}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">inst_name</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
+            <span class="n">text</span> <span class="o">+=</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">*Element, type=GAPUNI, elset={0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">gap_name</span><span class="p">))</span>
+            <span class="n">text</span> <span class="o">+=</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">{0:d},{1},{2:d}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">1000000</span><span class="o">+</span><span class="n">node</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">inst_node</span><span class="p">,</span>
+                     <span class="n">rp_id</span><span class="p">))</span>
+            <span class="n">text</span> <span class="o">+=</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">*GAP, elset={0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">gap_name</span><span class="p">)</span>
+            <span class="n">text</span> <span class="o">+=</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">{0:f},0,0,-1</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">gap</span><span class="p">)</span>
+
+        <span class="n">bottom_name_gaps</span> <span class="o">=</span> <span class="s">&#39;{0}_bottom_edge.gaps&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cc</span><span class="o">.</span><span class="n">model_name</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">bottom_name_gaps</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">uneven_top_edge</span><span class="p">:</span>
+            <span class="n">pattern</span> <span class="o">=</span> <span class="s">&#39;*Instance&#39;</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="s">&#39;*INCLUDE, INPUT={0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">bottom_name_gaps</span><span class="p">)</span>
+            <span class="n">edit_keywords</span><span class="p">(</span><span class="n">mod</span><span class="o">=</span><span class="n">mod</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">text</span><span class="p">,</span> <span class="n">before_pattern</span><span class="o">=</span><span class="n">pattern</span><span class="p">)</span>
+
+        <span class="n">set_RP_bot</span><span class="o">=</span><span class="n">ra</span><span class="o">.</span><span class="n">sets</span><span class="p">[</span><span class="s">&#39;RP_bot&#39;</span><span class="p">]</span>
+        <span class="n">rps</span> <span class="o">=</span> <span class="n">ra</span><span class="o">.</span><span class="n">referencePoints</span>
+        <span class="n">rps_gap_datums</span> <span class="o">=</span> <span class="p">[</span><span class="n">rps</span><span class="p">[</span><span class="n">rp</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="k">for</span> <span class="n">rp</span> <span class="ow">in</span> <span class="n">rps_gap</span><span class="p">]</span>
+        <span class="n">region</span> <span class="o">=</span> <span class="n">Region</span><span class="p">(</span><span class="n">referencePoints</span><span class="o">=</span><span class="n">rps_gap_datums</span><span class="p">)</span>
+        <span class="n">ra_cyl_csys</span> <span class="o">=</span> <span class="n">ra</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="s">&#39;ra_cyl_csys&#39;</span><span class="p">]</span>
+        <span class="n">ra_cyl_csys</span> <span class="o">=</span> <span class="n">ra</span><span class="o">.</span><span class="n">datums</span><span class="p">[</span><span class="n">ra_cyl_csys</span><span class="o">.</span><span class="n">id</span><span class="p">]</span>
+        <span class="n">mod</span><span class="o">.</span><span class="n">MultipointConstraint</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;MPC_RP_GAPs_bot_edge&#39;</span><span class="p">,</span>
+                                 <span class="n">controlPoint</span><span class="o">=</span><span class="n">set_RP_bot</span><span class="p">,</span>
+                                 <span class="n">surface</span><span class="o">=</span><span class="n">region</span><span class="p">,</span>
+                                 <span class="n">mpcType</span><span class="o">=</span><span class="n">PIN_MPC</span><span class="p">,</span>
+                                 <span class="n">userMode</span><span class="o">=</span><span class="n">DOF_MODE_MPC</span><span class="p">,</span>
+                                 <span class="n">userType</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">csys</span><span class="o">=</span><span class="n">ra_cyl_csys</span><span class="p">)</span></div></div>
+<div class="viewcode-block" id="UnevenTopEdge"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.uneven_edges.UnevenTopEdge">[docs]</a><span class="k">class</span> <span class="nc">UnevenTopEdge</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Uneven Top Edge</span>
+
+<span class="sd">    The following attributes are taken into account:</span>
+<span class="sd">    - misalignment of the top edge</span>
+<span class="sd">    - presence of shims</span>
+<span class="sd">    - measured uneven edge points</span>
+
+<span class="sd">    ============== =========================================================</span>
+<span class="sd">    Attributes     Description</span>
+<span class="sd">    ============== =========================================================</span>
+<span class="sd">    betadeg        Misalignment of the top edge in degrees</span>
+<span class="sd">    omegadeg       Azimuth angle of the top edge misalignment in degrees.</span>
+<span class="sd">    shims          ``list`` of shims included to this edge</span>
+<span class="sd">    measured_u3s   Measured points describing the edge imperfection</span>
+<span class="sd">    ============== =========================================================</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">betadeg</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">omegadeg</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39;uneven_top_edge&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">impconf</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">betadeg</span> <span class="o">=</span> <span class="n">betadeg</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">omegadeg</span> <span class="o">=</span> <span class="n">omegadeg</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thetadegs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pts</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shims</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">measured_u3s</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="c"># plotting options</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xaxis</span> <span class="o">=</span> <span class="s">&#39;scaling_factor&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xaxis_label</span> <span class="o">=</span> <span class="s">&#39;Scaling factor&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__nonzero__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="c"># in Python 3 this method was renamed to __bool__</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__bool__</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__bool__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">cc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">conecyl</span>
+        <span class="k">return</span> <span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">betadeg</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shims</span><span class="p">)</span> <span class="ow">or</span>
+                <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">measured_u3s</span><span class="o">!=</span><span class="bp">None</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">bool</span><span class="p">(</span><span class="n">cc</span><span class="o">.</span><span class="n">bc_gaps_top_edge</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">rebuild</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">cc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">conecyl</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thetadegs</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">thetadeg</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">shims</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thetadegs</span> <span class="o">+=</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">thetadeg</span> <span class="o">+</span> <span class="mi">360</span><span class="o">*</span><span class="n">s</span><span class="o">.</span><span class="n">width</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">cc</span><span class="o">.</span><span class="n">rtop</span><span class="p">)</span>
+                           <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">shims</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pts</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="UnevenTopEdge.add_measured_u3s"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.uneven_edges.UnevenTopEdge.add_measured_u3s">[docs]</a>    <span class="k">def</span> <span class="nf">add_measured_u3s</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thetadegs</span><span class="p">,</span> <span class="n">u3s</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Adds measured data to the uneven top edge</span>
+
+<span class="sd">        The edge imperfection that actually goes for each node is a linear</span>
+<span class="sd">        interpolation of the measured values.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        thetadegs : list</span>
+<span class="sd">            The circumferential positions where the imperfect top edge was</span>
+<span class="sd">            measured, in degrees.</span>
+<span class="sd">        u3s : list</span>
+<span class="sd">            The measured imperfections representing displacements along the</span>
+<span class="sd">            `X_3` axis :ref:`of the adopted model &lt;figure_conecyl&gt;`.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">thetadegs</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">u3s</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;thetadegs must have the same length of u3s!&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">measured_u3s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">thetadegs</span><span class="p">,</span> <span class="n">u3s</span><span class="p">])</span>
+</div>
+<div class="viewcode-block" id="UnevenTopEdge.add_shim"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.uneven_edges.UnevenTopEdge.add_shim">[docs]</a>    <span class="k">def</span> <span class="nf">add_shim</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thetadeg</span><span class="p">,</span> <span class="n">thick</span><span class="p">,</span> <span class="n">width</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Adds a shim to the uneven top edge</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        thetadeg : float</span>
+<span class="sd">            Circumferential position where the shim starts.</span>
+<span class="sd">        thick : float</span>
+<span class="sd">            Thickness of the shim.</span>
+<span class="sd">        width : float</span>
+<span class="sd">            Perimetrical width of the shim (along the shell perimeter).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        shim : :class:`.Shim` object.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">shim</span> <span class="o">=</span> <span class="n">Shim</span><span class="p">(</span><span class="n">thetadeg</span><span class="p">,</span> <span class="n">thick</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">edge</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">shim</span>
+</div>
+    <span class="k">def</span> <span class="nf">calc_amplitude</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">amplitude</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scaling_factor</span>
+
+<div class="viewcode-block" id="UnevenTopEdge.create"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.uneven_edges.UnevenTopEdge.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">r&quot;&quot;&quot;Creates the uneven top edge imperfections</span>
+
+<span class="sd">        The uneven top edge will be represented by many GAP elements created</span>
+<span class="sd">        in such a way to consider all the imperfections contained in the</span>
+<span class="sd">        current :class:`.UnevenTopEdge` object.</span>
+
+<span class="sd">        The output file ``cc.model_name + &#39;_top_edge.gaps&#39;`` will be created,</span>
+<span class="sd">        where ``cc`` is the :class:`.ConeCyl` object that contains this</span>
+<span class="sd">        :class:`.UnevenTopEdge` object.</span>
+
+<span class="sd">        The following steps are executed:</span>
+
+<span class="sd">        - get the `\theta` coordinate of the top nodes from the shell and top</span>
+<span class="sd">          resin rings</span>
+
+<span class="sd">        - get imperfection from the ``shims`` attribute</span>
+
+<span class="sd">        - get any additional imperfection of the top edge represented by</span>
+<span class="sd">          ``measured_u3s``</span>
+
+<span class="sd">        - include effect of the misalignment angle ``betadeg``</span>
+
+<span class="sd">        Assumptions:</span>
+
+<span class="sd">        - for a given `\theta` coordinate the uneven displacement is the same</span>
+<span class="sd">          for all the shell and resin ring nodes, but the load asymmetry angle</span>
+<span class="sd">          ``cc.betadeg`` may change this equality. The contribution due to</span>
+<span class="sd">          `\beta` is given by:</span>
+
+<span class="sd">          .. math::</span>
+<span class="sd">              \Delta u_3 = R_{top} tan(\beta) cos(\theta-\omega)</span>
+
+<span class="sd">        .. note:: Must be called from Abaqus</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">abaqus</span> <span class="kn">import</span> <span class="n">mdb</span>
+        <span class="kn">from</span> <span class="nn">abaqusConstants</span> <span class="kn">import</span> <span class="p">(</span><span class="n">PIN_MPC</span><span class="p">,</span> <span class="n">DOF_MODE_MPC</span><span class="p">)</span>
+        <span class="kn">from</span> <span class="nn">regionToolset</span> <span class="kn">import</span> <span class="n">Region</span>
+
+        <span class="kn">from</span> <span class="nn">desicos.abaqus.abaqus_functions</span> <span class="kn">import</span> <span class="n">edit_keywords</span>
+
+        <span class="n">cc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">conecyl</span>
+        <span class="n">mod</span> <span class="o">=</span> <span class="n">mdb</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="n">cc</span><span class="o">.</span><span class="n">model_name</span><span class="p">]</span>
+        <span class="n">ra</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">rootAssembly</span>
+        <span class="n">nodes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ra</span><span class="o">.</span><span class="n">sets</span><span class="p">[</span><span class="s">&#39;shell_top_edges&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
+        <span class="n">tshell</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">cc</span><span class="o">.</span><span class="n">plyts</span><span class="p">)</span>
+        <span class="n">cosa</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">cc</span><span class="o">.</span><span class="n">alpharad</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cc</span><span class="o">.</span><span class="n">resin_ring_top</span><span class="p">:</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ra</span><span class="o">.</span><span class="n">sets</span><span class="p">[</span><span class="s">&#39;Top_IR_faces&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">tmp</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ra</span><span class="o">.</span><span class="n">sets</span><span class="p">[</span><span class="s">&#39;Top_OR_faces&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">nodes</span><span class="p">)))</span>
+            <span class="n">coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">n</span><span class="o">.</span><span class="n">coordinates</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">tmp</span><span class="p">])</span>
+            <span class="n">r_nodes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">coords</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">coords</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+            <span class="c"># ignoring nodes that are already pinned to the shell</span>
+            <span class="n">check</span> <span class="o">=</span> <span class="p">((</span><span class="n">r_nodes</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">cc</span><span class="o">.</span><span class="n">rtop</span> <span class="o">-</span> <span class="n">cosa</span><span class="o">*</span><span class="mf">0.51</span><span class="o">*</span><span class="n">tshell</span><span class="p">))</span> <span class="o">|</span>
+                     <span class="p">(</span><span class="n">r_nodes</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">cc</span><span class="o">.</span><span class="n">rtop</span> <span class="o">+</span> <span class="n">cosa</span><span class="o">*</span><span class="mf">0.51</span><span class="o">*</span><span class="n">tshell</span><span class="p">)))</span>
+            <span class="n">nodes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">nodes</span><span class="p">,</span> <span class="n">tmp</span><span class="p">[</span><span class="n">check</span><span class="p">]))</span>
+        <span class="n">coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">n</span><span class="o">.</span><span class="n">coordinates</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">])</span>
+        <span class="n">r_nodes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">coords</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">coords</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">theta_nodes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">coords</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">coords</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span>
+        <span class="c">#</span>
+        <span class="c"># calculating gaps</span>
+        <span class="c">#</span>
+        <span class="c"># contributions from measured edge imperfection</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">measured_u3s</span><span class="o">!=</span><span class="bp">None</span><span class="p">:</span>
+            <span class="n">measured_u3s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">measured_u3s</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">measured_u3s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
+            <span class="n">measured_u3s</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">360</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+        <span class="c">#   calculating u3 for each node</span>
+        <span class="n">u3_nodes</span> <span class="o">=</span> <span class="n">interp</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">theta_nodes</span><span class="p">),</span> <span class="n">measured_u3s</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:],</span>
+                <span class="n">measured_u3s</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:],</span> <span class="n">period</span><span class="o">=</span><span class="mi">360</span><span class="p">)</span>
+        <span class="c">#   applying load asymmetry according to cc.betarad and omega</span>
+        <span class="n">betarad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">cc</span><span class="o">.</span><span class="n">betadeg</span><span class="p">)</span>
+        <span class="n">omegarad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">cc</span><span class="o">.</span><span class="n">omegadeg</span><span class="p">)</span>
+        <span class="n">u3_nodes</span> <span class="o">-=</span> <span class="n">cc</span><span class="o">.</span><span class="n">rtop</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">betarad</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta_nodes</span><span class="o">-</span><span class="n">omegarad</span><span class="p">)</span>
+
+        <span class="c"># contributions from shims</span>
+        <span class="n">hs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">theta_nodes</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">shims</span><span class="p">:</span>
+            <span class="n">thetarad1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">thetadeg</span><span class="p">)</span>
+            <span class="n">thetarad2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">thetadeg</span> <span class="o">+</span> <span class="mi">360</span><span class="o">*</span><span class="n">s</span><span class="o">.</span><span class="n">width</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">cc</span><span class="o">.</span><span class="n">rtop</span><span class="p">))</span>
+            <span class="n">check</span> <span class="o">=</span> <span class="p">((</span><span class="n">theta_nodes</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="n">thetarad1</span><span class="o">-</span><span class="mf">0.01</span><span class="p">))</span>
+                     <span class="o">&amp;</span> <span class="p">(</span><span class="n">theta_nodes</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="n">thetarad2</span><span class="o">+</span><span class="mf">0.01</span><span class="p">)))</span>
+            <span class="n">hs</span><span class="p">[</span><span class="n">check</span><span class="p">]</span> <span class="o">+=</span> <span class="n">s</span><span class="o">.</span><span class="n">thick</span>
+        <span class="n">u3_nodes</span> <span class="o">-=</span> <span class="n">hs</span>
+
+        <span class="c"># calculating gap values</span>
+        <span class="n">gaps</span> <span class="o">=</span> <span class="n">u3_nodes</span> <span class="o">-</span> <span class="n">u3_nodes</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+        <span class="c"># creating GAP elements</span>
+        <span class="n">rps_gap</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+        <span class="k">for</span> <span class="n">node</span><span class="p">,</span> <span class="n">gap</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">gaps</span><span class="p">):</span>
+            <span class="n">coord</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">coordinates</span><span class="p">)</span>
+            <span class="n">coord</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+=</span> <span class="n">gap</span>
+            <span class="n">rp</span> <span class="o">=</span> <span class="n">ra</span><span class="o">.</span><span class="n">ReferencePoint</span><span class="p">(</span><span class="n">point</span><span class="o">=</span><span class="n">coord</span><span class="p">)</span>
+            <span class="n">inst_name</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">instanceName</span>
+            <span class="c">#FIXME TODO really bad approach, but couldn&#39; find any other way to</span>
+            <span class="c">#           get the actual node id that is printed in the .inp</span>
+            <span class="c">#           file</span>
+            <span class="n">rp_id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">rp</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;-&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="mi">2</span>
+            <span class="c">#</span>
+            <span class="n">rps_gap</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rp</span><span class="p">)</span>
+            <span class="n">gap_name</span> <span class="o">=</span> <span class="s">&#39;gap_{0}_{1:d}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">inst_name</span><span class="p">,</span> <span class="mi">2000000</span><span class="o">+</span><span class="n">node</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
+            <span class="n">inst_node</span> <span class="o">=</span> <span class="s">&#39;{0}.{1:d}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">inst_name</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
+            <span class="n">text</span> <span class="o">+=</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">*Element, type=GAPUNI, elset={0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">gap_name</span><span class="p">))</span>
+            <span class="n">text</span> <span class="o">+=</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">{0:d},{1:d},{2}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">2000000</span><span class="o">+</span><span class="n">node</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">rp_id</span><span class="p">,</span>
+                     <span class="n">inst_node</span><span class="p">))</span>
+            <span class="n">text</span> <span class="o">+=</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">*GAP, elset={0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">gap_name</span><span class="p">)</span>
+            <span class="n">text</span> <span class="o">+=</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">{0:f},0,0,-1</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">gap</span><span class="p">)</span>
+
+        <span class="n">top_name_gaps</span> <span class="o">=</span> <span class="s">&#39;{0}_top_edge.gaps&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cc</span><span class="o">.</span><span class="n">model_name</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">top_name_gaps</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+        <span class="n">pattern</span> <span class="o">=</span> <span class="s">&#39;*Instance&#39;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">uneven_bottom_edge</span><span class="p">:</span>
+            <span class="n">bottom_name_gaps</span> <span class="o">=</span> <span class="s">&#39;{0}_bottom_edge.gaps&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cc</span><span class="o">.</span><span class="n">model_name</span><span class="p">)</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="s">&#39;*INCLUDE, INPUT={0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">bottom_name_gaps</span><span class="p">)</span>
+            <span class="n">text</span> <span class="o">+=</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">**</span><span class="se">\n</span><span class="s">*INCLUDE, INPUT={0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">top_name_gaps</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="s">&#39;*INCLUDE, INPUT={0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">top_name_gaps</span><span class="p">)</span>
+        <span class="n">edit_keywords</span><span class="p">(</span><span class="n">mod</span><span class="o">=</span><span class="n">mod</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">text</span><span class="p">,</span> <span class="n">before_pattern</span><span class="o">=</span><span class="n">pattern</span><span class="p">,</span> <span class="n">insert</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+        <span class="n">set_RP_top</span><span class="o">=</span><span class="n">ra</span><span class="o">.</span><span class="n">sets</span><span class="p">[</span><span class="s">&#39;RP_top&#39;</span><span class="p">]</span>
+        <span class="n">rps</span> <span class="o">=</span> <span class="n">ra</span><span class="o">.</span><span class="n">referencePoints</span>
+        <span class="n">rps_gap_datums</span> <span class="o">=</span> <span class="p">[</span><span class="n">rps</span><span class="p">[</span><span class="n">rp</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="k">for</span> <span class="n">rp</span> <span class="ow">in</span> <span class="n">rps_gap</span><span class="p">]</span>
+        <span class="n">region</span> <span class="o">=</span> <span class="n">Region</span><span class="p">(</span><span class="n">referencePoints</span><span class="o">=</span><span class="n">rps_gap_datums</span><span class="p">)</span>
+        <span class="n">ra_cyl_csys</span> <span class="o">=</span> <span class="n">ra</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="s">&#39;ra_cyl_csys&#39;</span><span class="p">]</span>
+        <span class="n">ra_cyl_csys</span> <span class="o">=</span> <span class="n">ra</span><span class="o">.</span><span class="n">datums</span><span class="p">[</span><span class="n">ra_cyl_csys</span><span class="o">.</span><span class="n">id</span><span class="p">]</span>
+        <span class="n">mod</span><span class="o">.</span><span class="n">MultipointConstraint</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;MPC_RP_GAPs_top_edge&#39;</span><span class="p">,</span>
+                                 <span class="n">controlPoint</span><span class="o">=</span><span class="n">set_RP_top</span><span class="p">,</span>
+                                 <span class="n">surface</span><span class="o">=</span><span class="n">region</span><span class="p">,</span>
+                                 <span class="n">mpcType</span><span class="o">=</span><span class="n">PIN_MPC</span><span class="p">,</span>
+                                 <span class="n">userMode</span><span class="o">=</span><span class="n">DOF_MODE_MPC</span><span class="p">,</span>
+                                 <span class="n">userType</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">csys</span><span class="o">=</span><span class="n">ra_cyl_csys</span><span class="p">)</span>
+</pre></div></div></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/desicos.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../../../../np-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../../index.html">DESICOS 2.0.0 documentation</a> &raquo;</li>
+          <li><a href="../../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012-2015 Desicos Improved Software Team.
+      Last updated on Oct 20, 2014.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

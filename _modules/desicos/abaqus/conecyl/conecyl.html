@@ -1,0 +1,1246 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>desicos.abaqus.conecyl.conecyl &mdash; DESICOS 2.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../../../../_static/desicos.png"/>
+    <link rel="top" title="DESICOS 2.0.0 documentation" href="../../../../index.html" />
+    <link rel="up" title="Module code" href="../../../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../../../../np-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../../index.html">DESICOS 2.0.0 documentation</a> &raquo;</li>
+          <li><a href="../../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for desicos.abaqus.conecyl.conecyl</h1><div class="highlight"><pre>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
+<span class="kn">import</span> <span class="nn">multiprocessing</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="kn">import</span> <span class="nn">desicos.conecylDB</span> <span class="kn">as</span> <span class="nn">conecylDB</span>
+<span class="kn">from</span> <span class="nn">desicos.logger</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">desicos.abaqus.constants</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">desicos.composite.laminate</span> <span class="kn">import</span> <span class="n">read_stack</span>
+<span class="kn">from</span> <span class="nn">desicos.conecylDB</span> <span class="kn">import</span> <span class="n">fetch</span>
+
+<div class="viewcode-block" id="ConeCyl"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl">[docs]</a><span class="k">class</span> <span class="nc">ConeCyl</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">r&quot;&quot;&quot;ConeCyl object</span>
+
+<span class="sd">    Carries all the information necessary to create a finite element model for</span>
+<span class="sd">    the analysis of conical and cylindrical structures. The tables below show</span>
+<span class="sd">    the attributes grouped by cathegory.</span>
+
+<span class="sd">    =====================  ==================================================</span>
+<span class="sd">    General Attributes     Description</span>
+<span class="sd">    =====================  ==================================================</span>
+<span class="sd">    ``name_DB``            ``str``, name of the corresponding</span>
+<span class="sd">                           :mod:`desicos.conecylDB.ccs` entry</span>
+<span class="sd">    ``model_name``         ``str``, Name of the corresponding model in Abaqus</span>
+<span class="sd">    ``rename``             ``bool``, tells to automatically rename during</span>
+<span class="sd">                           :meth:`rebuild`</span>
+<span class="sd">    ``rebuilt``            ``bool``, tells if :meth:`rebuild` already finished</span>
+<span class="sd">    ``created_model``      ``bool``, tells if the corresponding model was</span>
+<span class="sd">                           already created in Abaqus</span>
+<span class="sd">    ``impconf``            The corresponding imperfection configuration (see</span>
+<span class="sd">                           :class:`.ImpConf`)</span>
+<span class="sd">    =====================  ==================================================</span>
+
+<span class="sd">    =====================  ==================================================</span>
+<span class="sd">    Geometric Attributes   Description</span>
+<span class="sd">    =====================  ==================================================</span>
+<span class="sd">    ``rbot``               Radius at the bottom edge</span>
+<span class="sd">    ``rtop``               Radius at the top edge</span>
+<span class="sd">    ``H``                  Height</span>
+<span class="sd">    ``L``                  Meridional length (same as ``H`` for cylinders)</span>
+<span class="sd">    ``alphadeg``           Cone semi-vertex angle in degrees</span>
+<span class="sd">    =====================  ==================================================</span>
+
+<span class="sd">    =====================  ==================================================</span>
+<span class="sd">    Laminate Attributes    Description</span>
+<span class="sd">    =====================  ==================================================</span>
+<span class="sd">    ``stack``              ``list``, stacking sequence with angles in degrees</span>
+<span class="sd">    ``plyt``               ``float``, ply thickness that will be used for all</span>
+<span class="sd">                           plies</span>
+<span class="sd">    ``plyts``              ``list``, ply thicknesses for each ply (overwrites</span>
+<span class="sd">                           ``plyt`` if both are given). If this has a</span>
+<span class="sd">                           different length than ``stack``, the first</span>
+<span class="sd">                           thickness will be applied for all plies</span>
+<span class="sd">    ``laminapropKey``      ``str``, name of the lamina properties contained in</span>
+<span class="sd">                           the database (see :mod:`conecylDB.laminaprops`</span>
+<span class="sd">    ``laminapropKeys``     ``list`` a list of strings when different lamina</span>
+<span class="sd">                           property names are given for each ply (overwrites</span>
+<span class="sd">                           ``laminapropKey`` when given)</span>
+<span class="sd">    ``laminaprop``         ``list``, lamina properties given as</span>
+<span class="sd">                           ``[E11, E22, nu12, G12, G13, G23]``</span>
+<span class="sd">    ``laminaprops``        ``list`` a list of lists when different lamina</span>
+<span class="sd">                           properties should be used for each ply (overwrites</span>
+<span class="sd">                           ``laminaprop``, ``laminapropKey`` and</span>
+<span class="sd">                           ``laminapropKeys``, when given)</span>
+<span class="sd">    ``allowable``          ``list``, lamina allowables given as</span>
+<span class="sd">                           ``[S11t, S11c, S22t, S22c, S12, S13]``</span>
+<span class="sd">    ``allowables``         ``list`` a list of lists when different lamina</span>
+<span class="sd">                           allowables should be used for each ply</span>
+<span class="sd">    =====================  ==================================================</span>
+
+<span class="sd">    =====================  ==================================================</span>
+<span class="sd">    Load                   Description</span>
+<span class="sd">    =====================  ==================================================</span>
+<span class="sd">    ``displ_controlled``   ``bool``, if the axial compression is displacement</span>
+<span class="sd">                           controlled</span>
+<span class="sd">    ``pressure_load``      ``float``, the pressure load to be applied (a</span>
+<span class="sd">                           positive value will create a positive pressure, if</span>
+<span class="sd">                           ``None, False, 0`` no pressure is applied)</span>
+<span class="sd">    ``pressure_step``      ``int``, if pressure should be applied in the first</span>
+<span class="sd">                           (constant) or second (incremented) step</span>
+<span class="sd">    ``axial_displ``        ``float``, the axial displacement</span>
+
+<span class="sd">                           .. note:: Applicable if ``displ_controlled=True``</span>
+
+<span class="sd">    ``axial_load``         ``float``, the axial load</span>
+
+<span class="sd">                           .. note:: Applicable if ``displ_controlled=False``</span>
+
+<span class="sd">    ``axial_step``         ``int``, if the axial load should be applied in</span>
+<span class="sd">                           the first (constant) or second (incremented) step</span>
+<span class="sd">    ``Nxxtop``             ``str``, allows the use of a general equation for the</span>
+<span class="sd">                           distributed force `N_{xx}` at the top edge. The</span>
+<span class="sd">                           coordinates of the top edge are given in</span>
+<span class="sd">                           cylindrical coordinates: ``R``, ``Th``, ``Z``; and</span>
+<span class="sd">                           common functions like ``cos``, ``sin``, ``tan``,</span>
+<span class="sd">                           ``acos``, ``asin``, ``atan``, ``pow`` and constants</span>
+<span class="sd">                           like ``pi``, ``e`` etc can be used. Example::</span>
+<span class="sd">                               cc.Nxxtop = &quot;cos(Th)+sin(Th)&quot;</span>
+
+<span class="sd">                           .. note:: If ``Nxxtop`` is not given the formula:</span>
+
+<span class="sd">                                     .. math::</span>
+<span class="sd">                                           {N_{xx}}_{top} = \frac{F_C}{2 \pi</span>
+<span class="sd">                                           R_{top} cos(\alpha)}</span>
+<span class="sd">                                     will be adopted, where `F_C` is the</span>
+<span class="sd">                                     ``axial_load`` attribute</span>
+
+<span class="sd">                           .. note:: Applicable if ``displ_controlled=False``</span>
+
+<span class="sd">    ``Nxxtop_vec``         ``tuple``, the direction to apply ``Nxxtop``.</span>
+<span class="sd">                           Applicable only when ``Nxxtop`` is defined. This</span>
+<span class="sd">                           vector is defined with two points in the</span>
+<span class="sd">                           cylindrical coordinate system of :ref:`Figure 1</span>
+<span class="sd">                           &lt;figure_conecyl&gt;`:</span>
+
+<span class="sd">                           .. math::</span>
+<span class="sd">                               ((R_1, Th_1, Z_1), (R_2, Th_2, Z_2))</span>
+
+<span class="sd">                           If no direction is given ``Nxxtop`` will be applied</span>
+<span class="sd">                           along the shell membrane direction</span>
+
+<span class="sd">                           .. note:: Applicable if ``displ_controlled=False``</span>
+
+<span class="sd">    ``linear_buckling``    ``bool``, tells if the current model is for linear</span>
+<span class="sd">                           buckling analysis. If ``True`` the created model</span>
+<span class="sd">                           will have no imperfection and only an unitary axial</span>
+<span class="sd">                           load applied at the top edge</span>
+<span class="sd">    =====================  ==================================================</span>
+<span class="sd">    .. note:: The routines automatically determine whether the load should be</span>
+<span class="sd">              distributed or applied in a reference point based on the defined</span>
+<span class="sd">              boundary conditions</span>
+
+<span class="sd">    =====================  ==================================================</span>
+<span class="sd">    Boundary Conditions    Description</span>
+<span class="sd">    =====================  ==================================================</span>
+<span class="sd">    ``bc_fix_bottom_uR``   ``bool``, if the radial displacement should be</span>
+<span class="sd">                           constrained at the bottom edge (:ref:`cf. Figure 1</span>
+<span class="sd">                           &lt;figure_conecyl&gt;`)</span>
+<span class="sd">    ``bc_fix_bottom_v``    ``bool``, if the circumferential displacement</span>
+<span class="sd">                           should be constrained at the bottom edge (:ref:`cf.</span>
+<span class="sd">                           Figure 1 &lt;figure_conecyl&gt;`)</span>
+<span class="sd">    ``bc_bottom_clamped``  ``bool``, if the bottom edge should be clamped</span>
+
+<span class="sd">                           .. note:: Only applicable when</span>
+<span class="sd">                                     ``cc.resin_ring_bottom==False``</span>
+
+<span class="sd">    ``bc_fix_top_uR``      ``bool``, if the radial displacement should be</span>
+<span class="sd">                           constrained at the top edge (:ref:`cf. Figure 1</span>
+<span class="sd">                           &lt;figure_conecyl&gt;`)</span>
+<span class="sd">    ``bc_fix_top_v``       ``bool``, if the circumferential displacement</span>
+<span class="sd">                           should be constrained at the top edge (:ref:`cf.</span>
+<span class="sd">                           Figure 1 &lt;figure_conecyl&gt;`)</span>
+<span class="sd">    ``bc_top_clamped``     ``bool``, if the top edge should be clamped</span>
+
+<span class="sd">                           .. note:: Only applicable when</span>
+<span class="sd">                                     ``cc.resin_ring_top==False``</span>
+<span class="sd">    =====================  ==================================================</span>
+
+<span class="sd">    =====================  ==================================================</span>
+<span class="sd">    Resin Rings            Description (:ref:`the attributes are illustrated</span>
+<span class="sd">                           here &lt;resin_rings&gt;`)</span>
+<span class="sd">    =====================  ==================================================</span>
+<span class="sd">    ``resin_ring_bottom``  ``bool``, tells if a resin ring should be added</span>
+<span class="sd">                           to the bottom edge</span>
+<span class="sd">    ``resin_ring_top``     ``bool``, tells if a resin ring should be added</span>
+<span class="sd">                           to the top edge</span>
+<span class="sd">    ``resin_numel``        Number of solid elements in the resin ring</span>
+<span class="sd">    ``resin_E``            Young modulus of the resin material</span>
+<span class="sd">    ``resin_nu``           Poisson ratio of the resin material</span>
+<span class="sd">    ``resin_bot_h``        Thickness of the bottom resin ring</span>
+<span class="sd">    ``resin_top_h``        Thickness of the top resin ring</span>
+<span class="sd">    ``resin_bir_w1``       Lower face width of the bottom inner ring</span>
+<span class="sd">    ``resin_bir_w2``       Upper face width of the bottom inner ring</span>
+<span class="sd">    ``resin_bor_w1``       Lower face width of the bottom outer ring</span>
+<span class="sd">    ``resin_bor_w2``       Upper face width of the bottom outer ring</span>
+<span class="sd">    ``resin_tir_w1``       Lower face width of the top inner ring</span>
+<span class="sd">    ``resin_tir_w2``       Upper face width of the top inner ring</span>
+<span class="sd">    ``resin_tor_w1``       Lower face width of the top outer ring</span>
+<span class="sd">    ``resin_tor_w2``       Upper face width of the top outer ring</span>
+<span class="sd">    =====================  ==================================================</span>
+
+<span class="sd">    =====================  ==================================================</span>
+<span class="sd">    Mesh Parameters        Description</span>
+<span class="sd">    =====================  ==================================================</span>
+<span class="sd">    ``numel_r``            Number of elements around the circumference. This</span>
+<span class="sd">                           is sufficient to define the whole mesh size since</span>
+<span class="sd">                           the algorithms will keep an element aspect-ratio</span>
+<span class="sd">                           close to 1:1</span>
+<span class="sd">    ``elem_type``          Element type. Tested with: ``&#39;S4&#39;``, ``&#39;S4R&#39;``,</span>
+<span class="sd">                           ``&#39;S8R&#39;``, ``&#39;S8R5&#39;``</span>
+<span class="sd">    =====================  ==================================================</span>
+
+<span class="sd">    The analysis will be divided in one or two steps, and the corresponding</span>
+<span class="sd">    analysis parameters for each step are ending with ``1`` or ``2``. When</span>
+<span class="sd">    only one step is used the parameters corresponding to step 2 will be</span>
+<span class="sd">    applied.</span>
+
+<span class="sd">    =======================  =================================================</span>
+<span class="sd">    Analysis Parameters      Description</span>
+<span class="sd">    =======================  =================================================</span>
+<span class="sd">    ``separate_load_steps``  ``bool``, tells if  the load steps should be</span>
+<span class="sd">                             separated into two:</span>
+<span class="sd">                                1) constant loads</span>
+<span class="sd">                                2) incremented loads</span>
+<span class="sd">    ``initialInc1``          Initial increment size for step 1</span>
+<span class="sd">    ``initialInc2``          Initial increment size for step 2</span>
+<span class="sd">    ``minInc1``              Minimum increment size for step 1</span>
+<span class="sd">    ``minInc2``              Minimum increment size for step 2</span>
+<span class="sd">    ``maxInc1``              Maximum increment size for step 1</span>
+<span class="sd">    ``maxInc2``              Maximum increment size for step 2</span>
+<span class="sd">    ``maxNumInc1``           Maximum number of increments for step 1</span>
+<span class="sd">    ``maxNumInc2``           Maximum number of increments for step 2</span>
+<span class="sd">    ``damping_factor1``      If `\ne` ``None`` artificial damping will be</span>
+<span class="sd">                             applied to step 1</span>
+<span class="sd">    ``damping_factor2``      If `\ne` ``None`` artificial damping will be</span>
+<span class="sd">                             applied to step 2</span>
+<span class="sd">    ``timeInterval``         ``float``, the time interval where the outputs</span>
+<span class="sd">                             will be printed</span>
+<span class="sd">    ``stress_output``        ``bool``, tells to print stress outputs</span>
+<span class="sd">    ``force_output``         ``bool``, tells to print force outputs</span>
+<span class="sd">    ``output_requests``      ``list``, contains all the output variables that</span>
+<span class="sd">                             will be printed in the output</span>
+<span class="sd">    ``ncpus``                Number of CPUs to run the jobs</span>
+
+<span class="sd">    =======================  =================================================</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">desicos.abaqus.imperfections</span> <span class="kn">as</span> <span class="nn">imperfections</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name_DB</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rename</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">part_name_shell</span> <span class="o">=</span> <span class="s">&#39;Shell&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rebuilt</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">created_model</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="c"># geometry related</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rbot</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rtop</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">H</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">L</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alphadeg</span> <span class="o">=</span> <span class="mf">0.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alpharad</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">betadeg</span> <span class="o">=</span> <span class="mf">0.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">omegadeg</span> <span class="o">=</span> <span class="mf">0.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cutouts</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thetadegs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pts</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c"># resin rings</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resin_ring_bottom</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resin_ring_top</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resin_numel</span> <span class="o">=</span> <span class="mi">3</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resin_E</span> <span class="o">=</span> <span class="mf">2454.5336</span> <span class="c"># MPa</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resin_nu</span> <span class="o">=</span> <span class="mf">0.3</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resin_bot_h</span> <span class="o">=</span> <span class="mi">1</span><span class="o">*</span><span class="mf">25.4</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resin_top_h</span> <span class="o">=</span> <span class="mi">1</span><span class="o">*</span><span class="mf">25.4</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resin_bir_w1</span> <span class="o">=</span> <span class="mi">1</span><span class="o">*</span><span class="mf">25.4</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resin_bir_w2</span> <span class="o">=</span> <span class="mi">1</span><span class="o">*</span><span class="mf">25.4</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resin_bor_w1</span> <span class="o">=</span> <span class="mi">1</span><span class="o">*</span><span class="mf">25.4</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resin_bor_w2</span> <span class="o">=</span> <span class="mi">1</span><span class="o">*</span><span class="mf">25.4</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resin_tir_w1</span> <span class="o">=</span> <span class="mi">1</span><span class="o">*</span><span class="mf">25.4</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resin_tir_w2</span> <span class="o">=</span> <span class="mi">1</span><span class="o">*</span><span class="mf">25.4</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resin_tor_w1</span> <span class="o">=</span> <span class="mi">1</span><span class="o">*</span><span class="mf">25.4</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resin_tor_w2</span> <span class="o">=</span> <span class="mi">1</span><span class="o">*</span><span class="mf">25.4</span>
+
+        <span class="c"># laminaprop related</span>
+        <span class="c"># laminaprop below from COCOMAT, see Degenhardt, 2010</span>
+        <span class="c"># (142.5e3,8.7e3,0.28,5.1e3,5.1e3,3.4e3)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">laminaprop</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="c"># property related</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">laminate_t</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plyt</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stack</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plyts</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">laminaprops</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">allowables</span>  <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">laminapropKey</span>  <span class="o">=</span> <span class="s">&#39;material&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">laminapropKeys</span>  <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lam</span> <span class="o">=</span> <span class="bp">None</span>
+
+        <span class="c"># load related</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">displ_controlled</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pressure_load</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pressure_step</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">axial_displ</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">axial_load</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Nxxtop</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Nxxtop_vec</span> <span class="o">=</span> <span class="p">((</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">axial_step</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">linear_buckling</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">separate_load_steps</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">impconf</span> <span class="o">=</span> <span class="n">imperfections</span><span class="o">.</span><span class="n">ImpConf</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">conecyl</span> <span class="o">=</span> <span class="bp">self</span>
+
+        <span class="c"># boundary conditions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bc_fix_bottom_uR</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bc_fix_bottom_v</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bc_bottom_clamped</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bc_fix_top_uR</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bc_fix_top_v</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bc_top_clamped</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bc_gaps_bottom_edge</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bc_gaps_top_edge</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">distr_load_top</span> <span class="o">=</span> <span class="bp">None</span>
+
+        <span class="c"># mesh related</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">numel_r</span> <span class="o">=</span> <span class="mi">140</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">elem_type</span> <span class="o">=</span> <span class="s">&#39;S8R5&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mesh_size</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">elsize_r</span>  <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">elsize_r2</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">elsize_h</span>  <span class="o">=</span> <span class="bp">None</span>
+
+        <span class="c"># analysis related</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">direct_ABD_input</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="c">#</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ncpus</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">step1Name</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">step2Name</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">minInc1</span> <span class="o">=</span> <span class="mf">1.e-6</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initialInc1</span> <span class="o">=</span> <span class="mf">1.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">maxInc1</span> <span class="o">=</span> <span class="mf">1.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">maxNumInc1</span> <span class="o">=</span> <span class="mi">10000</span>
+        <span class="c">#</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">minInc2</span> <span class="o">=</span> <span class="mf">1.e-6</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initialInc2</span> <span class="o">=</span> <span class="mf">0.01</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">maxInc2</span> <span class="o">=</span> <span class="mf">0.01</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">maxNumInc2</span> <span class="o">=</span> <span class="mi">100000</span>
+        <span class="c">#</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">damping_factor1</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">damping_factor2</span> <span class="o">=</span> <span class="mf">1.e-7</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timeInterval</span> <span class="o">=</span> <span class="mf">0.025</span>
+        <span class="c"># file management related</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tmp_dir</span> <span class="o">=</span> <span class="n">TMP_DIR</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">study</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">study_dir</span> <span class="o">=</span> <span class="n">TMP_DIR</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">TMP_DIR</span><span class="p">,</span> <span class="s">&#39;outputs&#39;</span><span class="p">)</span>
+        <span class="c">#OUTPUTS</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ls_curve</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ener_total</span> <span class="o">=</span> <span class="mf">0.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zdisp</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zload</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stress_min_num</span>     <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stress_min_ms</span>      <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stress_min_pos_num</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stress_max_num</span>     <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stress_max_ms</span>      <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stress_max_pos_num</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hashin_max_num</span>     <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hashin_max_ms</span>      <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hashin_max_pos_num</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_requests</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;UT&#39;</span><span class="p">,</span> <span class="s">&#39;NFORC&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stress_output</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">force_output</span> <span class="o">=</span> <span class="bp">False</span>
+
+<div class="viewcode-block" id="ConeCyl.from_DB"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl.from_DB">[docs]</a>    <span class="k">def</span> <span class="nf">from_DB</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name_DB</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fetch all the cone/cylinder data from the database</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name_DB : str</span>
+<span class="sd">            Name of the corresponding :mod:`desicos.conecylDB.ccs` entry.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            cc : :class:`.ConeCyl` object with the updated properties.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name_DB</span> <span class="o">!=</span> <span class="s">&#39;&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">name_DB</span> <span class="o">=</span> <span class="n">name_DB</span>
+        <span class="n">ccs</span> <span class="o">=</span> <span class="n">conecylDB</span><span class="o">.</span><span class="n">ccs</span><span class="o">.</span><span class="n">ccs</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_DB</span> <span class="ow">in</span> <span class="n">ccs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">ccdict</span> <span class="o">=</span> <span class="n">ccs</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">name_DB</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">ccdict</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">k</span><span class="o">==</span><span class="s">&#39;r&#39;</span><span class="p">:</span>
+                    <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&#39;rbot&#39;</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">k</span><span class="o">==</span><span class="s">&#39;h&#39;</span><span class="p">:</span>
+                    <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&#39;H&#39;</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="s">&#39;pload&#39;</span><span class="p">:</span>
+                    <span class="n">pload</span> <span class="o">=</span> <span class="n">imperfections</span><span class="o">.</span><span class="n">pload</span><span class="o">.</span><span class="n">PLoad</span><span class="p">(</span><span class="n">theta</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span>
+                                                      <span class="n">pt</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                                                      <span class="n">pltotal</span><span class="o">=</span><span class="n">v</span><span class="p">)</span>
+                    <span class="n">pload</span><span class="o">.</span><span class="n">impconf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">impconf</span>
+                    <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">impconf</span><span class="p">,</span> <span class="s">&#39;ploads&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">pload</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">error</span><span class="p">(</span><span class="s">&#39;{0} not found in the conecylDB&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name_DB</span><span class="p">))</span>
+            <span class="k">return</span> <span class="bp">None</span>
+
+        <span class="k">return</span> <span class="bp">self</span>
+</div>
+<div class="viewcode-block" id="ConeCyl.rebuild"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl.rebuild">[docs]</a>    <span class="k">def</span> <span class="nf">rebuild</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">save_rebuild</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Updates the properties of the current :class:`.ConeCyl` object</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        force : bool</span>
+<span class="sd">            Force the update even if it is already rebuilt (even if</span>
+<span class="sd">            the ``rebuilt`` attribute is ``True``).</span>
+<span class="sd">        save_rebuild : bool</span>
+<span class="sd">            Tells if the ``rebuilt`` attribute should be ``True`` after the</span>
+<span class="sd">            update.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rebuilt</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">force</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rename</span> <span class="o">=</span> <span class="bp">False</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">force_output</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">output_requests</span> <span class="o">+=</span> <span class="p">[</span><span class="s">&#39;SF&#39;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">save_rebuild</span><span class="p">:</span>
+            <span class="c">#if len(self.impconf.ploads) == 0:</span>
+                <span class="c">#print &#39;WARNING - separate_load_steps changed to False&#39;</span>
+                <span class="c">#self.separate_load_steps = False</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">separate_load_steps</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">num_of_steps</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">separate_load_steps</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">num_of_steps</span> <span class="o">=</span> <span class="mi">2</span>
+
+        <span class="c"># angle in radians</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">alphadeg</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">alpharad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alphadeg</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">rtop</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rbot</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rbot</span> <span class="o">!=</span> <span class="bp">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">H</span> <span class="o">!=</span> <span class="bp">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpharad</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rtop</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rbot</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpharad</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">H</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">L</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">H</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpharad</span><span class="p">)</span>
+
+        <span class="c"># mesh</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rmesh</span> <span class="o">=</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">rbot</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">rtop</span><span class="p">)</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">rtop</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">rbot</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">rtop</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mesh_size</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">rmesh</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">numel_r</span>
+
+        <span class="c"># imperfections</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">betadeg</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">uneven_top_edge</span><span class="o">.</span><span class="n">betadeg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">betadeg</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">uneven_top_edge</span><span class="o">.</span><span class="n">omegadeg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">omegadeg</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">rebuild</span><span class="p">()</span>
+
+        <span class="c"># cutouts</span>
+        <span class="k">for</span> <span class="n">cutout</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cutouts</span><span class="p">:</span>
+            <span class="n">cutout</span><span class="o">.</span><span class="n">rebuild</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">allowables</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">allowables</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">allowables</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">stack</span><span class="p">]</span>
+
+        <span class="c"># laminapropKeys</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">laminapropKeys</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">laminapropKeys</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">laminapropKey</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">stack</span><span class="p">]</span>
+
+        <span class="c"># laminaprops</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">laminaprops</span><span class="p">:</span>
+            <span class="n">laminaprops</span> <span class="o">=</span> <span class="n">fetch</span><span class="p">(</span><span class="s">&#39;laminaprops&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">laminaprop</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">laminaprops</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">laminaprop</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">stack</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">laminaprops</span> <span class="o">=</span> <span class="p">[</span><span class="n">laminaprops</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">laminapropKeys</span><span class="p">]</span>
+
+        <span class="c"># ply thicknesses</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">plyts</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plyts</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">plyt</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">stack</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plyts</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plyts</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stack</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">plyts</span> <span class="o">=</span> <span class="p">[</span><span class="n">plyts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">stack</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">plyts</span> <span class="o">=</span> <span class="p">[</span><span class="n">plyts</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">stack</span><span class="p">]</span>
+
+        <span class="c"># calculating ABD matrix</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">direct_ABD_input</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">calc_ABD_matrix</span><span class="p">()</span>
+
+        <span class="c"># model_name</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rename</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">study</span><span class="p">:</span>
+                <span class="n">tmp</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">name_DB</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">=</span> <span class="s">&#39;_&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">study</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span>
+                                   <span class="s">&#39;_model_{0:02d}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+
+        <span class="c"># defining if bottom edge will have GAP elements</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">uneven_bottom_edge</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bc_gaps_bottom_edge</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bc_gaps_bottom_edge</span> <span class="o">=</span> <span class="bp">False</span>
+
+        <span class="c"># defining if top edge will have GAP elements</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bc_fix_top_uR</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">bc_fix_top_v</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">displ_controlled</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">uneven_top_edge</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">bc_gaps_top_edge</span> <span class="o">=</span> <span class="bp">True</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">bc_gaps_top_edge</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">bc_gaps_top_edge</span> <span class="o">=</span> <span class="bp">False</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">displ_controlled</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">bc_gaps_top_edge</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">bc_gaps_top_edge</span> <span class="o">=</span> <span class="bp">False</span>
+
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear_buckling</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bc_gaps_bottom_edge</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bc_gaps_top_edge</span> <span class="o">=</span> <span class="bp">False</span>
+
+
+        <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">bc_fix_top_uR</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">bc_fix_top_v</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">Nxxtop</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">distr_load_top</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear_buckling</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">uneven_top_edge</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">distr_load_top</span><span class="p">):</span>
+            <span class="n">warn</span><span class="p">(</span><span class="s">&#39;Distributed load is not compatible with uneven top edge &#39;</span> <span class="o">+</span>
+                 <span class="s">&#39;conditions!&#39;</span><span class="p">)</span>
+            <span class="n">warn</span><span class="p">(</span><span class="s">&#39;Using a concentrated load at the reference point!&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">distr_load_top</span> <span class="o">=</span> <span class="bp">False</span>
+
+        <span class="k">if</span> <span class="n">save_rebuild</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rebuilt</span> <span class="o">=</span> <span class="bp">True</span>
+</div>
+<div class="viewcode-block" id="ConeCyl.prepare_to_save"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl.prepare_to_save">[docs]</a>    <span class="k">def</span> <span class="nf">prepare_to_save</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Prepare the :class:`ConeCyl` to be saved</span>
+
+<span class="sd">        Any reference to Abaqus objects are removed in this method.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rebuilt</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="k">return</span>
+</div>
+<div class="viewcode-block" id="ConeCyl.fr"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl.fr">[docs]</a>    <span class="k">def</span> <span class="nf">fr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculates the radius at a given ``z`` position</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        z : float</span>
+<span class="sd">            Axial position from bottom to top.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        r : float</span>
+<span class="sd">            The calculated radius.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rbot</span> <span class="o">-</span> <span class="n">z</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpharad</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="ConeCyl.r_z_from_pt"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl.r_z_from_pt">[docs]</a>    <span class="k">def</span> <span class="nf">r_z_from_pt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Radius and the axial position from a given normalized position</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        pt : float or np.ndarray</span>
+<span class="sd">            Normalized meridional position.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        r, z : tuple</span>
+<span class="sd">            The radius and the actual axial position at the given normalized</span>
+<span class="sd">            position. It is a tuple of floats if ``pt`` is a float or a tuple</span>
+<span class="sd">            of ``numpy.ndarray`` objects if ``pt`` is an array.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rbot</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rtop</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">rbot</span><span class="p">)</span><span class="o">*</span><span class="n">pt</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">H</span><span class="o">*</span><span class="n">pt</span>
+        <span class="k">return</span> <span class="n">r</span><span class="p">,</span> <span class="n">z</span>
+</div>
+<div class="viewcode-block" id="ConeCyl.create_model"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl.create_model">[docs]</a>    <span class="k">def</span> <span class="nf">create_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Triggers the routines to create the model in Abaqus</span>
+
+<span class="sd">        The auxiliary module ``_create_model.py`` is used, from where the</span>
+<span class="sd">        functions ``_create_mesh()``, ``_create_load_steps()`` and</span>
+<span class="sd">        ``_create_loads_bcs()`` are executed in this order.</span>
+
+<span class="sd">        .. note:: Must be called from Abaqus</span>
+
+<span class="sd">        .. note:: When new functionalities have to be implemented or for any</span>
+<span class="sd">                  debugging purposes, one can conveniently change file</span>
+<span class="sd">                  ``_create_model.py`` directly, and using the ``__main__``</span>
+<span class="sd">                  section at the end of thid file makes it easy to test</span>
+<span class="sd">                  whatever necessary methods. The tests can be repeatedly run</span>
+<span class="sd">                  doing::</span>
+<span class="sd">                      import os</span>
+
+<span class="sd">                      from desicos.abaqus.constants import DAHOME</span>
+<span class="sd">                      os.chdir(os.path.join(DAHOME, &#39;conecyl&#39;))</span>
+<span class="sd">                      execfile(&#39;_create_model.py&#39;)</span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rebuild</span><span class="p">()</span>
+        <span class="kn">from</span> <span class="nn">_create_model</span> <span class="kn">import</span> <span class="p">(</span><span class="n">_create_mesh</span><span class="p">,</span> <span class="n">_create_load_steps</span><span class="p">,</span>
+                                   <span class="n">_create_loads_bcs</span><span class="p">)</span>
+
+        <span class="n">_create_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">_create_load_steps</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">_create_loads_bcs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">created_model</span> <span class="o">=</span> <span class="bp">True</span>
+</div>
+<div class="viewcode-block" id="ConeCyl.write_job"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl.write_job">[docs]</a>    <span class="k">def</span> <span class="nf">write_job</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">submit</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">wait</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">multiple_cores</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Writes the job of the corresponding Abaqus model</span>
+
+<span class="sd">        .. note:: Must be called from Abaqus</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        submit : bool, optional</span>
+<span class="sd">            If the job should be submitted.</span>
+<span class="sd">        wait : bool, optional</span>
+<span class="sd">            If the routine should wait in case the job was submitted.</span>
+<span class="sd">        multiple_cores : bool, optional</span>
+<span class="sd">            If multiple cores should be used in the run. Some licenses are</span>
+<span class="sd">            limited to one core.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">job</span> <span class="o">=</span> <span class="n">__main__</span><span class="o">.</span><span class="n">mdb</span><span class="o">.</span><span class="n">jobs</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">writeInput</span><span class="p">()</span>
+        <span class="n">inppath</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">+</span> <span class="s">&#39;.inp&#39;</span>
+        <span class="k">if</span> <span class="n">submit</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">multiple_cores</span><span class="p">:</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s">&#39;abaqus job={0} input={1} cpus={2}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                          <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">,</span> <span class="n">inppath</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ncpus</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s">&#39;abaqus job={0} input={1}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">,</span>
+                          <span class="n">inppath</span><span class="p">))</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp_dir</span><span class="p">)</span>
+</div>
+    <span class="k">def</span> <span class="nf">read_walltime</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">tmppath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">+</span> <span class="s">&#39;.msg&#39;</span><span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">tmppath</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">tmp</span><span class="p">:</span>
+                <span class="n">lines</span> <span class="o">=</span> <span class="n">tmp</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+                <span class="n">w</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+
+<div class="viewcode-block" id="ConeCyl.attach_results"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl.attach_results">[docs]</a>    <span class="k">def</span> <span class="nf">attach_results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Attach the odb file into Abaqus</span>
+
+<span class="sd">        If the odb file exists it will be attached in ``session.odbs``, in</span>
+<span class="sd">        Abaqus.</span>
+
+<span class="sd">        .. note:: Must be called from Abaqus</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">odbname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">+</span> <span class="s">&#39;.odb&#39;</span>
+        <span class="n">odbpath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">odbname</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">odbpath</span><span class="p">):</span>
+            <span class="n">warn</span><span class="p">(</span><span class="s">&#39;result was not found&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="kn">import</span> <span class="nn">__main__</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="n">__main__</span><span class="o">.</span><span class="n">session</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">odbpath</span> <span class="ow">in</span> <span class="n">session</span><span class="o">.</span><span class="n">odbs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">return</span> <span class="n">session</span><span class="o">.</span><span class="n">openOdb</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">odbname</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">odbpath</span><span class="p">,</span> <span class="n">readOnly</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">session</span><span class="o">.</span><span class="n">odbs</span><span class="p">[</span><span class="n">odbname</span><span class="p">]</span>
+</div>
+<div class="viewcode-block" id="ConeCyl.detach_results"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl.detach_results">[docs]</a>    <span class="k">def</span> <span class="nf">detach_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">odb</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Detach an odb file from Abaqus</span>
+
+<span class="sd">        .. note:: Must be called from Abaqus</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        odb : Abaqus&#39; :class:`Odb` object.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">visualization</span>
+        <span class="n">visualization</span><span class="o">.</span><span class="n">closeOdb</span><span class="p">(</span><span class="n">odb</span><span class="p">)</span>
+</div>
+    <span class="k">def</span> <span class="nf">read_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">_read_outputs</span>
+        <span class="k">return</span> <span class="n">_read_outputs</span><span class="o">.</span><span class="n">read_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">plot_displacements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">_plot</span>
+        <span class="k">return</span> <span class="n">_plot</span><span class="o">.</span><span class="n">plot_displacements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">plot_forces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">_plot</span>
+        <span class="k">return</span> <span class="n">_plot</span><span class="o">.</span><span class="n">plot_forces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">plot_stress_analysis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">_plot</span>
+        <span class="k">return</span> <span class="n">_plot</span><span class="o">.</span><span class="n">plot_stress_analysis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="kn">import</span> <span class="nn">abaqus_functions</span>
+        <span class="n">abaqus_functions</span><span class="o">.</span><span class="n">configure_session</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">plot_xy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">_plot</span>
+        <span class="k">return</span> <span class="n">_plot</span><span class="o">.</span><span class="n">plot_xy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ConeCyl.plot_opened"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl.plot_opened">[docs]</a>    <span class="k">def</span> <span class="nf">plot_opened</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">fieldOutputKey</span><span class="p">,</span> <span class="n">vec</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">numel_cir</span><span class="p">,</span>
+            <span class="n">elem_type</span><span class="o">=</span><span class="s">&#39;S4R&#39;</span><span class="p">,</span> <span class="n">ignore</span><span class="o">=</span><span class="p">[],</span> <span class="n">create_npz_only</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+            <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">3.3</span><span class="p">,</span> <span class="mf">3.3</span><span class="p">),</span> <span class="n">save_png</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s">&#39;equal&#39;</span><span class="p">,</span> <span class="n">clean</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+            <span class="n">plot_type</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">outpath</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">pngname</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">npzname</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">pyname</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span>
+            <span class="n">num_levels</span><span class="o">=</span><span class="mi">400</span><span class="p">):</span>
+        <span class="sd">r&quot;&quot;&quot;Print a field output for a cylinder/cone model from Abaqus</span>
+
+<span class="sd">        The ``frame`` and ``nodes`` input types are described in</span>
+<span class="sd">        `Abaqus Scripting Reference Manual</span>
+<span class="sd">        &lt;http://abaqus.me.chalmers.se/v6.11/books/ker/default.htm&gt;`_ and</span>
+<span class="sd">        they can be obtained through::</span>
+
+<span class="sd">            frame = session.odbs[&#39;odb_name.odb&#39;].steps[&#39;step_name&#39;].frames[0]</span>
+<span class="sd">            nodes = mdb.models[&#39;model_name&#39;].parts[&#39;part_name&#39;].nodes</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        frame : OdbFrame</span>
+<span class="sd">            The frame from where the field output will be taken from.</span>
+<span class="sd">        fieldOutputKey : str</span>
+<span class="sd">            The field output key to be used. It must be available in</span>
+<span class="sd">            ``frame.fieldOutputs.keys()``. This function was tested with</span>
+<span class="sd">            ``&#39;UT&#39;`` and ``&#39;U&#39;`` only.</span>
+<span class="sd">        vec : str</span>
+<span class="sd">            The displacement vector to be plotted:</span>
+<span class="sd">            ``&#39;u&#39;``, ``&#39;v&#39;`` or ``&#39;w&#39;``.</span>
+<span class="sd">        nodes : MeshNodeArray</span>
+<span class="sd">            The part nodes.</span>
+<span class="sd">        numel_cir : int</span>
+<span class="sd">            The number of elements around the circumference.</span>
+<span class="sd">        elem_type : str, optional</span>
+<span class="sd">            The element type. The elements ``&#39;S4R&#39;, &#39;S4R5&#39;`` where tested.</span>
+<span class="sd">        ignore : list, optional</span>
+<span class="sd">            A list with the node ids to be ignored. It must contain any nodes</span>
+<span class="sd">            outside the mapped mesh included in ``parts[&#39;part_name&#39;].nodes``.</span>
+<span class="sd">        create_npz_only : bool, optional</span>
+<span class="sd">            If ``True`` only the data belonging to the desired field output</span>
+<span class="sd">            will be saved in a ``.npz`` file, and no plotting is performed.</span>
+<span class="sd">        ax : AxesSubplot, optional</span>
+<span class="sd">            When ``ax`` is given, the contour plot will be created inside it.</span>
+<span class="sd">        figsize : tuple, optional</span>
+<span class="sd">            The figure size given by ``(width, height)``.</span>
+<span class="sd">        save_png : bool, optional</span>
+<span class="sd">            Flag telling whether the contour should be saved to an image file.</span>
+<span class="sd">        aspect : str, optional</span>
+<span class="sd">            String that will be passed to the ``AxesSubplot.set_aspect()``</span>
+<span class="sd">            method.</span>
+<span class="sd">        clean : bool, optional</span>
+<span class="sd">            Clean axes ticks, grids, spines etc.</span>
+<span class="sd">        plot_type : int, optional</span>
+<span class="sd">            See :meth:`plot`.</span>
+<span class="sd">        outpath : str, optional</span>
+<span class="sd">            Output path where the data from Abaqus and the plots are</span>
+<span class="sd">            saved (see notes).</span>
+<span class="sd">        pngname : str, optional</span>
+<span class="sd">            The file name for the generated image file.</span>
+<span class="sd">        npzname : str, optional</span>
+<span class="sd">            The file name for the generated npz file.</span>
+<span class="sd">        pyname : str, optional</span>
+<span class="sd">            The file name for the generated Python file.</span>
+<span class="sd">        num_levels : int, optional</span>
+<span class="sd">            Number of contour levels (higher values make the contour smoother).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        out : tuple</span>
+<span class="sd">            Where ``out[0]`` and ``out[1]`` contain the circumferential and</span>
+<span class="sd">            meridional grids of coordinates and ``out[2]`` the corresponding</span>
+<span class="sd">            field output.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        The data is saved using ``np.savez()`` into ``outpath`` as</span>
+<span class="sd">        ``abaqus_output.npz`` with an accompanying script for plotting</span>
+<span class="sd">        ``abaqus_output_plot.py``, very handy when Matplotlib is not</span>
+<span class="sd">        importable from Abaqus.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">npzname</span><span class="p">:</span>
+            <span class="n">npzname</span> <span class="o">=</span> <span class="s">&#39;abaqus_output.npz&#39;</span>
+        <span class="n">npzname</span> <span class="o">=</span> <span class="n">npzname</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;.npz&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s">&#39;.npz&#39;</span>
+        <span class="n">npzname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outpath</span><span class="p">,</span> <span class="n">npzname</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">pyname</span><span class="p">:</span>
+            <span class="n">pyname</span> <span class="o">=</span> <span class="s">&#39;abaqus_output_plot.py&#39;</span>
+        <span class="n">pyname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outpath</span><span class="p">,</span> <span class="n">pyname</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">pngname</span><span class="p">:</span>
+            <span class="n">pngname</span> <span class="o">=</span> <span class="s">&#39;plot_from_abaqus.png&#39;</span>
+        <span class="n">pngname</span> <span class="o">=</span> <span class="n">pngname</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;.png&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s">&#39;.png&#39;</span>
+        <span class="n">pngname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outpath</span><span class="p">,</span> <span class="n">pngname</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">create_npz_only</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+                <span class="kn">import</span> <span class="nn">matplotlib</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">create_npz_only</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">frame_num</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">frame</span><span class="o">.</span><span class="n">frameValue</span><span class="p">)</span>
+            <span class="n">coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">n</span><span class="o">.</span><span class="n">coordinates</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">nodes</span>
+                               <span class="k">if</span> <span class="n">n</span><span class="o">.</span><span class="n">label</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ignore</span><span class="p">])</span>
+            <span class="c">#TODO include more outputs like stress etc</span>
+            <span class="n">field</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">fieldOutputs</span><span class="p">[</span><span class="n">fieldOutputKey</span><span class="p">]</span>
+
+            <span class="n">uvw_rec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">val</span><span class="o">.</span><span class="n">data</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">field</span><span class="o">.</span><span class="n">values</span>
+                <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">val</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span><span class="o">==</span><span class="s">&#39;INST_SHELL&#39;</span><span class="p">])</span>
+            <span class="n">u_rec</span> <span class="o">=</span> <span class="n">uvw_rec</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">v_rec</span> <span class="o">=</span> <span class="n">uvw_rec</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">w_rec</span> <span class="o">=</span> <span class="n">uvw_rec</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]</span>
+
+            <span class="n">res_alpha</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">v_rec</span><span class="p">,</span> <span class="n">u_rec</span><span class="p">)</span>
+
+            <span class="n">thetas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">coords</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">coords</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+
+            <span class="n">sina</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpharad</span><span class="p">)</span>
+            <span class="n">cosa</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpharad</span><span class="p">)</span>
+
+            <span class="n">ucyl</span> <span class="o">=</span> <span class="o">-</span><span class="n">w_rec</span>
+            <span class="n">vcyl</span> <span class="o">=</span> <span class="n">v_rec</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">thetas</span><span class="p">)</span> <span class="o">-</span> <span class="n">u_rec</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">thetas</span><span class="p">)</span>
+            <span class="n">wcyl</span> <span class="o">=</span> <span class="n">v_rec</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">thetas</span><span class="p">)</span> <span class="o">+</span> <span class="n">u_rec</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">thetas</span><span class="p">)</span>
+            <span class="n">u</span> <span class="o">=</span> <span class="n">wcyl</span><span class="o">*</span><span class="n">sina</span> <span class="o">+</span> <span class="n">ucyl</span><span class="o">*</span><span class="n">cosa</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">vcyl</span>
+            <span class="n">w</span> <span class="o">=</span> <span class="n">wcyl</span><span class="o">*</span><span class="n">cosa</span> <span class="o">-</span> <span class="n">ucyl</span><span class="o">*</span><span class="n">sina</span>
+
+            <span class="n">displ_vecs</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;u&#39;</span><span class="p">:</span><span class="n">u</span><span class="p">,</span> <span class="s">&#39;v&#39;</span><span class="p">:</span><span class="n">v</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">:</span><span class="n">w</span><span class="p">}</span>
+            <span class="n">uvw</span> <span class="o">=</span> <span class="n">displ_vecs</span><span class="p">[</span><span class="n">vec</span><span class="p">]</span>
+
+            <span class="n">zs</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span>
+
+            <span class="n">nt</span> <span class="o">=</span> <span class="n">numel_cir</span>
+            <span class="k">if</span> <span class="s">&#39;S8&#39;</span> <span class="ow">in</span> <span class="n">elem_type</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&#39;{0} elements!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">elem_type</span><span class="p">))</span>
+                <span class="c">#nt *= 2</span>
+
+            <span class="c">#first sort</span>
+            <span class="n">asort</span> <span class="o">=</span> <span class="n">zs</span><span class="o">.</span><span class="n">argsort</span><span class="p">()</span>
+            <span class="n">zs</span> <span class="o">=</span> <span class="n">zs</span><span class="p">[</span><span class="n">asort</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">nt</span><span class="p">)</span>
+            <span class="n">thetas</span> <span class="o">=</span> <span class="n">thetas</span><span class="p">[</span><span class="n">asort</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">nt</span><span class="p">)</span>
+            <span class="n">uvw</span> <span class="o">=</span> <span class="n">uvw</span><span class="p">[</span><span class="n">asort</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">nt</span><span class="p">)</span>
+
+            <span class="c">#second sort</span>
+            <span class="n">asort</span> <span class="o">=</span> <span class="n">thetas</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">asorti</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">asort</span><span class="p">):</span>
+                <span class="n">zs</span><span class="p">[</span><span class="n">i</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">zs</span><span class="p">[</span><span class="n">i</span><span class="p">,:][</span><span class="n">asorti</span><span class="p">]</span>
+                <span class="n">thetas</span><span class="p">[</span><span class="n">i</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">thetas</span><span class="p">[</span><span class="n">i</span><span class="p">,:][</span><span class="n">asorti</span><span class="p">]</span>
+                <span class="n">uvw</span><span class="p">[</span><span class="n">i</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">uvw</span><span class="p">[</span><span class="n">i</span><span class="p">,:][</span><span class="n">asorti</span><span class="p">]</span>
+
+            <span class="n">H</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">H</span>
+            <span class="n">rtop</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rtop</span>
+            <span class="n">rbot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rbot</span>
+            <span class="n">L</span> <span class="o">=</span> <span class="n">H</span><span class="o">/</span><span class="n">cosa</span>
+
+            <span class="k">def</span> <span class="nf">fr</span><span class="p">(</span><span class="n">z</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">rbot</span> <span class="o">-</span> <span class="n">z</span><span class="o">*</span><span class="n">sina</span><span class="o">/</span><span class="n">cosa</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpharad</span><span class="o">==</span><span class="mf">0.</span><span class="p">:</span>
+                <span class="n">plot_type</span><span class="o">=</span><span class="mi">4</span>
+            <span class="k">if</span> <span class="n">plot_type</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+                <span class="n">r_plot</span> <span class="o">=</span> <span class="n">fr</span><span class="p">(</span><span class="n">zs</span><span class="p">)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpharad</span><span class="o">==</span><span class="mf">0.</span><span class="p">:</span>
+                    <span class="n">r_plot_max</span> <span class="o">=</span> <span class="n">L</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">r_plot_max</span> <span class="o">=</span> <span class="n">rtop</span><span class="o">/</span><span class="n">sina</span> <span class="o">+</span> <span class="n">L</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">r_plot_max</span> <span class="o">-</span> <span class="n">r_plot</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">thetas</span><span class="o">*</span><span class="n">sina</span><span class="p">)</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">r_plot</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">thetas</span><span class="o">*</span><span class="n">sina</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">plot_type</span><span class="o">==</span><span class="mi">2</span><span class="p">:</span>
+                <span class="n">r_plot</span> <span class="o">=</span> <span class="n">fr</span><span class="p">(</span><span class="n">zs</span><span class="p">)</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">r_plot</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">thetas</span><span class="o">*</span><span class="n">sina</span><span class="p">)</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">r_plot</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">thetas</span><span class="o">*</span><span class="n">sina</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">plot_type</span><span class="o">==</span><span class="mi">3</span><span class="p">:</span>
+                <span class="n">r_plot</span> <span class="o">=</span> <span class="n">fr</span><span class="p">(</span><span class="n">zs</span><span class="p">)</span>
+                <span class="n">r_plot_max</span> <span class="o">=</span> <span class="n">rtop</span><span class="o">/</span><span class="n">sina</span> <span class="o">+</span> <span class="n">L</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">r_plot_max</span> <span class="o">-</span> <span class="n">r_plot</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">thetas</span><span class="p">)</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">r_plot</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">thetas</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">plot_type</span><span class="o">==</span><span class="mi">4</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">fr</span><span class="p">(</span><span class="n">zs</span><span class="p">)</span><span class="o">*</span><span class="n">thetas</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">zs</span>
+            <span class="k">elif</span> <span class="n">plot_type</span><span class="o">==</span><span class="mi">5</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">thetas</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">zs</span>
+
+            <span class="n">cir</span> <span class="o">=</span> <span class="n">x</span>
+            <span class="n">mer</span> <span class="o">=</span> <span class="n">y</span>
+            <span class="n">field</span> <span class="o">=</span> <span class="n">uvw</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">create_npz_only</span><span class="p">:</span>
+                <span class="n">levels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">field</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">num_levels</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">ax</span><span class="o">==</span><span class="bp">None</span><span class="p">:</span>
+                    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+                    <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span><span class="p">):</span>
+                        <span class="n">ax</span> <span class="o">=</span> <span class="n">ax</span>
+                        <span class="n">fig</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">figure</span>
+                        <span class="n">save_png</span> <span class="o">=</span> <span class="bp">False</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;&quot;ax&quot; must be an Axes object&#39;</span><span class="p">)</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">cir</span><span class="p">,</span> <span class="n">mer</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="n">levels</span><span class="p">)</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="n">aspect</span><span class="p">)</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_ticks_position</span><span class="p">(</span><span class="s">&#39;bottom&#39;</span><span class="p">)</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_ticks_position</span><span class="p">(</span><span class="s">&#39;left&#39;</span><span class="p">)</span>
+                <span class="c">#lim = self.rtop*np.pi</span>
+                <span class="c">#ax.xaxis.set_ticks([-lim, 0, lim])</span>
+                <span class="c">#ax.xaxis.set_ticklabels([r&#39;$-\pi$&#39;, &#39;$0$&#39;, r&#39;$+\pi$&#39;])</span>
+                <span class="c">#ax.set_title(</span>
+                    <span class="c">#r&#39;$PL=20 N$, $F_{{C}}=50 kN$, $w_{{PL}}=\beta$, $mm$&#39;)</span>
+                <span class="k">if</span> <span class="n">clean</span><span class="p">:</span>
+                    <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_ticks_position</span><span class="p">(</span><span class="s">&#39;none&#39;</span><span class="p">)</span>
+                    <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_ticks_position</span><span class="p">(</span><span class="s">&#39;none&#39;</span><span class="p">)</span>
+                    <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_ticklabels</span><span class="p">([])</span>
+                    <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_ticklabels</span><span class="p">([])</span>
+                    <span class="n">ax</span><span class="o">.</span><span class="n">set_frame_on</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">save_png</span><span class="p">:</span>
+                    <span class="n">log</span><span class="p">(</span><span class="s">&#39;Plot saved at: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pngname</span><span class="p">))</span>
+                    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+                    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">pngname</span><span class="p">,</span> <span class="n">transparent</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                                <span class="n">bbox_inches</span><span class="o">=</span><span class="s">&#39;tight&#39;</span><span class="p">,</span> <span class="n">pad_inches</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+                                <span class="n">dpi</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">print</span><span class="p">(</span><span class="s">&#39;Matplotlib cannot be imported from Abaqus&#39;</span><span class="p">)</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">savez</span><span class="p">(</span><span class="n">npzname</span><span class="p">,</span> <span class="n">cir</span><span class="o">=</span><span class="n">cir</span><span class="p">,</span> <span class="n">mer</span><span class="o">=</span><span class="n">mer</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="n">field</span><span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">pyname</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;import os</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;import numpy as np</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;import matplotlib.pyplot as plt</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;tmp = np.load(&#39;abaqus_output.npz&#39;)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;cir = tmp[&#39;cir&#39;]</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;mer = tmp[&#39;mer&#39;]</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;field = tmp[&#39;field&#39;]</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;clean = {0}</span><span class="se">\n</span><span class="s">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">clean</span><span class="p">))</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;pngname = &#39;{0}&#39;</span><span class="se">\n</span><span class="s">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pngname</span><span class="p">))</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;plt.figure(figsize={0})</span><span class="se">\n</span><span class="s">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">figsize</span><span class="p">))</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;ax = plt.gca()</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;levels = np.linspace(field.min(), field.max(), {0})</span><span class="se">\n</span><span class="s">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">num_levels</span><span class="p">))</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;ax.contourf(cir, mer, field, levels=levels)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;ax.grid(b=None)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;ax.set_aspect(&#39;{0}&#39;)</span><span class="se">\n</span><span class="s">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">aspect</span><span class="p">))</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;ax.xaxis.set_ticks_position(&#39;bottom&#39;)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;ax.yaxis.set_ticks_position(&#39;left&#39;)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;ax.xaxis.set_ticks([{0}, 0, {1}])</span><span class="se">\n</span><span class="s">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">rtop</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rtop</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">))</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;ax.xaxis.set_ticklabels([r&#39;$-\pi$&#39;, &#39;$0$&#39;, r&#39;$+\pi$&#39;])</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;ax.set_title(r&#39;Abaqus, $PL=20 N$, $F_{{C}}=50 kN$, $w_{{PL}}=</span><span class="se">\b</span><span class="s">eta$, $mm$&#39;)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;if clean:</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;    ax.xaxis.set_ticks_position(&#39;none&#39;)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;    ax.yaxis.set_ticks_position(&#39;none&#39;)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;    ax.xaxis.set_ticklabels([])</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;    ax.yaxis.set_ticklabels([])</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;    ax.set_frame_on(False)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;if not pngname:</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;    pngname = &#39;abaqus_result.png&#39;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;plt.savefig(pngname, transparent=True,</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;            bbox_inches=&#39;tight&#39;, pad_inches=0.05, dpi=400)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;plt.show()</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&#39;Output exported to &quot;{0}&quot;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">npzname</span><span class="p">))</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&#39;Please run the file &quot;{0}&quot; to plot the output&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                  <span class="n">pyname</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">cir</span><span class="p">,</span> <span class="n">mer</span><span class="p">,</span> <span class="n">field</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">()</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&#39;Opened plot could not be generated! :(&#39;</span><span class="p">)</span>
+</div>
+    <span class="k">def</span> <span class="nf">check_completed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wait</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">print_found</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">rebuilt</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rebuild</span><span class="p">()</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">+</span> <span class="s">&#39;.log&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">wait</span> <span class="o">==</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="n">log</span><span class="p">(</span><span class="s">&#39;Waiting for job completion...&#39;</span><span class="p">)</span>
+        <span class="c">#TODO a general function to check the log file</span>
+        <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">tmp</span><span class="p">):</span>
+                <span class="n">tmpfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">)</span>
+                <span class="n">lines</span> <span class="o">=</span> <span class="n">tmpfile</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+                <span class="n">tmpfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="k">if</span> <span class="n">lines</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;End Abaqus/Standard Analysis&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">print_found</span><span class="p">:</span>
+                        <span class="n">log</span><span class="p">(</span><span class="s">&#39;RUN COMPLETED for model {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">))</span>
+                    <span class="k">return</span> <span class="bp">True</span>
+                <span class="k">elif</span> <span class="n">lines</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;Abaqus/Analysis exited with errors&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">print_found</span><span class="p">:</span>
+                        <span class="n">log</span><span class="p">(</span><span class="s">&#39;RUN COMPLETED WITH ERRORS for model {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">))</span>
+                    <span class="k">return</span> <span class="bp">True</span>
+
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">wait</span><span class="p">:</span>
+                        <span class="n">warn</span><span class="p">(</span><span class="s">&#39;RUN NOT COMPLETED for model {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                             <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">))</span>
+                        <span class="k">return</span> <span class="bp">False</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">wait</span><span class="p">:</span>
+                    <span class="n">warn</span><span class="p">(</span><span class="s">&#39;RUN NOT STARTED for model {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                         <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">))</span>
+                    <span class="k">return</span> <span class="bp">False</span>
+            <span class="k">if</span> <span class="n">wait</span><span class="p">:</span>
+                <span class="kn">import</span> <span class="nn">time</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">stress_analysis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear_buckling</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">True</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_completed</span><span class="p">():</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">read_outputs</span><span class="p">(</span><span class="n">last_frame</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                           <span class="n">last_cross_section</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                           <span class="n">read_fieldOutputs</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="kn">import</span> <span class="nn">_stress_analysis</span>
+        <span class="n">ans</span> <span class="o">=</span> <span class="n">_stress_analysis</span><span class="o">.</span><span class="n">calc_frames</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">read_outputs</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_stress_analysis</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">ans</span>
+
+<div class="viewcode-block" id="ConeCyl.create_cutout"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl.create_cutout">[docs]</a>    <span class="k">def</span> <span class="nf">create_cutout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">numel</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a cutout in the shell surface.</span>
+
+<span class="sd">        This function is buggy, intended to easily create cutouts on the shell</span>
+<span class="sd">        surface. Doesn&#39;t work for all cases and the mesh quality must be</span>
+<span class="sd">        improved.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        theta : float</span>
+<span class="sd">            Cylindrical coordinate theta in degrees.</span>
+<span class="sd">        pt : float</span>
+<span class="sd">            Coordinate z/cylinder height (or cone height).</span>
+<span class="sd">        d : float</span>
+<span class="sd">            Cutout diameter.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">desicos.abaqus.cutout</span> <span class="kn">import</span> <span class="n">Cutout</span>
+        <span class="n">cutobj</span> <span class="o">=</span> <span class="n">Cutout</span><span class="p">()</span>
+        <span class="n">cutobj</span><span class="o">.</span><span class="n">theta</span> <span class="o">=</span> <span class="n">theta</span>
+        <span class="n">cutobj</span><span class="o">.</span><span class="n">pt</span> <span class="o">=</span> <span class="n">pt</span>
+        <span class="n">cutobj</span><span class="o">.</span><span class="n">d</span> <span class="o">=</span> <span class="n">d</span>
+        <span class="k">if</span> <span class="n">numel</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">cutobj</span><span class="o">.</span><span class="n">numel</span> <span class="o">=</span> <span class="n">numel</span>
+        <span class="n">cutobj</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cutouts</span><span class="p">)</span>
+        <span class="n">cutobj</span><span class="o">.</span><span class="n">conecyl</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cutouts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cutobj</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">cutobj</span>
+</div>
+<div class="viewcode-block" id="ConeCyl.calc_ABD_matrix"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl.calc_ABD_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">calc_ABD_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculates the laminate stiffness matrix (ABD matrix)</span>
+
+<span class="sd">        Requires that all the laminate attributes are defines.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        lam : :class:`.Laminate` object.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lam</span> <span class="o">=</span> <span class="n">read_stack</span><span class="p">(</span><span class="n">stack</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stack</span><span class="p">,</span>
+                              <span class="n">plyt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">plyt</span><span class="p">,</span>
+                              <span class="n">laminaprop</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">laminaprop</span><span class="p">,</span>
+                              <span class="n">plyts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">plyts</span><span class="p">,</span>
+                              <span class="n">laminaprops</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">laminaprops</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lam</span>
+</div>
+<div class="viewcode-block" id="ConeCyl.calc_nasaKDF"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl.calc_nasaKDF">[docs]</a>    <span class="k">def</span> <span class="nf">calc_nasaKDF</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculates the KDF using the NASA SP-8007 guideline</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        nasaKDF : float</span>
+<span class="sd">            The knock-down factor (KDF) calculates using the NASA SP-8007.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">calc_ABD_matrix</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">alphadeg</span> <span class="o">&gt;</span> <span class="mf">0.</span> <span class="p">:</span>
+            <span class="n">rm</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rbot</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">rtop</span><span class="p">)</span><span class="o">/</span><span class="mf">2.</span>
+            <span class="n">req</span> <span class="o">=</span> <span class="n">rm</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpharad</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rbot</span>
+        <span class="n">Ex</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lam</span><span class="o">.</span><span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">Ey</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lam</span><span class="o">.</span><span class="n">A</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">Dx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lam</span><span class="o">.</span><span class="n">D</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">Dy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lam</span><span class="o">.</span><span class="n">D</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">teq</span> <span class="o">=</span> <span class="mf">3.4689</span><span class="o">*</span> <span class="p">(</span><span class="n">Dx</span><span class="o">*</span><span class="n">Dy</span><span class="o">/</span><span class="p">(</span><span class="n">Ex</span><span class="o">*</span><span class="n">Ey</span><span class="p">))</span><span class="o">**</span><span class="mf">0.25</span>
+        <span class="n">phi</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mf">16.</span> <span class="o">*</span> <span class="p">(</span><span class="n">req</span><span class="o">/</span><span class="n">teq</span><span class="p">)</span><span class="o">**</span><span class="mf">0.5</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nasaKDF</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">-</span> <span class="mf">0.901</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">e</span><span class="o">**-</span><span class="n">phi</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nasaKDF</span>
+</div>
+<div class="viewcode-block" id="ConeCyl.calc_partitions"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl.calc_partitions">[docs]</a>    <span class="k">def</span> <span class="nf">calc_partitions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thetadegs</span><span class="o">=</span><span class="p">[],</span> <span class="n">pts</span><span class="o">=</span><span class="p">[]):</span>
+        <span class="sd">&quot;&quot;&quot;Updates all circumferential and axial positions to partition</span>
+
+<span class="sd">        This method reads all the imperfections and collects the</span>
+<span class="sd">        circumferential positions ``thetadegs`` and the normalized meridional</span>
+<span class="sd">        positions ``pts`` where partitions should be created. These two lists</span>
+<span class="sd">        will be used in the routines to create an Abaqus model.</span>
+
+<span class="sd">        Parameter</span>
+<span class="sd">        ---------</span>
+<span class="sd">        thetadegs : list, optional</span>
+<span class="sd">            Additional positions where circumferential partitions are desired</span>
+<span class="sd">        pts : list, optional</span>
+<span class="sd">            Additional positions where meridional partitions are desired</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">thetadegs</span> <span class="o">+=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">imp</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">imperfections</span><span class="p">:</span>
+            <span class="n">valid</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="k">for</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">imp</span><span class="o">.</span><span class="n">pts</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">pt</span><span class="o">&lt;</span><span class="mi">0</span> <span class="ow">or</span> <span class="n">pt</span><span class="o">&gt;</span><span class="mf">1.</span><span class="p">:</span>
+                    <span class="n">error</span><span class="p">(</span><span class="s">&#39;Invalid imperfection: {0}, {1}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">imp</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+                          <span class="n">imp</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+                    <span class="n">warn</span><span class="p">(</span><span class="s">&#39;Ignored imperfection: {0}, {1}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">imp</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+                         <span class="n">imp</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+                    <span class="n">valid</span> <span class="o">=</span> <span class="bp">False</span>
+                    <span class="k">break</span>
+            <span class="k">if</span> <span class="n">valid</span><span class="p">:</span>
+                <span class="n">thetadegs</span> <span class="o">+=</span> <span class="n">imp</span><span class="o">.</span><span class="n">thetadegs</span>
+                <span class="n">pts</span> <span class="o">+=</span> <span class="n">imp</span><span class="o">.</span><span class="n">pts</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thetadegs</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">thetadegs</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pts</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">pts</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">thetadegs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pts</span>
+</div>
+<div class="viewcode-block" id="ConeCyl.get_step_name"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl.get_step_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_step_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the step name corresponding to an integer number</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        step : int</span>
+<span class="sd">            A step number. Abaqus&#39; &quot;Initial&quot; step does not count, such that</span>
+<span class="sd">            ``step=1`` will be the first step after the &quot;Initial&quot; step.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        step_name : str</span>
+<span class="sd">            The step name.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">step</span><span class="o">&lt;=</span><span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">step1Name</span>
+        <span class="k">elif</span> <span class="n">step</span><span class="o">&gt;=</span><span class="mi">2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">step2Name</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;Invalid step number!&#39;</span><span class="p">)</span>
+</pre></div></div></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/desicos.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../../../../np-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../../index.html">DESICOS 2.0.0 documentation</a> &raquo;</li>
+          <li><a href="../../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012-2015 Desicos Improved Software Team.
+      Last updated on Oct 20, 2014.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,469 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Virtual Material Model Tool (VMMT) &mdash; DESICOS 2.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../../../_static/desicos.png"/>
+    <link rel="top" title="DESICOS 2.0.0 documentation" href="../../../index.html" />
+    <link rel="up" title="Cone Ply Piece Optimization Tool (CPPOT)" href="../index.html" />
+    <link rel="next" title="References" href="../ref.html" />
+    <link rel="prev" title="GUI for the Cone Ply Piece Optimization Tool" href="../gui/index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../../../np-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../ref.html" title="References"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../gui/index.html" title="GUI for the Cone Ply Piece Optimization Tool"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">DESICOS 2.0.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Tutorials</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Cone Ply Piece Optimization Tool (CPPOT)</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="virtual-material-model-tool-vmmt">
+<h1>Virtual Material Model Tool (VMMT)<a class="headerlink" href="#virtual-material-model-tool-vmmt" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>The basic problem with laminated cones is the change of the local fiber angle
+due to the plane ply parts and the curved cone surface. Because of the curved
+surface the fibers are lying on the geodesic path, see Figure 1. There are two
+different fiber angles <img class="math" src="../../../_images/math/9d5701ac5defbef113046d7dfafad6a6a37c514c.png" alt="\Theta_{s1}"/> and <img class="math" src="../../../_images/math/279a612a1f96b972d2fc6855a54ebc63a345392b.png" alt="\Theta_{s2}"/> at the positions <img class="math" src="../../../_images/math/b7442399db5dac0d97e2692e250a298d334c76d3.png" alt="s_1"/>
+and <img class="math" src="../../../_images/math/3473c14d011d9f1aede5914054e51b46686d5045.png" alt="s_2"/>. The variable s is part of the conical coordinate system. Goldfeld
+<a class="reference internal" href="../ref.html#goldfeld2007" id="id1">[goldfeld2007]</a> describes the local fiber angle <img class="math" src="../../../_images/math/f6479197a297e86fd8493f26228dc4bc10ac492d.png" alt="\Theta"/> as a function of s:</p>
+<div class="math">
+<p><img src="../../../_images/math/c039a25e161ac1f19e936d78490be2193710eeaf.png" alt="\Theta(s)=arcsin \left( \frac{s_1}{s} \cdot sin(\Theta_1) \right)"/></p>
+</div><p>This approach is only valid for the path of a single fiber. A new approach is
+to describe the local fiber angle by the difference between the angle of the
+point of interest and the angle of the starting point of the ply part:</p>
+<div class="math">
+<p><img src="../../../_images/math/f5e17469200e2ee6b61e6e38addd5d0b363a7403.png" alt="\Theta(\phi)= \Theta_1-(\phi-\phi_1)"/></p>
+</div><p>This approach can be used for ply parts with a finite width and is the key
+formula for this program.</p>
+<div class="figure">
+<a class="reference internal image-reference" href="../../../_images/fig_012.png"><img alt="../../../_images/fig_012.png" src="../../../_images/fig_012.png" style="width: 700px;" /></a>
+<p class="caption">Figure 1: Path of Fiber on Cone</p>
+</div>
+<p>The objective of this tool is to calculate the local fiber angle and thickness
+of any given point on a laminated cone. To do this the laminate will be
+rebuild as a virtual model. Each ply (i) consist of a finite number of parts
+(j) with a certain ply angle <img class="math" src="../../../_images/math/2da91ca4eac8f854d9199d2e6615c1b644c6d963.png" alt="\Theta_i"/> and offset angle <img class="math" src="../../../_images/math/f2eee92c82af31a355a430b03a59b1adeb9af3d6.png" alt="\phi_{i,j}"/>. These
+are called ply-parts. After building the model another algorithm determines in
+which ply-parts a given point lies and calculates the local fiber angles and
+thickness.</p>
+<p>This manual is supposed to explain the VMM-program and every function it
+contains. In the ALPHA-Version the program has no GUI and the connection to
+ABAQUS is not yet safe.</p>
+</div>
+<div class="section" id="coordinate-systems">
+<h2>Coordinate systems<a class="headerlink" href="#coordinate-systems" title="Permalink to this headline">¶</a></h2>
+<p>This program works with three different coordinate systems:
+3D-Cartesian:           Used for the model generation in ABAQUS</p>
+<div class="math">
+<p><img src="../../../_images/math/e4aae9567309b8e723cfc314d08390a1478a0b71.png" alt="X,Y,Z \in [-\infty, +\infty]"/></p>
+</div><p>2D-Cartesian:   Used for working in the plane od the unwound cone (Definition
+of Lines, Calculation of crossings,...)</p>
+<div class="math">
+<p><img src="../../../_images/math/b4edaa5f471f5ef80808dcbaa22c9d62618d1920.png" alt="x,y \in [-\infty,+\infty]"/></p>
+</div><p>2D-polar:       Used for working in the plane of the unwound cone (Rotation of
+points, Calculation of angles).</p>
+<div class="math">
+<p><img src="../../../_images/math/ce94015167668842cf05aafb1be725ad05b9daa1.png" alt="\phi \in [0^{\circ}, 360^{\circ}],r \in [0,+\infty]"/></p>
+</div><div class="figure">
+<a class="reference internal image-reference" href="../../../_images/fig_022.png"><img alt="../../../_images/fig_022.png" src="../../../_images/fig_022.png" style="width: 350px;" /></a>
+<p class="caption">Figure 2: 2D-Polar and Cartesian CSYS</p>
+</div>
+<div class="figure">
+<a class="reference internal image-reference" href="../../../_images/fig_032.png"><img alt="../../../_images/fig_032.png" src="../../../_images/fig_032.png" style="width: 700px;" /></a>
+<p class="caption">Figure 3: Relationship between cone and unwound projection</p>
+</div>
+</div>
+<div class="section" id="building-the-vmm">
+<h2>Building the VMM<a class="headerlink" href="#building-the-vmm" title="Permalink to this headline">¶</a></h2>
+<p>The VMM is the virtual model of the lay-up of the laminated cone. Every ply is
+built out of a finite number of parts. Between the parts are no gaps. In the
+ALPHA-Version only two different part shapes are available: rectangular and
+trapezoidal. When using the rectangular shape the parts overlap each other, by
+using the trapezoidal shape this can be avoided.</p>
+<p>The VMM calculates the vertices of every ply-part and groups their
+2D-cartesian coordinates in lists. After building this model it is possible to
+determine on which parts a certain point lies and calculate the local fiber
+angle and thickness.</p>
+<p>The basic process flow for building the VMM is:
+- (1) Get Lay-up Information</p>
+<blockquote>
+<div><p>For every ply:
+- (2) Build a prototype part</p>
+<blockquote>
+<div><p>For every ply-part:
+- (3) Copy and rotate the prototype part</p>
+<blockquote>
+<div>Save Layer part to VMM</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+<p>The three highlighted  tasks are the main tasks of building the VMM:</p>
+<div class="section" id="get-lay-up-information">
+<h3>1. Get Lay-up Information<a class="headerlink" href="#get-lay-up-information" title="Permalink to this headline">¶</a></h3>
+<p>This is done by defining a number of variables:</p>
+<div class="math">
+<p><img src="../../../_images/math/6cb3eca4b3402b93759ebd0138898094d549d104.png" alt="\begin{tabular}{l c r}
+    Variable  &amp; Definition &amp; Format \\
+    \hline
+    E           &amp; Material Paramters, List of floats                 &amp; [E11,E22,G12,nu12,nu21] \\
+    $n_{ply}$   &amp; Number of plies, int                               &amp; $i$ \\
+    Theta       &amp; Nominal fiber angle of each ply, List of floats    &amp; [$\Theta_1,\Theta_2,\dots,\Theta_i$] \\
+    Thick       &amp; Thickness of each ply, List of floats              &amp; [$t_1,t_2,\dots,t_i$] \\
+    $phi_{off}$ &amp; Offset-Angle for each ply, List of floats          &amp; [$\phi_{off,1},\phi_{off,2},\dots,\phi_{off,i}$] \\
+    Shape       &amp; Defining the part shape of each ply, List of ints  &amp; [$S_1,S_2,\dots,S_i$] \\
+    $N_{parts}$ &amp; Number of parts per ply for each ply, List of ints &amp; [$n_1,n_2,\dots,n_i$]
+\end{tabular}"/></p>
+</div><p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">E</span>       <span class="o">=</span> <span class="p">[</span><span class="mi">150</span><span class="p">,</span> <span class="mf">9.08</span><span class="p">,</span> <span class="mf">5.39</span><span class="p">,</span> <span class="mf">0.32</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">]</span>
+<span class="n">n_ply</span>   <span class="o">=</span> <span class="mi">6</span>
+<span class="n">Theta</span>   <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">60.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">60.0</span><span class="p">,</span> <span class="mf">45.0</span><span class="p">,</span><span class="o">-</span><span class="mf">45.0</span><span class="p">]</span>
+<span class="n">Thick</span>   <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">phi_off</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
+<span class="n">Shape</span>   <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">N_parts</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="build-the-prototype-part">
+<h3>2. Build the prototype-part<a class="headerlink" href="#build-the-prototype-part" title="Permalink to this headline">¶</a></h3>
+<p>Instead of calculating each part of a layer independently only one prototype
+part is created and afterwards its vertices are saved, copied and rotated. The
+exact shape of the prototype part depends mainly on the size of the cone
+<img class="math" src="../../../_images/math/096a9b14015c17a796aed3fbfb5ff56b9bb9121e.png" alt="(s_0, s_1, s_2, \alpha)"/>., the nominal fiber angle of the ply (<img class="math" src="../../../_images/math/f6479197a297e86fd8493f26228dc4bc10ac492d.png" alt="\Theta"/>), the
+number of parts per ply (N) and the chosen shape (rectangular, trapezoidal).</p>
+<p>The prototype-part is built by the following function:</p>
+<div class="highlight-python"><div class="highlight"><pre>Bpart.PPr(Theta, N, S, s0, s1, s2, alpha)
+
+Theta  nominal fiber angle of ply, float
+N      number of ply parts, int
+S      shape of ply parts, only ‘1’ and ‘2’ are valid
+s0     s-coordinate of upper cone edge
+s1     s-coordinate of starting point of ply part
+s2     s-coordinate of lower cone edge
+alpha  half cone angle
+</pre></div>
+</div>
+<p>For further explanation of <img class="math" src="../../../_images/math/ddd6a14871c24955f1cf93413790c3abd7a03a0f.png" alt="s_0"/>, <img class="math" src="../../../_images/math/b7442399db5dac0d97e2692e250a298d334c76d3.png" alt="s_1"/> and <img class="math" src="../../../_images/math/3473c14d011d9f1aede5914054e51b46686d5045.png" alt="s_2"/> see Figure 4.</p>
+<div class="figure">
+<a class="reference internal image-reference" href="../../../_images/fig_042.png"><img alt="../../../_images/fig_042.png" src="../../../_images/fig_042.png" style="width: 700px;" /></a>
+<p class="caption">Figure 4: Definition <img class="math" src="../../../_images/math/ddd6a14871c24955f1cf93413790c3abd7a03a0f.png" alt="s_0"/>, <img class="math" src="../../../_images/math/b7442399db5dac0d97e2692e250a298d334c76d3.png" alt="s_1"/> and <img class="math" src="../../../_images/math/3473c14d011d9f1aede5914054e51b46686d5045.png" alt="s_2"/></p>
+</div>
+<p>Basically the function creates four lines (L1, L2, L3, L4) in the two
+dimensional plane of the unwound cone. Each line is defined by their
+functions:</p>
+<div class="math" id="equation-Equation 1">
+<p><span class="eqno">(1)</span><img src="../../../_images/math/242842eb5c33ce459c94f7935e6fdb60f3098872.png" alt="y=m_i \cdot x+b_i"/></p>
+</div><p>Where m is the gradient and b the intercept of the function. The gradient of
+the L1 is calculated by the nominal fiber angle of the ply <img class="math" src="../../../_images/math/f6479197a297e86fd8493f26228dc4bc10ac492d.png" alt="\Theta"/>:</p>
+<div class="math">
+<p><img src="../../../_images/math/db728d98f0af8b1c9a096e5eee21099497e7afbd.png" alt="m_1=tan(\Theta)"/></p>
+</div><p>Than a first point is defined on L1:</p>
+<div class="math">
+<p><img src="../../../_images/math/e19cb8019a7b2f37b157a390568459e123d9c264.png" alt="P_0:  (x_0=s_1, y_0=0)"/></p>
+</div><p>So the intercept of L1 can be calculated by transforming the upper function:</p>
+<div class="math">
+<p><img src="../../../_images/math/f1eaf146459161758c1d4987d870071d5734341d.png" alt="b_1=y_0-m_1 \cdot x_0
+\\
+b_1=0-tan(\Theta) \cdot s_1"/></p>
+</div><p>The function L1 is shown in Figure 5.</p>
+<div class="figure">
+<a class="reference internal image-reference" href="../../../_images/fig_052.png"><img alt="../../../_images/fig_052.png" src="../../../_images/fig_052.png" style="width: 350px;" /></a>
+<p class="caption">Figure 5: Definition of L1</p>
+</div>
+<p>In the next step the crossing between L1 and the circles with radius of <img class="math" src="../../../_images/math/ddd6a14871c24955f1cf93413790c3abd7a03a0f.png" alt="s_0"/>
+and <img class="math" src="../../../_images/math/3473c14d011d9f1aede5914054e51b46686d5045.png" alt="s_2"/> are calculated. A circle can be defined by:</p>
+<div class="math">
+<p><img src="../../../_images/math/183e38864bed4b4f43a11afc2e04933d8fddf2ca.png" alt="R^2=x^2 + y^2"/></p>
+</div><p>For a crossing of a Line the following formula has to be valid:</p>
+<div class="math">
+<p><img src="../../../_images/math/79d9ba978a6a20d0edbc1356a826c9a9b466121b.png" alt="0=x^2+y^2-R^2"/></p>
+</div><p>Now one can insert the function for L1:</p>
+<div class="math">
+<p><img src="../../../_images/math/0b5e78a59de7cbdabb2245f9f446dd16bb76a0d2.png" alt="0=x^2+(m_1 \cdot x + b_1 )^2-R^2
+\\
+0=(1+m_1^2 ) \cdot x^2 + (2\cdot m_1 \cdot b_1 )\cdot x+(b_1^2-R^2)"/></p>
+</div><p>Which is basically a quadratic function and can be solved for
+<img class="math" src="../../../_images/math/8e55893aa54b3bf7a308c1b58e6b6b103b80ca1c.png" alt="x_{1\backslash2}"/> by:</p>
+<div class="math" id="equation-Equation 2">
+<p><span class="eqno">(2)</span><img src="../../../_images/math/db4dba1cf284e6dc7a6b6cac1afbc42028fd7b81.png" alt="x_{1\backslash2} = \frac{-B \pm \sqrt{B^2 - 4AC}}{2A}"/></p>
+</div><p>In this case the three variables are defined as:</p>
+<div class="math">
+<p><img src="../../../_images/math/dbcb500c06d2facd6bdd69719638538cc546e62c.png" alt="A = 1 + m_1^2
+\\
+B = 2 \cdot m_1 \cdot b_1
+\\
+C = b_1^2 - R^2"/></p>
+</div><p>Naturally there are three different types of solutions for this equation. They
+can be easily distinguished by the value of the root argument:</p>
+<ul class="simple">
+<li>(1) <img class="math" src="../../../_images/math/3353acdba59af09cf0dbc646587f4e45adcd7331.png" alt="B^2-4AC&lt;0"/>: The solution is complex and the line does not touch or cut
+the circle</li>
+<li>(2) <img class="math" src="../../../_images/math/6ff9595a4ee9735260c73b0b238364154262e54a.png" alt="B^2-4AC=0"/>: The solution is one real number and the line touches the
+circle at one point</li>
+<li>(3) <img class="math" src="../../../_images/math/7cabdd8aaa802553faab8829f8c446a98b6ffef2.png" alt="B^2-4AC&gt;0"/>: The solution consists out of two real numbers and the line
+cuts the circle at two different points</li>
+</ul>
+<p>For the first line and the outer radius <img class="math" src="../../../_images/math/3473c14d011d9f1aede5914054e51b46686d5045.png" alt="s_2"/> there must be two solutions,
+because <img class="math" src="../../../_images/math/b7442399db5dac0d97e2692e250a298d334c76d3.png" alt="s_1"/> is smaller than <img class="math" src="../../../_images/math/3473c14d011d9f1aede5914054e51b46686d5045.png" alt="s_2"/>. For some combinations of <img class="math" src="../../../_images/math/b7442399db5dac0d97e2692e250a298d334c76d3.png" alt="s_1"/>, <img class="math" src="../../../_images/math/ddd6a14871c24955f1cf93413790c3abd7a03a0f.png" alt="s_0"/> and
+<img class="math" src="../../../_images/math/f6479197a297e86fd8493f26228dc4bc10ac492d.png" alt="\Theta"/> it is possible that the L1 is not cutting the inner circle of <img class="math" src="../../../_images/math/ddd6a14871c24955f1cf93413790c3abd7a03a0f.png" alt="s_0"/>.
+The Prototype-function uses for the construction of the first Line and Points
+only the positive Solution of <em class="xref std std-ref">Equation 2</em>.</p>
+<p>P1 and P2 are the crossing point of L1 and the circle <img class="math" src="../../../_images/math/ddd6a14871c24955f1cf93413790c3abd7a03a0f.png" alt="s_0"/> respectively s_2,
+see Figure 6.</p>
+<div class="figure">
+<a class="reference internal image-reference" href="../../../_images/fig_062.png"><img alt="../../../_images/fig_062.png" src="../../../_images/fig_062.png" style="width: 350px;" /></a>
+<p class="caption">Figure 6: Definition of P0, P1 and P2</p>
+</div>
+<p>The next step is to calculate the point P3. Therefore the angle of a single
+ply part is calculated by:</p>
+<div class="math">
+<p><img src="../../../_images/math/fdc38f6d04b5e87371ca06a72d42d5585de0c4e8.png" alt="\phi_{ply-part} = \frac{\phi_{cone}}{N}
+\\
+\phi_{cone} = 360° \cdot sin(\alpha)"/></p>
+</div><p>In which N is the number of ply-parts in this ply and alpha the half-cone
+angle.  Then the coordinates of P2 are transformed to a polar form:</p>
+<div class="math">
+<p><img src="../../../_images/math/11aff7a8aa406ff8eeaa20385ecafcb039e8bc29.png" alt="P2 : (x_2, y_2) \rightarrow (r_2, \phi_2)"/></p>
+</div><p>And add the angle <img class="math" src="../../../_images/math/c958cf9c5831af3645d330619755bfdce5855218.png" alt="\phi_{ply-part}"/> to <img class="math" src="../../../_images/math/f015299c21452c7cae0018ede46ceb797409f513.png" alt="\phi_2"/> then transformed backwards, see
+also Figure 7.</p>
+<div class="math">
+<p><img src="../../../_images/math/7b51f400d6339b783a51c00d118addcf3c3acb61.png" alt="P3 : (r_2, \phi_2 + \phi_{ply-part}) \ rightarrow (x_3, y_3)"/></p>
+</div><div class="figure">
+<a class="reference internal image-reference" href="../../../_images/fig_072.png"><img alt="../../../_images/fig_072.png" src="../../../_images/fig_072.png" style="width: 350px;" /></a>
+<p class="caption">Figure 7: Creation of P3</p>
+</div>
+<p>The gradient of L3 and also the position of P4 depends on the chosen shape of
+the ply part. For a rectangular the gradient m_3 is equal to m_1 and so L3 is
+defined as:</p>
+<div class="math">
+<p><img src="../../../_images/math/88385282b5eeb0e907cd8ce6dd3eab1b4ef49fba.png" alt="y = m_1 \cdot x + (y_3 - m_1 \cdot x_3)"/></p>
+</div><p>And P4 is the crossing point of L3 and the circle <img class="math" src="../../../_images/math/ddd6a14871c24955f1cf93413790c3abd7a03a0f.png" alt="s_0"/>.</p>
+<p>If the shape is trapezoidal the point P4 is calculated by rotating P1 by
+<img class="math" src="../../../_images/math/c958cf9c5831af3645d330619755bfdce5855218.png" alt="\phi_{ply-part}"/> analogous to the creation of P3.</p>
+<p>By now we have two points on each circle, but the connection line between P2
+and P3 lies inside the circle <img class="math" src="../../../_images/math/3473c14d011d9f1aede5914054e51b46686d5045.png" alt="s_2"/>. To correct this error P2 and P3 have to
+be moved. This is done by defining that L2 must be orthogonally to L1:</p>
+<div class="math">
+<p><img src="../../../_images/math/e99f374f42c312e352a331c0fdea14c49a9b5546.png" alt="m_2 = tan(\Theta+90^{\circ})"/></p>
+</div><p>The intercept <img class="math" src="../../../_images/math/01beed91ed2d5223b228646c84e7ce372e34dc36.png" alt="b_2"/> is then changed until L2 does not cut or touch the circle
+<img class="math" src="../../../_images/math/3473c14d011d9f1aede5914054e51b46686d5045.png" alt="s_2"/>. The procedure for P1, P4 and L4 is equivalent, see Figure 8.</p>
+<div class="figure">
+<a class="reference internal image-reference" href="../../../_images/fig_082.png"><img alt="../../../_images/fig_082.png" src="../../../_images/fig_082.png" style="width: 350px;" /></a>
+<p class="caption">Figure 8: Definition of L2 and L4</p>
+</div>
+<p>In the end the prototype is defined by the points P1, P2, P3, P4 and the
+function <tt class="docutils literal"><span class="pre">Bpart.PPr()</span></tt> returns these points in the following shape:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">PPr</span> <span class="o">=</span> <span class="p">[</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">x3</span><span class="p">,</span> <span class="n">y3</span><span class="p">,</span> <span class="n">x4</span><span class="p">,</span> <span class="n">y4</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>In Figure 9 one can see the finished prototype part.</p>
+<div class="figure">
+<a class="reference internal image-reference" href="../../../_images/fig_092.png"><img alt="../../../_images/fig_092.png" src="../../../_images/fig_092.png" style="width: 350px;" /></a>
+<p class="caption">Figure 9: Prototype-part</p>
+</div>
+</div>
+</div>
+<div class="section" id="copy-and-rotate-the-prototype-part">
+<h2>Copy and rotate the prototype-part<a class="headerlink" href="#copy-and-rotate-the-prototype-part" title="Permalink to this headline">¶</a></h2>
+<p>After the prototype-part is finished the vertices P1 to P4 are rotated around
+the origin of the CSYS to achieve a full coverage of the area of the unwound
+cone. This is achieved by the function <tt class="docutils literal"><span class="pre">Bpart.Pro()</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Bpart</span><span class="o">.</span><span class="n">PRo</span><span class="p">(</span><span class="n">PPr</span><span class="p">,</span> <span class="n">phi_off</span><span class="p">,</span> <span class="n">Theta</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The function needs different inputs:</p>
+<div class="highlight-python"><div class="highlight"><pre>PPr      Cartesian Coordinates of the Prototype Part, List of 8 floats
+phi_off  Offset angle of ply in degree, float
+Theta    Nominal fiber angle of ply in degree, float
+N        Number of ply-parts, int
+Alpha    Half cone angle in degree, float
+</pre></div>
+</div>
+<p>The first ply part is placed by converting the coordinates of the prototype
+points from Cartesian to polar form and add each to the angle of the point
+phi_off:</p>
+<div class="math">
+<p><img src="../../../_images/math/134e4487f422c0e5d97bf57ea7e8b5993c9e97d2.png" alt="\phi_{1,1}=\phi_{Prototype,P1}+\phi_{off}
+\\
+\phi_{1,2}=\phi_{Prototype,P2}+\phi_{off}
+\\
+\phi_{1,3}=\phi_{Prototype,P3}+\phi_{off}
+\\
+\phi_{1,4}=\phi_{Prototype,P4}+\phi_{off}"/></p>
+</div><p>In Figure 10 is an example shown. The red trapez is the first part of the
+ply-parts.</p>
+<p>The points of the other ply-parts are calculated by adding <img class="math" src="../../../_images/math/8687e80405214ea33eedbf3670fa8b66b55384f5.png" alt="k \cdot
+\phi_{ply-part}"/> to <img class="math" src="../../../_images/math/f07827f002abd61dea8ed63b62be98b12c16e926.png" alt="\phi_{1,1}"/>, <img class="math" src="../../../_images/math/9ecdd92df3d5e870f467709b96fd0641396d5738.png" alt="\phi_{1,2}"/>, <img class="math" src="../../../_images/math/ee177a636ad0b0af9d09f67553c9122af6ab4d8a.png" alt="\phi_{1,3}"/> and <img class="math" src="../../../_images/math/65b8211a7bc0722c272e458c35bf453d228ca86f.png" alt="\phi_{1,4}"/>.
+K is the running number of the ply parts.</p>
+<div class="math">
+<p><img src="../../../_images/math/08a140bc767a4bd9c686d94f458b702a6356b36e.png" alt="\phi_{k+1,1}=\phi_{1,1}+k \cdot \phi_{ply-part}
+\\
+\phi_{k+1,2}=\phi_{1,2}+k \cdot \phi_{ply-part}
+\\
+\phi_{k+1,3}=\phi_{1,3}+k \cdot \phi_{ply-part}
+\\
+\phi_{k+1,4}=\phi_{1,4}+k \cdot \phi_{ply-part}"/></p>
+</div><p>In Figure 10 this shown by the blue trapez.</p>
+<div class="figure">
+<a class="reference internal image-reference" href="../../../_images/fig_102.png"><img alt="../../../_images/fig_102.png" src="../../../_images/fig_102.png" style="width: 700px;" /></a>
+<p class="caption">Figure 10: Definition of <img class="math" src="../../../_images/math/03dd618f2bcb1be17fc4d1b7874fe340099235ff.png" alt="\phi_{off}"/> and <img class="math" src="../../../_images/math/c958cf9c5831af3645d330619755bfdce5855218.png" alt="\phi_{ply-part}"/></p>
+</div>
+<p>This procedure will go on until the whole area of the unwound cone is covered. This is checked by two simple if-statements:
+- if: <img class="math" src="../../../_images/math/401bf5125ca7fe1dfb788d7d1b5d1ade83111271.png" alt="\phi_{k,n} &gt; \phi_{cone}"/>,for all <img class="math" src="../../../_images/math/1a7140a269f8c40875342668404b39b743e27766.png" alt="n \in [0,4],k \in [0,N]"/>
+- if: <img class="math" src="../../../_images/math/f3e0ad63300c991421430954d35a7d2874489364.png" alt="\phi_{k,n} &lt; 0^{\circ}"/>,for all <img class="math" src="../../../_images/math/1a7140a269f8c40875342668404b39b743e27766.png" alt="n \in [0,4],k \in [0,N]"/></p>
+<div class="figure">
+<a class="reference internal image-reference" href="../../../_images/fig_112.png"><img alt="../../../_images/fig_112.png" src="../../../_images/fig_112.png" style="width: 700px;" /></a>
+<p class="caption">Figure 11: Complete ply</p>
+</div>
+<p>In Figure 11 is the complete ply shown.</p>
+<p>For the other plies the steps (2.) and (3.) are repeated.</p>
+</div>
+<div class="section" id="finding-the-local-fiber-angle-and-thickness">
+<h2>Finding the local fiber angle and thickness<a class="headerlink" href="#finding-the-local-fiber-angle-and-thickness" title="Permalink to this headline">¶</a></h2>
+<p>To investigate the effects of the changing fiber angle and thickness one has
+to find a method to find out in which parts a certain point lies. This problem
+is known as the point in polygon problem. There are several different
+approaches to solve this problem. This program uses a simple algorithm known
+as the Angle Summation Method. If a point lies inside of a convex polygon the
+sum of the inner angles between connecting lines of the vertices and the point
+is equal to 360°. If the point lies on one of the edges of the polygon the sum
+is equal to 180° and if it is outside of the polygon the sum is 0°. For a
+better explanation see Figure (TODO)</p>
+<p>Basically one has to calculate the angle of triangle defined by three points
+or between two vectors connecting the given point and two neighboring vertices
+of the polygon. It is known that:</p>
+<div class="math">
+<p><img src="../../../_images/math/649acb393bf73c9e33a57c577b01019a51b0859e.png" alt="\vec{a} \cdot \vec{b} = \|\vec{a}\|\|\vec{b}\|cos(\angle(\vec{a},\vec{b}))
+\\
+\angle(\vec{a}, \vec{b})=arccos \left(
+    \frac{\vec{a} \cdot \vec{b}}{\|\vec{a}\|\|\vec{b}\|} \right)"/></p>
+</div><p>The complicated part of this function was to make sure the angles are
+correctly summed up and are using the same direction.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/desicos.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Virtual Material Model Tool (VMMT)</a><ul>
+<li><a class="reference internal" href="#introduction">Introduction</a></li>
+<li><a class="reference internal" href="#coordinate-systems">Coordinate systems</a></li>
+<li><a class="reference internal" href="#building-the-vmm">Building the VMM</a><ul>
+<li><a class="reference internal" href="#get-lay-up-information">1. Get Lay-up Information</a></li>
+<li><a class="reference internal" href="#build-the-prototype-part">2. Build the prototype-part</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#copy-and-rotate-the-prototype-part">Copy and rotate the prototype-part</a></li>
+<li><a class="reference internal" href="#finding-the-local-fiber-angle-and-thickness">Finding the local fiber angle and thickness</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../gui/index.html"
+                        title="previous chapter">GUI for the Cone Ply Piece Optimization Tool</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../ref.html"
+                        title="next chapter">References</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../../_sources/tutorials/cppot/vmmt/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../../../np-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../ref.html" title="References"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../gui/index.html" title="GUI for the Cone Ply Piece Optimization Tool"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">DESICOS 2.0.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Tutorials</a> &raquo;</li>
+          <li><a href="../index.html" >Cone Ply Piece Optimization Tool (CPPOT)</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012-2015 Desicos Improved Software Team.
+      Last updated on Oct 20, 2014.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

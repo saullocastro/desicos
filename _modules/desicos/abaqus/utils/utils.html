@@ -1,0 +1,312 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>desicos.abaqus.utils.utils &mdash; DESICOS 2.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../../../../_static/desicos.png"/>
+    <link rel="top" title="DESICOS 2.0.0 documentation" href="../../../../index.html" />
+    <link rel="up" title="Module code" href="../../../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../../../../np-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../../index.html">DESICOS 2.0.0 documentation</a> &raquo;</li>
+          <li><a href="../../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for desicos.abaqus.utils.utils</h1><div class="highlight"><pre>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">sin</span><span class="p">,</span> <span class="n">cos</span>
+
+<span class="kn">import</span> <span class="nn">geom</span>
+<span class="kn">from</span> <span class="nn">desicos.abaqus.constants</span> <span class="kn">import</span> <span class="o">*</span>
+
+<div class="viewcode-block" id="add2list"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.utils.utils.add2list">[docs]</a><span class="k">def</span> <span class="nf">add2list</span><span class="p">(</span><span class="n">lst</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="n">TOL</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Adds a value to a list if it doesn&#39;t exist within a given tolerance</span>
+
+<span class="sd">    Performs more or less like the Python build-in ``set()``, but with a</span>
+<span class="sd">    tolerance associated.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    lst : list</span>
+<span class="sd">        The input list.</span>
+<span class="sd">    value : float</span>
+<span class="sd">        The value to be compared with each element of the input list.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    out : list</span>
+<span class="sd">        Extended input list.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">append_check</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">lst</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">value</span> <span class="o">-</span> <span class="n">v</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">tol</span><span class="p">:</span>
+            <span class="n">append_check</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="k">break</span>
+    <span class="k">if</span> <span class="n">append_check</span><span class="p">:</span>
+        <span class="n">lst</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="get_book_sheet"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.utils.utils.get_book_sheet">[docs]</a><span class="k">def</span> <span class="nf">get_book_sheet</span><span class="p">(</span><span class="n">excel_name</span><span class="p">,</span> <span class="n">sheet_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Gets an Excel Worksheet from a given file name</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    excel_name : str</span>
+<span class="sd">        The full path for the desired Excel file.</span>
+<span class="sd">    sheet_name : str</span>
+<span class="sd">        The name of the desired Excel Worksheet.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    workbook, sheet : tuple</span>
+<span class="sd">        A tuple with an ``xlwt.Workbook`` and an ``xlwt.Worksheet``</span>
+<span class="sd">        object.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">xlrd</span> <span class="kn">import</span> <span class="n">open_workbook</span>
+    <span class="kn">from</span> <span class="nn">xlutils.copy</span> <span class="kn">import</span> <span class="n">copy</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">excel_name</span><span class="p">):</span>
+        <span class="n">rb</span> <span class="o">=</span> <span class="n">open_workbook</span><span class="p">(</span><span class="n">excel_name</span><span class="p">,</span> <span class="n">formatting_info</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">sheet_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">rb</span><span class="o">.</span><span class="n">sheets</span><span class="p">()]</span>
+        <span class="c">#rs = rb.sheet_by_index(0)</span>
+        <span class="n">book</span> <span class="o">=</span> <span class="n">copy</span><span class="p">(</span><span class="n">rb</span><span class="p">)</span>
+        <span class="n">sheet</span> <span class="o">=</span> <span class="n">book</span><span class="o">.</span><span class="n">get_sheet</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">new_sheet_name</span> <span class="o">=</span> <span class="n">sheet_name</span> <span class="o">+</span> <span class="s">&#39;_</span><span class="si">%02d</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">count</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">new_sheet_name</span> <span class="ow">in</span> <span class="n">sheet_names</span><span class="p">:</span>
+                <span class="n">sheet</span> <span class="o">=</span> <span class="n">book</span><span class="o">.</span><span class="n">add_sheet</span><span class="p">(</span><span class="n">new_sheet_name</span><span class="p">)</span>
+                <span class="k">break</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">xlwt</span> <span class="kn">import</span> <span class="n">Workbook</span>
+        <span class="n">book</span> <span class="o">=</span> <span class="n">Workbook</span><span class="p">()</span>
+        <span class="n">sheet</span> <span class="o">=</span> <span class="n">book</span><span class="o">.</span><span class="n">add_sheet</span><span class="p">(</span><span class="n">sheet_name</span> <span class="o">+</span> <span class="s">&#39;_00&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">book</span><span class="p">,</span> <span class="n">sheet</span>
+</div>
+<span class="k">def</span> <span class="nf">sample_array</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">sample</span><span class="p">):</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">ndarray</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random_sample</span><span class="p">(</span><span class="n">sample</span><span class="p">))</span>
+    <span class="n">lines</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+    <span class="n">new_shape</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">ndarray</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="n">new_shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">sample</span>
+    <span class="n">new_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">new_shape</span><span class="p">,</span> <span class="n">dtype</span> <span class="o">=</span> <span class="n">ndarray</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lines</span><span class="p">):</span>
+        <span class="n">new_array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">ndarray</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="p">)]</span>
+    <span class="k">return</span> <span class="n">new_array</span>
+
+<div class="viewcode-block" id="index_within_linspace"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.utils.utils.index_within_linspace">[docs]</a><span class="k">def</span> <span class="nf">index_within_linspace</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns the index where the value fits better</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    a : np.ndarray or list</span>
+<span class="sd">        The values where the best index will be found.</span>
+<span class="sd">    value : float</span>
+<span class="sd">        The value to be compared with each value in ``a``.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    i : int</span>
+<span class="sd">        The index where ``value`` fits better in ``a``.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">absolute</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">-</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">argmin</span><span class="p">()</span>
+</div>
+<span class="k">def</span> <span class="nf">find_fb_load</span><span class="p">(</span><span class="n">cczload</span><span class="p">):</span>
+    <span class="n">frmlen</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cczload</span><span class="p">)</span>
+    <span class="n">fb_load</span> <span class="o">=</span> <span class="mf">0.</span>
+    <span class="n">found_fb_load</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">frmlen</span><span class="p">):</span>
+        <span class="n">zload</span> <span class="o">=</span> <span class="n">cczload</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">zload</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">abs</span><span class="p">(</span><span class="n">fb_load</span><span class="p">):</span>
+            <span class="n">found_fb_load</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="k">break</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">found_fb_load</span><span class="p">:</span>
+            <span class="n">fb_load</span> <span class="o">=</span> <span class="n">zload</span>
+    <span class="k">return</span> <span class="n">fb_load</span>
+
+<span class="k">def</span> <span class="nf">remove_special_characters</span><span class="p">(</span><span class="n">input_str</span><span class="p">):</span>
+    <span class="n">output_str</span> <span class="o">=</span> <span class="n">input_str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#39;/&#39;</span><span class="p">,</span><span class="s">&#39;_&#39;</span><span class="p">)</span>
+    <span class="n">output_str</span> <span class="o">=</span> <span class="n">output_str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#39; &#39;</span><span class="p">,</span><span class="s">&#39;_&#39;</span><span class="p">)</span>
+    <span class="n">others</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;$&#39;</span><span class="p">,</span><span class="s">&#39;{&#39;</span><span class="p">,</span><span class="s">&#39;}&#39;</span><span class="p">,</span><span class="s">&#39;|&#39;</span><span class="p">,</span><span class="s">&#39;!&#39;</span><span class="p">,</span><span class="s">&#39;%&#39;</span><span class="p">,</span><span class="s">&#39;&amp;&#39;</span><span class="p">,</span><span class="s">&#39;(&#39;</span><span class="p">,</span><span class="s">&#39;)&#39;</span><span class="p">,</span><span class="s">&#39;=&#39;</span><span class="p">,</span><span class="s">&#39;?&#39;</span><span class="p">,</span><span class="s">&#39;+&#39;</span><span class="p">,</span><span class="s">&#39;*&#39;</span><span class="p">,</span>
+              <span class="s">&#39;:&#39;</span><span class="p">,</span><span class="s">&#39;;&#39;</span><span class="p">,</span><span class="s">&#39;,&#39;</span><span class="p">,</span><span class="s">&#39;[&#39;</span><span class="p">,</span><span class="s">&#39;]&#39;</span><span class="p">,</span><span class="s">&#39;&quot;&#39;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">other</span> <span class="ow">in</span> <span class="n">others</span><span class="p">:</span>
+        <span class="n">output_str</span> <span class="o">=</span> <span class="n">output_str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">other</span><span class="p">,</span><span class="s">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">output_str</span> <span class="o">=</span> <span class="n">output_str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&quot;&#39;&quot;</span><span class="p">,</span><span class="s">&quot;&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">output_str</span>
+
+<span class="k">def</span> <span class="nf">calc_elem_cg</span><span class="p">(</span><span class="n">elem</span><span class="p">):</span>
+    <span class="n">coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">FLOAT</span><span class="p">)</span>
+    <span class="n">nodes</span> <span class="o">=</span> <span class="n">elem</span><span class="o">.</span><span class="n">getNodes</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">:</span>
+        <span class="n">coords</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="o">+=</span> <span class="n">node</span><span class="o">.</span><span class="n">coordinates</span>
+    <span class="n">coords</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="o">/=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">nodes</span><span class="p">))</span>
+    <span class="n">coords</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">elem</span><span class="o">.</span><span class="n">label</span>
+    <span class="k">return</span> <span class="n">coords</span>
+
+<span class="k">def</span> <span class="nf">vec_calc_elem_cg</span><span class="p">(</span><span class="n">elements</span><span class="p">):</span>
+    <span class="n">vec_tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vectorize</span><span class="p">(</span><span class="n">calc_elem_cg</span><span class="p">,</span> <span class="n">otypes</span><span class="o">=</span><span class="p">[</span><span class="nb">object</span><span class="p">])</span>
+    <span class="k">return</span>  <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">vec_tmp</span><span class="p">(</span><span class="n">elements</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">FLOAT</span><span class="p">)</span>
+
+
+
+<span class="k">def</span> <span class="nf">func_sin_cos</span><span class="p">(</span><span class="n">n_terms</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">guess</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="o">*</span><span class="n">n_terms</span><span class="o">+</span><span class="mi">2</span><span class="p">))</span>
+    <span class="n">n_terms</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="s">&#39;lambda x,a00,&#39;</span><span class="o">+</span><span class="s">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s">&#39;a</span><span class="si">%02d</span><span class="s">,b</span><span class="si">%02d</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">n_terms</span><span class="p">)])</span>\
+                <span class="o">+</span><span class="s">&#39;: a00+&#39;</span> <span class="o">+</span> <span class="s">&#39;+&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s">&#39;a</span><span class="si">%02d</span><span class="s">*sin(</span><span class="si">%d</span><span class="s">*x)+b</span><span class="si">%02d</span><span class="s">*cos(</span><span class="si">%d</span><span class="s">*x)&#39;</span> \
+                                      <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">n_terms</span><span class="p">)])</span>
+
+    <span class="k">return</span> <span class="nb">eval</span><span class="p">(</span><span class="n">s</span><span class="p">),</span> <span class="n">guess</span>
+
+<span class="k">def</span> <span class="nf">func_sin</span><span class="p">(</span><span class="n">n_terms</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">guess</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">n_terms</span><span class="o">+</span><span class="mi">2</span><span class="p">))</span>
+    <span class="n">n_terms</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="s">&#39;lambda x,a00,&#39;</span><span class="o">+</span><span class="s">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s">&#39;a</span><span class="si">%02d</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">n_terms</span><span class="p">)])</span>\
+                <span class="o">+</span><span class="s">&#39;: a00+&#39;</span> <span class="o">+</span> <span class="s">&#39;+&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s">&#39;a</span><span class="si">%02d</span><span class="s">*sin(</span><span class="si">%d</span><span class="s">*x)&#39;</span> \
+                                      <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">n_terms</span><span class="p">)])</span>
+
+    <span class="k">return</span> <span class="nb">eval</span><span class="p">(</span><span class="n">s</span><span class="p">),</span> <span class="n">guess</span>
+
+<span class="k">def</span> <span class="nf">func_cos</span><span class="p">(</span><span class="n">n_terms</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">guess</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">n_terms</span><span class="o">+</span><span class="mi">2</span><span class="p">))</span>
+    <span class="n">n_terms</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="s">&#39;lambda x,a00,&#39;</span><span class="o">+</span><span class="s">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s">&#39;a</span><span class="si">%02d</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">n_terms</span><span class="p">)])</span>\
+                <span class="o">+</span><span class="s">&#39;: a00+&#39;</span> <span class="o">+</span> <span class="s">&#39;+&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s">&#39;a</span><span class="si">%02d</span><span class="s">*cos(</span><span class="si">%d</span><span class="s">*x)&#39;</span> \
+                                      <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">n_terms</span><span class="p">)])</span>
+
+    <span class="k">return</span> <span class="nb">eval</span><span class="p">(</span><span class="n">s</span><span class="p">),</span> <span class="n">guess</span>
+
+<div class="viewcode-block" id="empirical_P1_isotropic"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.utils.utils.empirical_P1_isotropic">[docs]</a><span class="k">def</span> <span class="nf">empirical_P1_isotropic</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">nu</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    taken from Wang et al. (2008). An empirical formula for the critical</span>
+<span class="sd">    perturbation load</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">r</span><span class="o">/</span><span class="n">t</span> <span class="o">&lt;</span>  <span class="mi">300</span><span class="p">:</span> <span class="k">print</span> <span class="s">&#39;WARNING - r/t ratio smaller than 300&#39;</span>
+    <span class="k">if</span> <span class="n">r</span><span class="o">/</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mi">2000</span><span class="p">:</span> <span class="k">print</span> <span class="s">&#39;WARNING - r/t ratio bigger than 2000&#39;</span>
+    <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">t</span> <span class="ow">and</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="mf">0.8</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mf">0.81</span> <span class="o">*</span> <span class="n">E</span><span class="o">*</span><span class="n">t</span><span class="o">**</span><span class="mi">3</span> <span class="o">/</span><span class="p">(</span><span class="mi">12</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">nu</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">r</span><span class="o">**</span><span class="mf">0.8</span><span class="p">)</span>
+    <span class="k">elif</span>  <span class="mf">0.8</span> <span class="o">&lt;=</span> <span class="n">t</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">t</span> <span class="o">&gt;</span> <span class="mf">1.5</span><span class="p">:</span> <span class="k">print</span> <span class="s">&#39;WARNING - thickness beyond 1.5&#39;</span>
+        <span class="k">return</span> <span class="mf">0.69</span> <span class="o">*</span> <span class="n">E</span><span class="o">*</span><span class="n">t</span><span class="o">**</span><span class="mi">3</span> <span class="o">/</span><span class="p">(</span><span class="mi">12</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">nu</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">r</span><span class="o">**</span><span class="mf">0.8</span><span class="p">)</span>
+</div>
+<span class="k">def</span> <span class="nf">calc_nasaKDF</span><span class="p">(</span><span class="n">mapy_laminate</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">r2</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">alphadeg</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">alphadeg</span> <span class="o">&gt;</span> <span class="mf">0.</span> <span class="p">:</span>
+        <span class="n">rm</span> <span class="o">=</span> <span class="p">(</span><span class="n">r</span> <span class="o">+</span> <span class="n">r2</span><span class="p">)</span><span class="o">/</span><span class="mf">2.</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="n">rm</span><span class="o">/</span><span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">alpharad</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="n">r</span>
+    <span class="n">Ex</span> <span class="o">=</span> <span class="n">mapy_laminate</span><span class="o">.</span><span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">Ey</span> <span class="o">=</span> <span class="n">mapy_laminate</span><span class="o">.</span><span class="n">A</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">Dx</span> <span class="o">=</span> <span class="n">mapy_laminate</span><span class="o">.</span><span class="n">D</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">Dy</span> <span class="o">=</span> <span class="n">mapy_laminate</span><span class="o">.</span><span class="n">D</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">teq</span> <span class="o">=</span> <span class="mf">3.4689</span><span class="o">*</span> <span class="p">(</span><span class="n">Dx</span><span class="o">*</span><span class="n">Dy</span><span class="o">/</span><span class="p">(</span><span class="n">Ex</span><span class="o">*</span><span class="n">Ey</span><span class="p">))</span><span class="o">**</span><span class="mf">0.25</span>
+    <span class="n">phi</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mf">16.</span> <span class="o">*</span> <span class="p">(</span><span class="n">req</span><span class="o">/</span><span class="n">teq</span><span class="p">)</span><span class="o">**</span><span class="mf">0.5</span>
+    <span class="k">return</span> <span class="mf">1.</span> <span class="o">-</span> <span class="mf">0.901</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">numpy</span><span class="o">.</span><span class="n">e</span><span class="o">**-</span><span class="n">phi</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">rec2cyl</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+    <span class="n">thetarad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">y</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+    <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">thetarad</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">r</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">z</span>
+
+<span class="k">def</span> <span class="nf">cyl2rec</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">r</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">r</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">z</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span>
+
+<span class="k">def</span> <span class="nf">cyl2rec_profi</span><span class="p">(</span><span class="n">array</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">array</span><span class="p">[</span><span class="mi">1</span><span class="p">])),</span>
+                           <span class="n">array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">array</span><span class="p">[</span><span class="mi">1</span><span class="p">])),</span>
+                           <span class="n">array</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/desicos.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../../../../np-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../../index.html">DESICOS 2.0.0 documentation</a> &raquo;</li>
+          <li><a href="../../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012-2015 Desicos Improved Software Team.
+      Last updated on Oct 20, 2014.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

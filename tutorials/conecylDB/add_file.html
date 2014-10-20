@@ -1,0 +1,211 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Adding New Imperfection Files &mdash; DESICOS 2.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '2.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../../_static/desicos.png"/>
+    <link rel="top" title="DESICOS 2.0.0 documentation" href="../../index.html" />
+    <link rel="up" title="Cone / Cylinder DataBase (desicos.conecylDB)" href="index.html" />
+    <link rel="next" title="Old / new best fit radii" href="table_old_new.html" />
+    <link rel="prev" title="Processing Geometric Imperfection Data" href="processing_measured_imp_data/processing_measured_imp_data.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../../np-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="table_old_new.html" title="Old / new best fit radii"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="processing_measured_imp_data/processing_measured_imp_data.html" title="Processing Geometric Imperfection Data"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">DESICOS 2.0.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Tutorials</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Cone / Cylinder DataBase (<tt class="docutils literal"><span class="pre">desicos.conecylDB</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="adding-new-imperfection-files">
+<span id="add-imperfection-file"></span><h1>Adding New Imperfection Files<a class="headerlink" href="#adding-new-imperfection-files" title="Permalink to this headline">¶</a></h1>
+<p>The recommended format to include a new imperfection in the database is
+using the &#8220;<img class="math" src="../../_images/math/4dc4789b8e2f448615b3e2c2bdc22fb9267f7cd8.png" alt="\theta"/> <img class="math" src="../../_images/math/eb4fcf2ea15c365948abb172ed3693fbc10b3b4a.png" alt="z"/> <img class="math" src="../../_images/math/a359fcc67d4efbcaef5bda404120efef7de1ada3.png" alt="imp"/>&#8221; format, and how to obtain these
+files is explained in <a class="reference internal" href="processing_measured_imp_data/processing_measured_imp_data.html#process-raw-files"><em>here</em></a>.</p>
+<p>Once they are obtained the analyst must add to the folder:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">desicos</span><span class="o">/</span><span class="n">conecylDB</span><span class="o">/</span><span class="n">files</span><span class="o">/</span><span class="n">database</span><span class="o">/</span><span class="n">name</span>
+</pre></div>
+</div>
+<p>where <tt class="docutils literal"><span class="pre">database</span></tt> is one of the databases included in the:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">desicos</span><span class="o">/</span><span class="n">conecylDB</span><span class="o">/</span><span class="n">databases</span><span class="o">.</span><span class="n">json</span>
+</pre></div>
+</div>
+<p>and <tt class="docutils literal"><span class="pre">name</span></tt> is the name of this imperfection, e.g. based on existing
+ones:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">degenhardt_2010_z15</span>
+<span class="n">zimmermann_1992_z33</span>
+</pre></div>
+</div>
+<p>Then the analyst must add a cone / cylinder in the:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">desicos</span><span class="o">/</span><span class="n">conecylDB</span><span class="o">/</span><span class="n">ccs</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<p>file pointing the new imperfections and telling which database it belongs
+to. The next sub-sections explain this procedure for mid-suface
+and thickness imperfections.</p>
+<div class="section" id="mid-surface-imperfections-msi">
+<h2>Mid-Surface Imperfections (MSI)<a class="headerlink" href="#mid-surface-imperfections-msi" title="Permalink to this headline">¶</a></h2>
+<p>They come with the sufix <img class="math" src="../../_images/math/233a239d192ed5feed25efe6818df8a1e5bdce86.png" alt="_msi"/> and the final name using the
+new &#8220;<img class="math" src="../../_images/math/4dc4789b8e2f448615b3e2c2bdc22fb9267f7cd8.png" alt="\theta"/> <img class="math" src="../../_images/math/eb4fcf2ea15c365948abb172ed3693fbc10b3b4a.png" alt="z"/> <img class="math" src="../../_images/math/a359fcc67d4efbcaef5bda404120efef7de1ada3.png" alt="imp"/>&#8221; format will be:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">desicos</span><span class="o">/</span><span class="n">conecylDB</span><span class="o">/</span><span class="n">files</span><span class="o">/</span><span class="n">database</span><span class="o">/</span><span class="n">name_msi_theta_z_imp</span><span class="o">.</span><span class="n">txt</span>
+</pre></div>
+</div>
+<p>or, using the old &#8220;<img class="math" src="../../_images/math/fcbaa2ea1c6a047f151a45849927929823fc5d88.png" alt="x"/> <img class="math" src="../../_images/math/5a1161c9b9bf6a6addc18ade0f7fe8bb5ce0ba95.png" alt="y"/> <img class="math" src="../../_images/math/eb4fcf2ea15c365948abb172ed3693fbc10b3b4a.png" alt="z"/>&#8221; format:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">desicos</span><span class="o">/</span><span class="n">conecylDB</span><span class="o">/</span><span class="n">files</span><span class="o">/</span><span class="n">database</span><span class="o">/</span><span class="n">name_msi</span><span class="o">.</span><span class="n">txt</span>
+</pre></div>
+</div>
+<p>The new entry in the <tt class="docutils literal"><span class="pre">ccs.py</span></tt> file should have a <tt class="docutils literal"><span class="pre">msi</span></tt> key poiting
+the new imperfection and a <tt class="docutils literal"><span class="pre">database</span></tt> key telling which
+database it belongs to, for example:</p>
+<div class="highlight-python"><div class="highlight"><pre>&#39;zimmermann_1992_z33&#39;: {
+    ...
+    &#39;msi&#39;: &#39;zimmermann_1992_z33&#39;,
+    &#39;database&#39;: &#39;dlr&#39;,
+    ...
+    },
+</pre></div>
+</div>
+</div>
+<div class="section" id="thickness-imperfections-ti">
+<h2>Thickness Imperfections (TI)<a class="headerlink" href="#thickness-imperfections-ti" title="Permalink to this headline">¶</a></h2>
+<p>They come with the sufix <img class="math" src="../../_images/math/adc6de9276f835e0c4e8812eb3a54477a5a80d6f.png" alt="_ti"/> and the final name using the
+new &#8220;<img class="math" src="../../_images/math/4dc4789b8e2f448615b3e2c2bdc22fb9267f7cd8.png" alt="\theta"/> <img class="math" src="../../_images/math/eb4fcf2ea15c365948abb172ed3693fbc10b3b4a.png" alt="z"/> <img class="math" src="../../_images/math/f7dbbc702e08b27d1f1cb3c9b97304d213e9552a.png" alt="thick"/>&#8221; format will be:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">desicos</span><span class="o">/</span><span class="n">conecylDB</span><span class="o">/</span><span class="n">files</span><span class="o">/</span><span class="n">database</span><span class="o">/</span><span class="n">name_ti_theta_z_imp</span><span class="o">.</span><span class="n">txt</span>
+</pre></div>
+</div>
+<p>or, using the old &#8220;<img class="math" src="../../_images/math/fcbaa2ea1c6a047f151a45849927929823fc5d88.png" alt="x"/> <img class="math" src="../../_images/math/5a1161c9b9bf6a6addc18ade0f7fe8bb5ce0ba95.png" alt="y"/> <img class="math" src="../../_images/math/eb4fcf2ea15c365948abb172ed3693fbc10b3b4a.png" alt="z"/> <img class="math" src="../../_images/math/f7dbbc702e08b27d1f1cb3c9b97304d213e9552a.png" alt="thick"/>&#8221; format:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">desicos</span><span class="o">/</span><span class="n">conecylDB</span><span class="o">/</span><span class="n">files</span><span class="o">/</span><span class="n">database</span><span class="o">/</span><span class="n">name_ti</span><span class="o">.</span><span class="n">txt</span>
+</pre></div>
+</div>
+<p>The new entry in the <tt class="docutils literal"><span class="pre">ccs.py</span></tt> file should have a <tt class="docutils literal"><span class="pre">ti</span></tt> key poiting
+the new imperfection and a <tt class="docutils literal"><span class="pre">database</span></tt> key telling which
+database it belongs to, for example:</p>
+<div class="highlight-python"><div class="highlight"><pre>&#39;degenhardt_2010_z15&#39;: {
+    ...
+    &#39;ti&#39;: &#39;degenhardt_2010_z15&#39;,
+    &#39;database&#39;: &#39;dlr&#39;,
+    ...
+    },
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/desicos.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Adding New Imperfection Files</a><ul>
+<li><a class="reference internal" href="#mid-surface-imperfections-msi">Mid-Surface Imperfections (MSI)</a></li>
+<li><a class="reference internal" href="#thickness-imperfections-ti">Thickness Imperfections (TI)</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="processing_measured_imp_data/processing_measured_imp_data.html"
+                        title="previous chapter">Processing Geometric Imperfection Data</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="table_old_new.html"
+                        title="next chapter">Old / new best fit radii</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../_sources/tutorials/conecylDB/add_file.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../../np-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="table_old_new.html" title="Old / new best fit radii"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="processing_measured_imp_data/processing_measured_imp_data.html" title="Processing Geometric Imperfection Data"
+             >previous</a> |</li>
+        <li><a href="../../index.html">DESICOS 2.0.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Tutorials</a> &raquo;</li>
+          <li><a href="index.html" >Cone / Cylinder DataBase (<tt class="docutils literal"><span class="pre">desicos.conecylDB</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012-2015 Desicos Improved Software Team.
+      Last updated on Oct 20, 2014.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

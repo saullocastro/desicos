@@ -1,0 +1,679 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Processing Geometric Imperfection Data &mdash; DESICOS 2.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../../../_static/desicos.png"/>
+    <link rel="top" title="DESICOS 2.0.0 documentation" href="../../../index.html" />
+    <link rel="up" title="Cone / Cylinder DataBase (desicos.conecylDB)" href="../index.html" />
+    <link rel="next" title="Adding New Imperfection Files" href="../add_file.html" />
+    <link rel="prev" title="Dynamic Database" href="../dynamic.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../../../np-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../add_file.html" title="Adding New Imperfection Files"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../dynamic.html" title="Dynamic Database"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">DESICOS 2.0.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Tutorials</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Cone / Cylinder DataBase (<tt class="docutils literal"><span class="pre">desicos.conecylDB</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="processing-geometric-imperfection-data">
+<span id="process-raw-files"></span><h1>Processing Geometric Imperfection Data<a class="headerlink" href="#processing-geometric-imperfection-data" title="Permalink to this headline">¶</a></h1>
+<p>This part of the turorial will explain in a step-by-step example how one
+can use the <a class="reference internal" href="../../index.html#modules"><em>developed modules</em></a> to post-process measured
+imperfection data.</p>
+<p>The following steps will be discussed:</p>
+<ul class="simple">
+<li>raw data from measurement system</li>
+<li>finding</li>
+</ul>
+<div class="section" id="raw-data-from-mesurement-systems">
+<h2>Raw Data from Mesurement Systems<a class="headerlink" href="#raw-data-from-mesurement-systems" title="Permalink to this headline">¶</a></h2>
+<p>The raw files obtained from measured geometric imperfections usually come
+with three columns:</p>
+<div class="highlight-python"><div class="highlight"><pre>x1 y1 z1
+x2 y2 z2
+...
+xn yn zn
+</pre></div>
+</div>
+<p>The <a class="reference external" href="https://raw.githubusercontent.com/desicos/desicos/master/doc/source/tutorials/conecylDB/processing_measured_imp_data/sample.txt">following sample</a>
+has been used to illustrate this tutorial (first 10 lines shown below):</p>
+<div class="highlight-python"><div class="highlight"><pre>310.909   1174.136   261.8
+146.126   754.321   378.119
+216.694   1111.78   342.928
+-261.395   1031.417   -314.052
+-5.499   99.519   -407.764
+-70.556   95.452   -401.672
+-336.88   1148.365   -229.665
+-351.651   705.414   204.226
+403.703   454.238   -37.619
+122.444   55.322   386.451
+</pre></div>
+</div>
+<p>The following script is used to plot the sample with the imperfection
+exagerated. Note that <a class="reference internal" href="#best-fit-raw-data"><em>best_fit_raw_data.py</em></a> has to
+be executed before.</p>
+<p><tt class="docutils literal"><span class="pre">plot_sample_3d.py</span></tt></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">mayavi.mlab</span> <span class="kn">as</span> <span class="nn">mlab</span>
+
+<span class="kn">from</span> <span class="nn">desicos.conecylDB.read_write</span> <span class="kn">import</span> <span class="n">xyz2thetazimp</span>
+
+<span class="n">R</span> <span class="o">=</span> <span class="mf">406.4</span> <span class="c"># nominal radius</span>
+<span class="n">H</span> <span class="o">=</span> <span class="mf">1219.2</span> <span class="c"># nominal height</span>
+<span class="n">R_best_fit</span> <span class="o">=</span> <span class="mf">407.193</span> <span class="c"># radius obtained with the best-fit routine</span>
+
+<span class="n">thetas</span><span class="p">,</span> <span class="n">zfit</span><span class="p">,</span> <span class="n">dR</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="s">&#39;sample_theta_z_imp.txt&#39;</span><span class="p">,</span> <span class="n">unpack</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="n">xpos</span> <span class="o">=</span> <span class="n">R_best_fit</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">thetas</span><span class="p">)</span>
+<span class="n">ypos</span> <span class="o">=</span> <span class="n">R_best_fit</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">thetas</span><span class="p">)</span>
+<span class="n">sf</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">x2</span> <span class="o">=</span> <span class="n">xpos</span> <span class="o">+</span> <span class="n">sf</span><span class="o">*</span><span class="n">dR</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">thetas</span><span class="p">)</span>
+<span class="n">y2</span> <span class="o">=</span> <span class="n">ypos</span> <span class="o">+</span> <span class="n">sf</span><span class="o">*</span><span class="n">dR</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">thetas</span><span class="p">)</span>
+<span class="n">z2</span> <span class="o">=</span> <span class="n">zfit</span>
+
+<span class="n">Tinv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s">&#39;tmp_Tinv.txt&#39;</span><span class="p">)</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">Tinv</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">z2</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">x2</span><span class="p">))))</span>
+
+<span class="n">black</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">white</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">mlab</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">bgcolor</span><span class="o">=</span><span class="n">white</span><span class="p">)</span>
+<span class="n">mlab</span><span class="o">.</span><span class="n">points3d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+<span class="n">mlab</span><span class="o">.</span><span class="n">plot3d</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">600</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">black</span><span class="p">,</span> <span class="n">tube_radius</span><span class="o">=</span><span class="mf">10.</span><span class="p">)</span>
+<span class="n">mlab</span><span class="o">.</span><span class="n">plot3d</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1600</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">black</span><span class="p">,</span> <span class="n">tube_radius</span><span class="o">=</span><span class="mf">10.</span><span class="p">)</span>
+<span class="n">mlab</span><span class="o">.</span><span class="n">plot3d</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">600</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">black</span><span class="p">,</span> <span class="n">tube_radius</span><span class="o">=</span><span class="mf">10.</span><span class="p">)</span>
+<span class="n">mlab</span><span class="o">.</span><span class="n">text3d</span><span class="p">(</span><span class="mi">650</span><span class="p">,</span> <span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="o">+</span><span class="mi">50</span><span class="p">,</span> <span class="s">&#39;x&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">black</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">100.</span><span class="p">)</span>
+<span class="n">mlab</span><span class="o">.</span><span class="n">text3d</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1650</span><span class="p">,</span> <span class="o">+</span><span class="mi">50</span><span class="p">,</span> <span class="s">&#39;y&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">black</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">100.</span><span class="p">)</span>
+<span class="n">mlab</span><span class="o">.</span><span class="n">text3d</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="mi">650</span><span class="p">,</span> <span class="s">&#39;z&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">black</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">100.</span><span class="p">)</span>
+<span class="n">mlab</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s">&#39;plot_sample_3d.png&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">500</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>giving:</p>
+<div class="figure">
+<img alt="../../../_images/plot_sample_3d.png" src="../../../_images/plot_sample_3d.png" />
+</div>
+<p>In order to transform the raw data to the <a class="reference internal" href="../../../modules/abaqus/index.html#figure-conecyl"><em>finite element coordinate
+system</em></a>, the recommended procedure is the function
+<a class="reference internal" href="../../../modules/conecylDB/index.html#desicos.conecylDB.read_write.xyz2thetazimp" title="desicos.conecylDB.read_write.xyz2thetazimp"><tt class="xref py py-func docutils literal"><span class="pre">xyz2thetazimp()</span></tt></a>, exemplified below. This function converts the &#8220;<img class="math" src="../../../_images/math/fcbaa2ea1c6a047f151a45849927929823fc5d88.png" alt="x"/> <img class="math" src="../../../_images/math/5a1161c9b9bf6a6addc18ade0f7fe8bb5ce0ba95.png" alt="y"/>
+<img class="math" src="../../../_images/math/eb4fcf2ea15c365948abb172ed3693fbc10b3b4a.png" alt="z"/>&#8221; data to a to convert them to a &#8220;<img class="math" src="../../../_images/math/4dc4789b8e2f448615b3e2c2bdc22fb9267f7cd8.png" alt="\theta"/> <img class="math" src="../../../_images/math/eb4fcf2ea15c365948abb172ed3693fbc10b3b4a.png" alt="z"/> <img class="math" src="../../../_images/math/a359fcc67d4efbcaef5bda404120efef7de1ada3.png" alt="imp"/>&#8221; format. This function
+is a wrapper that calls funcion <a class="reference internal" href="../../../modules/conecylDB/index.html#desicos.conecylDB.fit_data.best_fit_cylinder" title="desicos.conecylDB.fit_data.best_fit_cylinder"><tt class="xref py py-func docutils literal"><span class="pre">best_fit_cylinder()</span></tt></a> or
+<a class="reference internal" href="../../../modules/conecylDB/index.html#desicos.conecylDB.fit_data.best_fit_cone" title="desicos.conecylDB.fit_data.best_fit_cone"><tt class="xref py py-func docutils literal"><span class="pre">best_fit_cone()</span></tt></a>, where the right coordinate transformation is
+calculated.</p>
+<p id="best-fit-raw-data"><tt class="docutils literal"><span class="pre">best_fit_raw_data.py</span></tt></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">desicos.conecylDB.read_write</span> <span class="kn">import</span> <span class="n">xyz2thetazimp</span>
+
+<span class="n">mps</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="n">xyz2thetazimp</span><span class="p">(</span><span class="s">&#39;sample.txt&#39;</span><span class="p">,</span> <span class="n">alphadeg_measured</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">R_expected</span><span class="o">=</span><span class="mf">406.4</span><span class="p">,</span>
+        <span class="n">H_measured</span><span class="o">=</span><span class="mf">1219.2</span><span class="p">,</span> <span class="n">clip_bottom</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">clip_top</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">use_best_fit</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+        <span class="n">best_fit_output</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="s">&#39;tmp_Tinv.txt&#39;</span><span class="p">,</span> <span class="n">out</span><span class="p">[</span><span class="s">&#39;Tinv&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>It will create an output file with a prefix <tt class="docutils literal"><span class="pre">&quot;_theta_z_imp.txt&quot;</span></tt> where the
+imperfection data is stored in the format:</p>
+<div class="highlight-python"><div class="highlight"><pre>theta1 z1 imp1
+theta2 z2 imp2
+...
+thetan zn impn
+</pre></div>
+</div>
+<p>where <tt class="docutils literal"><span class="pre">thetai</span></tt> and <tt class="docutils literal"><span class="pre">zi</span></tt> are the coordinates <img class="math" src="../../../_images/math/4dc4789b8e2f448615b3e2c2bdc22fb9267f7cd8.png" alt="\theta"/> and <img class="math" src="../../../_images/math/eb4fcf2ea15c365948abb172ed3693fbc10b3b4a.png" alt="z"/>, while
+<tt class="docutils literal"><span class="pre">impi</span></tt> represents the imperfection amplitude at this coordinate. An example
+of the transformed imperfection data is given below (first 10 lines), and
+<a class="reference external" href="https://raw.githubusercontent.com/desicos/desicos/master/doc/source/tutorials/conecylDB/processing_measured_imp_data/sample_theta_z_imp.txt">the full output is given here</a>:</p>
+<div class="highlight-python"><div class="highlight"><pre>0.701704 44.752223 -0.299107
+1.202029 464.737892 -0.772438
+1.008550 107.201740 -0.834017
+-2.266294 188.347008 0.697946
+-1.581399 1119.953672 -0.574269
+-1.742285 1124.099646 -0.728166
+-2.545140 71.468489 0.131696
+2.612788 514.312597 -0.417002
+-0.090133 764.620654 -1.094824
+1.261926 1163.763315 -0.307154
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">It is also possible to use <a class="reference internal" href="../../../modules/conecylDB/index.html#desicos.conecylDB.read_write.xyz2thetazimp" title="desicos.conecylDB.read_write.xyz2thetazimp"><tt class="xref py py-func docutils literal"><span class="pre">xyz2thetazimp()</span></tt></a> in other
+ways, as detailed in the function&#8217;s documentation</p>
+</div>
+<p>The transformed data can also be visualized in the 3-D domain, which was
+accomplished using the following script:</p>
+<p><tt class="docutils literal"><span class="pre">plot_sample_3d_tranformed.py</span></tt></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">mayavi.mlab</span> <span class="kn">as</span> <span class="nn">mlab</span>
+
+<span class="kn">from</span> <span class="nn">desicos.conecylDB.read_write</span> <span class="kn">import</span> <span class="n">xyz2thetazimp</span>
+
+<span class="n">sample_size</span> <span class="o">=</span> <span class="mi">100000</span>
+<span class="n">R</span> <span class="o">=</span> <span class="mf">406.4</span>
+<span class="n">R_best_fit</span> <span class="o">=</span> <span class="mf">407.168</span>
+<span class="n">H</span> <span class="o">=</span> <span class="mf">1219.2</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="s">&#39;sample_theta_z_imp.txt&#39;</span><span class="p">)</span>
+<span class="n">thetas</span><span class="p">,</span> <span class="n">zfit</span><span class="p">,</span> <span class="n">dR</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">T</span>
+
+<span class="n">xpos</span> <span class="o">=</span> <span class="n">R_best_fit</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">thetas</span><span class="p">)</span>
+<span class="n">ypos</span> <span class="o">=</span> <span class="n">R_best_fit</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">thetas</span><span class="p">)</span>
+<span class="n">sf</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">x2</span> <span class="o">=</span> <span class="n">xpos</span> <span class="o">+</span> <span class="n">sf</span><span class="o">*</span><span class="n">dR</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">thetas</span><span class="p">)</span>
+<span class="n">y2</span> <span class="o">=</span> <span class="n">ypos</span> <span class="o">+</span> <span class="n">sf</span><span class="o">*</span><span class="n">dR</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">thetas</span><span class="p">)</span>
+<span class="n">z2</span> <span class="o">=</span> <span class="n">zfit</span>
+
+<span class="n">black</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">white</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">mlab</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">bgcolor</span><span class="o">=</span><span class="n">white</span><span class="p">)</span>
+<span class="n">mlab</span><span class="o">.</span><span class="n">points3d</span><span class="p">(</span><span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">z2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">))</span>
+<span class="n">mlab</span><span class="o">.</span><span class="n">plot3d</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">600</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">black</span><span class="p">,</span> <span class="n">tube_radius</span><span class="o">=</span><span class="mf">10.</span><span class="p">)</span>
+<span class="n">mlab</span><span class="o">.</span><span class="n">plot3d</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">600</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">black</span><span class="p">,</span> <span class="n">tube_radius</span><span class="o">=</span><span class="mf">10.</span><span class="p">)</span>
+<span class="n">mlab</span><span class="o">.</span><span class="n">plot3d</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1600</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">black</span><span class="p">,</span> <span class="n">tube_radius</span><span class="o">=</span><span class="mf">10.</span><span class="p">)</span>
+<span class="n">mlab</span><span class="o">.</span><span class="n">text3d</span><span class="p">(</span><span class="mi">650</span><span class="p">,</span> <span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="o">+</span><span class="mi">50</span><span class="p">,</span> <span class="s">&#39;x&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">black</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">100.</span><span class="p">)</span>
+<span class="n">mlab</span><span class="o">.</span><span class="n">text3d</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">650</span><span class="p">,</span> <span class="o">+</span><span class="mi">50</span><span class="p">,</span> <span class="s">&#39;y&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">black</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">100.</span><span class="p">)</span>
+<span class="n">mlab</span><span class="o">.</span><span class="n">text3d</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="mi">1650</span><span class="p">,</span> <span class="s">&#39;z&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">black</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">100.</span><span class="p">)</span>
+<span class="n">mlab</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s">&#39;plot_sample_3d_transformed.png&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>giving:</p>
+<div class="figure">
+<img alt="../../../_images/plot_sample_3d_transformed.png" src="../../../_images/plot_sample_3d_transformed.png" />
+</div>
+<p>Note that due to the axisymmetry it may happen that the final result has some
+offset rotation. For this reason the interpolation routines that will be
+discussed in the next sessions of this tutorial include a <tt class="docutils literal"><span class="pre">rotatedeg</span></tt>
+parameter that the analyst should use in order to correct this angular offset.</p>
+</div>
+<div class="section" id="inverse-weighted-interpolation">
+<h2>Inverse-Weighted Interpolation<a class="headerlink" href="#inverse-weighted-interpolation" title="Permalink to this headline">¶</a></h2>
+<p>Function <tt class="xref py py-func docutils literal"><span class="pre">iterp_theta_z_imp()</span></tt> is the one used to interpolate the
+measured data into a given mesh. In the example below the mesh creates using
+<tt class="xref py py-func docutils literal"><span class="pre">np.meshgrid()</span></tt> is used for plotting purposes. Note that the an angular
+offset of <tt class="docutils literal"><span class="pre">-88.5</span></tt> degrees was used in order to adjust the imperfection.</p>
+<p><tt class="docutils literal"><span class="pre">interpolate_inv_weighted.py</span></tt></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">desicos.conecylDB.interpolate</span> <span class="kn">import</span> <span class="n">interp_theta_z_imp</span>
+
+<span class="n">R_model</span> <span class="o">=</span> <span class="mf">406.4</span> <span class="o">+</span> <span class="mf">0.8128</span><span class="o">/</span><span class="mf">2.</span>
+<span class="n">H_measured</span> <span class="o">=</span> <span class="mf">1219.2</span>
+<span class="n">ignore_bot_h</span> <span class="o">=</span> <span class="mf">25.4</span>
+<span class="n">ignore_top_h</span> <span class="o">=</span> <span class="mf">25.4</span>
+
+<span class="n">nz</span> <span class="o">=</span> <span class="mi">180</span>
+<span class="n">nt</span> <span class="o">=</span> <span class="mi">560</span>
+
+<span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">nt</span><span class="p">)</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">H_measured</span><span class="p">,</span> <span class="n">nz</span><span class="p">)</span>
+<span class="n">T</span><span class="p">,</span> <span class="n">Z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s">&#39;sample_theta_z_imp.txt&#39;</span><span class="p">)</span>
+<span class="n">ts</span><span class="p">,</span> <span class="n">zs</span><span class="p">,</span> <span class="n">imps</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">T</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">ts</span><span class="p">,</span> <span class="n">zs</span><span class="p">,</span> <span class="n">imps</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>
+<span class="n">mesh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">T</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">Z</span><span class="o">.</span><span class="n">ravel</span><span class="p">()))</span><span class="o">.</span><span class="n">T</span>
+<span class="n">w0</span> <span class="o">=</span> <span class="n">interp_theta_z_imp</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">a</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">semi_angle</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">H_measured</span><span class="o">=</span><span class="n">H_measured</span><span class="p">,</span> <span class="n">H_model</span><span class="o">=</span><span class="n">H_measured</span><span class="p">,</span> <span class="n">R_model</span><span class="o">=</span><span class="n">R_model</span><span class="p">,</span>
+        <span class="n">stretch_H</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">rotatedeg</span><span class="o">=-</span><span class="mf">88.5</span><span class="p">,</span> <span class="n">num_sub</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">ncp</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+        <span class="n">power_parameter</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ignore_bot_h</span><span class="o">=</span><span class="n">ignore_bot_h</span><span class="p">,</span>
+        <span class="n">ignore_top_h</span><span class="o">=</span><span class="n">ignore_top_h</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="s">&#39;tmp_inv_weighted.txt&#39;</span><span class="p">,</span>
+           <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">T</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">Z</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">w0</span><span class="p">))</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s">&#39;</span><span class="si">%1.8f</span><span class="s">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>An the generated data can be plotted using the following code:</p>
+<p><tt class="docutils literal"><span class="pre">plot_inv_weighted.py</span></tt></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">pi</span>
+<span class="kn">import</span> <span class="nn">matplotlib.cm</span> <span class="kn">as</span> <span class="nn">cm</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s">&#39;axes.labelsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">9.</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s">&#39;font.size&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">9.</span>
+
+<span class="n">method</span> <span class="o">=</span> <span class="s">&#39;inv_weighted&#39;</span>
+
+<span class="n">name</span> <span class="o">=</span> <span class="s">&#39;tmp&#39;</span>
+<span class="n">path</span> <span class="o">=</span> <span class="s">&#39;tmp_inv_weighted.txt&#39;</span>
+
+<span class="n">nz</span> <span class="o">=</span> <span class="mi">180</span>
+<span class="n">nt</span> <span class="o">=</span> <span class="mi">560</span>
+
+<span class="n">R</span> <span class="o">=</span> <span class="mf">407.168</span>
+
+<span class="c">#cmap = cm.jet</span>
+<span class="n">cmap</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">gist_rainbow_r</span>
+
+<span class="n">theta</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">w0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">unpack</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">3.5</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">220</span><span class="p">)</span>
+<span class="n">levels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">w0</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">w0</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="mi">400</span><span class="p">)</span>
+<span class="n">contour</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">theta</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nz</span><span class="p">,</span> <span class="n">nt</span><span class="p">)</span><span class="o">*</span><span class="n">R</span><span class="p">,</span> <span class="n">z</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nz</span><span class="p">,</span> <span class="n">nt</span><span class="p">),</span>
+        <span class="n">w0</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nz</span><span class="p">,</span> <span class="n">nt</span><span class="p">),</span> <span class="n">levels</span><span class="o">=</span><span class="n">levels</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_ticks_position</span><span class="p">(</span><span class="s">&#39;bottom&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_ticks_position</span><span class="p">(</span><span class="s">&#39;left&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s">&#39;top&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s">&#39;right&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s">&#39;bottom&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s">&#39;left&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s">&#39;equal&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_ticks</span><span class="p">([</span><span class="o">-</span><span class="n">pi</span><span class="o">*</span><span class="n">R</span><span class="p">,</span> <span class="n">pi</span><span class="o">*</span><span class="n">R</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_ticklabels</span><span class="p">([</span><span class="s">r&#39;$-\pi$&#39;</span><span class="p">,</span> <span class="s">r&#39;$\pi$&#39;</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s">r&#39;$\theta$ $[rad]$&#39;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s">&#39;center&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s">&#39;center&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">labelpad</span><span class="o">=-</span><span class="mi">7</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_ticks</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1219.2</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s">&#39;$x$</span><span class="se">\n</span><span class="s">$[mm]$&#39;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="s">&#39;horizontal&#39;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s">&#39;center&#39;</span><span class="p">,</span>
+        <span class="n">va</span><span class="o">=</span><span class="s">&#39;center&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">labelpad</span><span class="o">=-</span><span class="mi">10</span>
+
+<span class="n">colorbar</span><span class="o">=</span><span class="bp">True</span>
+<span class="k">if</span> <span class="n">colorbar</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">mpl_toolkits.axes_grid1</span> <span class="kn">import</span> <span class="n">make_axes_locatable</span>
+
+    <span class="n">fsize</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">cbar_nticks</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">divider</span> <span class="o">=</span> <span class="n">make_axes_locatable</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+    <span class="n">cax</span> <span class="o">=</span> <span class="n">divider</span><span class="o">.</span><span class="n">append_axes</span><span class="p">(</span><span class="s">&#39;right&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="s">&#39;5%&#39;</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+    <span class="n">cbarticks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">w0</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">w0</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">cbar_nticks</span><span class="p">)</span>
+    <span class="n">cbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">contour</span><span class="p">,</span> <span class="n">ticks</span><span class="o">=</span><span class="n">cbarticks</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;</span><span class="si">%1.3f</span><span class="s">&#39;</span><span class="p">,</span>
+                        <span class="n">cax</span><span class="o">=</span><span class="n">cax</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
+    <span class="n">cax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">,</span> <span class="s">&#39;$w_0$ $[mm]$&#39;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s">&#39;left&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s">&#39;bottom&#39;</span><span class="p">,</span>
+            <span class="n">fontsize</span><span class="o">=</span><span class="n">fsize</span><span class="p">)</span>
+    <span class="n">cbar</span><span class="o">.</span><span class="n">outline</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
+    <span class="n">cbar</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelsize</span><span class="o">=</span><span class="n">fsize</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">tick2On</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s">&#39;plot_inv_weighted.png&#39;</span><span class="p">,</span> <span class="n">transparent</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                  <span class="n">bbox_inches</span><span class="o">=</span><span class="s">&#39;tight&#39;</span><span class="p">,</span> <span class="n">pad_inches</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">220</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>giving:</p>
+<div class="figure">
+<a class="reference internal image-reference" href="../../../_images/plot_inv_weighted.png"><img alt="../../../_images/plot_inv_weighted.png" src="../../../_images/plot_inv_weighted.png" style="width: 400px;" /></a>
+</div>
+</div>
+<div class="section" id="half-cosine-function">
+<h2>Half-Cosine Function<a class="headerlink" href="#half-cosine-function" title="Permalink to this headline">¶</a></h2>
+<p>Function <a class="reference internal" href="../../../modules/conecylDB/index.html#desicos.conecylDB.fit_data.calc_c0" title="desicos.conecylDB.fit_data.calc_c0"><tt class="xref py py-func docutils literal"><span class="pre">calc_c0()</span></tt></a> is used to interpolate the measured data using
+Fourier series. The half-cosine function corresponds to the parameter
+<tt class="docutils literal"><span class="pre">funcnum</span> <span class="pre">=</span> <span class="pre">2</span></tt>, as can be seen in the function&#8217;s documentation.</p>
+<p>The following script was used to calculate the coefficients <img class="math" src="../../../_images/math/9d2e821b965da254bfd09bd9fdfc1e644cdabe55.png" alt="\{c_0\}"/>. Note
+how the angular offset is applied using the <tt class="docutils literal"><span class="pre">rotatedeg</span></tt> parameter:</p>
+<p><tt class="docutils literal"><span class="pre">interpolate_half_cosine.py</span></tt></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">desicos.conecylDB.fit_data</span> <span class="kn">import</span> <span class="n">calc_c0</span>
+
+<span class="n">method</span> <span class="o">=</span> <span class="s">&#39;points&#39;</span>
+<span class="n">funcnum</span><span class="o">=</span> <span class="mi">2</span>
+
+<span class="n">path</span> <span class="o">=</span> <span class="s">&#39;sample_theta_z_imp.txt&#39;</span>
+
+<span class="n">R</span> <span class="o">=</span> <span class="mf">406.4</span> <span class="o">+</span> <span class="mf">0.8128</span><span class="o">/</span><span class="mf">2.</span>
+<span class="n">H</span> <span class="o">=</span> <span class="mf">1219.2</span>
+<span class="n">m0</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">n0</span> <span class="o">=</span> <span class="mi">10</span>
+
+<span class="n">c0</span><span class="p">,</span> <span class="n">residues</span> <span class="o">=</span> <span class="n">calc_c0</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">m0</span><span class="o">=</span><span class="n">m0</span><span class="p">,</span> <span class="n">n0</span><span class="o">=</span><span class="n">n0</span><span class="p">,</span> <span class="n">funcnum</span><span class="o">=</span><span class="n">funcnum</span><span class="p">,</span> <span class="n">rotatedeg</span><span class="o">=-</span><span class="mf">88.5</span><span class="p">)</span>
+<span class="n">outname</span> <span class="o">=</span> <span class="s">&#39;tmp_c0_{0}_f{1:d}_m0_{2:03d}_n0_{3:03d}.txt&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">method</span><span class="p">,</span>
+        <span class="n">funcnum</span><span class="p">,</span> <span class="n">m0</span><span class="p">,</span> <span class="n">n0</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">outname</span><span class="p">,</span> <span class="n">c0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>and the following routine was used to plot the corresponding imperfection
+field:</p>
+<p><tt class="docutils literal"><span class="pre">plot_half_cosine.py</span></tt></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">pi</span>
+<span class="kn">import</span> <span class="nn">matplotlib.cm</span> <span class="kn">as</span> <span class="nn">cm</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+
+<span class="kn">from</span> <span class="nn">compmech.conecyl.imperfections</span> <span class="kn">import</span> <span class="n">fw0</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s">&#39;axes.labelsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">9.</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s">&#39;font.size&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">9.</span>
+
+<span class="n">method</span> <span class="o">=</span> <span class="s">&#39;points&#39;</span>
+<span class="n">funcnum</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;C01&#39;</span><span class="p">]</span>
+
+<span class="n">nz</span> <span class="o">=</span> <span class="mi">180</span>
+<span class="n">nt</span> <span class="o">=</span> <span class="mi">560</span>
+
+<span class="n">H</span> <span class="o">=</span> <span class="mf">1219.2</span>
+<span class="n">zpts_min</span> <span class="o">=</span> <span class="mf">25.4</span>
+<span class="n">zpts_max</span> <span class="o">=</span> <span class="n">H</span> <span class="o">-</span> <span class="mf">25.4</span>
+<span class="n">R</span> <span class="o">=</span> <span class="mf">406.4</span> <span class="o">+</span> <span class="mf">0.8128</span><span class="o">/</span><span class="mf">2.</span>
+
+<span class="c">#cmap = cm.jet</span>
+<span class="n">cmap</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">gist_rainbow_r</span>
+
+<span class="n">m0</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">n0</span> <span class="o">=</span> <span class="mi">10</span>
+
+<span class="n">filename</span> <span class="o">=</span> <span class="s">&#39;tmp_c0_{0}_f{1:d}_m0_{2:03d}_n0_{3:03d}.txt&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">method</span><span class="p">,</span>
+        <span class="n">funcnum</span><span class="p">,</span> <span class="n">m0</span><span class="p">,</span> <span class="n">n0</span><span class="p">)</span>
+<span class="n">c0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+<span class="n">ts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">pi</span><span class="p">,</span> <span class="n">pi</span><span class="p">,</span> <span class="n">nt</span><span class="p">)</span>
+<span class="n">xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="n">nz</span><span class="p">)</span>
+<span class="n">zs</span> <span class="o">=</span> <span class="n">xs</span><span class="o">*</span><span class="n">H</span>
+<span class="n">check</span> <span class="o">=</span> <span class="p">(</span><span class="n">zs</span> <span class="o">&gt;=</span> <span class="n">zpts_min</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">zs</span> <span class="o">&lt;=</span> <span class="n">zpts_max</span><span class="p">)</span>
+<span class="n">test</span> <span class="o">=</span> <span class="n">xs</span><span class="p">[</span><span class="n">check</span><span class="p">]</span>
+<span class="n">xs</span> <span class="o">-=</span> <span class="n">test</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+<span class="n">xs</span> <span class="o">/=</span> <span class="n">xs</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+<span class="n">xs</span><span class="p">[</span><span class="n">xs</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">xs</span><span class="p">[</span><span class="n">xs</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="n">dummy</span><span class="p">,</span> <span class="n">xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">ts</span><span class="p">,</span> <span class="n">xs</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">ts</span><span class="p">,</span> <span class="n">zs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">ts</span><span class="p">,</span> <span class="n">zs</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+<span class="n">w0</span> <span class="o">=</span> <span class="n">fw0</span><span class="p">(</span><span class="n">m0</span><span class="p">,</span> <span class="n">n0</span><span class="p">,</span> <span class="n">c0</span><span class="p">,</span> <span class="n">xs</span><span class="p">,</span> <span class="n">ts</span><span class="p">,</span> <span class="n">funcnum</span><span class="o">=</span><span class="n">funcnum</span><span class="p">)</span>
+<span class="n">w0</span><span class="o">.</span><span class="n">flat</span><span class="p">[(</span><span class="n">zs</span><span class="o">.</span><span class="n">flat</span> <span class="o">&lt;</span> <span class="n">zpts_min</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">zs</span><span class="o">.</span><span class="n">flat</span> <span class="o">&gt;</span> <span class="n">zpts_max</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">3.5</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">220</span><span class="p">)</span>
+
+<span class="n">levels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">w0</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">w0</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="mi">400</span><span class="p">)</span>
+<span class="n">contour</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">ts</span><span class="o">*</span><span class="n">R</span><span class="p">,</span> <span class="n">zs</span><span class="p">,</span> <span class="n">w0</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">ts</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="n">levels</span><span class="o">=</span><span class="n">levels</span><span class="p">,</span>
+        <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s">&#39;equal&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_ticks_position</span><span class="p">(</span><span class="s">&#39;bottom&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_ticks_position</span><span class="p">(</span><span class="s">&#39;left&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s">&#39;bottom&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s">&#39;top&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s">&#39;left&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s">&#39;right&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_ticks</span><span class="p">([</span><span class="o">-</span><span class="n">pi</span><span class="o">*</span><span class="n">R</span><span class="p">,</span> <span class="n">pi</span><span class="o">*</span><span class="n">R</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_ticklabels</span><span class="p">([</span><span class="s">r&#39;$-\pi$&#39;</span><span class="p">,</span> <span class="s">r&#39;$\pi$&#39;</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s">r&#39;$\theta$ $[rad]$&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s">&#39;center&#39;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s">&#39;center&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">labelpad</span> <span class="o">=</span> <span class="o">-</span><span class="mi">7</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_ticks</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">H</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s">&#39;$z$</span><span class="se">\n</span><span class="s">$[mm]$&#39;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="s">&#39;horizontal&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s">&#39;center&#39;</span><span class="p">,</span>
+        <span class="n">ha</span><span class="o">=</span><span class="s">&#39;center&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">labelpad</span> <span class="o">=</span> <span class="o">-</span><span class="mi">10</span>
+
+
+<span class="n">colorbar</span> <span class="o">=</span> <span class="bp">True</span>
+<span class="k">if</span> <span class="n">colorbar</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">mpl_toolkits.axes_grid1</span> <span class="kn">import</span> <span class="n">make_axes_locatable</span>
+
+    <span class="n">fsize</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">cbar_nticks</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">divider</span> <span class="o">=</span> <span class="n">make_axes_locatable</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+    <span class="n">cax</span> <span class="o">=</span> <span class="n">divider</span><span class="o">.</span><span class="n">append_axes</span><span class="p">(</span><span class="s">&#39;right&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="s">&#39;5%&#39;</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+    <span class="n">cbarticks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">w0</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">w0</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">cbar_nticks</span><span class="p">)</span>
+    <span class="n">cbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">contour</span><span class="p">,</span> <span class="n">ticks</span><span class="o">=</span><span class="n">cbarticks</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;</span><span class="si">%1.3f</span><span class="s">&#39;</span><span class="p">,</span>
+                        <span class="n">cax</span><span class="o">=</span><span class="n">cax</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
+    <span class="n">cax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">,</span> <span class="s">&#39;$w_0$ $[mm]$&#39;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s">&#39;left&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s">&#39;bottom&#39;</span><span class="p">,</span>
+            <span class="n">fontsize</span><span class="o">=</span><span class="n">fsize</span><span class="p">)</span>
+    <span class="n">cbar</span><span class="o">.</span><span class="n">outline</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
+    <span class="n">cbar</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelsize</span><span class="o">=</span><span class="n">fsize</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">tick2On</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s">&#39;plot_half_cosine.png&#39;</span><span class="p">,</span> <span class="n">transparent</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s">&#39;tight&#39;</span><span class="p">,</span>
+        <span class="n">pad_inches</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">220</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>giving:</p>
+<div class="figure">
+<a class="reference internal image-reference" href="../../../_images/plot_half_cosine.png"><img alt="../../../_images/plot_half_cosine.png" src="../../../_images/plot_half_cosine.png" style="width: 400px;" /></a>
+</div>
+<p>The relatively poor correlation between the half-cosine and the
+inverse_weighted is primarily due to the reduced amount of measured data used
+for this tutorial. Using real imperfection data the correlation is much
+closer, as shown in the additional examples below.</p>
+</div>
+<div class="section" id="additional-examples-using-the-half-cosine-function">
+<h2>Additional Examples using the Half-Cosine Function<a class="headerlink" href="#additional-examples-using-the-half-cosine-function" title="Permalink to this headline">¶</a></h2>
+<p>The example below shows how to use this function and then plot the
+displacement patterns using different approximation levels:</p>
+<p><tt class="docutils literal"><span class="pre">half_cosine_additional_example.py</span></tt></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="kn">from</span> <span class="nn">desicos.conecylDB.fit_data</span> <span class="kn">import</span> <span class="n">fw0</span>
+
+<span class="n">ntheta</span> <span class="o">=</span> <span class="mi">420</span>
+<span class="n">nz</span> <span class="o">=</span> <span class="mi">180</span>
+<span class="n">funcnum</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">path</span> <span class="o">=</span> <span class="s">&#39;degenhardt_2010_z25_msi_theta_z_imp.txt&#39;</span>
+
+<span class="n">theta</span> <span class="o">=</span> <span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">pi</span><span class="p">,</span> <span class="n">pi</span><span class="p">,</span> <span class="n">ntheta</span><span class="p">)</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">linspace</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="n">nz</span><span class="p">)</span>
+<span class="n">theta</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">meshgrid</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">m0</span><span class="p">,</span> <span class="n">n0</span> <span class="ow">in</span> <span class="p">[[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">],</span> <span class="p">[</span><span class="mi">30</span><span class="p">,</span> <span class="mi">45</span><span class="p">],</span> <span class="p">[</span><span class="mi">40</span><span class="p">,</span> <span class="mi">60</span><span class="p">],</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">75</span><span class="p">]]:</span>
+    <span class="n">c</span><span class="p">,</span> <span class="n">residues</span> <span class="o">=</span> <span class="n">calc_c0</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">m0</span><span class="o">=</span><span class="n">m0</span><span class="p">,</span> <span class="n">n0</span><span class="o">=</span><span class="n">n0</span><span class="p">,</span> <span class="n">sample_size</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">m</span><span class="o">*</span><span class="n">n</span><span class="p">),</span>
+                          <span class="n">funcnum</span><span class="o">=</span><span class="n">funcnum</span><span class="p">)</span>
+
+    <span class="n">w0</span> <span class="o">=</span> <span class="n">fw0</span><span class="p">(</span><span class="n">m0</span><span class="p">,</span> <span class="n">n0</span><span class="p">,</span> <span class="n">z</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">theta</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">funcnum</span><span class="o">=</span><span class="n">funcnum</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">3.5</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+    <span class="n">levels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">w0</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">w0</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="mi">400</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">z</span><span class="o">*</span><span class="n">H_measured</span><span class="p">,</span> <span class="n">w0</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">theta</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span>
+                 <span class="n">levels</span><span class="o">=</span><span class="n">levels</span><span class="p">)</span>
+
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_ticks_position</span><span class="p">(</span><span class="s">&#39;bottom&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_ticks_position</span><span class="p">(</span><span class="s">&#39;left&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s">&#39;top&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s">&#39;right&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_ticks</span><span class="p">([</span><span class="o">-</span><span class="n">pi</span><span class="p">,</span> <span class="n">pi</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_ticklabels</span><span class="p">([</span><span class="s">r&#39;$-\pi$&#39;</span><span class="p">,</span> <span class="s">r&#39;$\pi$&#39;</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s">&#39;Circumferential Position, $rad$&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">labelpad</span><span class="o">=-</span><span class="mi">10</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_ticks</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">500</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s">&#39;Height, $mm$&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">labelpad</span><span class="o">=-</span><span class="mi">15</span>
+
+    <span class="n">filename</span> <span class="o">=</span> <span class="s">&#39;fw0_f{0}_z25_m_{1:03d}_n_{2:03d}.png&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">funcnum</span><span class="p">,</span> <span class="n">m0</span><span class="p">,</span> <span class="n">n0</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">transparent</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s">&#39;tight&#39;</span><span class="p">,</span>
+                      <span class="n">pad_inches</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>which will result in the following figures for <tt class="docutils literal"><span class="pre">funcnum=1</span></tt>:</p>
+<p><img class="math" src="../../../_images/math/624c3265a78ed2cc633978f63bba190f6097fab7.png" alt="m_0=20"/>, <img class="math" src="../../../_images/math/9ed957cd12caab821285dd028035ca3b9fd8b8c3.png" alt="n_0=30"/>:</p>
+<div class="figure">
+<img alt="../../../_images/fw0_f1_z25_m_020_n_030.png" src="../../../_images/fw0_f1_z25_m_020_n_030.png" />
+</div>
+<p><img class="math" src="../../../_images/math/8ffb15b4d5a82e92171bc78f8b690a765a087a63.png" alt="m_0=30"/>, <img class="math" src="../../../_images/math/ae914e65f1ea75b391c02a0cf09dcbab0cc4f685.png" alt="n_0=45"/>:</p>
+<div class="figure">
+<img alt="../../../_images/fw0_f1_z25_m_030_n_045.png" src="../../../_images/fw0_f1_z25_m_030_n_045.png" />
+</div>
+<p><img class="math" src="../../../_images/math/0e7c170e1571536016b20b83f237ec80c169159d.png" alt="m_0=40"/>, <img class="math" src="../../../_images/math/23f9eebdb8e102928951b3fb4d4d9f15ce207ce3.png" alt="n_0=60"/>:</p>
+<div class="figure">
+<img alt="../../../_images/fw0_f1_z25_m_040_n_060.png" src="../../../_images/fw0_f1_z25_m_040_n_060.png" />
+</div>
+<p><img class="math" src="../../../_images/math/9c6a0d2b42ec07fcff39a1d8b4cf27da5cdf0e9f.png" alt="m_0=50"/>, <img class="math" src="../../../_images/math/4b39b4637efbc5f41f5b60b4b65557beec5c17b1.png" alt="n_0=75"/>:</p>
+<div class="figure">
+<img alt="../../../_images/fw0_f1_z25_m_050_n_075.png" src="../../../_images/fw0_f1_z25_m_050_n_075.png" />
+</div>
+<p>and for <tt class="docutils literal"><span class="pre">funcnum=2</span></tt>:</p>
+<p><img class="math" src="../../../_images/math/624c3265a78ed2cc633978f63bba190f6097fab7.png" alt="m_0=20"/>, <img class="math" src="../../../_images/math/9ed957cd12caab821285dd028035ca3b9fd8b8c3.png" alt="n_0=30"/>:</p>
+<div class="figure">
+<img alt="../../../_images/fw0_f2_z25_m_020_n_030.png" src="../../../_images/fw0_f2_z25_m_020_n_030.png" />
+</div>
+<p><img class="math" src="../../../_images/math/8ffb15b4d5a82e92171bc78f8b690a765a087a63.png" alt="m_0=30"/>, <img class="math" src="../../../_images/math/ae914e65f1ea75b391c02a0cf09dcbab0cc4f685.png" alt="n_0=45"/>:</p>
+<div class="figure">
+<img alt="../../../_images/fw0_f2_z25_m_030_n_045.png" src="../../../_images/fw0_f2_z25_m_030_n_045.png" />
+</div>
+<p><img class="math" src="../../../_images/math/0e7c170e1571536016b20b83f237ec80c169159d.png" alt="m_0=40"/>, <img class="math" src="../../../_images/math/23f9eebdb8e102928951b3fb4d4d9f15ce207ce3.png" alt="n_0=60"/>:</p>
+<div class="figure">
+<img alt="../../../_images/fw0_f2_z25_m_040_n_060.png" src="../../../_images/fw0_f2_z25_m_040_n_060.png" />
+</div>
+<p><img class="math" src="../../../_images/math/9c6a0d2b42ec07fcff39a1d8b4cf27da5cdf0e9f.png" alt="m_0=50"/>, <img class="math" src="../../../_images/math/4b39b4637efbc5f41f5b60b4b65557beec5c17b1.png" alt="n_0=75"/>:</p>
+<div class="figure">
+<img alt="../../../_images/fw0_f2_z25_m_050_n_075.png" src="../../../_images/fw0_f2_z25_m_050_n_075.png" />
+</div>
+<p>It can be seen how the <img class="math" src="../../../_images/math/05342505402760ddea398cf4ac14bf08993c760f.png" alt="w_0"/> function approximates the measured imperfection
+pattern with the increase of <img class="math" src="../../../_images/math/e1d0211f305ad1f379ed4c9fe66c217d32989c99.png" alt="m_0"/> and <img class="math" src="../../../_images/math/e1d0211f305ad1f379ed4c9fe66c217d32989c99.png" alt="m_0"/>. The measured imperfection
+pattern is shown below, and it was plotted after performing the
+inverse-weighted interpolation already described.</p>
+<div class="figure">
+<img alt="../../../_images/measured_z25.png" src="../../../_images/measured_z25.png" />
+</div>
+<p>Comparing the results using <tt class="docutils literal"><span class="pre">funcnum=1</span></tt> and <tt class="docutils literal"><span class="pre">funcnum=2</span></tt>, one see that
+the latter approaches closer the real measurements, since it relaxes the
+condition <img class="math" src="../../../_images/math/be5f7fe5aa721daffb1552ebb7ef3f8e73e6c583.png" alt="w_0 = 0"/> at the edges.</p>
+</div>
+</div>
+<div class="section" id="processing-measured-thickness-imperfection-data">
+<h1>Processing Measured Thickness Imperfection Data<a class="headerlink" href="#processing-measured-thickness-imperfection-data" title="Permalink to this headline">¶</a></h1>
+<p>The procedure described for geometric imperfections is also applicable for
+thickness imperfections. The measured imperfection data usually
+comes in a 4 columns format where the thickness measurement is given for each
+spatial position: <img class="math" src="../../../_images/math/79cb7a58f0ba0983a641c9af57385512f181a8d5.png" alt="x_i"/>, <img class="math" src="../../../_images/math/81684209f3f7806a0ce48bb88be4bfff890a2aae.png" alt="y_i"/>, <img class="math" src="../../../_images/math/0842ecdbdf24640b9de99c7f182508ecc1599b2d.png" alt="z_i"/>:</p>
+<div class="highlight-python"><div class="highlight"><pre>x1 y1 z1 thick1
+x2 y2 z2 thick2
+...
+xn yn zn thickn
+</pre></div>
+</div>
+<p>The recommended procedure to transform the raw data to the <a class="reference internal" href="../../../modules/abaqus/index.html#figure-conecyl"><em>finite
+element coordinate system</em></a> is the function
+<a class="reference internal" href="../../../modules/conecylDB/index.html#desicos.conecylDB.read_write.xyzthick2thetazthick" title="desicos.conecylDB.read_write.xyzthick2thetazthick"><tt class="xref py py-func docutils literal"><span class="pre">xyzthick2thetazthick()</span></tt></a>, that also calls internally the
+<a class="reference internal" href="../../../modules/conecylDB/index.html#desicos.conecylDB.fit_data.best_fit_cylinder" title="desicos.conecylDB.fit_data.best_fit_cylinder"><tt class="xref py py-func docutils literal"><span class="pre">best_fit_cylinder()</span></tt></a> or the <a class="reference internal" href="../../../modules/conecylDB/index.html#desicos.conecylDB.fit_data.best_fit_cone" title="desicos.conecylDB.fit_data.best_fit_cone"><tt class="xref py py-func docutils literal"><span class="pre">best_fit_cone()</span></tt></a> routines:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">desicos.conecylDB.read_write</span> <span class="kn">import</span> <span class="n">xyzthick2thetazthick</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xyzthick2thetazthick</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">alphadeg_measured</span><span class="p">,</span> <span class="n">R_measured</span><span class="p">,</span> <span class="n">H_measured</span><span class="p">,</span>
+<span class="go">                         fmt=&#39;%1.8f&#39;)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">It is possible to use function <tt class="xref py py-func docutils literal"><span class="pre">xyzthick2thetazthick`()</span></tt>
+in other ways, as detailed in the corresponding documentation</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/desicos.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Processing Geometric Imperfection Data</a><ul>
+<li><a class="reference internal" href="#raw-data-from-mesurement-systems">Raw Data from Mesurement Systems</a></li>
+<li><a class="reference internal" href="#inverse-weighted-interpolation">Inverse-Weighted Interpolation</a></li>
+<li><a class="reference internal" href="#half-cosine-function">Half-Cosine Function</a></li>
+<li><a class="reference internal" href="#additional-examples-using-the-half-cosine-function">Additional Examples using the Half-Cosine Function</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#processing-measured-thickness-imperfection-data">Processing Measured Thickness Imperfection Data</a></li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../dynamic.html"
+                        title="previous chapter">Dynamic Database</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../add_file.html"
+                        title="next chapter">Adding New Imperfection Files</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../../_sources/tutorials/conecylDB/processing_measured_imp_data/processing_measured_imp_data.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../../../np-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../add_file.html" title="Adding New Imperfection Files"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../dynamic.html" title="Dynamic Database"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">DESICOS 2.0.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Tutorials</a> &raquo;</li>
+          <li><a href="../index.html" >Cone / Cylinder DataBase (<tt class="docutils literal"><span class="pre">desicos.conecylDB</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012-2015 Desicos Improved Software Team.
+      Last updated on Oct 20, 2014.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

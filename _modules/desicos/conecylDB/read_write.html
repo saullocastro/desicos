@@ -1,0 +1,595 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>desicos.conecylDB.read_write &mdash; DESICOS 2.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../../../_static/desicos.png"/>
+    <link rel="top" title="DESICOS 2.0.0 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../../../np-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">DESICOS 2.0.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for desicos.conecylDB.read_write</h1><div class="highlight"><pre>
+<span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">Read/Write (:mod:`desicos.conecylDB.read_write`)</span>
+<span class="sd">==================================================</span>
+
+<span class="sd">.. currentmodule:: desicos.conecylDB.read_write</span>
+
+<span class="sd">This module includes functions to read and write imperfection files.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">desicos.constants</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">desicos.logger</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">desicos.conecylDB.fit_data</span> <span class="kn">import</span> <span class="n">best_fit_cylinder</span>
+
+<div class="viewcode-block" id="read_theta_z_imp"><a class="viewcode-back" href="../../../modules/conecylDB/index.html#desicos.conecylDB.read_write.read_theta_z_imp">[docs]</a><span class="k">def</span> <span class="nf">read_theta_z_imp</span><span class="p">(</span><span class="n">path</span><span class="p">,</span>
+                     <span class="n">H_measured</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                     <span class="n">stretch_H</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                     <span class="n">z_offset_bot</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">r&quot;&quot;&quot;Read an imperfection file in the format `\theta`, `z`, imperfection.</span>
+
+<span class="sd">    Where the angles `\theta` are given in radians.</span>
+
+<span class="sd">    Example of input file::</span>
+
+<span class="sd">        theta1 z1 imp1</span>
+<span class="sd">        theta2 z2 imp2</span>
+<span class="sd">        ...</span>
+<span class="sd">        thetan zn impn</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    path : str or np.ndarray</span>
+<span class="sd">        The path to the imperfection file, or a ``np.ndarray``, with</span>
+<span class="sd">        three columns.</span>
+<span class="sd">    H_measured : float, optional</span>
+<span class="sd">        The total height of the measured test specimen, including eventual</span>
+<span class="sd">        resin rings at the edges.</span>
+<span class="sd">    stretch_H : bool, optional</span>
+<span class="sd">        Tells if the height of the measured points, which is usually smaller</span>
+<span class="sd">        than the height of the test specimen, should be stretched to fill</span>
+<span class="sd">        the whole test specimen. If not, the points will be placed in the</span>
+<span class="sd">        middle or using the offset given by ``z_offset_bot`` and the</span>
+<span class="sd">        area not covered by the measured points will be interpolated</span>
+<span class="sd">        using the closest available points (the imperfection</span>
+<span class="sd">        pattern will look like there was an extrusion close to the edges).</span>
+<span class="sd">    z_offset_bot : float, optional</span>
+<span class="sd">        The offset that should be used from the bottom of the measured points</span>
+<span class="sd">        to the bottom of the test specimen.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    mps : np.ndarray</span>
+<span class="sd">        A 2-D array with `\theta`, `z`, `value` in the first, second</span>
+<span class="sd">        and third columns, respectively.</span>
+<span class="sd">    offset_mps : np.ndarray</span>
+<span class="sd">        A 2-D array similar to ``mps`` but offset according to place the</span>
+<span class="sd">        measured data according to the inputs given.</span>
+<span class="sd">    norm_mps : np.ndarray</span>
+<span class="sd">        A 2-D array similar to ``mps`` but normalized in `z` by the height.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c"># user warnings</span>
+    <span class="k">if</span> <span class="n">stretch_H</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">z_offset_bot</span><span class="p">:</span>
+            <span class="n">warn</span><span class="p">(</span><span class="s">&#39;Because of the stretch_H option,</span><span class="se">\n\t</span><span class="s">&#39;</span> <span class="o">+</span>
+                 <span class="s">&#39;consider setting &quot;z_offset_bot&quot; to None&#39;</span><span class="p">)</span>
+    <span class="c"># reading the imperfection file</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="n">log</span><span class="p">(</span><span class="s">&#39;Reading imperfection array: ...&#39;</span><span class="p">)</span>
+        <span class="n">mps</span> <span class="o">=</span> <span class="n">path</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">log</span><span class="p">(</span><span class="s">&#39;Reading imperfection file: {0} ...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+        <span class="n">mps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">FLOAT</span><span class="p">)</span>
+
+    <span class="c"># measuring model dimensions</span>
+    <span class="n">z_min</span> <span class="o">=</span> <span class="n">mps</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+    <span class="n">z_max</span> <span class="o">=</span> <span class="n">mps</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+    <span class="n">z_center</span>  <span class="o">=</span> <span class="p">(</span><span class="n">z_max</span> <span class="o">+</span> <span class="n">z_min</span><span class="p">)</span><span class="o">/</span><span class="mf">2.</span>
+    <span class="n">H_points</span>  <span class="o">=</span> <span class="p">(</span><span class="n">z_max</span> <span class="o">-</span> <span class="n">z_min</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">H_measured</span><span class="p">:</span>
+        <span class="n">H_measured</span> <span class="o">=</span> <span class="n">H_points</span>
+        <span class="n">warn</span><span class="p">(</span><span class="s">&#39;The cylinder height of the test specimen assumed</span><span class="se">\n\t</span><span class="s">&#39;</span> <span class="o">+</span>
+             <span class="s">&#39;to be {0:1.2f}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">H_measured</span><span class="p">))</span>
+
+    <span class="c"># calculating default z_offset_bot</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">z_offset_bot</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">stretch_H</span><span class="p">:</span>
+            <span class="n">z_offset_bot</span> <span class="o">=</span> <span class="mf">0.</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">z_offset_bot</span> <span class="o">=</span> <span class="p">(</span><span class="n">H_measured</span> <span class="o">-</span> <span class="n">H_points</span><span class="p">)</span><span class="o">/</span><span class="mf">2.</span>
+    <span class="n">offset_z</span> <span class="o">=</span> <span class="n">z_offset_bot</span> <span class="o">-</span> <span class="n">z_min</span>
+
+    <span class="n">log</span><span class="p">(</span><span class="s">&#39;H_points       : {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">H_points</span><span class="p">))</span>
+    <span class="n">log</span><span class="p">(</span><span class="s">&#39;H_measured     : {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">H_measured</span><span class="p">))</span>
+    <span class="n">log</span><span class="p">(</span><span class="s">&#39;z_min          : {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">z_min</span><span class="p">))</span>
+    <span class="n">log</span><span class="p">(</span><span class="s">&#39;z_max          : {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">z_max</span><span class="p">))</span>
+    <span class="n">log</span><span class="p">(</span><span class="s">&#39;offset_z       : {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">offset_z</span><span class="p">))</span>
+
+    <span class="n">offset_mps</span> <span class="o">=</span> <span class="n">mps</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">offset_mps</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">offset_z</span>
+
+    <span class="n">norm_mps</span> <span class="o">=</span> <span class="n">offset_mps</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">stretch_H</span><span class="p">:</span>
+        <span class="n">norm_mps</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">/=</span> <span class="n">H_points</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">norm_mps</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">/=</span> <span class="n">H_measured</span>
+
+    <span class="k">return</span> <span class="n">mps</span><span class="p">,</span> <span class="n">offset_mps</span><span class="p">,</span> <span class="n">norm_mps</span>
+</div>
+<div class="viewcode-block" id="read_xyz"><a class="viewcode-back" href="../../../modules/conecylDB/index.html#desicos.conecylDB.read_write.read_xyz">[docs]</a><span class="k">def</span> <span class="nf">read_xyz</span><span class="p">(</span><span class="n">path</span><span class="p">,</span>
+             <span class="n">alphadeg_measured</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+             <span class="n">R_best_fit</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+             <span class="n">H_measured</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+             <span class="n">stretch_H</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+             <span class="n">z_offset_bot</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+             <span class="n">r_TOL</span><span class="o">=</span><span class="mf">1.</span><span class="p">):</span>
+    <span class="sd">r&quot;&quot;&quot;Read an imperfection file in the format `x`, `y`, `z`.</span>
+
+<span class="sd">    Example of input file::</span>
+
+<span class="sd">        x1 y1 z1</span>
+<span class="sd">        x2 y2 z2</span>
+<span class="sd">        ...</span>
+<span class="sd">        xn yn zn</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    path : str or np.ndarray</span>
+<span class="sd">        The path to the imperfection file, or a ``np.ndarray``, with</span>
+<span class="sd">        three columns.</span>
+<span class="sd">    alphadeg_measured : float, optional</span>
+<span class="sd">        The semi-vertex angle of the measured sample.</span>
+<span class="sd">    R_best_fit : float, optional</span>
+<span class="sd">        Best fit radius obtained with functions :func:`.best_fit_cylinder`</span>
+<span class="sd">        or :func:`best_fit_cone`.</span>
+<span class="sd">    H_measured : float, optional</span>
+<span class="sd">        The total height of the measured test specimen, including eventual</span>
+<span class="sd">        resin rings at the edges.</span>
+<span class="sd">    stretch_H : bool, optional</span>
+<span class="sd">        Tells if the height of the measured points, which is usually smaller</span>
+<span class="sd">        than the height of the test specimen, should be stretched to fill</span>
+<span class="sd">        the whole test specimen. If not, the points will be placed in the</span>
+<span class="sd">        middle or using the offset given by ``z_offset_bot`` and the</span>
+<span class="sd">        area not covered by the measured points will be interpolated</span>
+<span class="sd">        using the closest available points (the imperfection</span>
+<span class="sd">        pattern will look like there was an extrusion close to the edges).</span>
+<span class="sd">    z_offset_bot : float, optional</span>
+<span class="sd">        The offset that should be used from the bottom of the measured points</span>
+<span class="sd">        to the bottom of the test specimen.</span>
+<span class="sd">    r_TOL : float, optional</span>
+<span class="sd">        The tolerance used to ignore points farer than ``r_TOL*R_best_fit``,</span>
+<span class="sd">        given in percent.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    mps : np.ndarray</span>
+<span class="sd">        A 2-D array with `x`, `y`, `z` in the first, second</span>
+<span class="sd">        and third columns, respectively.</span>
+<span class="sd">    offset_mps : np.ndarray</span>
+<span class="sd">        A 2-D array similar to ``mps`` but with the z coordinates offset</span>
+<span class="sd">        according to the inputs given.</span>
+<span class="sd">    norm_mps : np.ndarray</span>
+<span class="sd">        A 2-D array similar to ``mps`` but normalized in `z` by the height</span>
+<span class="sd">        and in `x` and `y` by the radius.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c"># user warnings</span>
+    <span class="k">if</span> <span class="n">stretch_H</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">z_offset_bot</span><span class="p">:</span>
+            <span class="n">warn</span><span class="p">(</span><span class="s">&#39;Because of the stretch_H option,</span><span class="se">\n\t</span><span class="s">&#39;</span> <span class="o">+</span>
+                 <span class="s">&#39;consider setting &quot;z_offset_bot&quot; to None&#39;</span><span class="p">)</span>
+    <span class="c"># reading the imperfection file</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="n">mps</span> <span class="o">=</span> <span class="n">path</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">mps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">FLOAT</span><span class="p">)</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mps</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">mps</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="c"># measuring model dimensions</span>
+    <span class="k">if</span> <span class="n">R_best_fit</span> <span class="o">==</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">R</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+        <span class="n">warn</span><span class="p">(</span><span class="s">&#39;The cylinder average radius of the measured points</span><span class="se">\n\t</span><span class="s">&#39;</span> <span class="o">+</span>
+             <span class="s">&#39;assumed to be {0:1.2f}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">R_best_fit</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">R</span> <span class="o">=</span> <span class="n">R_best_fit</span>
+    <span class="n">z_min</span> <span class="o">=</span> <span class="n">mps</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+    <span class="n">z_max</span> <span class="o">=</span> <span class="n">mps</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+    <span class="n">z_center</span>  <span class="o">=</span> <span class="p">(</span><span class="n">z_max</span> <span class="o">+</span> <span class="n">z_min</span><span class="p">)</span><span class="o">/</span><span class="mf">2.</span>
+    <span class="n">H_points</span>  <span class="o">=</span> <span class="p">(</span><span class="n">z_max</span> <span class="o">-</span> <span class="n">z_min</span><span class="p">)</span>
+    <span class="n">log</span><span class="p">(</span><span class="s">&#39;R_average     : {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">r</span><span class="p">)))</span>
+    <span class="n">log</span><span class="p">(</span><span class="s">&#39;R_best_fit     : {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">R_best_fit</span><span class="p">))</span>
+    <span class="c"># applying user inputs</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">H_measured</span><span class="p">:</span>
+        <span class="n">H_measured</span> <span class="o">=</span> <span class="n">H_points</span>
+        <span class="n">warn</span><span class="p">(</span><span class="s">&#39;The cylinder height of the measured points assumed</span><span class="se">\n\t</span><span class="s">&#39;</span> <span class="o">+</span>
+             <span class="s">&#39;to be {0:1.2f}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">H_measured</span><span class="p">))</span>
+    <span class="c"># calculating default z_offset_bot</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">z_offset_bot</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">stretch_H</span><span class="p">:</span>
+            <span class="n">z_offset_bot</span> <span class="o">=</span> <span class="mf">0.</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">z_offset_bot</span> <span class="o">=</span> <span class="p">(</span><span class="n">H_measured</span> <span class="o">-</span> <span class="n">H_points</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.</span>
+    <span class="n">offset_z</span> <span class="o">=</span> <span class="n">z_offset_bot</span> <span class="o">-</span> <span class="n">z_min</span>
+    <span class="n">log</span><span class="p">(</span><span class="s">&#39;H_points       : {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">H_points</span><span class="p">))</span>
+    <span class="n">log</span><span class="p">(</span><span class="s">&#39;H_measured     : {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">H_measured</span><span class="p">))</span>
+    <span class="n">log</span><span class="p">(</span><span class="s">&#39;z_min          : {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">z_min</span><span class="p">))</span>
+    <span class="n">log</span><span class="p">(</span><span class="s">&#39;z_max          : {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">z_max</span><span class="p">))</span>
+    <span class="n">log</span><span class="p">(</span><span class="s">&#39;offset_z       : {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">offset_z</span><span class="p">))</span>
+    <span class="n">r_TOL_min</span> <span class="o">=</span> <span class="p">(</span><span class="n">R</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">r_TOL</span><span class="o">/</span><span class="mf">100.</span><span class="p">))</span>
+    <span class="n">r_TOL_max</span> <span class="o">=</span> <span class="p">(</span><span class="n">R</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">r_TOL</span><span class="o">/</span><span class="mf">100.</span><span class="p">))</span>
+    <span class="n">cond</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">r</span> <span class="o">&gt;</span> <span class="n">r_TOL_max</span><span class="p">,</span>
+                            <span class="n">r</span> <span class="o">&lt;</span> <span class="n">r_TOL_min</span><span class="p">)),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">skept</span> <span class="o">=</span> <span class="n">mps</span><span class="p">[</span><span class="n">cond</span><span class="p">]</span>
+    <span class="n">log</span><span class="p">(</span><span class="s">&#39;Skipping {0} points&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">skept</span><span class="p">)))</span>
+    <span class="n">mps</span> <span class="o">=</span> <span class="n">mps</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="n">cond</span><span class="p">)]</span>
+    <span class="n">offset_mps</span> <span class="o">=</span> <span class="n">mps</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">offset_mps</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">+=</span> <span class="n">offset_z</span>
+    <span class="n">norm_mps</span> <span class="o">=</span> <span class="n">offset_mps</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">norm_mps</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">/=</span> <span class="n">R</span>
+    <span class="n">norm_mps</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">/=</span> <span class="n">R</span>
+    <span class="k">if</span> <span class="n">stretch_H</span><span class="p">:</span>
+        <span class="n">norm_mps</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">/=</span> <span class="n">H_points</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">norm_mps</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">/=</span> <span class="n">H_measured</span>
+
+    <span class="k">return</span> <span class="n">mps</span><span class="p">,</span> <span class="n">offset_mps</span><span class="p">,</span> <span class="n">norm_mps</span>
+</div>
+<div class="viewcode-block" id="xyz2thetazimp"><a class="viewcode-back" href="../../../modules/conecylDB/index.html#desicos.conecylDB.read_write.xyz2thetazimp">[docs]</a><span class="k">def</span> <span class="nf">xyz2thetazimp</span><span class="p">(</span><span class="n">path</span><span class="p">,</span>
+                  <span class="n">alphadeg_measured</span><span class="p">,</span>
+                  <span class="n">H_measured</span><span class="p">,</span>
+                  <span class="n">R_expected</span><span class="o">=</span><span class="mf">10.</span><span class="p">,</span>
+                  <span class="n">use_best_fit</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                  <span class="n">sample_size</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                  <span class="n">best_fit_output</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                  <span class="n">errorRtol</span><span class="o">=</span><span class="mf">1.e-9</span><span class="p">,</span>
+                  <span class="n">stretch_H</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                  <span class="n">z_offset_bot</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                  <span class="n">r_TOL</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span>
+                  <span class="n">clip_bottom</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                  <span class="n">clip_top</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                  <span class="n">save</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                  <span class="n">fmt</span><span class="o">=</span><span class="s">&#39;</span><span class="si">%1.6f</span><span class="s">&#39;</span><span class="p">):</span>
+    <span class="sd">r&quot;&quot;&quot;Transforms an imperfection file from the format &quot;`x` `y` `z`&quot;</span>
+<span class="sd">    to the format &quot;`\theta` `z` `imp`&quot;.</span>
+
+<span class="sd">    The input file::</span>
+
+<span class="sd">        x1 y1 z1</span>
+<span class="sd">        x2 y2 z2</span>
+<span class="sd">        ...</span>
+<span class="sd">        xn yn zn</span>
+
+<span class="sd">    Is transformed to a file::</span>
+
+<span class="sd">        theta1 z1 imp1</span>
+<span class="sd">        theta2 z2 imp2</span>
+<span class="sd">        ...</span>
+<span class="sd">        thetan zn impn</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    path : str</span>
+<span class="sd">        The path to the imperfection file.</span>
+<span class="sd">    alphadeg_measured : float</span>
+<span class="sd">        The semi-vertex angle of the measured sample (it is ``0.`` for a</span>
+<span class="sd">        cylinder).</span>
+<span class="sd">    H_measured : float</span>
+<span class="sd">        The total height of the measured test specimen, including eventual</span>
+<span class="sd">        resin rings at the edges.</span>
+<span class="sd">    R_expected : float, optional</span>
+<span class="sd">        If ``use_best_fit==True`` this will be used as a first estimative that</span>
+<span class="sd">        can reduce the number of iterations up to convergence of the best fit</span>
+<span class="sd">        algorithms. If ``use_best_fit==False`` this will be considered the</span>
+<span class="sd">        ``R_best_fit``.</span>
+<span class="sd">    use_best_fit : bool, optional</span>
+<span class="sd">        If ``True`` it overwrites the values for: ``R_expected`` (for</span>
+<span class="sd">        cylinders and cones) and ``z_offset_bot`` (for cones), which are</span>
+<span class="sd">        automatically determined with functions :func:`.best_fit_cylinder` and</span>
+<span class="sd">        :func:`.best_fit_cone`.</span>
+<span class="sd">    best_fit_output : bool, optional</span>
+<span class="sd">        If the output from the best fit routines should be also returned. In</span>
+<span class="sd">        case ``True`` the output of this function will be a tuple with</span>
+<span class="sd">        ``(mps, out)``. For a description of ``out`` see</span>
+<span class="sd">        :func:`.best_fit_cylinder`.</span>
+<span class="sd">    errorRtol : float, optional</span>
+<span class="sd">        The error tolerance for the best-fit radius to stop the iterations.</span>
+<span class="sd">    sample_size : int, optional</span>
+<span class="sd">        If the input file containing the measured data is too large it may</span>
+<span class="sd">        become convenient to use only a sample of it in order to calculate</span>
+<span class="sd">        the best fit.</span>
+<span class="sd">    z_offset_bot : float, optional</span>
+<span class="sd">        The offset that should be used from the bottom of the measured points</span>
+<span class="sd">        to the bottom of the test specimen.</span>
+<span class="sd">    r_TOL : float, optional</span>
+<span class="sd">        The tolerance used to ignore points farer than ``r_TOL*R_best_fit``,</span>
+<span class="sd">        given in percent.</span>
+<span class="sd">    clip_bottom : float, optional</span>
+<span class="sd">        How much of the measured points close to the bottom edge should be</span>
+<span class="sd">        cut off, convenient to remove spurious measured data. Example: if</span>
+<span class="sd">        the minimum ``z`` coordinate of the measured points is ``25.4``</span>
+<span class="sd">        and ``clip_bottom=10.``, all points with ``z&lt;=35.4`` will be</span>
+<span class="sd">        ignored.</span>
+<span class="sd">    clip_top : float, optional</span>
+<span class="sd">        Same as ``clip_bottom``, but applicable to the points close to the</span>
+<span class="sd">        top edge.</span>
+<span class="sd">    save : bool, optional</span>
+<span class="sd">        If the returned array ``mps`` should also be saved to a ``.txt`` file.</span>
+<span class="sd">    fmt : str or sequence of strs, optional</span>
+<span class="sd">        See ``np.savetxt()`` documentation for more details.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    mps : np.ndarray</span>
+<span class="sd">        A 2-D array with `\theta`, `z`, `imp` in the first, second</span>
+<span class="sd">        and third columns, respectively.</span>
+
+<span class="sd">    mps, out : np.ndarray, dict</span>
+<span class="sd">        If ``best_fit_output==True`` it returns ``(mps, out)`` as described</span>
+<span class="sd">        above.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">use_best_fit</span><span class="p">:</span>
+        <span class="n">log</span><span class="p">(</span><span class="s">&#39;Finding the best-fit ...&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">alphadeg_measured</span><span class="o">==</span><span class="mf">0.</span><span class="p">:</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="n">best_fit_cylinder</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">R_expected</span><span class="o">=</span><span class="n">R_expected</span><span class="p">,</span> <span class="n">H</span><span class="o">=</span><span class="n">H_measured</span><span class="p">,</span>
+                    <span class="n">save</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">sample_size</span><span class="o">=</span><span class="n">sample_size</span><span class="p">,</span>
+                    <span class="n">errorRtol</span><span class="o">=</span><span class="n">errorRtol</span><span class="p">)</span>
+            <span class="n">R_best_fit</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="s">&#39;R_best_fit&#39;</span><span class="p">]</span>
+            <span class="n">input_pts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">unpack</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="n">pts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">input_pts</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">input_pts</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:])))</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="s">&#39;T&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">pts</span><span class="p">)</span>
+            <span class="n">zmin</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+            <span class="n">zmax</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+            <span class="n">z</span> <span class="o">-=</span> <span class="n">zmin</span>
+            <span class="n">H_points</span> <span class="o">=</span> <span class="n">zmax</span> <span class="o">-</span> <span class="n">zmin</span>
+            <span class="k">if</span> <span class="n">z_offset_bot</span><span class="p">:</span>
+                <span class="n">z</span> <span class="o">+=</span> <span class="n">z_offset_bot</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">z</span> <span class="o">+=</span> <span class="p">(</span><span class="n">H_measured</span> <span class="o">-</span> <span class="n">H_points</span><span class="p">)</span><span class="o">/</span><span class="mf">2.</span> <span class="c"># centralizes the points</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">R_best_fit</span> <span class="o">=</span> <span class="n">R_expected</span>
+        <span class="n">log</span><span class="p">(</span><span class="s">&#39;Reading the data ...&#39;</span><span class="p">)</span>
+        <span class="n">d</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="n">read_xyz</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">alphadeg_measured</span><span class="p">,</span> <span class="n">R_best_fit</span><span class="p">,</span>
+                              <span class="n">H_measured</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="n">z_offset_bot</span><span class="p">,</span> <span class="n">r_TOL</span><span class="p">)</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">T</span>
+
+    <span class="k">if</span> <span class="n">clip_bottom</span> <span class="ow">or</span> <span class="n">clip_top</span><span class="p">:</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">z</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">clip_bottom</span><span class="p">:</span>
+            <span class="n">zmin</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+            <span class="n">log</span><span class="p">(</span><span class="s">&#39;Removing points with z &lt;= {0:1.6f}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">zmin</span><span class="o">+</span><span class="n">clip_bottom</span><span class="p">))</span>
+            <span class="n">mask</span> <span class="o">&amp;=</span> <span class="p">(</span><span class="n">z</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">zmin</span> <span class="o">+</span> <span class="n">clip_bottom</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">clip_top</span><span class="p">:</span>
+            <span class="n">zmax</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+            <span class="n">log</span><span class="p">(</span><span class="s">&#39;Removing points with z &gt;= {0:1.6f}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">zmax</span><span class="o">-</span><span class="n">clip_top</span><span class="p">))</span>
+            <span class="n">mask</span> <span class="o">&amp;=</span> <span class="p">(</span><span class="n">z</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">zmax</span> <span class="o">-</span> <span class="n">clip_top</span><span class="p">))</span>
+        <span class="n">shape1</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">z</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+        <span class="n">shape2</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">log</span><span class="p">(</span><span class="s">&#39;Total of {0} points excluded.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">shape1</span> <span class="o">-</span> <span class="n">shape2</span><span class="p">),</span>
+                <span class="n">level</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">y</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="n">imp</span> <span class="o">=</span> <span class="n">r</span> <span class="o">-</span> <span class="n">R_best_fit</span>
+    <span class="n">log</span><span class="p">(</span><span class="s">&#39;Minimum imperfection: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">imp</span><span class="o">.</span><span class="n">min</span><span class="p">()))</span>
+    <span class="n">log</span><span class="p">(</span><span class="s">&#39;Maximum imperfection: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">imp</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span>
+
+    <span class="n">mps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">theta</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">imp</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>
+    <span class="k">if</span> <span class="n">save</span><span class="p">:</span>
+        <span class="n">outpath</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;.&#39;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span>
+                   <span class="s">&#39;_theta_z_imp.txt&#39;</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">outpath</span><span class="p">,</span> <span class="n">mps</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="n">fmt</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">best_fit_output</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">mps</span><span class="p">,</span> <span class="n">out</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">mps</span>
+</div>
+<div class="viewcode-block" id="xyzthick2thetazthick"><a class="viewcode-back" href="../../../modules/conecylDB/index.html#desicos.conecylDB.read_write.xyzthick2thetazthick">[docs]</a><span class="k">def</span> <span class="nf">xyzthick2thetazthick</span><span class="p">(</span><span class="n">path</span><span class="p">,</span>
+                         <span class="n">alphadeg_measured</span><span class="p">,</span>
+                         <span class="n">H_measured</span><span class="p">,</span>
+                         <span class="n">R_expected</span><span class="o">=</span><span class="mf">10.</span><span class="p">,</span>
+                         <span class="n">use_best_fit</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                         <span class="n">sample_size</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                         <span class="n">stretch_H</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                         <span class="n">z_offset_bot</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                         <span class="n">r_TOL</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span>
+                         <span class="n">save</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                         <span class="n">fmt</span><span class="o">=</span><span class="s">&#39;</span><span class="si">%1.6f</span><span class="s">&#39;</span><span class="p">):</span>
+    <span class="sd">r&quot;&quot;&quot;Transforms an imperfection file from the format: &quot;`x` `y` `z` `thick`&quot;</span>
+<span class="sd">    to the format &quot;`\theta` `z` `thick`&quot;.</span>
+
+<span class="sd">    The input file::</span>
+
+<span class="sd">        x1 y1 z1 thick1</span>
+<span class="sd">        x2 y2 z2 thick2</span>
+<span class="sd">        ...</span>
+<span class="sd">        xn yn zn thickn</span>
+
+<span class="sd">    Is transformed in a file::</span>
+
+<span class="sd">        theta1 z1 thick1</span>
+<span class="sd">        theta2 z2 thick2</span>
+<span class="sd">        ...</span>
+<span class="sd">        thetan zn thickn</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    path : str</span>
+<span class="sd">        The path to the imperfection file.</span>
+<span class="sd">    alphadeg_measured : float</span>
+<span class="sd">        The semi-vertex angle of the measured sample (it is ``0.`` for a</span>
+<span class="sd">        cylinder).</span>
+<span class="sd">    H_measured : float</span>
+<span class="sd">        The total height of the measured test specimen, including eventual</span>
+<span class="sd">        resin rings at the edges.</span>
+<span class="sd">    R_expected : float, optional</span>
+<span class="sd">        If ``use_best_fit==True`` this will be used as a first estimative that</span>
+<span class="sd">        can reduce the number of iterations up to convergence of the best fit</span>
+<span class="sd">        algorithms. If ``use_best_fit==False`` this will be considered the</span>
+<span class="sd">        ``R_best_fit``.</span>
+<span class="sd">    use_best_fit : bool, optional</span>
+<span class="sd">        If ``True`` it overwrites the values for: ``R_expected`` (for</span>
+<span class="sd">        cylinders and cones) and ``z_offset_bot`` (for cones), which are</span>
+<span class="sd">        automatically determined with functions :func:`.best_fit_cylinder` and</span>
+<span class="sd">        :func:`.best_fit_cone`.</span>
+<span class="sd">    sample_size : int, optional</span>
+<span class="sd">        If the input file containing the measured data is too large it may</span>
+<span class="sd">        become convenient to use only a sample of it in order to calculate</span>
+<span class="sd">        the best fit.</span>
+<span class="sd">    z_offset_bot : float, optional</span>
+<span class="sd">        The offset that should be used from the bottom of the measured points</span>
+<span class="sd">        to the bottom of the test specimen.</span>
+<span class="sd">    r_TOL : float, optional</span>
+<span class="sd">        The tolerance used to ignore points farer than ``r_TOL*R_best_fit``,</span>
+<span class="sd">        given in percent.</span>
+<span class="sd">    save : bool, optional</span>
+<span class="sd">        If the returned array ``mps`` should also be saved to a ``.txt`` file.</span>
+<span class="sd">    fmt : str or sequence of strs, optional</span>
+<span class="sd">        See ``np.savetxt()`` documentation for more details.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    mps : np.ndarray</span>
+<span class="sd">        A 2-D array with `\theta`, `z`, `imp` in the first, second</span>
+<span class="sd">        and third columns, respectively.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">inputa</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">inputa</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;Input file does not have the format: &quot;x y z thick&quot;&#39;</span><span class="p">)</span>
+
+    <span class="n">xyz</span> <span class="o">=</span> <span class="n">inputa</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">thick</span> <span class="o">=</span> <span class="n">inputa</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">use_best_fit</span><span class="p">:</span>
+        <span class="n">log</span><span class="p">(</span><span class="s">&#39;Finding the best-fit ...&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">alphadeg_measured</span><span class="o">==</span><span class="mf">0.</span><span class="p">:</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="n">best_fit_cylinder</span><span class="p">(</span><span class="n">xyz</span><span class="p">,</span> <span class="n">R_expected</span><span class="o">=</span><span class="n">R_expected</span><span class="p">,</span> <span class="n">H</span><span class="o">=</span><span class="n">H_measured</span><span class="p">,</span>
+                    <span class="n">save</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">sample_size</span><span class="o">=</span><span class="n">sample_size</span><span class="p">)</span>
+            <span class="n">R_best_fit</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="s">&#39;R_best_fit&#39;</span><span class="p">]</span>
+            <span class="n">input_pts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">unpack</span><span class="o">=</span><span class="bp">True</span><span class="p">)[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+            <span class="n">pts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">input_pts</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">input_pts</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:])))</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="s">&#39;T&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">pts</span><span class="p">)</span>
+            <span class="n">z</span> <span class="o">-=</span> <span class="n">z</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+            <span class="n">H_points</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">z</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">z_offset_bot</span><span class="p">:</span>
+                <span class="n">z</span> <span class="o">+=</span> <span class="n">z_offset_bot</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">z</span> <span class="o">+=</span> <span class="p">(</span><span class="n">H_measured</span> <span class="o">-</span> <span class="n">H_points</span><span class="p">)</span><span class="o">/</span><span class="mf">2.</span> <span class="c"># centralizes the points</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">R_best_fit</span> <span class="o">=</span> <span class="n">R_expected</span>
+        <span class="n">log</span><span class="p">(</span><span class="s">&#39;Reading the data ...&#39;</span><span class="p">)</span>
+        <span class="n">d</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="n">read_xyz</span><span class="p">(</span><span class="n">xyz</span><span class="p">,</span> <span class="n">alphadeg_measured</span><span class="p">,</span> <span class="n">R_best_fit</span><span class="p">,</span>
+                              <span class="n">H_measured</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="n">z_offset_bot</span><span class="p">,</span> <span class="n">r_TOL</span><span class="p">)</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">T</span>
+
+    <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="n">log</span><span class="p">(</span><span class="s">&#39;Minimum thickness: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">thick</span><span class="o">.</span><span class="n">min</span><span class="p">()))</span>
+    <span class="n">log</span><span class="p">(</span><span class="s">&#39;Maximum thickness: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">thick</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span>
+
+    <span class="n">mps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">theta</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">thick</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>
+    <span class="k">if</span> <span class="n">save</span><span class="p">:</span>
+        <span class="n">outpath</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;.&#39;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span>
+                   <span class="s">&#39;_theta_z_thick.txt&#39;</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">outpath</span><span class="p">,</span> <span class="n">mps</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="n">fmt</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">mps</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/desicos.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../../../np-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">DESICOS 2.0.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012-2015 Desicos Improved Software Team.
+      Last updated on Oct 20, 2014.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

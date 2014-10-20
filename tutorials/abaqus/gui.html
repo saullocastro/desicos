@@ -1,0 +1,277 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>GUI &mdash; DESICOS 2.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '2.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../../_static/desicos.png"/>
+    <link rel="top" title="DESICOS 2.0.0 documentation" href="../../index.html" />
+    <link rel="up" title="Abaqus plug-in (desicos.abaqus)" href="index.html" />
+    <link rel="next" title="Python API" href="python_API.html" />
+    <link rel="prev" title="Abaqus plug-in (desicos.abaqus)" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../../np-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="python_API.html" title="Python API"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Abaqus plug-in (desicos.abaqus)"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">DESICOS 2.0.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Tutorials</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Abaqus plug-in (<tt class="docutils literal"><span class="pre">desicos.abaqus</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="gui">
+<span id="id1"></span><h1>GUI<a class="headerlink" href="#gui" title="Permalink to this headline">¶</a></h1>
+<p>The user-friendly way to use the plug-in is through the graphic interface.
+Just execute the file <tt class="docutils literal"><span class="pre">START_GUI.bat</span></tt>.
+You need Abaqus to be executable by the command line <tt class="docutils literal"><span class="pre">abaqus</span> <span class="pre">cae</span></tt>
+for this to work.</p>
+<p>The plug-in for Abaqus looks like this:</p>
+<div class="figure">
+<img alt="../../_images/fig_01.png" src="../../_images/fig_01.png" />
+</div>
+<div class="section" id="loading-and-configuring-a-model">
+<h2>Loading and configuring a model<a class="headerlink" href="#loading-and-configuring-a-model" title="Permalink to this headline">¶</a></h2>
+<p>Where the <tt class="docutils literal"><span class="pre">desicos.conecylDB</span></tt> is embedded, and the existing models
+easily chosen from the <a class="reference internal" href="../conecylDB/static.html#static-database"><em>Static Database</em></a> or from the
+<a class="reference internal" href="../conecylDB/dynamic.html#dynamic-database"><em>Dynamic database</em></a>. When the option
+<tt class="docutils literal"><span class="pre">Enter</span> <span class="pre">New</span></tt> is active, the buttons <tt class="docutils literal"><span class="pre">Save</span></tt> is activated and
+the user may save a new configuration into the database, which can
+be deleted afterwards using the <tt class="docutils literal"><span class="pre">Delete</span></tt> button.</p>
+<div class="figure">
+<img alt="../../_images/fig_02.png" src="../../_images/fig_02.png" />
+</div>
+<p>Geometric parameters easily changed:</p>
+<div class="figure">
+<img alt="../../_images/fig_03.png" src="../../_images/fig_03.png" />
+</div>
+<p>Material properties taken from the database and easily changed. Note that the
+<a class="reference internal" href="../conecylDB/dynamic.html#dynamic-database"><em>Dynamic database</em></a> is implemented here through the use
+of the buttons <tt class="docutils literal"><span class="pre">Save</span></tt> (when the <tt class="docutils literal"><span class="pre">Enter</span> <span class="pre">New</span></tt> option is active)
+and <tt class="docutils literal"><span class="pre">Delete</span></tt>.</p>
+<div class="figure">
+<img alt="../../_images/fig_04.png" src="../../_images/fig_04.png" />
+</div>
+<p>The laminate is defined giving a different material and thickness to each
+ply or defining only for the first ply when all the others should have the
+same material and thicknesses.</p>
+<div class="figure">
+<img alt="../../_images/fig_05.png" src="../../_images/fig_05.png" />
+</div>
+<p>The mesh parameters are defined as shown below, and this data can also be
+saved and loaded in the database.</p>
+<div class="figure">
+<img alt="../../_images/fig_06.png" src="../../_images/fig_06.png" />
+</div>
+<p>The analysis parameters are summarized as shown below. After the models
+are created the user may change those. This analysis&#8217; configuration has
+been optimized for the Single Perturbation Load Approach (SPLA).</p>
+<div class="figure">
+<img alt="../../_images/fig_07.png" src="../../_images/fig_07.png" />
+</div>
+<p>The number of output frames can be changed here, allowing some control
+in the size of the output files. The <tt class="docutils literal"><span class="pre">Request</span> <span class="pre">stress</span> <span class="pre">output</span></tt> checkbox
+must be activated if one intents to perform a stress analysis:</p>
+<div class="figure">
+<img alt="../../_images/fig_08.png" src="../../_images/fig_08.png" />
+</div>
+</div>
+<div class="section" id="applying-imperfections">
+<h2>Applying imperfections<a class="headerlink" href="#applying-imperfections" title="Permalink to this headline">¶</a></h2>
+<p>The perturbation loads can be applied using:</p>
+<div class="figure">
+<img alt="../../_images/fig_09.png" src="../../_images/fig_09.png" />
+</div>
+<p>The geometric dimples using:</p>
+<div class="figure">
+<img alt="../../_images/fig_10.png" src="../../_images/fig_10.png" />
+</div>
+<p>Axisymmetric imperfections:</p>
+<div class="figure">
+<img alt="../../_images/fig_11.png" src="../../_images/fig_11.png" />
+</div>
+<p>Imperfections from Linear buckling modes:</p>
+<div class="figure">
+<img alt="../../_images/fig_12.png" src="../../_images/fig_12.png" />
+</div>
+<p>Cutouts:</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The cutouts module needs improvement!</p>
+</div>
+<div class="figure">
+<img alt="../../_images/fig_13.png" src="../../_images/fig_13.png" />
+</div>
+<p>Measured geometric imperfections that represent the normal displacement of
+the shell mid-surface can be applied too. This <strong>must</strong> be
+applied after creating the study (click on <tt class="docutils literal"><span class="pre">Create</span> <span class="pre">Study</span></tt>):</p>
+<div class="figure">
+<img alt="../../_images/fig_14.png" src="../../_images/fig_14.png" />
+</div>
+<p>Similarly, thickness imperfections can be applied. If the study has not yet
+been created, click on <tt class="docutils literal"><span class="pre">Create</span> <span class="pre">Study</span></tt> before applying the thickness
+imperfections:</p>
+<div class="figure">
+<img alt="../../_images/fig_15.png" src="../../_images/fig_15.png" />
+</div>
+<p>Load imperfections can also be considered:</p>
+<div class="figure">
+<img alt="../../_images/fig_16.png" src="../../_images/fig_16.png" />
+</div>
+</div>
+<div class="section" id="running-the-analysis">
+<h2>Running the analysis<a class="headerlink" href="#running-the-analysis" title="Permalink to this headline">¶</a></h2>
+<p>It allows running the jobs in the structure of folders used by the plug-in
+in order to keep the models organized. You can <tt class="docutils literal"><span class="pre">use</span> <span class="pre">multiple</span> <span class="pre">cpus</span></tt> or
+use the <tt class="docutils literal"><span class="pre">job</span> <span class="pre">stopper</span></tt>, which significantly accelerates the analysis time
+by stopping the analysis after buckling.</p>
+<p>If the post-buckled pattern have to be studied, it may be better to run one
+analysis with the <tt class="docutils literal"><span class="pre">job</span> <span class="pre">stopper</span></tt> activated, obtain the axial compression
+level that caused the buckling and then run another analysis disabling the
+<tt class="docutils literal"><span class="pre">job</span> <span class="pre">stopper</span></tt> in order to achieve the desired post-buckled pattern.</p>
+<p>The run log file will be printed on the plug-in screen.</p>
+<div class="figure">
+<img alt="../../_images/fig_17.png" src="../../_images/fig_17.png" />
+</div>
+</div>
+<div class="section" id="post-processing">
+<h2>Post processing<a class="headerlink" href="#post-processing" title="Permalink to this headline">¶</a></h2>
+<p>For all the options you can add the results to an Excel file or
+even open the Excel after finished.</p>
+<p>The load-shortening curves can be easily plotted:</p>
+<div class="figure">
+<img alt="../../_images/fig_18.png" src="../../_images/fig_18.png" />
+</div>
+<p>Or the knock-down curves:</p>
+<div class="figure">
+<img alt="../../_images/fig_19.png" src="../../_images/fig_19.png" />
+</div>
+<p>Or the stress analysis results:</p>
+<div class="figure">
+<img alt="../../_images/fig_20.png" src="../../_images/fig_20.png" />
+</div>
+<p>An extra options has been added to allow an opened representation of the
+cylinder or cone, convinient for publications:</p>
+<div class="figure">
+<img alt="../../_images/fig_21.png" src="../../_images/fig_21.png" />
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/desicos.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">GUI</a><ul>
+<li><a class="reference internal" href="#loading-and-configuring-a-model">Loading and configuring a model</a></li>
+<li><a class="reference internal" href="#applying-imperfections">Applying imperfections</a></li>
+<li><a class="reference internal" href="#running-the-analysis">Running the analysis</a></li>
+<li><a class="reference internal" href="#post-processing">Post processing</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Abaqus plug-in (<tt class="docutils literal"><span class="pre">desicos.abaqus</span></tt>)</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="python_API.html"
+                        title="next chapter">Python API</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../_sources/tutorials/abaqus/gui.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../../np-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="python_API.html" title="Python API"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Abaqus plug-in (desicos.abaqus)"
+             >previous</a> |</li>
+        <li><a href="../../index.html">DESICOS 2.0.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Tutorials</a> &raquo;</li>
+          <li><a href="index.html" >Abaqus plug-in (<tt class="docutils literal"><span class="pre">desicos.abaqus</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012-2015 Desicos Improved Software Team.
+      Last updated on Oct 20, 2014.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>
