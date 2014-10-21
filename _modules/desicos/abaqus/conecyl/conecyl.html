@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>desicos.abaqus.conecyl.conecyl &mdash; DESICOS 2.0.0 documentation</title>
+    <title>desicos.abaqus.conecyl.conecyl &mdash; DESICOS 2.0.1 documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     '2.0.0',
+        VERSION:     '2.0.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,7 +24,7 @@
     <script type="text/javascript" src="../../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../../../../_static/desicos.png"/>
-    <link rel="top" title="DESICOS 2.0.0 documentation" href="../../../../index.html" />
+    <link rel="top" title="DESICOS 2.0.1 documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" /> 
   </head>
   <body>
@@ -40,7 +40,7 @@
         <li class="right" >
           <a href="../../../../np-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../../index.html">DESICOS 2.0.0 documentation</a> &raquo;</li>
+        <li><a href="../../../../index.html">DESICOS 2.0.1 documentation</a> &raquo;</li>
           <li><a href="../../../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
@@ -635,9 +635,10 @@
 <span class="sd">        .. note:: When new functionalities have to be implemented or for any</span>
 <span class="sd">                  debugging purposes, one can conveniently change file</span>
 <span class="sd">                  ``_create_model.py`` directly, and using the ``__main__``</span>
-<span class="sd">                  section at the end of thid file makes it easy to test</span>
+<span class="sd">                  section at the end of this file makes it easy to test</span>
 <span class="sd">                  whatever necessary methods. The tests can be repeatedly run</span>
 <span class="sd">                  doing::</span>
+
 <span class="sd">                      import os</span>
 
 <span class="sd">                      from desicos.abaqus.constants import DAHOME</span>
@@ -671,8 +672,10 @@
 <span class="sd">            limited to one core.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">abaqus</span>
+
         <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">job</span> <span class="o">=</span> <span class="n">__main__</span><span class="o">.</span><span class="n">mdb</span><span class="o">.</span><span class="n">jobs</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">job</span> <span class="o">=</span> <span class="n">abaqus</span><span class="o">.</span><span class="n">mdb</span><span class="o">.</span><span class="n">jobs</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">writeInput</span><span class="p">()</span>
         <span class="n">inppath</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">+</span> <span class="s">&#39;.inp&#39;</span>
         <span class="k">if</span> <span class="n">submit</span><span class="p">:</span>
@@ -703,13 +706,14 @@
 <span class="sd">        .. note:: Must be called from Abaqus</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">abaqus</span>
+
         <span class="n">odbname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">+</span> <span class="s">&#39;.odb&#39;</span>
         <span class="n">odbpath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">odbname</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">odbpath</span><span class="p">):</span>
             <span class="n">warn</span><span class="p">(</span><span class="s">&#39;result was not found&#39;</span><span class="p">)</span>
             <span class="k">return</span> <span class="bp">False</span>
-        <span class="kn">import</span> <span class="nn">__main__</span>
-        <span class="n">session</span> <span class="o">=</span> <span class="n">__main__</span><span class="o">.</span><span class="n">session</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="n">abaqus</span><span class="o">.</span><span class="n">session</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">odbpath</span> <span class="ow">in</span> <span class="n">session</span><span class="o">.</span><span class="n">odbs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
             <span class="k">return</span> <span class="n">session</span><span class="o">.</span><span class="n">openOdb</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">odbname</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">odbpath</span><span class="p">,</span> <span class="n">readOnly</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -1233,13 +1237,13 @@
         <li class="right" >
           <a href="../../../../np-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../../index.html">DESICOS 2.0.0 documentation</a> &raquo;</li>
+        <li><a href="../../../../index.html">DESICOS 2.0.1 documentation</a> &raquo;</li>
           <li><a href="../../../index.html" >Module code</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2015 Desicos Improved Software Team.
-      Last updated on Oct 20, 2014.
+      Last updated on Oct 21, 2014.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>

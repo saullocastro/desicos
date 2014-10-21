@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>desicos.abaqus.abaqus_functions &mdash; DESICOS 2.0.0 documentation</title>
+    <title>desicos.abaqus.abaqus_functions &mdash; DESICOS 2.0.1 documentation</title>
     
     <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.0.0',
+        VERSION:     '2.0.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,7 +24,7 @@
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../../../_static/desicos.png"/>
-    <link rel="top" title="DESICOS 2.0.0 documentation" href="../../../index.html" />
+    <link rel="top" title="DESICOS 2.0.1 documentation" href="../../../index.html" />
     <link rel="up" title="Module code" href="../../index.html" /> 
   </head>
   <body>
@@ -40,7 +40,7 @@
         <li class="right" >
           <a href="../../../np-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">DESICOS 2.0.0 documentation</a> &raquo;</li>
+        <li><a href="../../../index.html">DESICOS 2.0.1 documentation</a> &raquo;</li>
           <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
@@ -65,6 +65,7 @@
 
 <span class="kn">from</span> <span class="nn">constants</span> <span class="kn">import</span> <span class="p">(</span><span class="n">TOL</span><span class="p">,</span> <span class="n">FLOAT</span><span class="p">,</span> <span class="n">COLORS</span><span class="p">,</span> <span class="n">COLOR_WHINE</span><span class="p">,</span> <span class="n">COLOR_DARK_BLUE</span><span class="p">,</span>
         <span class="n">COLOR_BLACK</span><span class="p">)</span>
+
 
 <div class="viewcode-block" id="configure_session"><a class="viewcode-back" href="../../../modules/abaqus/index.html#desicos.abaqus.abaqus_functions.configure_session">[docs]</a><span class="k">def</span> <span class="nf">configure_session</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Improve layout and colors of the current figures in visualization</span>
@@ -173,6 +174,7 @@
             <span class="n">curve</span><span class="o">.</span><span class="n">curveOptions</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">showSymbol</span><span class="o">=</span><span class="n">OFF</span><span class="p">)</span>
             <span class="n">ay</span><span class="o">.</span><span class="n">titleStyle</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">COLOR_DARK_BLUE</span><span class="p">)</span>
             <span class="n">ay</span><span class="o">.</span><span class="n">labelStyle</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">COLOR_DARK_BLUE</span><span class="p">)</span>
+
 </div>
 <div class="viewcode-block" id="print_png"><a class="viewcode-back" href="../../../modules/abaqus/index.html#desicos.abaqus.abaqus_functions.print_png">[docs]</a><span class="k">def</span> <span class="nf">print_png</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Print a png file from the current viewport</span>
@@ -190,6 +192,7 @@
     <span class="n">session</span><span class="o">.</span><span class="n">printToFile</span><span class="p">(</span><span class="n">fileName</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span>
                          <span class="n">format</span><span class="o">=</span><span class="n">PNG</span><span class="p">,</span>
                          <span class="n">canvasObjects</span><span class="o">=</span><span class="p">(</span><span class="n">viewport</span><span class="p">,))</span>
+
 </div>
 <div class="viewcode-block" id="set_default_view"><a class="viewcode-back" href="../../../modules/abaqus/index.html#desicos.abaqus.abaqus_functions.set_default_view">[docs]</a><span class="k">def</span> <span class="nf">set_default_view</span><span class="p">(</span><span class="n">cc</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Set a default view in order to compare figures from different models</span>
@@ -247,6 +250,7 @@
                             <span class="n">height</span><span class="o">=</span><span class="mf">665.183</span><span class="p">,</span>
                             <span class="n">cameraPosition</span><span class="o">=</span><span class="p">(</span><span class="mf">1236.44</span><span class="p">,</span> <span class="mf">1079.87</span><span class="p">,</span> <span class="mf">889.94</span><span class="p">),</span>
                             <span class="n">cameraTarget</span><span class="o">=</span><span class="p">(</span><span class="mf">27.3027</span><span class="p">,</span> <span class="o">-</span><span class="mf">54.758</span><span class="p">,</span> <span class="mf">306.503</span><span class="p">))</span>
+
 </div>
 <div class="viewcode-block" id="edit_keywords"><a class="viewcode-back" href="../../../modules/abaqus/index.html#desicos.abaqus.abaqus_functions.edit_keywords">[docs]</a><span class="k">def</span> <span class="nf">edit_keywords</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">before_pattern</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">insert</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Edit the keywords to add commands not available in Abaqus CAE</span>
@@ -282,6 +286,7 @@
         <span class="n">mod</span><span class="o">.</span><span class="n">keywordBlock</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">mod</span><span class="o">.</span><span class="n">keywordBlock</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+
 </div>
 <div class="viewcode-block" id="create_composite_layup"><a class="viewcode-back" href="../../../modules/abaqus/index.html#desicos.abaqus.abaqus_functions.create_composite_layup">[docs]</a><span class="k">def</span> <span class="nf">create_composite_layup</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">stack</span><span class="p">,</span> <span class="n">plyts</span><span class="p">,</span> <span class="n">mat_names</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="n">part</span><span class="p">,</span>
                            <span class="n">part_csys</span><span class="p">,</span> <span class="n">symmetric</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">scaling_factor</span><span class="o">=</span><span class="mf">1.</span><span class="p">):</span>
@@ -353,6 +358,7 @@
                              <span class="n">orientationValue</span><span class="o">=</span><span class="n">angle</span><span class="p">,</span>
                              <span class="n">orientationType</span><span class="o">=</span><span class="n">SPECIFY_ORIENT</span><span class="p">,</span>
                              <span class="n">numIntPoints</span><span class="o">=</span><span class="n">numIntPoints</span><span class="p">)</span>
+
 </div>
 <span class="k">def</span> <span class="nf">createDiscreteField</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="n">odb</span><span class="p">,</span> <span class="n">step_name</span><span class="p">,</span> <span class="n">frame_num</span><span class="p">):</span>
     <span class="kn">from</span> <span class="nn">abaqusConstants</span> <span class="kn">import</span> <span class="p">(</span><span class="n">NODES</span><span class="p">,</span> <span class="n">PRESCRIBEDCONDITION_DOF</span><span class="p">)</span>
@@ -379,6 +385,7 @@
                       <span class="n">dataWidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
                       <span class="n">defaultValues</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span>
                       <span class="n">data</span><span class="o">=</span><span class="p">((</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">tuple_ids</span><span class="p">,</span> <span class="n">tuple_dof_values</span><span class="p">),))</span>
+
 
 <div class="viewcode-block" id="create_sketch_plane"><a class="viewcode-back" href="../../../modules/abaqus/index.html#desicos.abaqus.abaqus_functions.create_sketch_plane">[docs]</a><span class="k">def</span> <span class="nf">create_sketch_plane</span><span class="p">(</span><span class="n">cc</span><span class="p">,</span> <span class="n">entity</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Creates a sketch plane tangent to the shell surface</span>
@@ -427,6 +434,7 @@
     <span class="n">plane</span><span class="o">.</span><span class="n">thetadeg</span> <span class="o">=</span> <span class="n">entity</span><span class="o">.</span><span class="n">thetadeg</span>
     <span class="n">cc</span><span class="o">.</span><span class="n">sketch_planes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">plane</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">plane</span>
+
 </div>
 <span class="k">def</span> <span class="nf">set_colors_ti</span><span class="p">(</span><span class="n">cc</span><span class="p">):</span>
     <span class="kn">from</span> <span class="nn">abaqus</span> <span class="kn">import</span> <span class="n">mdb</span><span class="p">,</span> <span class="n">session</span>
@@ -450,6 +458,7 @@
     <span class="n">viewport</span><span class="o">.</span><span class="n">partDisplay</span><span class="o">.</span><span class="n">geometryOptions</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">referenceRepresentation</span><span class="o">=</span><span class="n">ON</span><span class="p">)</span>
     <span class="n">viewport</span><span class="o">.</span><span class="n">disableMultipleColors</span><span class="p">()</span>
 
+
 <span class="k">def</span> <span class="nf">printLBmodes</span><span class="p">():</span>
     <span class="kn">from</span> <span class="nn">abaqus</span> <span class="kn">import</span> <span class="n">session</span>
     <span class="kn">from</span> <span class="nn">abaqusConstants</span> <span class="kn">import</span> <span class="n">DPI_1200</span><span class="p">,</span> <span class="n">EXTRA_FINE</span><span class="p">,</span> <span class="n">OFF</span><span class="p">,</span> <span class="n">PNG</span>
@@ -465,6 +474,7 @@
                              <span class="n">format</span><span class="o">=</span><span class="n">PNG</span><span class="p">,</span>
                              <span class="n">canvasObjects</span><span class="o">=</span><span class="p">(</span><span class="n">vp</span><span class="p">,))</span>
 
+
 <span class="k">def</span> <span class="nf">get_odbdisplay</span><span class="p">():</span>
     <span class="kn">from</span> <span class="nn">abaqus</span> <span class="kn">import</span> <span class="n">session</span>
 
@@ -474,6 +484,7 @@
         <span class="k">return</span> <span class="n">viewport</span><span class="o">.</span><span class="n">odbDisplay</span>
     <span class="k">except</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">None</span>
+
 
 <span class="k">def</span> <span class="nf">get_current_odb</span><span class="p">():</span>
     <span class="kn">from</span> <span class="nn">abaqus</span> <span class="kn">import</span> <span class="n">session</span>
@@ -485,12 +496,14 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">None</span>
 
+
 <span class="k">def</span> <span class="nf">get_current_step_name</span><span class="p">():</span>
     <span class="n">odbdisplay</span> <span class="o">=</span> <span class="n">get_odbdisplay</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">odbdisplay</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">odbdisplay</span><span class="o">.</span><span class="n">fieldSteps</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">None</span>
+
 
 <span class="k">def</span> <span class="nf">get_current_frame</span><span class="p">():</span>
     <span class="n">odbdisplay</span> <span class="o">=</span> <span class="n">get_odbdisplay</span><span class="p">()</span>
@@ -540,13 +553,13 @@
         <li class="right" >
           <a href="../../../np-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">DESICOS 2.0.0 documentation</a> &raquo;</li>
+        <li><a href="../../../index.html">DESICOS 2.0.1 documentation</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2015 Desicos Improved Software Team.
-      Last updated on Oct 20, 2014.
+      Last updated on Oct 21, 2014.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>
