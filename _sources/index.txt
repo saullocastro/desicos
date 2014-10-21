@@ -22,7 +22,7 @@ Installation
 
 The oficial releases are listed below:
 
-- `Version 2.0.0 <https://github.com/desicos/desicos/releases/tag/2.0.0>`_
+- `Version 2.0.1 <https://github.com/desicos/desicos/releases/tag/2.0.1>`_
 
 - `Version 1.0.0 <https://github.com/desicos/desicos/releases/tag/1.0.0>`_
 
