@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>desicos.abaqus.conecyl.conecyl &mdash; DESICOS 2.0.1 documentation</title>
+    <title>desicos.abaqus.conecyl.conecyl &mdash; DESICOS 2.0.2 documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     '2.0.1',
+        VERSION:     '2.0.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,7 +24,7 @@
     <script type="text/javascript" src="../../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../../../../_static/desicos.png"/>
-    <link rel="top" title="DESICOS 2.0.1 documentation" href="../../../../index.html" />
+    <link rel="top" title="DESICOS 2.0.2 documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" /> 
   </head>
   <body>
@@ -40,7 +40,7 @@
         <li class="right" >
           <a href="../../../../np-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../../index.html">DESICOS 2.0.1 documentation</a> &raquo;</li>
+        <li><a href="../../../../index.html">DESICOS 2.0.2 documentation</a> &raquo;</li>
           <li><a href="../../../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
@@ -62,6 +62,7 @@
 <span class="kn">from</span> <span class="nn">desicos.abaqus.constants</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">desicos.composite.laminate</span> <span class="kn">import</span> <span class="n">read_stack</span>
 <span class="kn">from</span> <span class="nn">desicos.conecylDB</span> <span class="kn">import</span> <span class="n">fetch</span>
+
 
 <div class="viewcode-block" id="ConeCyl"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl">[docs]</a><span class="k">class</span> <span class="nc">ConeCyl</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">r&quot;&quot;&quot;ConeCyl object</span>
@@ -409,6 +410,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">stress_output</span> <span class="o">=</span> <span class="bp">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">force_output</span> <span class="o">=</span> <span class="bp">False</span>
 
+
 <div class="viewcode-block" id="ConeCyl.from_DB"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl.from_DB">[docs]</a>    <span class="k">def</span> <span class="nf">from_DB</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name_DB</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Fetch all the cone/cylinder data from the database</span>
 
@@ -445,6 +447,7 @@
             <span class="k">return</span> <span class="bp">None</span>
 
         <span class="k">return</span> <span class="bp">self</span>
+
 </div>
 <div class="viewcode-block" id="ConeCyl.rebuild"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl.rebuild">[docs]</a>    <span class="k">def</span> <span class="nf">rebuild</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">save_rebuild</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Updates the properties of the current :class:`.ConeCyl` object</span>
@@ -577,6 +580,7 @@
 
         <span class="k">if</span> <span class="n">save_rebuild</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">rebuilt</span> <span class="o">=</span> <span class="bp">True</span>
+
 </div>
 <div class="viewcode-block" id="ConeCyl.prepare_to_save"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl.prepare_to_save">[docs]</a>    <span class="k">def</span> <span class="nf">prepare_to_save</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Prepare the :class:`ConeCyl` to be saved</span>
@@ -586,6 +590,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rebuilt</span> <span class="o">=</span> <span class="bp">False</span>
         <span class="k">return</span>
+
 </div>
 <div class="viewcode-block" id="ConeCyl.fr"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl.fr">[docs]</a>    <span class="k">def</span> <span class="nf">fr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Calculates the radius at a given ``z`` position</span>
@@ -602,6 +607,7 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rbot</span> <span class="o">-</span> <span class="n">z</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpharad</span><span class="p">)</span>
+
 </div>
 <div class="viewcode-block" id="ConeCyl.r_z_from_pt"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl.r_z_from_pt">[docs]</a>    <span class="k">def</span> <span class="nf">r_z_from_pt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Radius and the axial position from a given normalized position</span>
@@ -622,6 +628,7 @@
         <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rbot</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rtop</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">rbot</span><span class="p">)</span><span class="o">*</span><span class="n">pt</span>
         <span class="n">z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">H</span><span class="o">*</span><span class="n">pt</span>
         <span class="k">return</span> <span class="n">r</span><span class="p">,</span> <span class="n">z</span>
+
 </div>
 <div class="viewcode-block" id="ConeCyl.create_model"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl.create_model">[docs]</a>    <span class="k">def</span> <span class="nf">create_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Triggers the routines to create the model in Abaqus</span>
@@ -655,6 +662,7 @@
         <span class="n">_create_load_steps</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">_create_loads_bcs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">created_model</span> <span class="o">=</span> <span class="bp">True</span>
+
 </div>
 <div class="viewcode-block" id="ConeCyl.write_job"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl.write_job">[docs]</a>    <span class="k">def</span> <span class="nf">write_job</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">submit</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">wait</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">multiple_cores</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Writes the job of the corresponding Abaqus model</span>
@@ -675,8 +683,8 @@
         <span class="kn">import</span> <span class="nn">abaqus</span>
 
         <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">job</span> <span class="o">=</span> <span class="n">abaqus</span><span class="o">.</span><span class="n">mdb</span><span class="o">.</span><span class="n">jobs</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">writeInput</span><span class="p">()</span>
+        <span class="n">job</span> <span class="o">=</span> <span class="n">abaqus</span><span class="o">.</span><span class="n">mdb</span><span class="o">.</span><span class="n">jobs</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">]</span>
+        <span class="n">job</span><span class="o">.</span><span class="n">writeInput</span><span class="p">()</span>
         <span class="n">inppath</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">+</span> <span class="s">&#39;.inp&#39;</span>
         <span class="k">if</span> <span class="n">submit</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">multiple_cores</span><span class="p">:</span>
@@ -686,6 +694,7 @@
                 <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s">&#39;abaqus job={0} input={1}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">,</span>
                           <span class="n">inppath</span><span class="p">))</span>
         <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp_dir</span><span class="p">)</span>
+
 </div>
     <span class="k">def</span> <span class="nf">read_walltime</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
@@ -696,6 +705,7 @@
                 <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
         <span class="k">except</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">None</span>
+
 
 <div class="viewcode-block" id="ConeCyl.attach_results"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl.attach_results">[docs]</a>    <span class="k">def</span> <span class="nf">attach_results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Attach the odb file into Abaqus</span>
@@ -718,6 +728,7 @@
             <span class="k">return</span> <span class="n">session</span><span class="o">.</span><span class="n">openOdb</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">odbname</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">odbpath</span><span class="p">,</span> <span class="n">readOnly</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">session</span><span class="o">.</span><span class="n">odbs</span><span class="p">[</span><span class="n">odbname</span><span class="p">]</span>
+
 </div>
 <div class="viewcode-block" id="ConeCyl.detach_results"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl.detach_results">[docs]</a>    <span class="k">def</span> <span class="nf">detach_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">odb</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Detach an odb file from Abaqus</span>
@@ -731,18 +742,22 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">import</span> <span class="nn">visualization</span>
         <span class="n">visualization</span><span class="o">.</span><span class="n">closeOdb</span><span class="p">(</span><span class="n">odb</span><span class="p">)</span>
+
 </div>
     <span class="k">def</span> <span class="nf">read_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="kn">import</span> <span class="nn">_read_outputs</span>
         <span class="k">return</span> <span class="n">_read_outputs</span><span class="o">.</span><span class="n">read_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
+
     <span class="k">def</span> <span class="nf">plot_displacements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="kn">import</span> <span class="nn">_plot</span>
         <span class="k">return</span> <span class="n">_plot</span><span class="o">.</span><span class="n">plot_displacements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
+
     <span class="k">def</span> <span class="nf">plot_forces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="kn">import</span> <span class="nn">_plot</span>
         <span class="k">return</span> <span class="n">_plot</span><span class="o">.</span><span class="n">plot_forces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
 
     <span class="k">def</span> <span class="nf">plot_stress_analysis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="kn">import</span> <span class="nn">_plot</span>
@@ -750,9 +765,11 @@
         <span class="kn">import</span> <span class="nn">abaqus_functions</span>
         <span class="n">abaqus_functions</span><span class="o">.</span><span class="n">configure_session</span><span class="p">()</span>
 
+
     <span class="k">def</span> <span class="nf">plot_xy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="kn">import</span> <span class="nn">_plot</span>
         <span class="k">return</span> <span class="n">_plot</span><span class="o">.</span><span class="n">plot_xy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
 
 <div class="viewcode-block" id="ConeCyl.plot_opened"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl.plot_opened">[docs]</a>    <span class="k">def</span> <span class="nf">plot_opened</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">fieldOutputKey</span><span class="p">,</span> <span class="n">vec</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">numel_cir</span><span class="p">,</span>
             <span class="n">elem_type</span><span class="o">=</span><span class="s">&#39;S4R&#39;</span><span class="p">,</span> <span class="n">ignore</span><span class="o">=</span><span class="p">[],</span> <span class="n">create_npz_only</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
@@ -1016,6 +1033,7 @@
         <span class="k">except</span><span class="p">:</span>
             <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">()</span>
             <span class="k">print</span><span class="p">(</span><span class="s">&#39;Opened plot could not be generated! :(&#39;</span><span class="p">)</span>
+
 </div>
     <span class="k">def</span> <span class="nf">check_completed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wait</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">print_found</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">rebuilt</span><span class="p">:</span>
@@ -1058,6 +1076,7 @@
                 <span class="kn">import</span> <span class="nn">time</span>
                 <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
 
+
     <span class="k">def</span> <span class="nf">stress_analysis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear_buckling</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">True</span>
@@ -1072,6 +1091,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">plot_stress_analysis</span><span class="p">()</span>
 
         <span class="k">return</span> <span class="n">ans</span>
+
 
 <div class="viewcode-block" id="ConeCyl.create_cutout"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl.create_cutout">[docs]</a>    <span class="k">def</span> <span class="nf">create_cutout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">numel</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Create a cutout in the shell surface.</span>
@@ -1101,6 +1121,7 @@
         <span class="n">cutobj</span><span class="o">.</span><span class="n">conecyl</span> <span class="o">=</span> <span class="bp">self</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cutouts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cutobj</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">cutobj</span>
+
 </div>
 <div class="viewcode-block" id="ConeCyl.calc_ABD_matrix"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl.calc_ABD_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">calc_ABD_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Calculates the laminate stiffness matrix (ABD matrix)</span>
@@ -1119,6 +1140,7 @@
                               <span class="n">plyts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">plyts</span><span class="p">,</span>
                               <span class="n">laminaprops</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">laminaprops</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lam</span>
+
 </div>
 <div class="viewcode-block" id="ConeCyl.calc_nasaKDF"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl.calc_nasaKDF">[docs]</a>    <span class="k">def</span> <span class="nf">calc_nasaKDF</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Calculates the KDF using the NASA SP-8007 guideline</span>
@@ -1143,6 +1165,7 @@
         <span class="n">phi</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mf">16.</span> <span class="o">*</span> <span class="p">(</span><span class="n">req</span><span class="o">/</span><span class="n">teq</span><span class="p">)</span><span class="o">**</span><span class="mf">0.5</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nasaKDF</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">-</span> <span class="mf">0.901</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">e</span><span class="o">**-</span><span class="n">phi</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nasaKDF</span>
+
 </div>
 <div class="viewcode-block" id="ConeCyl.calc_partitions"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl.calc_partitions">[docs]</a>    <span class="k">def</span> <span class="nf">calc_partitions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thetadegs</span><span class="o">=</span><span class="p">[],</span> <span class="n">pts</span><span class="o">=</span><span class="p">[]):</span>
         <span class="sd">&quot;&quot;&quot;Updates all circumferential and axial positions to partition</span>
@@ -1177,6 +1200,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">thetadegs</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">thetadegs</span><span class="p">)))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pts</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">pts</span><span class="p">)))</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">thetadegs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pts</span>
+
 </div>
 <div class="viewcode-block" id="ConeCyl.get_step_name"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl.get_step_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_step_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get the step name corresponding to an integer number</span>
@@ -1237,7 +1261,7 @@
         <li class="right" >
           <a href="../../../../np-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../../index.html">DESICOS 2.0.1 documentation</a> &raquo;</li>
+        <li><a href="../../../../index.html">DESICOS 2.0.2 documentation</a> &raquo;</li>
           <li><a href="../../../index.html" >Module code</a> &raquo;</li> 
       </ul>
     </div>

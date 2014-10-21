@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>desicos.abaqus.imperfections.ti &mdash; DESICOS 2.0.1 documentation</title>
+    <title>desicos.abaqus.imperfections.ti &mdash; DESICOS 2.0.2 documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     '2.0.1',
+        VERSION:     '2.0.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,7 +24,7 @@
     <script type="text/javascript" src="../../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../../../../_static/desicos.png"/>
-    <link rel="top" title="DESICOS 2.0.1 documentation" href="../../../../index.html" />
+    <link rel="top" title="DESICOS 2.0.2 documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" /> 
   </head>
   <body>
@@ -40,7 +40,7 @@
         <li class="right" >
           <a href="../../../../np-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../../index.html">DESICOS 2.0.1 documentation</a> &raquo;</li>
+        <li><a href="../../../../index.html">DESICOS 2.0.2 documentation</a> &raquo;</li>
           <li><a href="../../../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
@@ -119,7 +119,8 @@
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">layup</span><span class="o">.</span><span class="n">suppressed</span><span class="p">:</span>
                     <span class="n">layup_t</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">p</span><span class="o">.</span><span class="n">thickness</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">layup</span><span class="o">.</span><span class="n">plies</span><span class="o">.</span><span class="n">values</span><span class="p">()])</span>
                     <span class="n">max_amp</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">max_amp</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">layup_t</span><span class="o">-</span><span class="n">cc_total_t</span><span class="p">))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">amplitude</span> <span class="o">=</span> <span class="n">max_amp</span>
+
+            <span class="k">return</span> <span class="n">max_amp</span>
 </div>
 <div class="viewcode-block" id="TI.create"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.ti.TI.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Creates the thickness imperfection</span>
@@ -181,8 +182,7 @@
         <span class="kn">import</span> <span class="nn">desicos.abaqus.utils</span> <span class="kn">as</span> <span class="nn">utils</span>
         <span class="n">utils</span><span class="o">.</span><span class="n">set_colors_ti</span><span class="p">(</span><span class="n">cc</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">created</span> <span class="o">=</span> <span class="bp">True</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">calc_amplitude</span><span class="p">()</span>
-        <span class="k">print</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s"> amplitude = </span><span class="si">%f</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">amplitude</span><span class="p">)</span>
+        <span class="k">print</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s"> amplitude = </span><span class="si">%f</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_amplitude</span><span class="p">())</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">elems_t</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_set</span>
 </pre></div></div></div>
@@ -224,7 +224,7 @@
         <li class="right" >
           <a href="../../../../np-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../../index.html">DESICOS 2.0.1 documentation</a> &raquo;</li>
+        <li><a href="../../../../index.html">DESICOS 2.0.2 documentation</a> &raquo;</li>
           <li><a href="../../../index.html" >Module code</a> &raquo;</li> 
       </ul>
     </div>
