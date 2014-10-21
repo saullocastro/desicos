@@ -2,6 +2,7 @@ import numpy as np
 
 from desicos.conecylDB.interpolate import interp
 
+
 class Shim(object):
     """Represents a shim added to one of the edges
 
@@ -22,6 +23,7 @@ class Shim(object):
         self.edge = edge
         if edge!=None:
             self.edge.shims.append(self)
+
 
 class UnevenBottomEdge(object):
     """Uneven Bottom Edge
@@ -49,17 +51,21 @@ class UnevenBottomEdge(object):
         self.pts = []
         self.shims = []
         self.measured_u3s = None
+        self.scaling_factor = 1.
         # plotting options
         self.xaxis = 'scaling_factor'
         self.xaxis_label = 'Scaling factor'
 
+
     def __nonzero__(self): # in Python 3 this method was renamed to __bool__
         return self.__bool__()
+
 
     def __bool__(self):
         cc = self.impconf.conecyl
         return (bool(self.shims) or bool(self.measured_u3s!=None) or
                 bool(cc.bc_gaps_bottom_edge))
+
 
     def rebuild(self):
         cc = self.impconf.conecyl
@@ -67,6 +73,7 @@ class UnevenBottomEdge(object):
         self.thetadegs += [s.thetadeg + 360*s.width/(2*np.pi*cc.rbot)
                            for s in self.shims]
         self.pts = []
+
 
     def add_measured_u3s(self, thetadegs, u3s):
         """Adds measured data to the uneven bottom edge
@@ -88,6 +95,7 @@ class UnevenBottomEdge(object):
             raise ValueError('thetadegs must have the same length of u3s!')
         self.measured_u3s = np.array([thetadegs, u3s])
 
+
     def add_shim(self, thetadeg, thick, width):
         """Adds a shim to the uneven bottom edge
 
@@ -108,8 +116,10 @@ class UnevenBottomEdge(object):
         shim = Shim(thetadeg, thick, width, edge=self)
         return shim
 
+
     def calc_amplitude(self):
-        self.amplitude = self.scaling_factor
+        return self.scaling_factor
+
 
     def create(self):
         r"""Creates the uneven bottom edge imperfections
@@ -187,6 +197,9 @@ class UnevenBottomEdge(object):
             hs[check] += s.thick
         u3_nodes += hs
 
+        # applying scaling_factor
+        u3_nodes *= self.scaling_factor
+
         # calculating gap values
         gaps = u3_nodes.max() - u3_nodes
         # creating GAP elements
@@ -232,6 +245,8 @@ class UnevenBottomEdge(object):
                                  mpcType=PIN_MPC,
                                  userMode=DOF_MODE_MPC,
                                  userType=0, csys=ra_cyl_csys)
+
+
 class UnevenTopEdge(object):
     """Uneven Top Edge
 
@@ -260,17 +275,21 @@ class UnevenTopEdge(object):
         self.pts = []
         self.shims = []
         self.measured_u3s = None
+        self.scaling_factor = 1.
         # plotting options
         self.xaxis = 'scaling_factor'
         self.xaxis_label = 'Scaling factor'
 
+
     def __nonzero__(self): # in Python 3 this method was renamed to __bool__
         return self.__bool__()
+
 
     def __bool__(self):
         cc = self.impconf.conecyl
         return (bool(self.betadeg) or bool(self.shims) or
                 bool(self.measured_u3s!=None) or bool(cc.bc_gaps_top_edge))
+
 
     def rebuild(self):
         cc = self.impconf.conecyl
@@ -278,6 +297,7 @@ class UnevenTopEdge(object):
         self.thetadegs += [s.thetadeg + 360*s.width/(2*np.pi*cc.rtop)
                            for s in self.shims]
         self.pts = []
+
 
     def add_measured_u3s(self, thetadegs, u3s):
         """Adds measured data to the uneven top edge
@@ -299,6 +319,7 @@ class UnevenTopEdge(object):
             raise ValueError('thetadegs must have the same length of u3s!')
         self.measured_u3s = np.array([thetadegs, u3s])
 
+
     def add_shim(self, thetadeg, thick, width):
         """Adds a shim to the uneven top edge
 
@@ -319,8 +340,10 @@ class UnevenTopEdge(object):
         shim = Shim(thetadeg, thick, width, edge=self)
         return shim
 
+
     def calc_amplitude(self):
-        self.amplitude = self.scaling_factor
+        return self.scaling_factor
+
 
     def create(self):
         r"""Creates the uneven top edge imperfections
@@ -409,6 +432,9 @@ class UnevenTopEdge(object):
             hs[check] += s.thick
         u3_nodes -= hs
 
+        # applying scaling_factor
+        u3_nodes *= self.scaling_factor
+
         # calculating gap values
         gaps = u3_nodes - u3_nodes.min()
         # creating GAP elements
@@ -446,7 +472,7 @@ class UnevenTopEdge(object):
             text = '*INCLUDE, INPUT={0}'.format(top_name_gaps)
         edit_keywords(mod=mod, text=text, before_pattern=pattern, insert=True)
 
-        set_RP_top=ra.sets['RP_top']
+        set_RP_top = ra.sets['RP_top']
         rps = ra.referencePoints
         rps_gap_datums = [rps[rp.id] for rp in rps_gap]
         region = Region(referencePoints=rps_gap_datums)

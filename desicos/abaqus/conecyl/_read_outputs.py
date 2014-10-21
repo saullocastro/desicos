@@ -2,9 +2,9 @@ import numpy as np
 
 import _read_outputs
 
-def read_outputs(self, last_frame = False,
-                       last_cross_section = True,
-                       read_fieldOutputs = False):
+
+def read_outputs(self, last_frame=False, last_cross_section=True,
+        read_fieldOutputs=False):
 
     if not self.check_completed():
         print 'ERROR! Output not found for model %s !' % self.model_name
@@ -16,13 +16,7 @@ def read_outputs(self, last_frame = False,
     except:
         print 'ERROR - Probably %s.odb is corrupted' % self.model_name
         return False
-    #
-    if self.rsm:
-        fieldOutput = odb.steps['RSM'].frames[-1].fieldOutputs['SENER']
-        self.ener_total = sum([v.data for v in fieldOutput.values])
-        self.detach_results(odb)
-        return True
-    #
+
     if self.linear_buckling:
         pcrs = []
         for frame in odb.steps[self.step1Name].frames:
@@ -34,66 +28,24 @@ def read_outputs(self, last_frame = False,
         self.zload = np.linspace(min(pcrs),        min(pcrs),10)
         self.detach_results(odb)
         return True
+
     _read_outputs._read_axial_load_displ_history(self, odb)
-    # reading imperfection amplitude:
-    cs_list = set()
-    for imp in self.impconf.imperfections:
-        if  imp.cross_section <> None:
-            cs_list.add(imp.cross_section)
-        else:
-            print 'WARNING - imp %s with cross_section = None' % imp.name
-    if read_fieldOutputs:
-        if last_cross_section:
-            print 'WARNING - reading only last cross section'
-            cs_list.add(self.cross_sections[-1])
-        else:
-            for cross_section in self.cross_sections:
-                cs_list.add(cross_section)
-        for cs in cs_list:
-            _read_outputs._read_outputs_cross_section(\
-                        cc                  = self,
-                        odb                 = odb,
-                        cross_section_index = cs.index,
-                        last_frame          = last_frame)
-        for meridian in self.meridians:
-            _read_outputs._read_outputs_meridian(\
-                        cc                  = self,
-                        odb                 = odb,
-                        meridian_index      = meridian.index,
-                        last_frame          = last_frame)
-    #TODO move from here
-    for imp in self.impconf.imperfections:
-        imp.calc_amplitude()
-    self.detach_results(odb)
+
     return True
 
 
-
-def _read_outputs_cross_section(cc,
-                                 odb,
-                                 cross_section_index = -1,
-                                 last_frame = False):
-    #
+def _read_outputs_cross_section(cc, odb, cross_section_index=-1,
+        last_frame=False):
     cross_section = cc.cross_sections[cross_section_index]
-    _read_outputs._read_outputs_entity(cc,
-                                        odb,
-                                        cross_section,
-                                        last_frame)
+    _read_outputs._read_outputs_entity(cc, odb, cross_section, last_frame)
 
-def _read_outputs_meridian(cc,
-                            odb,
-                            meridian_index = 0,
-                            last_frame = False):
+
+def _read_outputs_meridian(cc, odb, meridian_index=0, last_frame=False):
     meridian = cc.meridians[meridian_index]
-    _read_outputs._read_outputs_entity(cc,
-                                        odb,
-                                        meridian,
-                                        last_frame)
+    _read_outputs._read_outputs_entity(cc, odb, meridian, last_frame)
 
-def _read_outputs_entity(cc,
-                          odb,
-                          entity,
-                          last_frame = False):
+
+def _read_outputs_entity(cc, odb, entity, last_frame=False):
     setname = '%s_%03d' % (entity.prefix, entity.index)
     #TODO this if below is temporary... the meridians should not be even created
     #     if they have not nodes associated
@@ -177,48 +129,14 @@ def _read_outputs_entity(cc,
                 #node.fx[step_name] += fx
                 #node.fy[step_name] += fy
 
+
 def _read_axial_load_displ_history(cc, odb):
-    import coords
+    import utils
+
     step_name = cc.step2Name
     step = odb.steps[step_name]
-    historyRegion = step.historyRegions['Node ASSEMBLY.1']
-    zdisp_data    = historyRegion.historyOutputs['U3'].data
-    zload_data    = historyRegion.historyOutputs['RF3'].data
-    cc.zdisp      = [ value[1] for value in zdisp_data]
-    cc.zload      = [-value[1] for value in zload_data]
-    for imp in cc.impconf.imperfections:
-        # trying first by node id
-        # if the model has been renumbered somehow
-        # it will try by imperfection name
-        key = 'Node INSTANCECYLINDER.%d' % imp.node.id
-        if not key in step.historyRegions.keys():
-            set_name =  'SET_' + imp.name.upper()
-            nodeSets = odb.rootAssembly.nodeSets
-            if set_name in nodeSets.keys():
-                node_id = nodeSets[set_name].nodes[0][0].label
-                key = 'Node INSTANCECYLINDER.%d' % node_id
-                if not key in step.historyRegions.keys():
-                    continue
-            else:
-                continue
-        historyRegion = step.historyRegions[key]
-        dx_data = historyRegion.historyOutputs['U1'].data
-        try:
-            dy_data = historyRegion.historyOutputs['U2'].data
-            dz_data = historyRegion.historyOutputs['U3'].data
-        except:
-            pass
-        imp.node.dx[step_name] = []
-        imp.node.dy[step_name] = []
-        imp.node.dz[step_name] = []
-        imp.node.dr[step_name] = []
-        for i in range(len(dx_data)):
-            dx = dx_data[i][1]
-            dy = dy_data[i][1]
-            dz = dz_data[i][1]
-            dr, theta, z = coords.rec2cyl(dx, dy, dz)
-            imp.node.dx[step_name].append(dx)
-            imp.node.dy[step_name].append(dy)
-            imp.node.dz[step_name].append(dz)
-            imp.node.dr[step_name].append(dr)
-
+    historyRegion = step.historyRegions['Node ASSEMBLY.2']
+    zdisp_data = historyRegion.historyOutputs['U3'].data
+    zload_data = historyRegion.historyOutputs['RF3'].data
+    cc.zdisp = [ value[1] for value in zdisp_data]
+    cc.zload = [-value[1] for value in zload_data]

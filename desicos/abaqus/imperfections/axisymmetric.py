@@ -29,7 +29,7 @@ class Axisymmetric(Imperfection):
         self.thetadegs = []
         self.pts = [pt]
 
-    def get_amplitude(self):
+    def calc_amplitude(self):
         return self.wb
 
     def create(self):

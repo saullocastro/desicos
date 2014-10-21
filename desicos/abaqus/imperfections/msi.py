@@ -190,7 +190,7 @@ class MSI(object):
             rs, zs = cc.r_z_from_pt(pts)
             amps = (node_rs - rs)/np.cos(cc.alpharad)
             max_amp = max(np.absolute(amps))
-            self.amplitude = max_amp
+
             return max_amp
 
     def create(self, force=False):
@@ -255,8 +255,7 @@ class MSI(object):
                               ignore_bot_h = self.ignore_bot_h,
                               ignore_top_h = self.ignore_top_h)
         self.created = True
-        self.calc_amplitude()
-        print '%s amplitude = %f' % (self.name, self.amplitude)
+        print '%s amplitude = %f' % (self.name, self.calc_amplitude())
 
         return self.nodal_translations
 

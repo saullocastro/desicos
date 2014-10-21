@@ -21,7 +21,7 @@ def plot_xy(self, xs, ys, name = 'default_plot',
 
 def plot_forces(self, step_num=2, along_edge=False, gui=False):
     import __main__
-    step_name = self.step_name(step_num)
+    step_name = self.get_step_name(step_num)
     names = []
     do_norm = False
     if self.study:
@@ -29,15 +29,15 @@ def plot_forces(self, step_num=2, along_edge=False, gui=False):
             do_norm = True
             Pcr = self.study.ccs[0].zload[0]
     if gui:
-        names.append('%s_load_shortening_curve' % self.jobname)
+        names.append('%s_load_shortening_curve' % self.model_name)
         if do_norm:
-            names.append('%s_load_shortening_curve_norm' % self.jobname)
+            names.append('%s_load_shortening_curve_norm' % self.model_name)
     else:
-        names.append('%s_Step_%02d_Displacement_X_Force' %\
-                     (self.jobname, step_num))
+        names.append('%s_Step_%02d_Displacement_X_Force' %
+                     (self.model_name, step_num))
         if do_norm:
-            names.append('%s_Step_%02d_Displacement_X_Force_norm' %\
-                     (self.jobname, step_num))
+            names.append('%s_Step_%02d_Displacement_X_Force_norm' %
+                     (self.model_name, step_num))
     lamt = sum(self.plyts)
     tmp_displ_f = []
     tmp_displ_f_norm = []
@@ -51,44 +51,45 @@ def plot_forces(self, step_num=2, along_edge=False, gui=False):
         print 'ERROR - plot_forces - run read_outputs first'
         return
     if self.impconf.ploads <> []:
-        legendLabel = 'perturbation load = %2.1f N, first buckling load = %2.2f kN' %\
-                (self.impconf.ploads[0].pltotal, 0.001 * fb_load)
+        text = ('perturbation load = %2.1f N, first buckling load = %2.2f kN' %
+                (self.impconf.ploads[0].pltotal, 0.001 * fb_load))
+        legendLabel = text
     else:
-        legendLabel = self.jobname
+        legendLabel = self.model_name
 
     session = __main__.session
-    session.XYData(\
-            name = names[ 0 ],
+    session.XYData(
+            name = names[0],
             data = tmp_displ_f,
             xValuesLabel = 'End-Shortening, mm',
             yValuesLabel = 'Reaction Load, kN',
             legendLabel = legendLabel)
     if do_norm:
-        session.XYData(\
-                name = names[ 1 ],
+        session.XYData(
+                name = names[1],
                 data = tmp_displ_f_norm,
                 xValuesLabel = 'Normalized End-Shortening',
                 yValuesLabel = 'Normalized Reaction Load',
                 legendLabel = legendLabel)
     if along_edge:
-        names.append(\
-            '%s_Step_%02d_Force_along_loaded_edge' \
-            % (self.jobname, step_num))
+        names.append(
+            '%s_Step_%02d_Force_along_loaded_edge'
+            % (self.model_name, step_num))
         tmp = []
         zload = 0
         for node in self.cross_sections[-1].nodes:
             if node <> None:
-                fz = node.fz[ step_name ][ -1 ]
+                fz = node.fz[step_name][-1]
                 zload += fz
                 tmp.append((node.theta, 0.001 * fz))
-        frmlen = len(node.fz[ step_name ])
-        session.XYData(\
-                name = names[ 1 ],
+        frmlen = len(node.fz[step_name])
+        session.XYData(
+                name = names[1],
                 data = tmp,
                 xValuesLabel = 'Circumferential position, degrees',
                 yValuesLabel = 'Reaction Load, kN',
-                legendLabel =  '%s, total force = %2.2f kN' \
-                               % (self.jobname, 0.001 * sum(self.zload)))
+                legendLabel =  '%s, total force = %2.2f kN'
+                               % (self.model_name, 0.001 * sum(self.zload)))
     self.ls_curve = tmp_displ_f
     if do_norm:
         return tmp_displ_f, tmp_displ_f_norm
@@ -97,7 +98,7 @@ def plot_forces(self, step_num=2, along_edge=False, gui=False):
 
 def plot_displacements(self, step_num=1, frame_num = -1):
     import __main__
-    step_name = self.step_name(step_num)
+    step_name = self.get_step_name(step_num)
     names = []
     numcharts = 2
     index = -1
@@ -106,16 +107,16 @@ def plot_displacements(self, step_num=1, frame_num = -1):
         tmp = []
         maxdisp = 0.
         for node in pload.cross_section.nodes:
-            dr = node.dr[ step_name ][ frame_num ]
+            dr = node.dr[step_name][frame_num]
             if abs(dr) > abs(maxdisp):
                 maxdisp = dr
             theta = node.theta
             tmp.append((theta, dr))
-        names.append(\
-            '%s_Step_%02d_Displ_along_circumference' \
-            % (self.jobname, step_num))
-        __main__.session.XYData(\
-                name = names[ index * numcharts + 0 ],
+        names.append(
+            '%s_Step_%02d_Displ_along_circumference'
+            % (self.model_name, step_num))
+        __main__.session.XYData(
+                name = names[index * numcharts + 0],
                 data = tmp,
                 xValuesLabel = 'Circumferential position, degrees',
                 yValuesLabel = 'Radial displacement, mm',
@@ -123,16 +124,16 @@ def plot_displacements(self, step_num=1, frame_num = -1):
         tmp = []
         maxdisp = 0.
         for node in pload.meridian.nodes:
-            dr = node.dr[ step_name ][ frame_num ]
+            dr = node.dr[step_name][frame_num]
             if abs(dr) > abs(maxdisp):
                 maxdisp = dr
             z = node.z
             tmp.append((z, dr))
-        names.append(\
-            '%s_Step_%02d_Displ_along_meridian' \
-            % (self.jobname, step_num))
-        __main__.session.XYData(\
-                name = names[ index * numcharts + 1 ],
+        names.append(
+            '%s_Step_%02d_Displ_along_meridian'
+            % (self.model_name, step_num))
+        __main__.session.XYData(
+                name = names[index * numcharts + 1],
                 data = tmp,
                 xValuesLabel = 'Meridional position, mm',
                 yValuesLabel = 'Radial displacement, mm',
@@ -160,12 +161,12 @@ def plot_stress_analysis(self, disp_force_frame = 'DISP'):
             xs.append(xaxis[f_num])
             ms.append(self.hashin_max_ms[f_num][key])
             fi.append(self.hashin_max_num[f_num][key])
-        name = '_'.join([self.jobname,dff,'MS',key])
+        name = '_'.join([self.model_name,dff,'MS',key])
         self.plot_xy(xs=xs, ys=ms, name=name,
                       xValuesLabel = xlabel,
                       yValuesLabel = 'Margin of Safety',
                       legendLabel  = 'MS ' + names[key])
-        name = '_'.join([self.jobname,dff,'FI',key])
+        name = '_'.join([self.model_name,dff,'FI',key])
         self.plot_xy(xs=xs, ys=fi, name=name,
                       xValuesLabel = xlabel,
                       yValuesLabel = 'Failure Index',
@@ -177,12 +178,12 @@ def plot_stress_analysis(self, disp_force_frame = 'DISP'):
             xs.append(xaxis[f_num])
             ms.append(self.stress_min_ms[f_num][key])
             fi.append(self.stress_min_num[f_num][key])
-        name = '_'.join([self.jobname,dff,key,'MS','MIN'])
+        name = '_'.join([self.model_name,dff,key,'MS','MIN'])
         self.plot_xy(xs=xs, ys=ms, name=name,
                       xValuesLabel = xlabel,
                       yValuesLabel = 'Margin of Safety',
                       legendLabel  = 'MS ' + key)
-        name = '_'.join([self.jobname,dff,key,'STRESS','MIN'])
+        name = '_'.join([self.model_name,dff,key,'STRESS','MIN'])
         self.plot_xy(xs=xs, ys=fi, name=name,
                       xValuesLabel = xlabel,
                       yValuesLabel = 'Stress, MPa',
@@ -192,12 +193,12 @@ def plot_stress_analysis(self, disp_force_frame = 'DISP'):
             xs.append(xaxis[f_num])
             ms.append(self.stress_max_ms[f_num][key])
             fi.append(self.stress_max_num[f_num][key])
-        name = '_'.join([self.jobname,dff,key,'MS','MAX'])
+        name = '_'.join([self.model_name,dff,key,'MS','MAX'])
         self.plot_xy(xs=xs, ys=ms, name=name,
                       xValuesLabel = xlabel,
                       yValuesLabel = 'Margin of Safety',
                       legendLabel  = 'MS ' + key)
-        name = '_'.join([self.jobname,dff,key,'STRESS','MAX'])
+        name = '_'.join([self.model_name,dff,key,'STRESS','MAX'])
         self.plot_xy(xs=xs, ys=fi, name=name,
                       xValuesLabel = xlabel,
                       yValuesLabel = 'Stress, MPa',

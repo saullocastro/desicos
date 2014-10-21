@@ -10,6 +10,7 @@ from desicos.abaqus.constants import *
 from desicos.composite.laminate import read_stack
 from desicos.conecylDB import fetch
 
+
 class ConeCyl(object):
     r"""ConeCyl object
 
@@ -356,6 +357,7 @@ class ConeCyl(object):
         self.stress_output = False
         self.force_output = False
 
+
     def from_DB(self, name_DB=''):
         """Fetch all the cone/cylinder data from the database
 
@@ -392,6 +394,7 @@ class ConeCyl(object):
             return None
 
         return self
+
 
     def rebuild(self, force=False, save_rebuild=True):
         """Updates the properties of the current :class:`.ConeCyl` object
@@ -525,6 +528,7 @@ class ConeCyl(object):
         if save_rebuild:
             self.rebuilt = True
 
+
     def prepare_to_save(self):
         """Prepare the :class:`ConeCyl` to be saved
 
@@ -533,6 +537,7 @@ class ConeCyl(object):
         """
         self.rebuilt = False
         return
+
 
     def fr(self, z):
         """Calculates the radius at a given ``z`` position
@@ -549,6 +554,7 @@ class ConeCyl(object):
 
         """
         return self.rbot - z*np.tan(self.alpharad)
+
 
     def r_z_from_pt(self, pt=0.5):
         """Radius and the axial position from a given normalized position
@@ -569,6 +575,7 @@ class ConeCyl(object):
         r = self.rbot + (self.rtop - self.rbot)*pt
         z = self.H*pt
         return r, z
+
 
     def create_model(self):
         """Triggers the routines to create the model in Abaqus
@@ -603,6 +610,7 @@ class ConeCyl(object):
         _create_loads_bcs(self)
         created_model = True
 
+
     def write_job(self, submit=False, wait=True, multiple_cores=False):
         """Writes the job of the corresponding Abaqus model
 
@@ -622,8 +630,8 @@ class ConeCyl(object):
         import abaqus
 
         os.chdir(self.output_dir)
-        self.job = abaqus.mdb.jobs[self.model_name]
-        self.job.writeInput()
+        job = abaqus.mdb.jobs[self.model_name]
+        job.writeInput()
         inppath = self.model_name + '.inp'
         if submit:
             if multiple_cores:
@@ -634,6 +642,7 @@ class ConeCyl(object):
                           inppath))
         os.chdir(self.tmp_dir)
 
+
     def read_walltime(self):
         try:
             tmppath = os.path.join(self.output_dir, self.model_name + '.msg')
@@ -643,6 +652,7 @@ class ConeCyl(object):
                 return float(w)
         except:
             return None
+
 
     def attach_results(self):
         """Attach the odb file into Abaqus
@@ -666,6 +676,7 @@ class ConeCyl(object):
         else:
             return session.odbs[odbname]
 
+
     def detach_results(self, odb):
         """Detach an odb file from Abaqus
 
@@ -679,17 +690,21 @@ class ConeCyl(object):
         import visualization
         visualization.closeOdb(odb)
 
+
     def read_outputs(self, **kwargs):
         import _read_outputs
         return _read_outputs.read_outputs(self, **kwargs)
+
 
     def plot_displacements(self, **kwargs):
         import _plot
         return _plot.plot_displacements(self, **kwargs)
 
+
     def plot_forces(self, **kwargs):
         import _plot
         return _plot.plot_forces(self, **kwargs)
+
 
     def plot_stress_analysis(self, **kwargs):
         import _plot
@@ -697,9 +712,11 @@ class ConeCyl(object):
         import abaqus_functions
         abaqus_functions.configure_session()
 
+
     def plot_xy(self, xs, ys, **kwargs):
         import _plot
         return _plot.plot_xy(self, xs, ys, **kwargs)
+
 
     def plot_opened(self, frame, fieldOutputKey, vec, nodes, numel_cir,
             elem_type='S4R', ignore=[], create_npz_only=False, ax=None,
@@ -964,6 +981,7 @@ class ConeCyl(object):
             traceback.print_exc()
             print('Opened plot could not be generated! :(')
 
+
     def check_completed(self, wait=False, print_found=False):
         if not self.rebuilt:
             self.rebuild()
@@ -1005,6 +1023,7 @@ class ConeCyl(object):
                 import time
                 time.sleep(5)
 
+
     def stress_analysis(self, **kwargs):
         if self.linear_buckling:
             return True
@@ -1019,6 +1038,7 @@ class ConeCyl(object):
         self.plot_stress_analysis()
 
         return ans
+
 
     def create_cutout(self, theta, pt, d, numel=None):
         """Create a cutout in the shell surface.
@@ -1049,6 +1069,7 @@ class ConeCyl(object):
         self.cutouts.append(cutobj)
         return cutobj
 
+
     def calc_ABD_matrix(self):
         """Calculates the laminate stiffness matrix (ABD matrix)
 
@@ -1066,6 +1087,7 @@ class ConeCyl(object):
                               plyts=self.plyts,
                               laminaprops=self.laminaprops)
         return self.lam
+
 
     def calc_nasaKDF(self):
         """Calculates the KDF using the NASA SP-8007 guideline
@@ -1090,6 +1112,7 @@ class ConeCyl(object):
         phi = 1/16. * (req/teq)**0.5
         self.nasaKDF = 1. - 0.901*(1-np.e**-phi)
         return self.nasaKDF
+
 
     def calc_partitions(self, thetadegs=[], pts=[]):
         """Updates all circumferential and axial positions to partition
@@ -1124,6 +1147,7 @@ class ConeCyl(object):
         self.thetadegs = sorted(list(set(thetadegs)))
         self.pts = sorted(list(set(pts)))
         return self.thetadegs, self.pts
+
 
     def get_step_name(self, step):
         """Get the step name corresponding to an integer number

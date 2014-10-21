@@ -36,4 +36,4 @@ class Shim(Imperfection):
                     int(self.theta), int(self.thick*100), int(self.omega))
 
     def calc_amplitude(self):
-        self.amplitude = self.thick
+        return self.thick

@@ -27,6 +27,7 @@ ccattrs = ['rbot','H','alphadeg','plyts',
 'resin_top_h', 'resin_tir_w1', 'resin_tir_w2', 'resin_tor_w1', 'resin_tor_w2',
 'laminapropKeys', 'allowables', 'timeInterval', 'request_stress_output']
 
+
 def find_std_name(std_name):
     #
     #TODO: avoid using try and except... how to find if .stds exists inside
@@ -38,8 +39,6 @@ def find_std_name(std_name):
         __main__.stds = {}
     return std_name
 
-def post():
-    pass
 
 def apply_imp_ms(
              std_name,
@@ -75,6 +74,7 @@ def apply_imp_ms(
             msi.nodal_translations = nodal_translations
             nodal_translations = msi.create()
 
+
 def apply_imp_t(
              std_name,
              imp_thick,
@@ -109,6 +109,7 @@ def apply_imp_t(
             ti.elems_t = elems_t
             ti.t_set = t_set
             elems_t, t_set = ti.create()
+
 
 def create_study(**kwargs):
     # setting defaults
@@ -268,6 +269,7 @@ def create_study(**kwargs):
     #    num_models = max(len(pl_table),len(d_table),len(cut_table))
     return
 
+
 def run_study(std_name, ncpus, use_job_stopper):
     args = ['abaqus', 'python']
     args.append(os.path.join(TMP_DIR, std_name,
@@ -279,6 +281,7 @@ def run_study(std_name, ncpus, use_job_stopper):
 
     run_cmd = ' '.join(args)
     subprocess.Popen(run_cmd, shell=True)
+
 
 def save_study(std_name, params_from_gui):
     stds = __main__.stds
@@ -297,6 +300,7 @@ def save_study(std_name, params_from_gui):
           os.path.join(std.tmp_dir, std_name))
     print ' '
 
+
 def load_study(std_name):
     std = study.Study()
     std.tmp_dir = TMP_DIR
@@ -313,15 +317,14 @@ def load_study(std_name):
     __main__.session.viewports[vpname].setValues(displayedObject = p)
     a = mod.rootAssembly
     a.regenerate()
-    #
+
     for cc in std.ccs:
         if not cc.model_name in mdb.models.keys():
             print 'Could not load objects for model {0}!'.format(
                    cc.model_name)
             continue
-        cc.mod  = mdb.models[cc.model_name]
-        cc.part = cc.mod.parts['Shell']
         abaqus_functions.set_colors_ti(cc)
+
 
 def load_study_gui(std_name, form):
     std = study.Study()

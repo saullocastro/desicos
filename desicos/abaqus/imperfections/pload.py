@@ -44,7 +44,7 @@ class PLoad(Imperfection):
             warn('Ignoring perturbation load: {0}'.format(self.name))
 
     def calc_amplitude(self):
-        return None
+        return self.pltotal
 
     def create(self):
         """Includes the perturbation load

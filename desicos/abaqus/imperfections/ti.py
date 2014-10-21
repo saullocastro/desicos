@@ -66,7 +66,8 @@ class TI(object):
                 if not layup.suppressed:
                     layup_t = sum([p.thickness for p in layup.plies.values()])
                     max_amp = max(max_amp, abs(layup_t-cc_total_t))
-            self.amplitude = max_amp
+
+            return max_amp
 
     def create(self, force=False):
         """Creates the thickness imperfection
@@ -128,8 +129,7 @@ class TI(object):
         import desicos.abaqus.utils as utils
         utils.set_colors_ti(cc)
         self.created = True
-        self.calc_amplitude()
-        print '%s amplitude = %f' % (self.name, self.amplitude)
+        print '%s amplitude = %f' % (self.name, self.calc_amplitude())
 
         return self.elems_t, self.t_set
 

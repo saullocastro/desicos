@@ -24,7 +24,7 @@ class LBMI(Imperfection):
         self.pts = []
 
     def calc_amplitude(self):
-        self.amplitude = self.scaling_factor
+        return self.scaling_factor
 
     def create(self):
         pass

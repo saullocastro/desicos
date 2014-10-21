@@ -127,7 +127,6 @@ class Study(object):
             cc_Pcr.rename = False
             cc_Pcr.model_name = self.name + '_lb'
             self.ccs.insert(0, cc_Pcr)
-            self.ccs[0].rsm = False
             self.ccs[0].direct_ABD_input = False
             self.ccs[0].impconf = imperfections.ImpConf()
             self.ccs[0].impconf.conecyl = self.ccs[0]
@@ -236,19 +235,16 @@ class Study(object):
         laminate_t = sum(t for t in self.ccs[0].plyts)
         session = __main__.session
         numcharts = 4
-        # preventing compatibility problems with older versions
-        if getattr(self, 'calc_Pcr', 'NOTFOUND') != 'NOTFOUND':
-            if self.calc_Pcr == False:
-                calc_Pcr = False
-                numcharts = 2
-                start = 0
-            else:
-                calc_Pcr = True
-                pcr_kN = 0.001*self.ccs[0].zload[0]
-                start = 1
-        else:
+
+        if self.calc_Pcr == False:
             calc_Pcr = False
             numcharts = 2
+            start = 0
+        else:
+            calc_Pcr = True
+            pcr_kN = 0.001*self.ccs[0].zload[0]
+            start = 1
+
         curves_dict = {}
         limit = len(self.ccs[start].impconf.imperfections)
         for i in range(limit):
@@ -267,7 +263,7 @@ class Study(object):
                         if i < len(cc.impconf.imperfections):
                             imp = cc.impconf.imperfections[i]
                             imp_xaxis = getattr(imp, imp.xaxis)
-                            amplitude = imp.amplitude
+                            amplitude = imp.calc_amplitude()
                         else:
                             imp_xaxis = getattr(imp_ref, imp_ref.xaxis)
                             amplitude = 0.
