@@ -1,0 +1,24 @@
+About
+==================
+
+License
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+  (c) 2013 DESICOS project 
+
+This software is distributed under GPLv2 license
+
+
+Authors
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ Pavel Schor - GUI
+
+ Saullo Castro - desicos conecyl
+
+
+Contacts
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ schor.pavel@gmail.com

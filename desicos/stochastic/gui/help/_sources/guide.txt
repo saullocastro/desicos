@@ -1,0 +1,74 @@
+Step by step guide
+==================
+
+.. warning::
+  Before you start, please make backup of following files and folders:
+
+   * ABAQUS_HOME/External/Python/
+   * ABAQUS_HOME/site/abaqus.aev
+
+1. Determine your Abaqus python version
+----------------------------------------
+
+Type following into python shell in abaqus:
+
+.. code-block:: python
+
+   import sys
+   sys.version
+
+This will print output like this:
+::
+
+  '2.6.2 for Abaqus (r262 71600 Nov 16 2011, 18:14:31) [MSC v 1500 64 bit (AMD64)]'
+
+This states that you are using Python 2.6.2 for AMD64, therefore you need to use additional libraries, which are compatible with this pyhon version. E.g. you have to download numpy for python 2.6,  win64
+
+
+2. Getting stuff work
+------------------------
+
+1. Prepare your python
+^^^^^^^^^^^^^^^^^^^^^^^
+ 1. Download install python which is compatible with abaqus-python
+ 2. Download install all required stuff (numpy, scipy, matplotlib) and make sure it works in your ordinary python installation. 
+
+2. Copy libraries into abaqus
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 1. Create :file:`desicos` directory for new libraries:  :file:`ABAQUS_HOME`/External/Python/desicos/
+ 2. Copy :file:`Lib` folder from C:/Python26/ into :file:`ABAQUS_HOME`/External/Python/desicos/
+ 3. Create directory :file:`DLLs` in :file:`ABAQUS_HOME`/External/Python/desicos/
+ 4. Copy :file:`tcl85.dll`  :file:`tclpip85.dll` :file:`tk85.dll` into :file:`ABAQUS_HOME`/External/Python/desicos/DLLs
+ 5. Copy content of C:/Python26/tcl/ into :file:`ABAQUS_HOME`/External/Python/
+
+3. Edit ABAQUS environment variables:
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Edit file :file:`ABAQUS_HOME/site/abaqus.aev` to be like this::
+
+
+  ABA_PATH $ABA_HOME:$ABA_HOME/archive
+  #PYTHONPATH $ABA_HOME/Python/Lib:$ABA_HOME/Python/Obj:$ABA_HOME/exec/lbr:$ABA_HOME/External/Python/Lib:$ABA_HOME/External/Python/DLLs:$ABA_HOME/../custom/python26/lib/site-packages:$ABA_HOME/External/Python/Lib/site-packages:.:$PYTHONPATH
+  PYTHONPATH $ABA_HOME/Python/Lib:$ABA_HOME/Python/Obj:$ABA_HOME/exec/lbr:$ABA_HOME/External/desicos/Lib:$ABA_HOME/External/desicos/DLLs:$ABA_HOME/../custom/python26/lib/site-packages:$ABA_HOME/External/desicos/Lib/site-packages:$ABA_HOME/External/Python/Lib:$ABA_HOME/External/Python/DLLs:$ABA_HOME/../custom/python26/lib/site-packages:$ABA_HOME/External/Python/Lib/site-packages:.:$PYTHONPATH
+  ABA_LIBRARY_PATH $ABA_HOME/ABA_SELECT:$ABA_HOME/exec/lbr:$ABA_HOME/Python/Obj/lbr:$ABA_HOME/External/Acis:$ABA_HOME/External:$ABA_HOME/External/ebt:$ABA_HOME/exec:$ABA_HOME/External/Interop_32:$ABA_HOME/External/32:$ABA_HOME/External/Elysium:$ABA_HOME/External/Backbone
+  ABA_MPI_LIBRARY_PATH $ABA_HOME/External/dmp
+  ABA_ATOM_DEP_LIB_PATH $ABA_LIBRARY_PATH
+
+
+4. Test the installation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Restart abaqus and type for example this into its python shell:
+
+.. code-block:: python
+
+   import numpy
+   import scipy
+   from pylab import *
+
+   numpy.__version__
+   scipy.__version__
+
+   t = arange(0.0, 2.0, 0.01)
+   s = sin(2*pi*t)
+   plot(t, s, linewidth=1.0)
+ 
+If you are not getting error messages, you installation works properly. Congratulations! :-)
