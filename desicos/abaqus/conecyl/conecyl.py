@@ -585,6 +585,7 @@ class ConeCyl(object):
                   section at the end of this file makes it easy to test
                   whatever necessary methods. The tests can be repeatedly run
                   doing::
+
                       import os
 
                       from desicos.abaqus.constants import DAHOME
