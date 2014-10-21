@@ -13,6 +13,7 @@ import numpy as np
 from constants import (TOL, FLOAT, COLORS, COLOR_WHINE, COLOR_DARK_BLUE,
         COLOR_BLACK)
 
+
 def configure_session():
     """Improve layout and colors of the current figures in visualization
 
@@ -121,6 +122,7 @@ def configure_session():
             ay.titleStyle.setValues(color=COLOR_DARK_BLUE)
             ay.labelStyle.setValues(color=COLOR_DARK_BLUE)
 
+
 def print_png(filename):
     """Print a png file from the current viewport
 
@@ -137,6 +139,7 @@ def print_png(filename):
     session.printToFile(fileName=filename,
                          format=PNG,
                          canvasObjects=(viewport,))
+
 
 def set_default_view(cc):
     """Set a default view in order to compare figures from different models
@@ -195,6 +198,7 @@ def set_default_view(cc):
                             cameraPosition=(1236.44, 1079.87, 889.94),
                             cameraTarget=(27.3027, -54.758, 306.503))
 
+
 def edit_keywords(mod, text, before_pattern=None, insert=False):
     """Edit the keywords to add commands not available in Abaqus CAE
 
@@ -229,6 +233,7 @@ def edit_keywords(mod, text, before_pattern=None, insert=False):
         mod.keywordBlock.insert(index, text)
     else:
         mod.keywordBlock.replace(index, text)
+
 
 def create_composite_layup(name, stack, plyts, mat_names, region, part,
                            part_csys, symmetric=False, scaling_factor=1.):
@@ -301,6 +306,7 @@ def create_composite_layup(name, stack, plyts, mat_names, region, part,
                              orientationType=SPECIFY_ORIENT,
                              numIntPoints=numIntPoints)
 
+
 def createDiscreteField(mod, odb, step_name, frame_num):
     from abaqusConstants import (NODES, PRESCRIBEDCONDITION_DOF)
     u=odb.steps[step_name].frames[frame_num].fieldOutputs['U']
@@ -326,6 +332,7 @@ def createDiscreteField(mod, odb, step_name, frame_num):
                       dataWidth=2,
                       defaultValues=(0.0, 0.0, 0.0, 0.0, 0.0, 0.0),
                       data=(('', 2, tuple_ids, tuple_dof_values),))
+
 
 def create_sketch_plane(cc, entity):
     """Creates a sketch plane tangent to the shell surface
@@ -375,6 +382,7 @@ def create_sketch_plane(cc, entity):
     cc.sketch_planes.append(plane)
     return plane
 
+
 def set_colors_ti(cc):
     from abaqus import mdb, session
     from abaqusConstants import ON
@@ -397,6 +405,7 @@ def set_colors_ti(cc):
     viewport.partDisplay.geometryOptions.setValues(referenceRepresentation=ON)
     viewport.disableMultipleColors()
 
+
 def printLBmodes():
     from abaqus import session
     from abaqusConstants import DPI_1200, EXTRA_FINE, OFF, PNG
@@ -412,6 +421,7 @@ def printLBmodes():
                              format=PNG,
                              canvasObjects=(vp,))
 
+
 def get_odbdisplay():
     from abaqus import session
 
@@ -421,6 +431,7 @@ def get_odbdisplay():
         return viewport.odbDisplay
     except:
         return None
+
 
 def get_current_odb():
     from abaqus import session
@@ -432,12 +443,14 @@ def get_current_odb():
     else:
         return None
 
+
 def get_current_step_name():
     odbdisplay = get_odbdisplay()
     if odbdisplay:
         return odbdisplay.fieldSteps[0][0]
     else:
         return None
+
 
 def get_current_frame():
     odbdisplay = get_odbdisplay()

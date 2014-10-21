@@ -582,7 +582,7 @@ class ConeCyl(object):
         .. note:: When new functionalities have to be implemented or for any
                   debugging purposes, one can conveniently change file
                   ``_create_model.py`` directly, and using the ``__main__``
-                  section at the end of thid file makes it easy to test
+                  section at the end of this file makes it easy to test
                   whatever necessary methods. The tests can be repeatedly run
                   doing::
                       import os
@@ -618,8 +618,10 @@ class ConeCyl(object):
             limited to one core.
 
         """
+        import abaqus
+
         os.chdir(self.output_dir)
-        self.job = __main__.mdb.jobs[self.model_name]
+        self.job = abaqus.mdb.jobs[self.model_name]
         self.job.writeInput()
         inppath = self.model_name + '.inp'
         if submit:
@@ -650,13 +652,14 @@ class ConeCyl(object):
         .. note:: Must be called from Abaqus
 
         """
+        import abaqus
+
         odbname = self.model_name + '.odb'
         odbpath = os.path.join(self.output_dir, odbname)
         if not os.path.isfile(odbpath):
             warn('result was not found')
             return False
-        import __main__
-        session = __main__.session
+        session = abaqus.session
         if not odbpath in session.odbs.keys():
             return session.openOdb(name=odbname, path=odbpath, readOnly=True)
         else:

@@ -5,7 +5,7 @@ import __main__
 
 import numpy
 
-import desicos.abaqus.utils as utils
+import desicos.abaqus.abaqus_functions as abaqus_functions
 import desicos.conecylDB as conecylDB
 import desicos.abaqus.conecyl as conecyl
 import desicos.abaqus.study as study
@@ -309,7 +309,7 @@ def load_study(std_name):
     __main__.session.viewports[vpname].setValues(displayedObject = None)
     mdb = __main__.mdb
     mod = mdb.models[std_name + '_model_01']
-    p = mod.parts['Cylinder']
+    p = mod.parts['Shell']
     __main__.session.viewports[vpname].setValues(displayedObject = p)
     a = mod.rootAssembly
     a.regenerate()
@@ -320,8 +320,8 @@ def load_study(std_name):
                    cc.model_name)
             continue
         cc.mod  = mdb.models[cc.model_name]
-        cc.part = cc.mod.parts['Cylinder']
-        utils.set_colors_ti(cc)
+        cc.part = cc.mod.parts['Shell']
+        abaqus_functions.set_colors_ti(cc)
 
 def load_study_gui(std_name, form):
     std = study.Study()

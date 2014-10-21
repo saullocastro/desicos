@@ -6,6 +6,7 @@ from numpy import sin, cos
 import geom
 from desicos.abaqus.constants import *
 
+
 def add2list(lst, value, tol=TOL):
     """Adds a value to a list if it doesn't exist within a given tolerance
 
@@ -32,6 +33,7 @@ def add2list(lst, value, tol=TOL):
             break
     if append_check:
         lst.append(value)
+
 
 def get_book_sheet(excel_name, sheet_name):
     """Gets an Excel Worksheet from a given file name
@@ -69,7 +71,9 @@ def get_book_sheet(excel_name, sheet_name):
         from xlwt import Workbook
         book = Workbook()
         sheet = book.add_sheet(sheet_name + '_00')
+
     return book, sheet
+
 
 def sample_array(ndarray, sample):
     lines = np.round((len(ndarray)-1)*np.random.random_sample(sample))
@@ -79,7 +83,9 @@ def sample_array(ndarray, sample):
     new_array = np.zeros(new_shape, dtype = ndarray.dtype)
     for i,line in enumerate(lines):
         new_array[i] = ndarray[int(line)]
+
     return new_array
+
 
 def index_within_linspace(a, value):
     """Returns the index where the value fits better
@@ -99,6 +105,7 @@ def index_within_linspace(a, value):
     """
     return np.absolute(np.asarray(a)-value).argmin()
 
+
 def find_fb_load(cczload):
     frmlen = len(cczload)
     fb_load = 0.
@@ -110,7 +117,9 @@ def find_fb_load(cczload):
             break
         if not found_fb_load:
             fb_load = zload
+
     return fb_load
+
 
 def remove_special_characters(input_str):
     output_str = input_str.replace('/','_')
@@ -120,7 +129,9 @@ def remove_special_characters(input_str):
     for other in others:
         output_str = output_str.replace(other,'')
     output_str = output_str.replace("'","")
+
     return output_str
+
 
 def calc_elem_cg(elem):
     coords = np.array([0.,0.,0.,0.], dtype=FLOAT)
@@ -129,12 +140,14 @@ def calc_elem_cg(elem):
         coords[:3] += node.coordinates
     coords[:3] /= float(len(nodes))
     coords[3] = elem.label
+
     return coords
+
 
 def vec_calc_elem_cg(elements):
     vec_tmp = np.vectorize(calc_elem_cg, otypes=[object])
-    return  np.array(tuple(vec_tmp(elements)), dtype=FLOAT)
 
+    return  np.array(tuple(vec_tmp(elements)), dtype=FLOAT)
 
 
 def func_sin_cos(n_terms=10):
@@ -146,6 +159,7 @@ def func_sin_cos(n_terms=10):
 
     return eval(s), guess
 
+
 def func_sin(n_terms=10):
     guess = np.array(range(1,n_terms+2))
     n_terms += 1
@@ -154,6 +168,7 @@ def func_sin(n_terms=10):
                                       % (i,i) for i in range(1,n_terms)])
 
     return eval(s), guess
+
 
 def func_cos(n_terms=10):
     guess = np.array(range(1,n_terms+2))
@@ -164,6 +179,7 @@ def func_cos(n_terms=10):
 
     return eval(s), guess
 
+
 def empirical_P1_isotropic(r, t, E, nu):
     """
     taken from Wang et al. (2008). An empirical formula for the critical
@@ -172,10 +188,14 @@ def empirical_P1_isotropic(r, t, E, nu):
     if r/t <  300: print 'WARNING - r/t ratio smaller than 300'
     if r/t > 2000: print 'WARNING - r/t ratio bigger than 2000'
     if 0 < t and t < 0.8:
+
         return 0.81 * E*t**3 /(12*(1-nu**2)*r**0.8)
+
     elif  0.8 <= t:
         if t > 1.5: print 'WARNING - thickness beyond 1.5'
+
         return 0.69 * E*t**3 /(12*(1-nu**2)*r**0.8)
+
 
 def calc_nasaKDF(mapy_laminate, r, r2=None, alphadeg=None):
     if alphadeg > 0. :
@@ -189,19 +209,25 @@ def calc_nasaKDF(mapy_laminate, r, r2=None, alphadeg=None):
     Dy = mapy_laminate.D[1,1]
     teq = 3.4689* (Dx*Dy/(Ex*Ey))**0.25
     phi = 1/16. * (req/teq)**0.5
+
     return 1. - 0.901*(1-numpy.e**-phi)
+
 
 def rec2cyl(x, y, z):
     thetarad = np.arctan2(y, x)
     r = np.sqrt((x**2 + y**2))
     theta = np.rad2deg(thetarad)
+
     return r, theta, z
+
 
 def cyl2rec(r, theta, z):
     x = r * np.cos(np.deg2rad(theta))
     y = r * np.sin(np.deg2rad(theta))
     z = z
+
     return x, y, z
+
 
 def cyl2rec_profi(array):
     return np.concatenate((array[0] * np.cos(np.deg2rad(array[1])),
