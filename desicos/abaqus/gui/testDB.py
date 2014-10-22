@@ -9,6 +9,7 @@ from abaqusGui import *
 
 import gui_commands
 import gui_plot
+from desicos import __version__ as version
 import desicos.conecylDB as conecylDB
 from desicos.conecylDB import fetch
 from desicos.abaqus.utils import remove_special_characters as rsc
@@ -103,7 +104,8 @@ class TestDB(AFXDataDialog):
         #
         #
         #
-        AFXDataDialog.__init__(self, form, 'DESICOS GUI', 0)
+        title = 'DESICOS GUI Version {0}'.format(version)
+        AFXDataDialog.__init__(self, form, title, 0)
         self.appendActionButton('Create Study', self, self.ID_CLICKED_APPLY)
         self.appendActionButton('Apply defaults', self, self.ID_CLICKED_DEFAULTS)
         self.appendActionButton('Close', self, self.ID_CLICKED_CANCEL)
@@ -393,7 +395,7 @@ class TestDB(AFXDataDialog):
         AFXTextField(outputFrame, 8, 'Print at every time interval',
                      form.timeIntervalKw, opts=AFXTEXTFIELD_FLOAT)
         FXCheckButton(outputFrame, 'Request stress outputs',
-                     form.request_stress_outputKw)
+                     form.stress_outputKw)
         #FXHorizontalSeparator(outputFrame)
         #FXLabel(outputFrame, 'History Outputs')
         #FXCheckButton(outputFrame, 'Load shortening curve').setCheck(True)
@@ -743,8 +745,9 @@ class TestDB(AFXDataDialog):
         aboutVF = FXVerticalFrame(mainTabBook, FRAME_RAISED|FRAME_SUNKEN)
         pngpath = os.path.join(DAHOME, 'gui', 'icons', 'pfh.png')
         icon = afxCreatePNGIcon(pngpath)
-        FXLabel(aboutVF, 'Released by partner:',
-                icon, opts=ICON_AFTER_TEXT)
+        FXLabel(aboutVF, 'DESICOS package Version {0}'.format(version))
+        FXLabel(aboutVF, '')
+        FXLabel(aboutVF, 'Released by partner:', icon, opts=ICON_AFTER_TEXT)
         pngpath = os.path.join(DAHOME, 'gui', 'icons', 'desicos2.png')
         icon = afxCreatePNGIcon(pngpath)
         FXLabel(aboutVF, '', icon)

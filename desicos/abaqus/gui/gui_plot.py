@@ -29,7 +29,7 @@ def plot_stress_analysis(std_name, cc_name):
     cmdstr  = 'import __main__\n'
     cmdstr += 'std = __main__.stds[ "%s" ]\n' % std_name
     cmdstr += 'for cc in std.ccs:\n'
-    cmdstr += '    if cc.jobname == "%s":\n' % cc_name
+    cmdstr += '    if cc.model_name == "%s":\n' % cc_name
     cmdstr += '        cc.stress_analysis()\n'
     cmdstr += '        break\n'
     sendCommand(cmdstr)
@@ -44,7 +44,7 @@ def plot_opened_conecyl(std_name):
     cmdstr += '    cc_name = os.path.basename(odbdisplay.name).split(".")[0]\n'
     cmdstr += '    std = __main__.stds[ "%s" ]\n' % std_name
     cmdstr += '    for cc in std.ccs:\n'
-    cmdstr += '        if cc.jobname == cc_name:\n'
+    cmdstr += '        if cc.model_name == cc_name:\n'
     cmdstr += '            cc.plot_opened_conecyl()\n'
     cmdstr += '            break\n'
     cmdstr += 'else:\n'

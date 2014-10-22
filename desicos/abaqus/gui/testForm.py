@@ -42,7 +42,7 @@ params = ['rbot', 'H', 'alphadeg','betadeg','omegadeg',
 'resin_top_h', 'resin_tir_w1', 'resin_tir_w2', 'resin_tor_w1', 'resin_tor_w2',
 'use_job_stopper',
 'laminate','stack',
-'allowables', 'timeInterval', 'request_stress_output',
+'allowables', 'timeInterval', 'stress_output',
 'pl_num', 'd_num', 'ax_num', 'lbmi_num', 'cut_num',
 'pl_table', 'd_table', 'ax_table', 'lbmi_table', 'cut_table',
 'std_name',
@@ -149,7 +149,7 @@ class TestForm(AFXForm):
         self.laminapropKw = AFXTupleKeyword(self.dummy, 'laminaprop',FALSE)
         self.allowablesKw = AFXTupleKeyword(self.cmd, 'allowables', TRUE)
         self.timeIntervalKw = AFXFloatKeyword(self.cmd, 'timeInterval', TRUE)
-        self.request_stress_outputKw = AFXBoolKeyword(self.cmd,'request_stress_output', TRUE_FALSE, TRUE)
+        self.stress_outputKw = AFXBoolKeyword(self.cmd,'stress_output', TRUE_FALSE, TRUE)
         self.pl_numKw = AFXIntKeyword(  self.cmd, 'pl_num', TRUE)
         self.d_numKw = AFXIntKeyword(  self.cmd, 'd_num', TRUE)
         self.ax_numKw = AFXIntKeyword(  self.cmd, 'ax_num', TRUE)
@@ -229,7 +229,7 @@ class TestForm(AFXForm):
         if params_from_gui.get('laminate', None)==None:
             laminapropKeys = [self.laminapropKeyKw.getValue()]
             plyts = [self.plytKw.getValue()]
-            stack = [float(i)for i in self.stackKw.getValues().split(',')]
+            stack = [float(i) for i in self.stackKw.getValues().split(',')]
             tmp = numpy.empty((40,3),dtype='|S50')
             tmp.fill('')
             tmp[:len(laminapropKeys),0] = laminapropKeys

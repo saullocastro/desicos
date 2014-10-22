@@ -25,7 +25,7 @@ ccattrs = ['rbot','H','alphadeg','plyts',
 'resin_ring_bottom', 'resin_ring_top', 'resin_E', 'resin_nu', 'resin_numel',
 'resin_bot_h', 'resin_bir_w1', 'resin_bir_w2', 'resin_bor_w1', 'resin_bor_w2',
 'resin_top_h', 'resin_tir_w1', 'resin_tir_w2', 'resin_tor_w1', 'resin_tor_w2',
-'laminapropKeys', 'allowables', 'timeInterval', 'request_stress_output']
+'laminapropKeys', 'allowables', 'timeInterval', 'stress_output']
 
 
 def find_std_name(std_name):
@@ -51,7 +51,6 @@ def apply_imp_ms(
              imp_ms_num_sec_z,
              imp_ms_theta_z_format,
              ):
-    #
     std = __main__.stds[std_name]
     start = 0
     if std.calc_Pcr:
@@ -85,7 +84,6 @@ def apply_imp_t(
              imp_t_power_parameter,
              imp_t_num_sec_z,
              imp_t_theta_z_format):
-    #
     std = __main__.stds[std_name]
     start = 0
     if std.calc_Pcr:

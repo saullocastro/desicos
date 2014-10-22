@@ -60,7 +60,7 @@ defaults = {
             'lbmi_num': 0,
             'cut_num': 0,
             'ncpus': multiprocessing.cpu_count()-1,
-            'request_stress_output': False,
+            'stress_output': False,
             'laminapropKey': 'degenhardt_2010_IM78552_cocomat',
             'allowablesKey': 'degenhardt_2010_IM78552_cocomat',
             'post_put_in_Excel': True,
