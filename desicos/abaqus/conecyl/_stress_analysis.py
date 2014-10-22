@@ -95,7 +95,6 @@ def calc_frame(cc, frame, frame_i, max_id, check_print_report = True):
     for key in stress.keys():
         for pt in stress_pts[key]:
             stress_fields[key].append(stress[key].getSubset(sectionPoint=pt))
-        print 'DEBUG', key, stress_fields[key]
         stress_min[key], stress_min_pos[key] = \
             abaqus.minEnvelope(stress_fields[key])
         stress_max[key], stress_max_pos[key] = \
