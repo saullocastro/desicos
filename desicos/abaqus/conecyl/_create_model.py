@@ -45,7 +45,7 @@ def _create_mesh(cc):
     inst_name_shell = ('inst_' + part_name_shell).upper()
     output_name = model_name + '.odb'
 
-    elem_dict = {'S8R5':S8R5, 'S4R':S4R, 'S4R5':S4R5}
+    elem_dict = {'S8R':S8R, 'S8R5':S8R5, 'S4R':S4R, 'S4R5':S4R5}
     elem_type = elem_dict[elem_type_str]
 
     mod = mdb.Model(name=model_name)
@@ -1146,10 +1146,25 @@ def _create_loads_bcs(cc):
     else:
         mod.fieldOutputRequests.changeKey(fromName='F-Output-1',
                                           toName='shell_outputs')
-        mod.fieldOutputRequests['shell_outputs'].setValues(
-                               variables=('S', 'SF', 'U', 'RF', 'NFORC'),
-                               region=set_shell_faces,
-                               timeInterval=cc.timeInterval, timeMarks=OFF)
+        if cc.stress_output:
+            mod.fieldOutputRequests['shell_outputs'].setValues(
+                    variables=('SF', 'U', 'RF', 'NFORC'),
+                    region=set_shell_faces, timeInterval=cc.timeInterval,
+                    timeMarks=OFF)
+            mod.FieldOutputRequest(name='composite_stresses',
+                    region=set_shell_faces,
+                    createStepName=cc.step2Name,
+                    variables=('S', 'HSNFTCRT', 'HSNFCCRT', 'HSNMTCRT',
+                        'HSNMCCRT'),
+                    layupNames = ('INST_SHELL.CompositePlate',),
+                    layupLocationMethod = ALL_LOCATIONS,
+                    timeInterval=cc.timeInterval,
+                    timeMarks=OFF)
+        else:
+            mod.fieldOutputRequests['shell_outputs'].setValues(
+                    variables=('S', 'SF', 'U', 'RF', 'NFORC'),
+                    region=set_shell_faces, timeInterval=cc.timeInterval,
+                    timeMarks=OFF)
         if cc.resin_ring_bottom:
             set_Bottom_IR = ra.sets['resin_ring_Bottom_IR']
             set_Bottom_OR = ra.sets['resin_ring_Bottom_OR']
