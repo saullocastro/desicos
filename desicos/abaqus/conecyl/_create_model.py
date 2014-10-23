@@ -34,7 +34,7 @@ def _create_mesh(cc):
     resin_tor_w2 = float(cc.resin_tor_w2)
 
     # Analysis parameters
-    elem_type_str = cc.elem_type
+    shell_elem_code_str = cc.elem_type
     mesh_size = cc.mesh_size
     resin_numel = cc.resin_numel
 
@@ -45,8 +45,14 @@ def _create_mesh(cc):
     inst_name_shell = ('inst_' + part_name_shell).upper()
     output_name = model_name + '.odb'
 
-    elem_dict = {'S8R':S8R, 'S8R5':S8R5, 'S4R':S4R, 'S4R5':S4R5}
-    elem_type = elem_dict[elem_type_str]
+    shell_elem_dict = {'S8R':S8R, 'S8R5':S8R5, 'S4R':S4R, 'S4R5':S4R5}
+    shell_elem_code = shell_elem_dict[shell_elem_code_str]
+    if shell_elem_code_str == 'S4':
+        solid_elem_code = C3D8
+    elif shell_elem_code_str in ('S4R', 'S4R5'):
+        solid_elem_code = C3D8R
+    elif shell_elem_code_str in ('S8R', 'S8R5'):
+        solid_elem_code = C3D20R
 
     mod = mdb.Model(name=model_name)
     if 'Model-1' in mdb.models.keys():
@@ -697,20 +703,31 @@ def _create_mesh(cc):
     # Mesh size for the shell
     part_shell.seedPart(size=mesh_size, deviationFactor=0.1,
                         minSizeFactor=0.1)
-    elemType1 = mesh.ElemType(elemCode=elem_type, elemLibrary=STANDARD)
+
+    shell_elem = mesh.ElemType(elemCode=shell_elem_code, elemLibrary=STANDARD)
     part_shell.setElementType(regions=Region(faces=part_shell.faces),
-                        elemTypes=(elemType1, ))
+                        elemTypes=(shell_elem, ))
     part_shell.setMeshControls(regions=part_shell.faces, elemShape=QUAD,
                                technique=SWEEP)
     part_shell.generateMesh()
 
+    solid_elem = mesh.ElemType(elemCode=solid_elem_code, elemLibrary=STANDARD)
+
     if cc.resin_add_BIR:
+        part_bir.setElementType(regions=Region(cells=part_bir.cells),
+                                elemTypes=(solid_elem, ))
         part_bir.generateMesh()
     if cc.resin_add_BOR:
+        part_bor.setElementType(regions=Region(cells=part_bor.cells),
+                                elemTypes=(solid_elem, ))
         part_bor.generateMesh()
     if cc.resin_add_TIR:
+        part_tir.setElementType(regions=Region(cells=part_tir.cells),
+                                elemTypes=(solid_elem, ))
         part_tir.generateMesh()
     if cc.resin_add_TOR:
+        part_tor.setElementType(regions=Region(cells=part_tor.cells),
+                                elemTypes=(solid_elem, ))
         part_tor.generateMesh()
 
     ra = mod.rootAssembly
