@@ -37,7 +37,9 @@ params = ['rbot', 'H', 'alphadeg','betadeg','omegadeg',
 'damping_factor2', 'minInc2', 'initialInc2', 'maxInc2', 'maxNumInc2',
 'bc_fix_bottom_uR', 'bc_fix_bottom_v', 'bc_bottom_clamped',
 'bc_fix_top_uR', 'bc_fix_top_v', 'bc_top_clamped',
-'resin_ring_bottom', 'resin_ring_top', 'resin_E', 'resin_nu', 'resin_numel',
+'resin_add_BIR', 'resin_add_BOR',
+'resin_add_TIR', 'resin_add_TOR',
+'resin_E', 'resin_nu', 'resin_numel',
 'resin_bot_h', 'resin_bir_w1', 'resin_bir_w2', 'resin_bor_w1', 'resin_bor_w2',
 'resin_top_h', 'resin_tir_w1', 'resin_tir_w2', 'resin_tor_w1', 'resin_tor_w2',
 'use_job_stopper',
@@ -133,13 +135,15 @@ class TestForm(AFXForm):
         self.resin_EKw = AFXFloatKeyword(self.cmd, 'resin_E', TRUE)
         self.resin_nuKw = AFXFloatKeyword(self.cmd, 'resin_nu', TRUE)
         self.resin_numelKw = AFXIntKeyword(self.cmd, 'resin_numel', TRUE)
-        self.resin_ring_bottomKw = AFXBoolKeyword(self.cmd, 'resin_ring_bottom', TRUE_FALSE, TRUE)
+        self.resin_add_BIRKw = AFXBoolKeyword(self.cmd, 'resin_add_BIR', TRUE_FALSE, TRUE)
+        self.resin_add_BORKw = AFXBoolKeyword(self.cmd, 'resin_add_BOR', TRUE_FALSE, TRUE)
         self.resin_bot_hKw = AFXFloatKeyword(self.cmd, 'resin_bot_h', TRUE)
         self.resin_bir_w1Kw = AFXFloatKeyword(self.cmd, 'resin_bir_w1', TRUE)
         self.resin_bir_w2Kw = AFXFloatKeyword(self.cmd, 'resin_bir_w2', TRUE)
         self.resin_bor_w1Kw = AFXFloatKeyword(self.cmd, 'resin_bor_w1', TRUE)
         self.resin_bor_w2Kw = AFXFloatKeyword(self.cmd, 'resin_bor_w2', TRUE)
-        self.resin_ring_topKw = AFXBoolKeyword(self.cmd, 'resin_ring_top', TRUE_FALSE, TRUE)
+        self.resin_add_TIRKw = AFXBoolKeyword(self.cmd, 'resin_add_TIR', TRUE_FALSE, TRUE)
+        self.resin_add_TORKw = AFXBoolKeyword(self.cmd, 'resin_add_TOR', TRUE_FALSE, TRUE)
         self.resin_top_hKw = AFXFloatKeyword(self.cmd, 'resin_top_h', TRUE)
         self.resin_tir_w1Kw = AFXFloatKeyword(self.cmd, 'resin_tir_w1', TRUE)
         self.resin_tir_w2Kw = AFXFloatKeyword(self.cmd, 'resin_tir_w2', TRUE)

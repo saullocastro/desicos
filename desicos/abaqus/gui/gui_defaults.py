@@ -25,8 +25,10 @@ defaults = {
             'bc_fix_top_v': True,
             'bc_top_clamped': True,
             # resin rings
-            'resin_ring_bottom': False,
-            'resin_ring_top': False,
+            'resin_add_BIR': False,
+            'resin_add_BOR': False,
+            'resin_add_TIR': False,
+            'resin_add_TOR': False,
             'resin_E': 2454.5336,
             'resin_nu': 0.3,
             'resin_numel': 3,

@@ -144,7 +144,8 @@ class ConeCyl(object):
     ``bc_bottom_clamped``  ``bool``, if the bottom edge should be clamped
 
                            .. note:: Only applicable when
-                                     ``cc.resin_ring_bottom==False``
+                                     ``cc.resin_add_BIR==False and``
+                                     ``cc.resin_add_BOR==False``
 
     ``bc_fix_top_uR``      ``bool``, if the radial displacement should be
                            constrained at the top edge (:ref:`cf. Figure 1
@@ -155,17 +156,22 @@ class ConeCyl(object):
     ``bc_top_clamped``     ``bool``, if the top edge should be clamped
 
                            .. note:: Only applicable when
-                                     ``cc.resin_ring_top==False``
+                                     ``cc.resin_add_TIR==False and ``
+                                     ``cc.resin_add_TOR==False``
     =====================  ==================================================
 
     =====================  ==================================================
     Resin Rings            Description (:ref:`the attributes are illustrated
                            here <resin_rings>`)
     =====================  ==================================================
-    ``resin_ring_bottom``  ``bool``, tells if a resin ring should be added
-                           to the bottom edge
-    ``resin_ring_top``     ``bool``, tells if a resin ring should be added
-                           to the top edge
+    ``resin_add_BIR``      ``bool``, tells if a resin ring should be added
+                           to the inner part of the bottom edge
+    ``resin_add_BOR``      ``bool``, tells if a resin ring should be added
+                           to the outer part of the bottom edge
+    ``resin_add_TIR``      ``bool``, tells if a resin ring should be added
+                           to the inner part of the top edge
+    ``resin_add_TOR``      ``bool``, tells if a resin ring should be added
+                           to the outer part of the top edge
     ``resin_numel``        Number of solid elements in the resin ring
     ``resin_E``            Young modulus of the resin material
     ``resin_nu``           Poisson ratio of the resin material

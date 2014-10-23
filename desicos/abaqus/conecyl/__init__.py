@@ -76,8 +76,10 @@ attribute is detailed in the :class:`.ConeCyl` class description::
 
     cc = Conecyl()
     cc.from_DB('castro_2014_c02')
-    cc.resin_ring_bottom = True
-    cc.resin_ring_top = True
+    cc.resin_add_BIR = False
+    cc.resin_add_BOR = True
+    cc.resin_add_TIR = False
+    cc.resin_add_TOR = True
     cc.resin_E = 2454.5336
     cc.resin_nu = 0.3
     cc.resin_numel = 3

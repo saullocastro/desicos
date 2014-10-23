@@ -89,7 +89,8 @@ def _create_mesh(cc):
             region=Region(faces=part_shell.faces))
 
     # Creating the resin material.
-    if cc.resin_ring_bottom or cc.resin_ring_top:
+    if (cc.resin_add_BIR or cc.resin_add_BOR
+        or cc.resin_add_TIR or cc.resin_add_TOR):
         mod.Material(name='Resin')
         mod.materials['Resin'].Elastic(table=((resin_E, resin_nu),))
         mod.HomogeneousSolidSection(name='Rings', material='Resin')
@@ -116,7 +117,7 @@ def _create_mesh(cc):
         #p.setValues(geometryRefinement=EXTRA_FINE)
         return p
 
-    if cc.resin_ring_bottom:
+    if cc.resin_add_BIR:
         # Create the Part 'Bottom_IR'
         y1 = 0
         y2 = 0
@@ -128,6 +129,7 @@ def _create_mesh(cc):
         x4 = fr(y4) - cosa*tshell/2.
         part_bir = create_ring_part('Bottom_IR', x1, x2, x3, x4,
                                     y1, y2, y3, y4)
+    if cc.resin_add_BOR:
         # Create the part 'Bottom_OR'
         y1 = 0
         y2 = 0
@@ -140,7 +142,7 @@ def _create_mesh(cc):
         part_bor = create_ring_part('Bottom_OR', x1, x2, x3, x4,
                                     y1, y2, y3, y4)
 
-    if cc.resin_ring_top:
+    if cc.resin_add_TIR:
         # Create the part 'Top_IR'
         y1 = H-resin_top_h
         y2 = H-resin_top_h
@@ -151,6 +153,8 @@ def _create_mesh(cc):
         x3 = fr(y3) - cosa*tshell/2. - resin_tir_w2
         x4 = fr(y4) - cosa*tshell/2.
         part_tir = create_ring_part('Top_IR', x1, x2, x3, x4, y1, y2, y3, y4)
+
+    if cc.resin_add_TOR:
         # Create the part 'Top_OR'
         y1 = H-resin_top_h
         y2 = H-resin_top_h
@@ -185,7 +189,7 @@ def _create_mesh(cc):
         except:
             pass
 
-        if cc.resin_ring_bottom:
+        if cc.resin_add_BIR:
             # cutting Bottom_IR
             y1 = 0.
             y2 = 0.
@@ -219,6 +223,8 @@ def _create_mesh(cc):
                         point1=datum_1, point2=datum_2, point3=datum_3)
             except:
                 pass
+
+        if cc.resin_add_BOR:
             # cutting Bottom_OR
             y1 = 0.
             y2 = 0.
@@ -252,7 +258,8 @@ def _create_mesh(cc):
                         point1=datum_1, point2=datum_2, point3=datum_3)
             except:
                 pass
-        if cc.resin_ring_top:
+
+        if cc.resin_add_TIR:
             # cutting the Top_IR
             y1 = H-resin_top_h
             y2 = H-resin_top_h
@@ -286,6 +293,8 @@ def _create_mesh(cc):
                         point1=datum_1, point2=datum_2, point3=datum_3)
             except:
                 pass
+
+        if cc.resin_add_TOR:
             # cutting the Top_OR
             y1 = H-resin_top_h
             y2 = H-resin_top_h
@@ -324,13 +333,13 @@ def _create_mesh(cc):
 
     # Partition the top and bottom to have a finer mesh in this area to match
     # the mesh of the rings
-    if cc.resin_ring_bottom:
+    if cc.resin_add_BIR or cc.resin_add_BOR:
         plane_bot = part_shell.DatumPlaneByPrincipalPlane(
                         principalPlane=XYPLANE, offset=resin_bot_h)
         part_shell.PartitionFaceByDatumPlane(
                         datumPlane=part_shell.datums[plane_bot.id],
                         faces=part_shell.faces)
-    if cc.resin_ring_top:
+    if cc.resin_add_TIR or cc.resin_add_TOR:
         plane_top = part_shell.DatumPlaneByPrincipalPlane(
                             principalPlane=XYPLANE,
                             offset=H-resin_top_h)
@@ -344,23 +353,25 @@ def _create_mesh(cc):
                     datumPlane=part_shell.datums[plane.id],
                     faces=part_shell.faces)
 
-    if cc.resin_ring_bottom:
+    if cc.resin_add_BIR:
         # Assign the material properties to Bottom_IR
         region = Region(cells=part_bir.cells)
         part_bir.SectionAssignment(region=region, sectionName='Rings',
                 offset=0.0, offsetType=MIDDLE_SURFACE, offsetField='',
                 thicknessAssignment=FROM_SECTION)
+    if cc.resin_add_BOR:
         # Assign the material properties to Bottom_OR
         region = Region(cells=part_bor.cells)
         part_bor.SectionAssignment(region=region, sectionName='Rings',
                 offset=0.0, offsetType=MIDDLE_SURFACE, offsetField='',
                 thicknessAssignment=FROM_SECTION)
-    if cc.resin_ring_top:
+    if cc.resin_add_TIR:
         # Assign the material properties to Top_IR
         region = Region(cells=part_tir.cells)
         part_tir.SectionAssignment(region=region, sectionName='Rings',
                 offset=0.0, offsetType=MIDDLE_SURFACE, offsetField='',
                 thicknessAssignment=FROM_SECTION)
+    if cc.resin_add_TOR:
         # Assign the material properties to Top_OR
         region = Region(cells=part_tor.cells)
         part_tor.SectionAssignment(region=region, sectionName='Rings',
@@ -369,7 +380,7 @@ def _create_mesh(cc):
 
     for thetadeg in thetadegs:
         thetarad = np.deg2rad(thetadeg)
-        if cc.resin_ring_bottom:
+        if cc.resin_add_BIR or cc.resin_add_BOR:
             # Seed partitioned top and bottom part_shell
             z = resin_bot_h/2.
             x = fr(z)*np.cos(thetarad)
@@ -377,14 +388,14 @@ def _create_mesh(cc):
             edge = part_shell.edges.findAt((x, y, z))
             part_shell.seedEdgeByNumber(edges=(edge,), number=resin_numel,
                                         constraint=FIXED)
-        if cc.resin_ring_top:
+        if cc.resin_add_TIR or cc.resin_add_TOR:
             z = H - resin_bot_h/2.
             x = fr(z)*np.cos(thetarad)
             y = fr(z)*np.sin(thetarad)
             edge = part_shell.edges.findAt((x, y, z))
             part_shell.seedEdgeByNumber(edges=(edge,), number=resin_numel,
                                         constraint=FIXED)
-        if cc.resin_ring_bottom:
+        if cc.resin_add_BIR:
             # Seed Bottom_IR
             y = 0.
             x = (fr(y) - cosa*tshell/2. - resin_bir_w1/2.)*np.cos(thetarad)
@@ -411,6 +422,7 @@ def _create_mesh(cc):
             edge = part_bir.edges.findAt((x, y, z))
             part_bir.seedEdgeByNumber(edges=(edge,), number=resin_numel,
                                       constraint=FIXED)
+        if cc.resin_add_BOR:
             # Seed Bottom_OR
             y = 0.
             x = (fr(y) + cosa*tshell/2. + resin_bor_w1/2.)*np.cos(thetarad)
@@ -437,7 +449,7 @@ def _create_mesh(cc):
             edge = part_bor.edges.findAt((x, y, z))
             part_bor.seedEdgeByNumber(edges=(edge,), number=resin_numel,
                                       constraint=FIXED)
-        if cc.resin_ring_top:
+        if cc.resin_add_TIR:
             # Seed Top_IR
             y = H-resin_top_h
             x = (fr(y) - cosa*tshell/2. - resin_tir_w1/2.)*np.cos(thetarad)
@@ -464,6 +476,7 @@ def _create_mesh(cc):
             edge = part_tir.edges.findAt((x, y, z))
             part_tir.seedEdgeByNumber(edges=(edge,), number=resin_numel,
                                       constraint=FIXED)
+        if cc.resin_add_TOR:
             # Seed Top_OR
             y = H-resin_top_h
             x = (fr(y) + cosa*tshell/2. + resin_tor_w1/2.)*np.cos(thetarad)
@@ -501,7 +514,7 @@ def _create_mesh(cc):
     tmp = np.linspace(0.1, 359, 360)
     tmp = tmp[~np.in1d(tmp, thetadegs)]
     thetarads_search = np.deg2rad(tmp)
-    if cc.resin_ring_bottom:
+    if cc.resin_add_BIR:
         # Seed Bottom_IR edges inner face
         coords = []
         y = 0.
@@ -546,6 +559,7 @@ def _create_mesh(cc):
         edges = part_bir.edges.findAt(*tuple(coords), printWarning=False)
         part_bir.seedEdgeBySize(edges=edges, size=size, constraint=FINER)
 
+    if cc.resin_add_BOR:
         # Seed Bottom_OR edges inner face
         coords = []
         y = 0.
@@ -590,7 +604,7 @@ def _create_mesh(cc):
         edges = part_bor.edges.findAt(*tuple(coords), printWarning=False)
         part_bor.seedEdgeBySize(edges=edges, size=size, constraint=FINER)
 
-    if cc.resin_ring_top:
+    if cc.resin_add_TIR:
         # Seed Top_IR edges inner face
         coords = []
         y = H-resin_top_h
@@ -635,6 +649,7 @@ def _create_mesh(cc):
         edges = part_tir.edges.findAt(*tuple(coords), printWarning=False)
         part_tir.seedEdgeBySize(edges=edges, size=size, constraint=FINER)
 
+    if cc.resin_add_TOR:
         # Seed Top_OR edges inner face
         coords = []
         y = H-resin_top_h
@@ -688,11 +703,14 @@ def _create_mesh(cc):
     part_shell.setMeshControls(regions=part_shell.faces, elemShape=QUAD,
                                technique=SWEEP)
     part_shell.generateMesh()
-    if cc.resin_ring_bottom:
+
+    if cc.resin_add_BIR:
         part_bir.generateMesh()
+    if cc.resin_add_BOR:
         part_bor.generateMesh()
-    if cc.resin_ring_top:
+    if cc.resin_add_TIR:
         part_tir.generateMesh()
+    if cc.resin_add_TOR:
         part_tor.generateMesh()
 
     ra = mod.rootAssembly
@@ -708,32 +726,42 @@ def _create_mesh(cc):
 
     # Regenerate the Part and the Assembly. Although the mesh is created
     # before it has to be updated again to be visible.
-    if cc.resin_ring_bottom:
-        part_bor.regenerate()
+    if cc.resin_add_BIR:
         part_bir.regenerate()
-    if cc.resin_ring_top:
-        part_tor.regenerate()
+    if cc.resin_add_BOR:
+        part_bor.regenerate()
+    if cc.resin_add_TIR:
         part_tir.regenerate()
+    if cc.resin_add_TOR:
+        part_tor.regenerate()
     part_shell.regenerate()
     ra.regenerate()
 
     # Instance the Rings
-    if cc.resin_ring_bottom:
+    if cc.resin_add_BIR:
         inst_bir = ra.Instance(name='Bottom_IR', part=part_bir, dependent=ON)
+    if cc.resin_add_BOR:
         inst_bor = ra.Instance(name='Bottom_OR', part=part_bor, dependent=ON)
-    if cc.resin_ring_top:
+    if cc.resin_add_TIR:
         inst_tir = ra.Instance(name='Top_IR', part=part_tir, dependent=ON)
+    if cc.resin_add_TOR:
         inst_tor = ra.Instance(name='Top_OR', part=part_tor, dependent=ON)
 
     # Rotate both 'Top_IR' and 'Top_OR'
     ring_names = []
     resin_hs = []
-    if cc.resin_ring_bottom:
-        ring_names += ['Bottom_IR', 'Bottom_OR']
-        resin_hs += [resin_bot_h, resin_bot_h]
-    if cc.resin_ring_top:
-        ring_names += ['Top_IR', 'Top_OR']
-        resin_hs += [resin_top_h, resin_top_h]
+    if cc.resin_add_BIR:
+        ring_names += ['Bottom_IR']
+        resin_hs += [resin_bot_h]
+    if cc.resin_add_BOR:
+        ring_names += ['Bottom_OR']
+        resin_hs += [resin_bot_h]
+    if cc.resin_add_TIR:
+        ring_names += ['Top_IR']
+        resin_hs += [resin_top_h]
+    if cc.resin_add_TOR:
+        ring_names += ['Top_OR']
+        resin_hs += [resin_top_h]
     ra.rotate(instanceList=ring_names, axisPoint=(0.0, 0.0, 0),
               axisDirection=(1,0,0), angle=90)
 
@@ -866,23 +894,25 @@ def _create_mesh(cc):
 
     ra.Set(faces=inst_shell.faces, name='shell_faces')
 
-    if cc.resin_ring_bottom:
+    if cc.resin_add_BIR:
         faces = ra.instances['Bottom_IR'].faces
         bot_IR_faces = faces.getByBoundingBox(-2*rbot, -2*rbot, -0.0001,
                                                2*rbot, 2*rbot, 0.0001)
         ra.Set(faces=bot_IR_faces, name='Bottom_IR_faces')
         ra.Set(cells=inst_bir.cells, name='resin_ring_Bottom_IR')
+    if cc.resin_add_BOR:
         faces = ra.instances['Bottom_OR'].faces
         bot_OR_faces = faces.getByBoundingBox(-2*rbot, -2*rbot, -0.0001,
                                                2*rbot, 2*rbot, 0.0001)
         ra.Set(faces=bot_OR_faces, name='Bottom_OR_faces')
         ra.Set(cells=inst_bor.cells, name='resin_ring_Bottom_OR')
-    if cc.resin_ring_top:
+    if cc.resin_add_TIR:
         faces = ra.instances['Top_IR'].faces
         top_IR_faces = faces.getByBoundingBox(-2*rbot, -2*rbot, 0.999*H,
                                                2*rbot, 2*rbot, 1.001*H)
         ra.Set(faces=top_IR_faces, name='Top_IR_faces')
         ra.Set(cells=inst_tir.cells, name='resin_ring_Top_IR')
+    if cc.resin_add_TOR:
         faces = ra.instances['Top_OR'].faces
         top_OR_faces = faces.getByBoundingBox(-2*rbot, -2*rbot, 0.999*H,
                                                2*rbot, 2*rbot, 1.001*H)
@@ -1017,10 +1047,10 @@ def _create_loads_bcs(cc):
 
 
     # boundary condition at the bottom edge
-    if cc.resin_ring_bottom:
-        region = ra.sets['Bottom_IR_faces']
+    if cc.resin_add_BIR:
         if (bc_fix_bottom_uR==SET or bc_fix_bottom_v==SET or
             bc_fix_bottom_u3==SET):
+            region = ra.sets['Bottom_IR_faces']
             mod.DisplacementBC(name='BC_Bottom_IR',
                                createStepName='Initial', region=region,
                                u1=bc_fix_bottom_uR,
@@ -1031,6 +1061,9 @@ def _create_loads_bcs(cc):
                                ur3=UNSET,
                                amplitude=UNSET, distributionType=UNIFORM,
                                fieldName='', localCsys=ra_cyl_csys)
+    if cc.resin_add_BOR:
+        if (bc_fix_bottom_uR==SET or bc_fix_bottom_v==SET or
+            bc_fix_bottom_u3==SET):
             region = ra.sets['Bottom_OR_faces']
             mod.DisplacementBC(name='BC_Bottom_OR',
                                createStepName='Initial', region=region,
@@ -1045,7 +1078,7 @@ def _create_loads_bcs(cc):
     ur1_bottom = UNSET
     ur2_bottom = UNSET
     ur3_bottom = UNSET
-    if not cc.resin_ring_bottom and cc.bc_bottom_clamped:
+    if (not (cc.resin_add_BIR or cc.resin_add_BOR) and cc.bc_bottom_clamped):
         ur1_bottom = SET
         ur2_bottom = SET
         ur3_bottom = SET
@@ -1072,9 +1105,9 @@ def _create_loads_bcs(cc):
         bc_fix_top_v = SET
 
     # boundary conditions at the top edge
-    if cc.resin_ring_top:
-        region = ra.sets['Top_IR_faces']
+    if cc.resin_add_TIR:
         if cc.bc_fix_top_uR or cc.bc_fix_top_v:
+            region = ra.sets['Top_IR_faces']
             mod.DisplacementBC(name='BC_Top_IR',
                                createStepName='Initial', region=region,
                                u1=bc_fix_top_uR,
@@ -1085,6 +1118,8 @@ def _create_loads_bcs(cc):
                                ur3=UNSET,
                                amplitude=UNSET, distributionType=UNIFORM,
                                fieldName='', localCsys=ra_cyl_csys)
+    if cc.resin_add_TOR:
+        if cc.bc_fix_top_uR or cc.bc_fix_top_v:
             region = ra.sets['Top_OR_faces']
             mod.DisplacementBC(name='BC_Top_OR',
                                createStepName='Initial', region=region,
@@ -1099,12 +1134,13 @@ def _create_loads_bcs(cc):
     ur1_top = UNSET
     ur2_top = UNSET
     ur3_top = UNSET
-    if not cc.resin_ring_top and cc.bc_top_clamped:
+    if (not (cc.resin_add_TIR or cc.resin_add_TOR) and cc.bc_top_clamped):
         ur1_top = SET
         ur2_top = SET
         ur3_top = SET
     if (cc.bc_fix_top_uR or cc.bc_fix_top_v
-        or (not cc.resin_ring_top and cc.bc_top_clamped)):
+        or (not (cc.resin_add_TIR or cc.resin_add_TOR) and
+            cc.bc_top_clamped)):
         mod.DisplacementBC(name='BC_Top_Shell',
                            createStepName='Initial',
                            region=Region(edges=shell_top_edges),
@@ -1125,21 +1161,23 @@ def _create_loads_bcs(cc):
         mod.fieldOutputRequests['shell_outputs'].setValues(
                                variables=('U',),
                                region=set_shell_faces)
-        if cc.resin_ring_bottom:
+        if cc.resin_add_BIR:
             set_Bottom_IR = ra.sets['resin_ring_Bottom_IR']
-            set_Bottom_OR = ra.sets['resin_ring_Bottom_OR']
             mod.FieldOutputRequest(name='Bottom_IR', region=set_Bottom_IR,
                     createStepName=cc.step2Name,
                     variables=('U',))
+        if cc.resin_add_BOR:
+            set_Bottom_OR = ra.sets['resin_ring_Bottom_OR']
             mod.FieldOutputRequest(name='Bottom_OR', region=set_Bottom_OR,
                     createStepName=cc.step2Name,
                     variables=('U',))
-        if cc.resin_ring_top:
+        if cc.resin_add_TIR:
             set_Top_IR = ra.sets['resin_ring_Top_IR']
-            set_Top_OR = ra.sets['resin_ring_Top_OR']
             mod.FieldOutputRequest(name='Top_IR', region=set_Top_IR,
                     createStepName=cc.step2Name,
                     variables=('U',))
+        if cc.resin_add_TOR:
+            set_Top_OR = ra.sets['resin_ring_Top_OR']
             mod.FieldOutputRequest(name='Top_OR', region=set_Top_OR,
                     createStepName=cc.step2Name,
                     variables=('U',))
@@ -1165,24 +1203,26 @@ def _create_loads_bcs(cc):
                     variables=('S', 'SF', 'U', 'RF', 'NFORC'),
                     region=set_shell_faces, timeInterval=cc.timeInterval,
                     timeMarks=OFF)
-        if cc.resin_ring_bottom:
+        if cc.resin_add_BIR:
             set_Bottom_IR = ra.sets['resin_ring_Bottom_IR']
-            set_Bottom_OR = ra.sets['resin_ring_Bottom_OR']
             mod.FieldOutputRequest(name='Bottom_IR', region=set_Bottom_IR,
                     createStepName=cc.step2Name,
                     variables=('S', 'U', 'RF'),
                     timeInterval=cc.timeInterval, timeMarks=OFF)
+        if cc.resin_add_BOR:
+            set_Bottom_OR = ra.sets['resin_ring_Bottom_OR']
             mod.FieldOutputRequest(name='Bottom_OR', region=set_Bottom_OR,
                     createStepName=cc.step2Name,
                     variables=('S', 'U', 'RF'),
                     timeInterval=cc.timeInterval, timeMarks=OFF)
-        if cc.resin_ring_top:
+        if cc.resin_add_TIR:
             set_Top_IR = ra.sets['resin_ring_Top_IR']
-            set_Top_OR = ra.sets['resin_ring_Top_OR']
             mod.FieldOutputRequest(name='Top_IR', region=set_Top_IR,
                     createStepName=cc.step2Name,
                     variables=('S', 'U', 'RF'),
                     timeInterval=cc.timeInterval, timeMarks=OFF)
+        if cc.resin_add_TOR:
+            set_Top_OR = ra.sets['resin_ring_Top_OR']
             mod.FieldOutputRequest(name='Top_OR', region=set_Top_OR,
                     createStepName=cc.step2Name,
                     variables=('S', 'U', 'RF'),
@@ -1304,7 +1344,7 @@ def _create_loads_bcs(cc):
                                  mpcType=PIN_MPC,
                                  userMode=DOF_MODE_MPC,
                                  userType=0, csys=ra_cyl_csys)
-        if cc.resin_ring_top:
+        if cc.resin_add_TIR:
             top_IR_faces = ra.sets['Top_IR_faces'].faces
             mod.MultipointConstraint(name='MPC_RP_Top_IR',
                                      controlPoint=set_RP_top,
@@ -1312,6 +1352,7 @@ def _create_loads_bcs(cc):
                                      mpcType=PIN_MPC,
                                      userMode=DOF_MODE_MPC,
                                      userType=0, csys=ra_cyl_csys)
+        if cc.resin_add_TOR:
             top_OR_faces = ra.sets['Top_OR_faces'].faces
             mod.MultipointConstraint(name='MPC_RP_Top_OR',
                                      controlPoint=set_RP_top,
@@ -1343,8 +1384,10 @@ if __name__=='__main__':
     cc.pressure_load = 0
     cc.pressure_step = 2
     cc.linear_buckling = False
-    cc.resin_ring_bottom = False
-    cc.resin_ring_top = False
+    cc.resin_add_BIR = False
+    cc.resin_add_BOR = False
+    cc.resin_add_TIR = False
+    cc.resin_add_TOR = False
     cc.bc_bottom_clamped = True
     cc.bc_top_clamped = False
     cc.bc_fix_top_uR = True

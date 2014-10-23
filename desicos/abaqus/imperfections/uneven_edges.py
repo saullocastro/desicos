@@ -162,14 +162,19 @@ class UnevenBottomEdge(object):
         nodes = np.array(ra.sets['shell_bottom_edges'].nodes)
         tshell = sum(cc.plyts)
         cosa = np.cos(cc.alpharad)
-        if cc.resin_ring_bottom:
+        if cc.resin_add_BIR:
             tmp = np.array(ra.sets['Bottom_IR_faces'].nodes)
-            tmp = np.hstack((tmp, np.array(ra.sets['Bottom_OR_faces'].nodes)))
             coords = np.array([n.coordinates for n in tmp])
             r_nodes = np.sqrt(coords[:,0]**2 + coords[:,1]**2)
-            # ignoring nodes that are already pinned to the shell
-            check = ((r_nodes < (cc.rbot - cosa*0.51*tshell)) |
-                     (r_nodes > (cc.rbot + cosa*0.51*tshell)))
+            # taking nodes that are not pinned to the shell
+            check = (r_nodes < (cc.rbot - cosa*0.51*tshell))
+            nodes = np.hstack((nodes, tmp[check]))
+        if cc.resin_add_BOR:
+            tmp = np.array(ra.sets['Bottom_OR_faces'].nodes)
+            coords = np.array([n.coordinates for n in tmp])
+            r_nodes = np.sqrt(coords[:,0]**2 + coords[:,1]**2)
+            # taking nodes that are not pinned to the shell
+            check = (r_nodes > (cc.rbot + cosa*0.51*tshell))
             nodes = np.hstack((nodes, tmp[check]))
         coords = np.array([n.coordinates for n in nodes])
         r_nodes = np.sqrt(coords[:,0]**2 + coords[:,1]**2)
@@ -393,14 +398,19 @@ class UnevenTopEdge(object):
         nodes = np.array(ra.sets['shell_top_edges'].nodes)
         tshell = sum(cc.plyts)
         cosa = np.cos(cc.alpharad)
-        if cc.resin_ring_top:
+        if cc.resin_add_TIR:
             tmp = np.array(ra.sets['Top_IR_faces'].nodes)
-            tmp = np.hstack((tmp, np.array(ra.sets['Top_OR_faces'].nodes)))
             coords = np.array([n.coordinates for n in tmp])
             r_nodes = np.sqrt(coords[:,0]**2 + coords[:,1]**2)
-            # ignoring nodes that are already pinned to the shell
-            check = ((r_nodes < (cc.rtop - cosa*0.51*tshell)) |
-                     (r_nodes > (cc.rtop + cosa*0.51*tshell)))
+            # taking nodes that are not pinned to the shell
+            check = (r_nodes < (cc.rtop - cosa*0.51*tshell))
+            nodes = np.hstack((nodes, tmp[check]))
+        if cc.resin_add_TOR:
+            tmp = np.array(ra.sets['Top_OR_faces'].nodes)
+            coords = np.array([n.coordinates for n in tmp])
+            r_nodes = np.sqrt(coords[:,0]**2 + coords[:,1]**2)
+            # taking nodes that are not pinned to the shell
+            check = (r_nodes > (cc.rtop + cosa*0.51*tshell))
             nodes = np.hstack((nodes, tmp[check]))
         coords = np.array([n.coordinates for n in nodes])
         r_nodes = np.sqrt(coords[:,0]**2 + coords[:,1]**2)
