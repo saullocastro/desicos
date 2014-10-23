@@ -17,6 +17,7 @@ from desicos.abaqus.constants import *
 
 NUM_PLIES = 40
 
+
 def cc_form2dict(db, form):
     tmp = form.laminateKw.getValueAsString()
     laminate = np.array(ast.literal_eval(tmp))
@@ -30,6 +31,7 @@ def cc_form2dict(db, form):
     for k in others:
         cc[k] = getattr(form, k+'Kw').getValue()
     return cc
+
 
 def cc_dict2form(ccname, cc, db, form):
     # clearing laminateKw
@@ -81,12 +83,15 @@ def cc_dict2form(ccname, cc, db, form):
     form.setDefault(update_values=True, input_dict = cc)
     db.update_database(update_all=True)
 
+
 def message(string):
     sendCommand("print(r'%s')" % string)
+
 
 ###########################################################################
 # Class definition
 ###########################################################################
+
 
 class TestDB(AFXDataDialog):
 
@@ -168,7 +173,9 @@ class TestDB(AFXDataDialog):
         AFXTextField(geomVA, 8, 'H:', form.HKw, opts=AFXTEXTFIELD_FLOAT)
         AFXTextField(geomVA, 8, 'alpha in degrees:',
                      form.alphadegKw, opts=AFXTEXTFIELD_FLOAT)
-        FXLabel(geomVF, 'OBS: For cylinders keep alpha = 0')
+        FXLabel(geomVF, 'OBS:')
+        FXLabel(geomVF, '       - For cylinders keep alpha = 0')
+        FXLabel(geomVF, '       - H includes the resin rings')
         #
         # Tabs / Model
         #
@@ -304,8 +311,8 @@ class TestDB(AFXDataDialog):
         FXLabel(bcVAbot, '')
         FXLabel(bcVAbot, '')
         FXLabel(bcVAbot, '')
-        self.add_BIR = FXCheckButton(bcVAbot, 'Inner Resin Ring Bottom', form.resin_add_BIRKw)
-        self.add_BOR = FXCheckButton(bcVAbot, 'Outer Resin Ring Bottom', form.resin_add_BORKw)
+        FXCheckButton(bcVAbot, 'Inner Resin Ring Bottom', form.resin_add_BIRKw)
+        FXCheckButton(bcVAbot, 'Outer Resin Ring Bottom', form.resin_add_BORKw)
         FXLabel(bcVAbot, '')
         FXLabel(bcVAbot, '')
         bcVAbot_VA = AFXVerticalAligner(bcVAbot)
@@ -324,8 +331,8 @@ class TestDB(AFXDataDialog):
         FXLabel(bcVAtop, '')
         FXLabel(bcVAtop, '')
         FXLabel(bcVAtop, '')
-        self.add_TIR = FXCheckButton(bcVAtop, 'Inner Resin Ring Top' , form.resin_add_TIRKw)
-        self.add_TOR = FXCheckButton(bcVAtop, 'Outer Resin Ring Top' , form.resin_add_TORKw)
+        FXCheckButton(bcVAtop, 'Inner Resin Ring Top' , form.resin_add_TIRKw)
+        FXCheckButton(bcVAtop, 'Outer Resin Ring Top' , form.resin_add_TORKw)
         FXLabel(bcVAtop, '')
         FXLabel(bcVAtop, '')
         bcVAtop_VA = AFXVerticalAligner(bcVAtop)
@@ -350,28 +357,31 @@ class TestDB(AFXDataDialog):
         FXLabel(nlVFc, 'Load Definitions')
         FXLabel(nlVFc, '')
         FXCheckButton(nlVFc, 'Displacement controlled', form.displ_controlledKw)
-        FXCheckButton(nlVFc, 'Separate load steps:', form.separate_load_stepsKw)
-        AFXTextField(nlVFc, 8, 'Axial displacement:', form.axial_displKw, AFXTEXTFIELD_FLOAT)
-        AFXTextField(nlVFc, 8, 'Axial load:', form.axial_loadKw, opts=AFXTEXTFIELD_FLOAT)
-        AFXTextField(nlVFc, 8, 'Axial step:', form.axial_stepKw, opts=AFXTEXTFIELD_INTEGER)
-        AFXTextField(nlVFc, 8, 'Pressure load:', form.pressure_loadKw, opts=AFXTEXTFIELD_FLOAT)
-        AFXTextField(nlVFc, 8, 'Pressure step:', form.pressure_stepKw, opts=AFXTEXTFIELD_INTEGER)
-        AFXTextField(nlVFc, 8, 'Perturbation load step:', form.pload_stepKw, opts=AFXTEXTFIELD_INTEGER)
+        FXCheckButton(nlVFc, 'Use two load steps:', form.separate_load_stepsKw)
+        self.axial_displ = AFXTextField(nlVFc, 8, 'Axial displacement:', form.axial_displKw, AFXTEXTFIELD_FLOAT)
+        self.axial_load = AFXTextField(nlVFc, 8, 'Axial compressive\nload:', form.axial_loadKw, opts=AFXTEXTFIELD_FLOAT)
+        AFXTextField(nlVFc, 8, 'Pressure load:\n  (positive outwards)', form.pressure_loadKw, opts=AFXTEXTFIELD_FLOAT)
+        FXHorizontalSeparator(nlVFc)
+        FXLabel(nlVFc, '')
+        FXLabel(nlVFc, 'Step Number for Each Load')
+        FXLabel(nlVFc, '')
+        self.axial_step = AFXTextField(nlVFc, 8, 'Axial loads:', form.axial_stepKw, opts=AFXTEXTFIELD_INTEGER)
+        AFXTextField(nlVFc, 8, 'Perturbation loads:', form.pload_stepKw, opts=AFXTEXTFIELD_INTEGER)
+        AFXTextField(nlVFc, 8, 'Pressure load:', form.pressure_stepKw, opts=AFXTEXTFIELD_INTEGER)
         # perturbation load step
         FXVerticalSeparator(nlHF)
         nlVF1 = FXVerticalFrame(nlHF)
         FXLabel(nlVF1, '')
         FXLabel(nlVF1, 'Step with constant loads (step 1)')
         FXLabel(nlVF1, '')
-        FXCheckButton(nlVF1, 'Artificial Damping', form.artificial_damping1Kw)
+        self.art_damp1 = FXCheckButton(nlVF1, 'Artificial Damping', form.artificial_damping1Kw)
         FXLabel(nlVF1, '')
-        AFXTextField(nlVF1, 8, 'Damping Factor:', form.damping_factor1Kw,
-                     opts=AFXTEXTFIELD_FLOAT)
+        self.damp_factor1 = AFXTextField(nlVF1, 8, 'Damping Factor:', form.damping_factor1Kw, opts=AFXTEXTFIELD_FLOAT)
         nlVA = AFXVerticalAligner(nlVF1)
-        AFXTextField(nlVA, 8, 'Minimum increment size:', form.minInc1Kw, opts=AFXTEXTFIELD_FLOAT)
-        AFXTextField(nlVA, 8, 'Initial increment size:', form.initialInc1Kw, opts=AFXTEXTFIELD_FLOAT)
-        AFXTextField(nlVA, 8, 'Maximum increment size:', form.maxInc1Kw, opts=AFXTEXTFIELD_FLOAT)
-        AFXTextField(nlVA, 8, 'Maximum number of increments:', form.maxNumInc1Kw, opts=AFXTEXTFIELD_FLOAT)
+        self.minInc1 = AFXTextField(nlVA, 8, 'Minimum increment size:', form.minInc1Kw, opts=AFXTEXTFIELD_FLOAT)
+        self.initialInc1 = AFXTextField(nlVA, 8, 'Initial increment size:', form.initialInc1Kw, opts=AFXTEXTFIELD_FLOAT)
+        self.maxInc1 = AFXTextField(nlVA, 8, 'Maximum increment size:', form.maxInc1Kw, opts=AFXTEXTFIELD_FLOAT)
+        self.maxNumInc1 = AFXTextField(nlVA, 8, 'Maximum number of increments:', form.maxNumInc1Kw, opts=AFXTEXTFIELD_FLOAT)
         # axial compression step
         FXVerticalSeparator(nlHF)
         nlVF2 = FXVerticalFrame(nlHF)
@@ -762,6 +772,7 @@ class TestDB(AFXDataDialog):
         #
         self.extraUpdates()
 
+
     def update_database(self, update_all=False):
         form = self.form
         if update_all:
@@ -855,15 +866,18 @@ class TestDB(AFXDataDialog):
             self.save_allowables_button.disable()
             self.del_allowables_button.enable()
 
+
     def save_cc(self):
         name = self.form.new_cc_nameKw.getValue()
         value = cc_form2dict(self, self.form)
         self.form.last_loadedKw.setValue(name)
         message(conecylDB.save('ccs', name, value))
 
+
     def del_cc(self):
         name = self.form.ccKeyKw.getValue()
         message(conecylDB.delete('ccs', name))
+
 
     def save_laminaprop(self):
         name = self.form.new_laminaprop_nameKw.getValue()
@@ -873,9 +887,11 @@ class TestDB(AFXDataDialog):
             value = (value[0], value[0], value[1])
         message(conecylDB.save('laminaprops', name, value))
 
+
     def del_laminaprop(self):
         name = self.form.laminapropKeyKw.getValue()
         message(conecylDB.delete('laminaprops', name))
+
 
     def save_allowables(self):
         name = self.form.new_allowables_nameKw.getValue()
@@ -883,9 +899,11 @@ class TestDB(AFXDataDialog):
         value = tuple(float(i) for i in value.split(','))
         message(conecylDB.save('allowables', name, value))
 
+
     def del_allowables(self):
         name = self.form.allowablesKeyKw.getValue()
         message(conecylDB.delete('allowables', name))
+
 
     def extraUpdates(self):
         # updating list of studies
@@ -916,6 +934,7 @@ class TestDB(AFXDataDialog):
                 self.model_to_post.appendItem(k)
         self.update_database(update_all=True)
 
+
     def slowUpdates(self):
         form = self.form
         std_name = form.std_to_postKw.getValue()
@@ -943,11 +962,12 @@ class TestDB(AFXDataDialog):
         sendCommand(command)
         self.extraUpdates()
 
+
     def processUpdates(self):
         form = self.form
-        #
         std_name = form.std_nameKw.getValue()
         form.std_nameKw.setValue(rsc(std_name))
+
         # imp_tables[k]
         for k in ['pl', 'd', 'ax', 'lbmi', 'cut']:
             correct_num = self.imp_spinners[k].getValue()
@@ -981,6 +1001,7 @@ class TestDB(AFXDataDialog):
             self.extraUpdates()
         if self.logcount > 20:
             self.slowUpdates()
+
         # apply Mid-Surface Imperfections
         if self.apply_imp_ms.getState() == STATE_DOWN:
             self.apply_imp_ms.setState(STATE_UP)
@@ -995,6 +1016,7 @@ class TestDB(AFXDataDialog):
                           'reload(gui_commands)\n'
                 command += form.apply_imp_ms.getCommandString()
                 sendCommand(command, writeToReplay=False, writeToJournal=True)
+
         # apply Thickness Imperfections
         if self.apply_imp_t.getState() == STATE_DOWN:
             self.apply_imp_t.setState(STATE_UP)
@@ -1009,6 +1031,7 @@ class TestDB(AFXDataDialog):
                           'reload(gui_commands)\n'
                 command += form.apply_imp_t.getCommandString()
                 sendCommand(command, writeToReplay=False, writeToJournal=True)
+
         # post load shortening curve button
         if self.post_ls_button.getState() == STATE_DOWN:
             self.post_ls_button.setState(STATE_UP)
@@ -1102,7 +1125,32 @@ class TestDB(AFXDataDialog):
             message(' ')
             form.loaded_study = True
             return
+
         # changing variable widgets
+        if form.displ_controlledKw.getValue():
+            self.axial_displ.enable()
+            self.axial_load.disable()
+            self.axial_step.disable()
+        else:
+            self.axial_displ.disable()
+            self.axial_load.enable()
+            self.axial_step.enable()
+
+        if form.separate_load_stepsKw.getValue():
+            self.art_damp1.enable()
+            self.damp_factor1.enable()
+            self.minInc1.enable()
+            self.initialInc1.enable()
+            self.maxInc1.enable()
+            self.maxNumInc1.enable()
+        else:
+            self.art_damp1.disable()
+            self.damp_factor1.disable()
+            self.minInc1.disable()
+            self.initialInc1.disable()
+            self.maxInc1.disable()
+            self.maxNumInc1.disable()
+
         #if form.laKw.getValue() == False:
         #    self.la_beta.disable()
         #    self.la_omega.disable()
@@ -1117,6 +1165,7 @@ class TestDB(AFXDataDialog):
             status = webBrowser.openWithURL('www.pfh.de')
             status = webBrowser.openWithURL('www.desicos.eu')
         return
+
 
     def show(self):
 
