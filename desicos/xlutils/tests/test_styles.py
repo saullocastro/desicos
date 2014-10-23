@@ -7,7 +7,7 @@
 from mock import Mock
 from testfixtures import should_raise
 from unittest import TestSuite,TestCase,makeSuite
-from xlutils.styles import Styles
+from desicos.xlutils.styles import Styles
 
 class TestStyles(TestCase):
 

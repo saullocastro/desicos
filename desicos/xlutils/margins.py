@@ -3,11 +3,13 @@
 import sys, glob, string
 
 try:
-    from xlrd import open_workbook, XL_CELL_EMPTY, XL_CELL_BLANK, XL_CELL_TEXT, XL_CELL_NUMBER, cellname
+    from desicos.xlrd import (open_workbook, XL_CELL_EMPTY, XL_CELL_BLANK,
+            XL_CELL_TEXT, XL_CELL_NUMBER, cellname)
     null_cell_types = (XL_CELL_EMPTY, XL_CELL_BLANK)
 except ImportError:
     # older version
-    from xlrd import open_workbook, XL_CELL_EMPTY, XL_CELL_TEXT, XL_CELL_NUMBER
+    from desicos.xlrd import (open_workbook, XL_CELL_EMPTY, XL_CELL_TEXT,
+            XL_CELL_NUMBER)
     null_cell_types = (XL_CELL_EMPTY, )
 
 def cells_all_junk(cells, is_rubbish=None):

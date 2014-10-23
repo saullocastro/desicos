@@ -8,7 +8,7 @@
 # <p>This module is part of the xlrd package, which is released under a BSD-style licence.</p>
 ##
 
-import xlrd
+import desicos.xlrd as xlrd
 import sys
 import glob
 

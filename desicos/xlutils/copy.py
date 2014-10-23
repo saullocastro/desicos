@@ -4,7 +4,7 @@
 # http://www.opensource.org/licenses/mit-license.html
 # See license.txt for more details.
 
-from xlutils.filter import process,XLRDReader,XLWTWriter
+from desicos.xlutils.filter import process,XLRDReader,XLWTWriter
 
 def copy(wb):
     w = XLWTWriter()

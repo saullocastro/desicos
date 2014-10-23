@@ -5,7 +5,7 @@
 # See license.txt for more details.
 
 import os
-from xlutils.filter import process,XLRDReader,StreamWriter
+from desicos.xlutils.filter import process,XLRDReader,StreamWriter
 
 def save(wb,filename_or_stream):
     if isinstance(filename_or_stream,basestring):

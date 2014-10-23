@@ -7,11 +7,12 @@
 import sys
 import os.path
 
-from xlrd import XL_CELL_TEXT,Book
-from xlrd.biffh import FUN
-from xlrd.formatting import XF, Format, Font, XFAlignment, XFBorder, XFBackground, XFProtection
+from desicos.xlrd import XL_CELL_TEXT,Book
+from desicos.xlrd.biffh import FUN
+from desicos.xlrd.formatting import (XF, Format, Font, XFAlignment, XFBorder,
+        XFBackground, XFProtection)
 
-from xlrd.sheet import Sheet
+from desicos.xlrd.sheet import Sheet
 
 test_files = os.path.dirname(__file__)
 

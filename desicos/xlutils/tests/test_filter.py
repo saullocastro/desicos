@@ -9,12 +9,17 @@ from __future__ import with_statement
 from mock import Mock
 from StringIO import StringIO
 from tempfile import TemporaryFile
-from testfixtures import compare, Comparison as C, replace, log_capture, ShouldRaise, tempdir
+from testfixtures import (compare, Comparison as C, replace, log_capture,
+        ShouldRaise, tempdir)
 from unittest import TestSuite,TestCase,makeSuite
-from xlrd import open_workbook, XL_CELL_NUMBER, XL_CELL_ERROR, XL_CELL_BOOLEAN
-from xlrd.formatting import XF
-from xlutils.filter import BaseReader,GlobReader,MethodFilter,BaseWriter,process,XLRDReader,XLWTWriter, BaseFilter
-from xlutils.tests.fixtures import test_files,test_xls_path,make_book,make_sheet,DummyBook
+from desicos.xlrd import (open_workbook, XL_CELL_NUMBER, XL_CELL_ERROR,
+        XL_CELL_BOOLEAN)
+from desicos.xlrd.formatting import XF
+from desicos.xlutils.filter import
+(BaseReader,GlobReader,MethodFilter,BaseWriter,process,XLRDReader,XLWTWriter,
+        BaseFilter)
+from desicos.xlutils.tests.fixtures import (test_files, test_xls_path,
+        make_book, make_sheet, DummyBook)
 
 import os
 
@@ -190,7 +195,7 @@ class TestBaseReader(TestCase):
 class TestBaseFilter(TestCase):
 
     def setUp(self):
-        from xlutils.filter import BaseFilter
+        from desicos.xlutils.filter import BaseFilter
         self.filter = BaseFilter()
         self.filter.next = self.tf = Mock()
 
@@ -364,7 +369,7 @@ class TestMethodFilter(TestCase):
             OurMethodFilter(self.called,['foo'])
 
 
-from xlutils.filter import Echo
+from desicos.xlutils.filter import Echo
 
 class TestEcho(TestCase):
 
@@ -386,7 +391,7 @@ class TestEcho(TestCase):
 class TestMemoryLogger(TestCase):
 
     def setUp(self):
-        from xlutils.filter import MemoryLogger
+        from desicos.xlutils.filter import MemoryLogger
         self.filter = MemoryLogger('somepath',['workbook'])
 
     @replace('xlutils.filter.guppy',True)
@@ -409,7 +414,7 @@ class TestMemoryLogger(TestCase):
     def test_inheritance(self):
         self.failUnless(isinstance(self.filter,MethodFilter))
 
-from xlutils.filter import ErrorFilter
+from desicos.xlutils.filter import ErrorFilter
 
 class TestErrorFilter(TestCase):
 
@@ -579,7 +584,7 @@ class TestErrorFilter(TestCase):
             ])
         self.assertEqual(len(h.records),0)
 
-from xlutils.filter import ColumnTrimmer
+from desicos.xlutils.filter import ColumnTrimmer
 
 class TestColumnTrimmer(TestCase):
 
@@ -1301,12 +1306,12 @@ class TestBaseWriter(TestCase):
 class TestDirectoryWriter(TestCase):
 
     def test_inheritance(self):
-        from xlutils.filter import DirectoryWriter
+        from desicos.xlutils.filter import DirectoryWriter
         self.failUnless(isinstance(DirectoryWriter('foo'),BaseWriter))
 
     @tempdir()
     def test_plus_in_workbook_name(self,d):
-        from xlutils.filter import DirectoryWriter
+        from desicos.xlutils.filter import DirectoryWriter
         r = TestReader(
             ('Sheet1',[['Cell']]),
             )

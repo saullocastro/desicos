@@ -52,8 +52,8 @@ def get_book_sheet(excel_name, sheet_name):
         object.
 
     """
-    from xlrd import open_workbook
-    from xlutils.copy import copy
+    from desicos.xlrd import open_workbook
+    from desicos.xlutils.copy import copy
     if os.path.isfile(excel_name):
         rb = open_workbook(excel_name, formatting_info=True)
         sheet_names = [s.name for s in rb.sheets()]
@@ -68,7 +68,7 @@ def get_book_sheet(excel_name, sheet_name):
                 sheet = book.add_sheet(new_sheet_name)
                 break
     else:
-        from xlwt import Workbook
+        from desicos.xlwt import Workbook
         book = Workbook()
         sheet = book.add_sheet(sheet_name + '_00')
 

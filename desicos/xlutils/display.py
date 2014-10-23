@@ -4,7 +4,7 @@
 # http://www.opensource.org/licenses/mit-license.html
 # See license.txt for more details.
 
-import xlrd
+import desicos.xlrd as xlrd
 
 def quoted_sheet_name(sheet_name, encoding='ascii'):
     if "'" in sheet_name:

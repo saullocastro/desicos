@@ -11,8 +11,8 @@ from StringIO import StringIO
 from tempfile import mkdtemp,TemporaryFile
 from testfixtures import replace,tempdir
 from unittest import TestSuite,TestCase,makeSuite
-from xlutils.save import save
-from xlutils.filter import XLRDReader,StreamWriter
+from desicos.xlutils.save import save
+from desicos.xlutils.filter import XLRDReader,StreamWriter
 
 class TestSave(TestCase):
 

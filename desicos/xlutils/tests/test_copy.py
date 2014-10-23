@@ -8,8 +8,8 @@ import os
 from mock import Mock
 from testfixtures import replace,compare,Comparison as C
 from unittest import TestSuite,TestCase,makeSuite
-from xlutils.copy import copy
-from xlutils.filter import XLRDReader
+from desicos.xlutils.copy import copy
+from desicos.xlutils.filter import XLRDReader
 
 class TestCopy(TestCase):
 

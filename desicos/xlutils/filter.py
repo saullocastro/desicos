@@ -6,16 +6,17 @@
 
 import logging
 import os
-import xlrd,xlwt
+import desicos.xlrd as xlrd
+import desicos.xlwt as xlwt
 
 from functools import partial
 from glob import glob
 from shutil import rmtree
 from tempfile import mkdtemp
-from xlutils.display import quoted_sheet_name,cell_display
-from xlutils.margins import cells_all_junk
-from xlwt.Style import default_style
-logger = logging.getLogger('xlutils.filter')
+from desicos.xlutils.display import quoted_sheet_name,cell_display
+from desicos.xlutils.margins import cells_all_junk
+from desicos.xlwt.Style import default_style
+logger = logging.getLogger('desicos.xlutils.filter')
 
 class BaseReader:
 
