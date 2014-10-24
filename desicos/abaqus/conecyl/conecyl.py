@@ -257,8 +257,10 @@ class ConeCyl(object):
         self.pts = []
 
         # resin rings
-        self.resin_ring_bottom = False
-        self.resin_ring_top = False
+        self.resin_add_BIR = False
+        self.resin_add_BOR = False
+        self.resin_add_TIR = False
+        self.resin_add_TOR = False
         self.resin_numel = 3
         self.resin_E = 2454.5336 # MPa
         self.resin_nu = 0.3
