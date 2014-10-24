@@ -422,12 +422,11 @@ def printLBmodes():
                              canvasObjects=(vp,))
 
 
-def get_odbdisplay():
+def get_current_odbdisplay():
     from abaqus import session
 
     viewport = session.viewports[session.currentViewportName]
     try:
-        name = viewport.odbDisplay.name
         return viewport.odbDisplay
     except:
         return None
@@ -437,7 +436,7 @@ def get_current_odb():
     from abaqus import session
 
     viewport = session.viewports[session.currentViewportName]
-    odbdisplay = get_odbdisplay()
+    odbdisplay = get_current_odbdisplay()
     if odbdisplay:
         return session.odbs[odbdisplay.name]
     else:
@@ -445,15 +444,16 @@ def get_current_odb():
 
 
 def get_current_step_name():
-    odbdisplay = get_odbdisplay()
+    odbdisplay = get_current_odbdisplay()
     if odbdisplay:
-        return odbdisplay.fieldSteps[0][0]
+        index, frame_num = odbdisplay.fieldFrame
+        return odbdisplay.fieldSteps[index][0]
     else:
         return None
 
 
 def get_current_frame():
-    odbdisplay = get_odbdisplay()
+    odbdisplay = get_current_odbdisplay()
     if not odbdisplay:
         return None
     step_name = get_current_step_name()

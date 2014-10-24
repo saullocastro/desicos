@@ -145,9 +145,13 @@ def calc_elem_cg(elem):
 
 
 def vec_calc_elem_cg(elements):
-    vec_tmp = np.vectorize(calc_elem_cg, otypes=[object])
-
-    return  np.array(tuple(vec_tmp(elements)), dtype=FLOAT)
+    nodes = []
+    for elem in elements:
+        nodes += elem.getNodes()
+    coords = np.array([node.coordinates for node in nodes])
+    cgs = coords.reshape(-1, 8, 3).mean(axis=1)
+    labels = np.array([elem.label for elem in elements])
+    return  np.hstack((cgs, labels[:, None]))
 
 
 def func_sin_cos(n_terms=10):

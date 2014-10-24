@@ -50,7 +50,7 @@ params = ['rbot', 'H', 'alphadeg','betadeg','omegadeg',
 'std_name',
 'allowablesKey','laminapropKey','ccKey',
 'last_loaded',
-'post_put_in_Excel', 'post_open_Excel',
+'post_put_in_Excel', 'post_open_Excel', 'post_outpath',
 'ncpus', 'imp_ms', 'imp_ms_theta_z_format',
 'imp_t_theta_z_format', 'imp_thick',
 'imp_ms_stretch_H', 'imp_t_stretch_H',
@@ -177,6 +177,7 @@ class TestForm(AFXForm):
         self.model_to_postKw = AFXStringKeyword(self.dummy, 'model_to_post', FALSE)
         self.post_put_in_ExcelKw = AFXBoolKeyword(self.dummy, 'post_put_in_Excel', TRUE_FALSE, FALSE)
         self.post_open_ExcelKw = AFXBoolKeyword(self.dummy, 'post_open_Excel', TRUE_FALSE, FALSE)
+        self.post_outpathKw = AFXStringKeyword(self.dummy, 'post_outpath', FALSE)
         #
         self.imp_ms_std_nameKw = AFXStringKeyword(self.apply_imp_ms, 'std_name', TRUE)
         self.imp_msKw = AFXStringKeyword(self.apply_imp_ms, 'imp_ms', TRUE)
@@ -324,6 +325,7 @@ class TestForm(AFXForm):
             raise RuntimeError(str(e) + '\n' + msg)
         self.just_created_study = True
         self.loaded_study = True
+        os.chdir(os.path.join(TMP_DIR, self.std_nameKw.getValue()))
         self.deactivateIfNeeded()
         return TRUE
         # Since this is a prototype application, just write the command to

@@ -67,6 +67,7 @@ defaults = {
             'allowablesKey': 'degenhardt_2010_IM78552_cocomat',
             'post_put_in_Excel': True,
             'post_open_Excel': False,
+            'post_outpath': '',
             'imp_ms_stretch_H': False,
             'imp_t_stretch_H': False,
             'imp_ms_theta_z_format': True,

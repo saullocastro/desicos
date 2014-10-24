@@ -741,15 +741,46 @@ class TestDB(AFXDataDialog):
         #
         # Tabs / Post-processing tools / Utils
         #
-        FXTabItem(postBook, 'Utils', None, TAB_LEFT)
+        FXTabItem(postBook, 'Opened Contour Plots', None, TAB_LEFT)
         postVF = FXVerticalFrame(postBook, FRAME_RAISED|FRAME_SUNKEN)
-        postVF2 = FXVerticalFrame(postVF, opts=LAYOUT_LEFT|LAYOUT_CENTER_Y)
-        FXLabel(postVF2, 'Plot current field output as an opened cone/cylinder')
-        FXLabel(postVF2, '')
-        pngpath = os.path.join(DAHOME, 'gui', 'icons', 'opened_conecyl.png')
+        FXLabel(postVF, 'Plot current field output as an opened cone/cylinder')
+        FXLabel(postVF, '')
+        postHF = FXHorizontalFrame(postVF)
+        postVF1 = FXVerticalFrame(postHF, opts=LAYOUT_LEFT|LAYOUT_CENTER_Y)
+        postVF2 = FXVerticalFrame(postHF, opts=LAYOUT_LEFT|LAYOUT_CENTER_Y)
+
+        self.plot_type_buttons = []
+
+        button = FXButton(postVF1, 'Plot type 1')
+        pngpath = os.path.join(DAHOME, 'gui', 'icons', 'plot_type_1.png')
+        icon = afxCreatePNGIcon(pngpath)
+        FXLabel(postVF1, '', icon, opts=ICON_AFTER_TEXT)
+        self.plot_type_buttons.append(button)
+
+        button = FXButton(postVF1, 'Plot type 2')
+        pngpath = os.path.join(DAHOME, 'gui', 'icons', 'plot_type_2.png')
+        icon = afxCreatePNGIcon(pngpath)
+        FXLabel(postVF1, '', icon, opts=ICON_AFTER_TEXT)
+        self.plot_type_buttons.append(button)
+
+        button = FXButton(postVF2, 'Plot type 3')
+        pngpath = os.path.join(DAHOME, 'gui', 'icons', 'plot_type_3.png')
         icon = afxCreatePNGIcon(pngpath)
         FXLabel(postVF2, '', icon, opts=ICON_AFTER_TEXT)
-        self.plot_opened_conecyl = FXButton(postVF2, 'Plot opened cone/cylinder')
+        self.plot_type_buttons.append(button)
+
+        button = FXButton(postVF1, 'Plot type 4')
+        pngpath = os.path.join(DAHOME, 'gui', 'icons', 'plot_type_4.png')
+        icon = afxCreatePNGIcon(pngpath)
+        FXLabel(postVF1, '', icon, opts=ICON_AFTER_TEXT)
+        self.plot_type_buttons.append(button)
+
+        button = FXButton(postVF2, 'Plot type 5')
+        pngpath = os.path.join(DAHOME, 'gui', 'icons', 'plot_type_5.png')
+        icon = afxCreatePNGIcon(pngpath)
+        FXLabel(postVF2, '', icon, opts=ICON_AFTER_TEXT)
+        self.plot_type_buttons.append(button)
+
         #
         # Tabs / About this plug-in
         #
@@ -1002,64 +1033,6 @@ class TestDB(AFXDataDialog):
         if self.logcount > 20:
             self.slowUpdates()
 
-        # apply Mid-Surface Imperfections
-        if self.apply_imp_ms.getState() == STATE_DOWN:
-            self.apply_imp_ms.setState(STATE_UP)
-            std_name = form.std_nameKw.getValue()
-            if not form.imp_msKw.getValue():
-                message('An imperfection must be selected!')
-            elif not form.loaded_study:
-                message('The study must be created or loaded first!')
-            else:
-                form.imp_ms_std_nameKw.setValue(std_name)
-                command = 'import gui_commands\n' +\
-                          'reload(gui_commands)\n'
-                command += form.apply_imp_ms.getCommandString()
-                sendCommand(command, writeToReplay=False, writeToJournal=True)
-
-        # apply Thickness Imperfections
-        if self.apply_imp_t.getState() == STATE_DOWN:
-            self.apply_imp_t.setState(STATE_UP)
-            std_name = form.std_nameKw.getValue()
-            if form.imp_thickKw.getValue()=='':
-                message('An imperfection must be selected!')
-            elif not form.loaded_study:
-                message('The study must be created or loaded first!')
-            else:
-                form.imp_t_std_nameKw.setValue(std_name)
-                command = 'import gui_commands\n' +\
-                          'reload(gui_commands)\n'
-                command += form.apply_imp_t.getCommandString()
-                sendCommand(command, writeToReplay=False, writeToJournal=True)
-
-        # post load shortening curve button
-        if self.post_ls_button.getState() == STATE_DOWN:
-            self.post_ls_button.setState(STATE_UP)
-            reload(gui_plot)
-            put_in_Excel = form.post_put_in_ExcelKw.getValue()
-            open_Excel = form.post_open_ExcelKw.getValue()
-            gui_plot.plot_ls_curve(std_name,
-                                    put_in_Excel, open_Excel)
-        # post knock-down curves
-        if self.post_kdf_button.getState() == STATE_DOWN:
-            self.post_kdf_button.setState(STATE_UP)
-            reload(gui_plot)
-            put_in_Excel = form.post_put_in_ExcelKw.getValue()
-            open_Excel = form.post_open_ExcelKw.getValue()
-            gui_plot.plot_kdf_curve(std_name,
-                                     put_in_Excel, open_Excel,
-                                     configure_session=False)
-        # post stress analysis button
-        if self.post_stress_button.getState() == STATE_DOWN:
-            self.post_stress_button.setState(STATE_UP)
-            reload(gui_plot)
-            cc_name = form.model_to_postKw.getValue()
-            gui_plot.plot_stress_analysis(std_name, cc_name)
-        # plot opened conecyl
-        if self.plot_opened_conecyl.getState() == STATE_DOWN:
-            self.plot_opened_conecyl.setState(STATE_UP)
-            reload(gui_plot)
-            gui_plot.plot_opened_conecyl(std_name)
         # cc, laminapropKeys, plyts, stack,  laminaprop and allowables updates
         self.update_database()
         if self.save_cc_button.getState() == STATE_DOWN:
@@ -1095,35 +1068,58 @@ class TestDB(AFXDataDialog):
             self.del_allowables()
             form.allowablesKeyKw.setValue('deleted!')
             self.update_database(update_all=True)
-        # run models
-        if self.exec_std.getState() == STATE_DOWN:
-            self.exec_std.setState(STATE_UP)
-            self.logcount = 10000
-            ncpus = form.ncpusKw.getValue()
-            command = ('import __main__\n' +
-                       '__main__.stds["{0}"].write_inputs()\n'.format(std_name))
-            sendCommand(command)
-            reload(gui_commands)
-            gui_commands.run_study(std_name, ncpus, form.use_job_stopperKw.getValue())
+
+        # apply Mid-Surface Imperfections
+        if self.apply_imp_ms.getState() == STATE_DOWN:
+            self.apply_imp_ms.setState(STATE_UP)
+            std_name = form.std_nameKw.getValue()
+            if not form.imp_msKw.getValue():
+                message('An imperfection must be selected!')
+            elif not form.loaded_study:
+                message('The study must be created or loaded first!')
+            else:
+                form.imp_ms_std_nameKw.setValue(std_name)
+                command = 'import gui_commands\n' +\
+                          'reload(gui_commands)\n'
+                command += form.apply_imp_ms.getCommandString()
+                sendCommand(command, writeToReplay=False, writeToJournal=True)
+
+        # apply Thickness Imperfections
+        if self.apply_imp_t.getState() == STATE_DOWN:
+            self.apply_imp_t.setState(STATE_UP)
+            std_name = form.std_nameKw.getValue()
+            if form.imp_thickKw.getValue()=='':
+                message('An imperfection must be selected!')
+            elif not form.loaded_study:
+                message('The study must be created or loaded first!')
+            else:
+                form.imp_t_std_nameKw.setValue(std_name)
+                command = 'import gui_commands\n' +\
+                          'reload(gui_commands)\n'
+                command += form.apply_imp_t.getCommandString()
+                sendCommand(command, writeToReplay=False, writeToJournal=True)
+
         # save study
         if self.save_std.getState() == STATE_DOWN:
             self.save_std.setState(STATE_UP)
             self.saveStudy()
+
         # load study
         if self.load_std.getState() == STATE_DOWN:
             self.load_std.setState(STATE_UP)
             message('Loading...')
             self.logcount = 10000
-            command = 'import gui_commands\n'    +\
-                      'reload(gui_commands)\n' +\
-                      'gui_commands.load_study("%s")\n' % std_name
+            command = ('import gui_commands\n' +
+                       'reload(gui_commands)\n' +
+                       'gui_commands.load_study("%s")\n' % std_name)
             sendCommand(command)
             reload(gui_commands)
             gui_commands.load_study_gui(std_name, form)
-            message('The DESICOS study "%s.study" has been opened.' \
-                     % os.path.join(TMP_DIR, std_name))
+            outpath = os.path.join(TMP_DIR, std_name)
+            message('The DESICOS study "%s.study" has been opened.' % outpath)
             message(' ')
             form.loaded_study = True
+            os.chdir(outpath)
             return
 
         # changing variable widgets
@@ -1151,6 +1147,59 @@ class TestDB(AFXDataDialog):
             self.maxInc1.disable()
             self.maxNumInc1.disable()
 
+        if not form.loaded_study:
+            return
+        else:
+            if not form.post_outpathKw.getValue():
+                outpath = os.path.join(TMP_DIR, std_name)
+                form.post_outpathKw.setValue(outpath)
+
+        # post load shortening curve button
+        if self.post_ls_button.getState() == STATE_DOWN:
+            self.post_ls_button.setState(STATE_UP)
+            reload(gui_plot)
+            put_in_Excel = form.post_put_in_ExcelKw.getValue()
+            open_Excel = form.post_open_ExcelKw.getValue()
+            gui_plot.plot_ls_curve(std_name,
+                                    put_in_Excel, open_Excel)
+
+        # post knock-down curves
+        if self.post_kdf_button.getState() == STATE_DOWN:
+            self.post_kdf_button.setState(STATE_UP)
+            reload(gui_plot)
+            put_in_Excel = form.post_put_in_ExcelKw.getValue()
+            open_Excel = form.post_open_ExcelKw.getValue()
+            gui_plot.plot_kdf_curve(std_name,
+                                     put_in_Excel, open_Excel,
+                                     configure_session=False)
+
+        # post stress analysis button
+        if self.post_stress_button.getState() == STATE_DOWN:
+            self.post_stress_button.setState(STATE_UP)
+            reload(gui_plot)
+            cc_name = form.model_to_postKw.getValue()
+            gui_plot.plot_stress_analysis(std_name, cc_name)
+
+        # plot opened conecyl
+        for i, plot_type_button in enumerate(self.plot_type_buttons):
+            if plot_type_button.getState() == STATE_DOWN:
+                plot_type_button.setState(STATE_UP)
+                reload(gui_plot)
+                gui_plot.plot_opened_conecyl(std_name, plot_type=(i+1),
+                        outpath=form.post_outpathKw.getValue())
+
+        # run models
+        if self.exec_std.getState() == STATE_DOWN:
+            self.exec_std.setState(STATE_UP)
+            self.logcount = 10000
+            ncpus = form.ncpusKw.getValue()
+            command = ('import __main__\n' +
+                   '__main__.stds["{0}"].write_inputs()\n'.format(std_name))
+            sendCommand(command)
+            reload(gui_commands)
+            gui_commands.run_study(std_name, ncpus,
+                    form.use_job_stopperKw.getValue())
+
         #if form.laKw.getValue() == False:
         #    self.la_beta.disable()
         #    self.la_omega.disable()
@@ -1159,7 +1208,7 @@ class TestDB(AFXDataDialog):
         #    self.la_omega.enable()
         # default profile
         # webBrowser url
-        #TODO
+        #TODO add click-able link to pfh and desicos
         if False:
             #FXMAPFUNC(...
             status = webBrowser.openWithURL('www.pfh.de')
