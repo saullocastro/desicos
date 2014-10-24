@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Abaqus Plug-In (desicos.abaqus) &mdash; DESICOS 2.0.2 documentation</title>
+    <title>Abaqus Plug-In (desicos.abaqus) &mdash; DESICOS 2.1.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.0.2',
+        VERSION:     '2.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,7 +24,7 @@
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../../_static/desicos.png"/>
-    <link rel="top" title="DESICOS 2.0.2 documentation" href="../../index.html" />
+    <link rel="top" title="DESICOS 2.1.0 documentation" href="../../index.html" />
     <link rel="up" title="Modules" href="../index.html" />
     <link rel="prev" title="Modules" href="../index.html" /> 
   </head>
@@ -44,7 +44,7 @@
         <li class="right" >
           <a href="../index.html" title="Modules"
              accesskey="P">previous</a> |</li>
-        <li><a href="../../index.html">DESICOS 2.0.2 documentation</a> &raquo;</li>
+        <li><a href="../../index.html">DESICOS 2.1.0 documentation</a> &raquo;</li>
           <li><a href="../index.html" accesskey="U">Modules</a> &raquo;</li> 
       </ul>
     </div>  
@@ -128,8 +128,10 @@ attribute is detailed in the <a class="reference internal" href="#desicos.abaqus
 
 <span class="n">cc</span> <span class="o">=</span> <span class="n">Conecyl</span><span class="p">()</span>
 <span class="n">cc</span><span class="o">.</span><span class="n">from_DB</span><span class="p">(</span><span class="s">&#39;castro_2014_c02&#39;</span><span class="p">)</span>
-<span class="n">cc</span><span class="o">.</span><span class="n">resin_ring_bottom</span> <span class="o">=</span> <span class="bp">True</span>
-<span class="n">cc</span><span class="o">.</span><span class="n">resin_ring_top</span> <span class="o">=</span> <span class="bp">True</span>
+<span class="n">cc</span><span class="o">.</span><span class="n">resin_add_BIR</span> <span class="o">=</span> <span class="bp">False</span>
+<span class="n">cc</span><span class="o">.</span><span class="n">resin_add_BOR</span> <span class="o">=</span> <span class="bp">True</span>
+<span class="n">cc</span><span class="o">.</span><span class="n">resin_add_TIR</span> <span class="o">=</span> <span class="bp">False</span>
+<span class="n">cc</span><span class="o">.</span><span class="n">resin_add_TOR</span> <span class="o">=</span> <span class="bp">True</span>
 <span class="n">cc</span><span class="o">.</span><span class="n">resin_E</span> <span class="o">=</span> <span class="mf">2454.5336</span>
 <span class="n">cc</span><span class="o">.</span><span class="n">resin_nu</span> <span class="o">=</span> <span class="mf">0.3</span>
 <span class="n">cc</span><span class="o">.</span><span class="n">resin_numel</span> <span class="o">=</span> <span class="mi">3</span>
@@ -395,7 +397,8 @@ Figure 1</em></a>)</td>
 <div class="last admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">Only applicable when
-<tt class="docutils literal"><span class="pre">cc.resin_ring_bottom==False</span></tt></p>
+<tt class="docutils literal"><span class="pre">cc.resin_add_BIR==False</span> <span class="pre">and</span></tt>
+<tt class="docutils literal"><span class="pre">cc.resin_add_BOR==False</span></tt></p>
 </div>
 </td>
 </tr>
@@ -413,7 +416,8 @@ Figure 1</em></a>)</td>
 <div class="last admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">Only applicable when
-<tt class="docutils literal"><span class="pre">cc.resin_ring_top==False</span></tt></p>
+<tt class="docutils literal"><span class="pre">cc.resin_add_TIR==False</span> <span class="pre">and</span> <span class="pre">``</span>
+<span class="pre">``cc.resin_add_TOR==False</span></tt></p>
 </div>
 </td>
 </tr>
@@ -431,13 +435,21 @@ here</em></a>)</th>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">resin_ring_bottom</span></tt></td>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">resin_add_BIR</span></tt></td>
 <td><tt class="docutils literal"><span class="pre">bool</span></tt>, tells if a resin ring should be added
-to the bottom edge</td>
+to the inner part of the bottom edge</td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">resin_ring_top</span></tt></td>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">resin_add_BOR</span></tt></td>
 <td><tt class="docutils literal"><span class="pre">bool</span></tt>, tells if a resin ring should be added
-to the top edge</td>
+to the outer part of the bottom edge</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">resin_add_TIR</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">bool</span></tt>, tells if a resin ring should be added
+to the inner part of the top edge</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">resin_add_TOR</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">bool</span></tt>, tells if a resin ring should be added
+to the outer part of the top edge</td>
 </tr>
 <tr class="row-even"><td><tt class="docutils literal"><span class="pre">resin_numel</span></tt></td>
 <td>Number of solid elements in the resin ring</td>
@@ -626,7 +638,7 @@ will be printed in the output</td>
 <tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">plot_forces</span></tt>(**kwargs)</td>
 <td></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.plot_opened" title="desicos.abaqus.conecyl.conecyl.ConeCyl.plot_opened"><tt class="xref py py-obj docutils literal"><span class="pre">plot_opened</span></tt></a>(frame,&nbsp;fieldOutputKey,&nbsp;vec,&nbsp;...)</td>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.plot_opened" title="desicos.abaqus.conecyl.conecyl.ConeCyl.plot_opened"><tt class="xref py py-obj docutils literal"><span class="pre">plot_opened</span></tt></a>([ignore,&nbsp;create_npz_only,&nbsp;ax,&nbsp;...])</td>
 <td>Print a field output for a cylinder/cone model from Abaqus</td>
 </tr>
 <tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">plot_stress_analysis</span></tt>(**kwargs)</td>
@@ -861,50 +873,17 @@ doing:</p>
 
 <dl class="method">
 <dt id="desicos.abaqus.conecyl.conecyl.ConeCyl.plot_opened">
-<tt class="descname">plot_opened</tt><big>(</big><em>frame</em>, <em>fieldOutputKey</em>, <em>vec</em>, <em>nodes</em>, <em>numel_cir</em>, <em>elem_type='S4R'</em>, <em>ignore=</em>, <span class="optional">[</span><span class="optional">]</span><em>create_npz_only=False</em>, <em>ax=None</em>, <em>figsize=(3.3</em>, <em>3.3)</em>, <em>save_png=True</em>, <em>aspect='equal'</em>, <em>clean=True</em>, <em>plot_type=1</em>, <em>outpath=''</em>, <em>pngname=''</em>, <em>npzname=''</em>, <em>pyname=''</em>, <em>num_levels=400</em><big>)</big><a class="reference internal" href="../../_modules/desicos/abaqus/conecyl/conecyl.html#ConeCyl.plot_opened"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.plot_opened" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">plot_opened</tt><big>(</big><em>ignore=</em>, <span class="optional">[</span><span class="optional">]</span><em>create_npz_only=False</em>, <em>ax=None</em>, <em>figsize=(3.3</em>, <em>3.3)</em>, <em>save_png=True</em>, <em>aspect='equal'</em>, <em>clean=True</em>, <em>plot_type=1</em>, <em>outpath=''</em>, <em>pngname='plot_from_abaqus.png'</em>, <em>npzname='plot_from_abaqus.npz'</em>, <em>pyname='plot_from_abaqus.py'</em>, <em>num_levels=400</em><big>)</big><a class="reference internal" href="../../_modules/desicos/abaqus/conecyl/conecyl.html#ConeCyl.plot_opened"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.plot_opened" title="Permalink to this definition">¶</a></dt>
 <dd><p>Print a field output for a cylinder/cone model from Abaqus</p>
-<p>The <tt class="docutils literal"><span class="pre">frame</span></tt> and <tt class="docutils literal"><span class="pre">nodes</span></tt> input types are described in
-<a class="reference external" href="http://abaqus.me.chalmers.se/v6.11/books/ker/default.htm">Abaqus Scripting Reference Manual</a> and
-they can be obtained through:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">frame</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">odbs</span><span class="p">[</span><span class="s">&#39;odb_name.odb&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="s">&#39;step_name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">frames</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">nodes</span> <span class="o">=</span> <span class="n">mdb</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="s">&#39;model_name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="s">&#39;part_name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">nodes</span>
-</pre></div>
-</div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>frame</strong> : OdbFrame</p>
-<blockquote>
-<div><p>The frame from where the field output will be taken from.</p>
-</div></blockquote>
-<p><strong>fieldOutputKey</strong> : str</p>
-<blockquote>
-<div><p>The field output key to be used. It must be available in
-<tt class="docutils literal"><span class="pre">frame.fieldOutputs.keys()</span></tt>. This function was tested with
-<tt class="docutils literal"><span class="pre">'UT'</span></tt> and <tt class="docutils literal"><span class="pre">'U'</span></tt> only.</p>
-</div></blockquote>
-<p><strong>vec</strong> : str</p>
-<blockquote>
-<div><p>The displacement vector to be plotted:
-<tt class="docutils literal"><span class="pre">'u'</span></tt>, <tt class="docutils literal"><span class="pre">'v'</span></tt> or <tt class="docutils literal"><span class="pre">'w'</span></tt>.</p>
-</div></blockquote>
-<p><strong>nodes</strong> : MeshNodeArray</p>
-<blockquote>
-<div><p>The part nodes.</p>
-</div></blockquote>
-<p><strong>numel_cir</strong> : int</p>
-<blockquote>
-<div><p>The number of elements around the circumference.</p>
-</div></blockquote>
-<p><strong>elem_type</strong> : str, optional</p>
-<blockquote>
-<div><p>The element type. The elements <tt class="docutils literal"><span class="pre">'S4R',</span> <span class="pre">'S4R5'</span></tt> where tested.</p>
-</div></blockquote>
-<p><strong>ignore</strong> : list, optional</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>ignore</strong> : list, optional</p>
 <blockquote>
 <div><p>A list with the node ids to be ignored. It must contain any nodes
-outside the mapped mesh included in <tt class="docutils literal"><span class="pre">parts['part_name'].nodes</span></tt>.</p>
+outside the mapped mesh included in
+<tt class="docutils literal"><span class="pre">parts['part_name_shell'].nodes</span></tt>.</p>
 </div></blockquote>
 <p><strong>create_npz_only</strong> : bool, optional</p>
 <blockquote>
@@ -934,7 +913,15 @@ method.</p>
 </div></blockquote>
 <p><strong>plot_type</strong> : int, optional</p>
 <blockquote>
-<div><p>See <tt class="xref py py-meth docutils literal"><span class="pre">plot()</span></tt>.</p>
+<div><p>For cylinders only <tt class="docutils literal"><span class="pre">4</span></tt> and <tt class="docutils literal"><span class="pre">5</span></tt> are valid.
+For cones all the following types can be used:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">1</span></tt>: concave up (default for cones)</li>
+<li><tt class="docutils literal"><span class="pre">2</span></tt>: concave down</li>
+<li><tt class="docutils literal"><span class="pre">3</span></tt>: stretched closed</li>
+<li><tt class="docutils literal"><span class="pre">4</span></tt>: stretched opened (<img class="math" src="../../_images/math/7e78f20e2452971ffe8ac1537a12e4ddd41b69d2.png" alt="r(z) \times \theta"/> vs. <img class="math" src="../../_images/math/5b4dfe819df3c0c09e92d12de54b6910e15f8457.png" alt="H"/>)</li>
+<li><tt class="docutils literal"><span class="pre">5</span></tt>: stretched opened (<img class="math" src="../../_images/math/4549d58d6609928262333a15e47dfc944da71a7e.png" alt="r_{bottom}"/> vs. <img class="math" src="../../_images/math/5b4dfe819df3c0c09e92d12de54b6910e15f8457.png" alt="H"/>)</li>
+</ul>
 </div></blockquote>
 <p><strong>outpath</strong> : str, optional</p>
 <blockquote>
@@ -971,8 +958,8 @@ field output.</p>
 </table>
 <p class="rubric">Notes</p>
 <p>The data is saved using <tt class="docutils literal"><span class="pre">np.savez()</span></tt> into <tt class="docutils literal"><span class="pre">outpath</span></tt> as
-<tt class="docutils literal"><span class="pre">abaqus_output.npz</span></tt> with an accompanying script for plotting
-<tt class="docutils literal"><span class="pre">abaqus_output_plot.py</span></tt>, very handy when Matplotlib is not
+<tt class="docutils literal"><span class="pre">npzname</span></tt> with an accompanying script for plotting
+<tt class="docutils literal"><span class="pre">pyname</span></tt>, very handy when Matplotlib is not
 importable from Abaqus.</p>
 </dd></dl>
 
@@ -3375,13 +3362,13 @@ thickness imperfection in some cases.</p>
         <li class="right" >
           <a href="../index.html" title="Modules"
              >previous</a> |</li>
-        <li><a href="../../index.html">DESICOS 2.0.2 documentation</a> &raquo;</li>
+        <li><a href="../../index.html">DESICOS 2.1.0 documentation</a> &raquo;</li>
           <li><a href="../index.html" >Modules</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2015 Desicos Improved Software Team.
-      Last updated on Oct 21, 2014.
+      Last updated on Oct 24, 2014.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>

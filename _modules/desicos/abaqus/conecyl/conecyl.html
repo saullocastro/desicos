@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>desicos.abaqus.conecyl.conecyl &mdash; DESICOS 2.0.2 documentation</title>
+    <title>desicos.abaqus.conecyl.conecyl &mdash; DESICOS 2.1.0 documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     '2.0.2',
+        VERSION:     '2.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,7 +24,7 @@
     <script type="text/javascript" src="../../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../../../../_static/desicos.png"/>
-    <link rel="top" title="DESICOS 2.0.2 documentation" href="../../../../index.html" />
+    <link rel="top" title="DESICOS 2.1.0 documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" /> 
   </head>
   <body>
@@ -40,7 +40,7 @@
         <li class="right" >
           <a href="../../../../np-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../../index.html">DESICOS 2.0.2 documentation</a> &raquo;</li>
+        <li><a href="../../../../index.html">DESICOS 2.1.0 documentation</a> &raquo;</li>
           <li><a href="../../../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
@@ -62,6 +62,7 @@
 <span class="kn">from</span> <span class="nn">desicos.abaqus.constants</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">desicos.composite.laminate</span> <span class="kn">import</span> <span class="n">read_stack</span>
 <span class="kn">from</span> <span class="nn">desicos.conecylDB</span> <span class="kn">import</span> <span class="n">fetch</span>
+<span class="kn">from</span> <span class="nn">desicos.abaqus.utils</span> <span class="kn">import</span> <span class="n">vec_calc_elem_cg</span>
 
 
 <div class="viewcode-block" id="ConeCyl"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl">[docs]</a><span class="k">class</span> <span class="nc">ConeCyl</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -197,7 +198,8 @@
 <span class="sd">    ``bc_bottom_clamped``  ``bool``, if the bottom edge should be clamped</span>
 
 <span class="sd">                           .. note:: Only applicable when</span>
-<span class="sd">                                     ``cc.resin_ring_bottom==False``</span>
+<span class="sd">                                     ``cc.resin_add_BIR==False and``</span>
+<span class="sd">                                     ``cc.resin_add_BOR==False``</span>
 
 <span class="sd">    ``bc_fix_top_uR``      ``bool``, if the radial displacement should be</span>
 <span class="sd">                           constrained at the top edge (:ref:`cf. Figure 1</span>
@@ -208,17 +210,22 @@
 <span class="sd">    ``bc_top_clamped``     ``bool``, if the top edge should be clamped</span>
 
 <span class="sd">                           .. note:: Only applicable when</span>
-<span class="sd">                                     ``cc.resin_ring_top==False``</span>
+<span class="sd">                                     ``cc.resin_add_TIR==False and ``</span>
+<span class="sd">                                     ``cc.resin_add_TOR==False``</span>
 <span class="sd">    =====================  ==================================================</span>
 
 <span class="sd">    =====================  ==================================================</span>
 <span class="sd">    Resin Rings            Description (:ref:`the attributes are illustrated</span>
 <span class="sd">                           here &lt;resin_rings&gt;`)</span>
 <span class="sd">    =====================  ==================================================</span>
-<span class="sd">    ``resin_ring_bottom``  ``bool``, tells if a resin ring should be added</span>
-<span class="sd">                           to the bottom edge</span>
-<span class="sd">    ``resin_ring_top``     ``bool``, tells if a resin ring should be added</span>
-<span class="sd">                           to the top edge</span>
+<span class="sd">    ``resin_add_BIR``      ``bool``, tells if a resin ring should be added</span>
+<span class="sd">                           to the inner part of the bottom edge</span>
+<span class="sd">    ``resin_add_BOR``      ``bool``, tells if a resin ring should be added</span>
+<span class="sd">                           to the outer part of the bottom edge</span>
+<span class="sd">    ``resin_add_TIR``      ``bool``, tells if a resin ring should be added</span>
+<span class="sd">                           to the inner part of the top edge</span>
+<span class="sd">    ``resin_add_TOR``      ``bool``, tells if a resin ring should be added</span>
+<span class="sd">                           to the outer part of the top edge</span>
 <span class="sd">    ``resin_numel``        Number of solid elements in the resin ring</span>
 <span class="sd">    ``resin_E``            Young modulus of the resin material</span>
 <span class="sd">    ``resin_nu``           Poisson ratio of the resin material</span>
@@ -304,8 +311,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">pts</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="c"># resin rings</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">resin_ring_bottom</span> <span class="o">=</span> <span class="bp">False</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">resin_ring_top</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resin_add_BIR</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resin_add_BOR</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resin_add_TIR</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resin_add_TOR</span> <span class="o">=</span> <span class="bp">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resin_numel</span> <span class="o">=</span> <span class="mi">3</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resin_E</span> <span class="o">=</span> <span class="mf">2454.5336</span> <span class="c"># MPa</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resin_nu</span> <span class="o">=</span> <span class="mf">0.3</span>
@@ -771,41 +780,19 @@
         <span class="k">return</span> <span class="n">_plot</span><span class="o">.</span><span class="n">plot_xy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="ConeCyl.plot_opened"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl.plot_opened">[docs]</a>    <span class="k">def</span> <span class="nf">plot_opened</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">fieldOutputKey</span><span class="p">,</span> <span class="n">vec</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">numel_cir</span><span class="p">,</span>
-            <span class="n">elem_type</span><span class="o">=</span><span class="s">&#39;S4R&#39;</span><span class="p">,</span> <span class="n">ignore</span><span class="o">=</span><span class="p">[],</span> <span class="n">create_npz_only</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+<div class="viewcode-block" id="ConeCyl.plot_opened"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl.plot_opened">[docs]</a>    <span class="k">def</span> <span class="nf">plot_opened</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ignore</span><span class="o">=</span><span class="p">[],</span> <span class="n">create_npz_only</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
             <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">3.3</span><span class="p">,</span> <span class="mf">3.3</span><span class="p">),</span> <span class="n">save_png</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s">&#39;equal&#39;</span><span class="p">,</span> <span class="n">clean</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
-            <span class="n">plot_type</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">outpath</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">pngname</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">npzname</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">pyname</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span>
+            <span class="n">plot_type</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">outpath</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">pngname</span><span class="o">=</span><span class="s">&#39;plot_from_abaqus.png&#39;</span><span class="p">,</span>
+            <span class="n">npzname</span><span class="o">=</span><span class="s">&#39;plot_from_abaqus.npz&#39;</span><span class="p">,</span> <span class="n">pyname</span><span class="o">=</span><span class="s">&#39;plot_from_abaqus.py&#39;</span><span class="p">,</span>
             <span class="n">num_levels</span><span class="o">=</span><span class="mi">400</span><span class="p">):</span>
         <span class="sd">r&quot;&quot;&quot;Print a field output for a cylinder/cone model from Abaqus</span>
 
-<span class="sd">        The ``frame`` and ``nodes`` input types are described in</span>
-<span class="sd">        `Abaqus Scripting Reference Manual</span>
-<span class="sd">        &lt;http://abaqus.me.chalmers.se/v6.11/books/ker/default.htm&gt;`_ and</span>
-<span class="sd">        they can be obtained through::</span>
-
-<span class="sd">            frame = session.odbs[&#39;odb_name.odb&#39;].steps[&#39;step_name&#39;].frames[0]</span>
-<span class="sd">            nodes = mdb.models[&#39;model_name&#39;].parts[&#39;part_name&#39;].nodes</span>
-
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        frame : OdbFrame</span>
-<span class="sd">            The frame from where the field output will be taken from.</span>
-<span class="sd">        fieldOutputKey : str</span>
-<span class="sd">            The field output key to be used. It must be available in</span>
-<span class="sd">            ``frame.fieldOutputs.keys()``. This function was tested with</span>
-<span class="sd">            ``&#39;UT&#39;`` and ``&#39;U&#39;`` only.</span>
-<span class="sd">        vec : str</span>
-<span class="sd">            The displacement vector to be plotted:</span>
-<span class="sd">            ``&#39;u&#39;``, ``&#39;v&#39;`` or ``&#39;w&#39;``.</span>
-<span class="sd">        nodes : MeshNodeArray</span>
-<span class="sd">            The part nodes.</span>
-<span class="sd">        numel_cir : int</span>
-<span class="sd">            The number of elements around the circumference.</span>
-<span class="sd">        elem_type : str, optional</span>
-<span class="sd">            The element type. The elements ``&#39;S4R&#39;, &#39;S4R5&#39;`` where tested.</span>
 <span class="sd">        ignore : list, optional</span>
 <span class="sd">            A list with the node ids to be ignored. It must contain any nodes</span>
-<span class="sd">            outside the mapped mesh included in ``parts[&#39;part_name&#39;].nodes``.</span>
+<span class="sd">            outside the mapped mesh included in</span>
+<span class="sd">            ``parts[&#39;part_name_shell&#39;].nodes``.</span>
 <span class="sd">        create_npz_only : bool, optional</span>
 <span class="sd">            If ``True`` only the data belonging to the desired field output</span>
 <span class="sd">            will be saved in a ``.npz`` file, and no plotting is performed.</span>
@@ -821,7 +808,14 @@
 <span class="sd">        clean : bool, optional</span>
 <span class="sd">            Clean axes ticks, grids, spines etc.</span>
 <span class="sd">        plot_type : int, optional</span>
-<span class="sd">            See :meth:`plot`.</span>
+<span class="sd">            For cylinders only ``4`` and ``5`` are valid.</span>
+<span class="sd">            For cones all the following types can be used:</span>
+
+<span class="sd">            - ``1``: concave up (default for cones)</span>
+<span class="sd">            - ``2``: concave down</span>
+<span class="sd">            - ``3``: stretched closed</span>
+<span class="sd">            - ``4``: stretched opened (`r(z) \times \theta` vs. `H`)</span>
+<span class="sd">            - ``5``: stretched opened (`r_{bottom}` vs. `H`)</span>
 <span class="sd">        outpath : str, optional</span>
 <span class="sd">            Output path where the data from Abaqus and the plots are</span>
 <span class="sd">            saved (see notes).</span>
@@ -844,22 +838,40 @@
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
 <span class="sd">        The data is saved using ``np.savez()`` into ``outpath`` as</span>
-<span class="sd">        ``abaqus_output.npz`` with an accompanying script for plotting</span>
-<span class="sd">        ``abaqus_output_plot.py``, very handy when Matplotlib is not</span>
+<span class="sd">        ``npzname`` with an accompanying script for plotting</span>
+<span class="sd">        ``pyname``, very handy when Matplotlib is not</span>
 <span class="sd">        importable from Abaqus.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">npzname</span><span class="p">:</span>
-            <span class="n">npzname</span> <span class="o">=</span> <span class="s">&#39;abaqus_output.npz&#39;</span>
+        <span class="kn">from</span> <span class="nn">abaqus</span> <span class="kn">import</span> <span class="n">mdb</span>
+        <span class="kn">from</span> <span class="nn">abaqusConstants</span> <span class="kn">import</span> <span class="n">NODAL</span>
+        <span class="kn">import</span> <span class="nn">desicos.abaqus.abaqus_functions</span> <span class="kn">as</span> <span class="nn">abaqus_functions</span>
+
+        <span class="n">part</span> <span class="o">=</span> <span class="n">mdb</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">]</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">part_name_shell</span><span class="p">]</span>
+        <span class="n">elements</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">elements</span>
+        <span class="n">nodes</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">nodes</span>
+        <span class="n">sina</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpharad</span><span class="p">)</span>
+        <span class="n">cosa</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpharad</span><span class="p">)</span>
+
         <span class="n">npzname</span> <span class="o">=</span> <span class="n">npzname</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;.npz&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s">&#39;.npz&#39;</span>
-        <span class="n">npzname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outpath</span><span class="p">,</span> <span class="n">npzname</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">pyname</span><span class="p">:</span>
-            <span class="n">pyname</span> <span class="o">=</span> <span class="s">&#39;abaqus_output_plot.py&#39;</span>
-        <span class="n">pyname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outpath</span><span class="p">,</span> <span class="n">pyname</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">pngname</span><span class="p">:</span>
-            <span class="n">pngname</span> <span class="o">=</span> <span class="s">&#39;plot_from_abaqus.png&#39;</span>
+        <span class="n">pyname</span> <span class="o">=</span> <span class="n">pyname</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;.py&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s">&#39;.py&#39;</span>
         <span class="n">pngname</span> <span class="o">=</span> <span class="n">pngname</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;.png&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s">&#39;.png&#39;</span>
+
+        <span class="n">npzname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outpath</span><span class="p">,</span> <span class="n">npzname</span><span class="p">)</span>
+        <span class="n">pyname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outpath</span><span class="p">,</span> <span class="n">pyname</span><span class="p">)</span>
         <span class="n">pngname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outpath</span><span class="p">,</span> <span class="n">pngname</span><span class="p">)</span>
+
+        <span class="n">odb</span> <span class="o">=</span> <span class="n">abaqus_functions</span><span class="o">.</span><span class="n">get_current_odb</span><span class="p">()</span>
+        <span class="n">odbDisplay</span> <span class="o">=</span> <span class="n">abaqus_functions</span><span class="o">.</span><span class="n">get_current_odbdisplay</span><span class="p">()</span>
+        <span class="n">frame</span> <span class="o">=</span> <span class="n">abaqus_functions</span><span class="o">.</span><span class="n">get_current_frame</span><span class="p">()</span>
+        <span class="n">fieldOutputKey</span> <span class="o">=</span> <span class="n">odbDisplay</span><span class="o">.</span><span class="n">primaryVariable</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">sub_vector</span> <span class="o">=</span> <span class="n">odbDisplay</span><span class="o">.</span><span class="n">primaryVariable</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+
+        <span class="n">valid_plot_types</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">plot_type</span> <span class="ow">in</span> <span class="n">valid_plot_types</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;Valid values for plot_type are:</span><span class="se">\n\t\t</span><span class="s">&#39;</span> <span class="o">+</span>
+                             <span class="s">&#39; or &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">valid_plot_types</span><span class="p">)))</span>
+
         <span class="k">if</span> <span class="ow">not</span> <span class="n">create_npz_only</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
@@ -868,53 +880,122 @@
                 <span class="n">create_npz_only</span> <span class="o">=</span> <span class="bp">True</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">frame_num</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">frame</span><span class="o">.</span><span class="n">frameValue</span><span class="p">)</span>
-            <span class="n">coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">n</span><span class="o">.</span><span class="n">coordinates</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">nodes</span>
-                               <span class="k">if</span> <span class="n">n</span><span class="o">.</span><span class="n">label</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ignore</span><span class="p">])</span>
-            <span class="c">#TODO include more outputs like stress etc</span>
             <span class="n">field</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">fieldOutputs</span><span class="p">[</span><span class="n">fieldOutputKey</span><span class="p">]</span>
+            <span class="n">nodal_out</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">position</span> <span class="o">==</span> <span class="n">NODAL</span><span class="p">:</span>
+                <span class="n">nodal_out</span> <span class="o">=</span> <span class="bp">True</span>
 
-            <span class="n">uvw_rec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">val</span><span class="o">.</span><span class="n">data</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">field</span><span class="o">.</span><span class="n">values</span>
-                <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">val</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span><span class="o">==</span><span class="s">&#39;INST_SHELL&#39;</span><span class="p">])</span>
-            <span class="n">u_rec</span> <span class="o">=</span> <span class="n">uvw_rec</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">v_rec</span> <span class="o">=</span> <span class="n">uvw_rec</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span>
-            <span class="n">w_rec</span> <span class="o">=</span> <span class="n">uvw_rec</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">nodal_out</span><span class="p">:</span>
+                <span class="n">odbSet</span> <span class="o">=</span> <span class="n">odb</span><span class="o">.</span><span class="n">rootAssembly</span><span class="o">.</span><span class="n">nodeSets</span><span class="p">[</span><span class="s">&#39;SHELL_FACES&#39;</span><span class="p">]</span>
+                <span class="n">coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">n</span><span class="o">.</span><span class="n">coordinates</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">])</span>
+                <span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">n</span><span class="o">.</span><span class="n">label</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">])</span>
+                <span class="k">if</span> <span class="n">ignore</span><span class="p">:</span>
+                    <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">in1d</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">ignore</span><span class="p">)</span>
+                    <span class="n">labels</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+                    <span class="n">coords</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+                <span class="n">thetas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">coords</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">coords</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">odbSet</span> <span class="o">=</span> <span class="n">odb</span><span class="o">.</span><span class="n">rootAssembly</span><span class="o">.</span><span class="n">elementSets</span><span class="p">[</span><span class="s">&#39;SHELL_FACES&#39;</span><span class="p">]</span>
+                <span class="n">coords</span> <span class="o">=</span> <span class="n">vec_calc_elem_cg</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span>
+                <span class="n">thetas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">coords</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">coords</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
 
-            <span class="n">res_alpha</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">v_rec</span><span class="p">,</span> <span class="n">u_rec</span><span class="p">)</span>
+            <span class="n">field</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">getSubset</span><span class="p">(</span><span class="n">region</span><span class="o">=</span><span class="n">odbSet</span><span class="p">)</span>
 
-            <span class="n">thetas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">coords</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">coords</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+            <span class="n">attributes</span> <span class="o">=</span> <span class="p">{</span>
+                          <span class="s">&#39;Magnitude&#39;</span><span class="p">:</span> <span class="s">&#39;magnitude&#39;</span><span class="p">,</span>
+                          <span class="s">&#39;Mises&#39;</span><span class="p">:</span> <span class="s">&#39;mises&#39;</span><span class="p">,</span>
+                          <span class="s">&#39;Min. In-Plane Principal&#39;</span><span class="p">:</span> <span class="s">&#39;minInPlanePrincipal&#39;</span><span class="p">,</span>
+                          <span class="s">&#39;Max. In-Plane Principal&#39;</span><span class="p">:</span> <span class="s">&#39;maxInPlanePrincipal&#39;</span><span class="p">,</span>
+                          <span class="s">&#39;Min. Principal&#39;</span><span class="p">:</span> <span class="s">&#39;minPrincipal&#39;</span><span class="p">,</span>
+                          <span class="s">&#39;Mid. Principal&#39;</span><span class="p">:</span> <span class="s">&#39;midPrincipal&#39;</span><span class="p">,</span>
+                          <span class="s">&#39;Max. Principal&#39;</span><span class="p">:</span> <span class="s">&#39;maxPrincipal&#39;</span><span class="p">,</span>
+                          <span class="s">&#39;Out-of-Plane Principal&#39;</span><span class="p">:</span> <span class="s">&#39;outOfPlanePrincipal&#39;</span><span class="p">,</span>
+                          <span class="s">&#39;Tresca&#39;</span><span class="p">:</span> <span class="s">&#39;tresca&#39;</span><span class="p">,</span>
+                          <span class="s">&#39;Third Invariant&#39;</span><span class="p">:</span> <span class="s">&#39;inv3&#39;</span><span class="p">,</span>
+                         <span class="p">}</span>
+            <span class="n">components</span> <span class="o">=</span> <span class="p">{</span>
+                          <span class="s">&#39;S11&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                          <span class="s">&#39;S22&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                          <span class="s">&#39;S33&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+                          <span class="s">&#39;S12&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+                          <span class="s">&#39;SF1&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                          <span class="s">&#39;SF2&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                          <span class="s">&#39;SF3&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+                          <span class="s">&#39;SM2&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                          <span class="s">&#39;SM1&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                          <span class="s">&#39;SM3&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+                         <span class="p">}</span>
 
-            <span class="n">sina</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpharad</span><span class="p">)</span>
-            <span class="n">cosa</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpharad</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">sub_vector</span> <span class="o">==</span> <span class="s">&#39;&#39;</span><span class="p">:</span>
+                <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">val</span><span class="o">.</span><span class="n">data</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">field</span><span class="o">.</span><span class="n">values</span><span class="p">])</span>
 
-            <span class="n">ucyl</span> <span class="o">=</span> <span class="o">-</span><span class="n">w_rec</span>
-            <span class="n">vcyl</span> <span class="o">=</span> <span class="n">v_rec</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">thetas</span><span class="p">)</span> <span class="o">-</span> <span class="n">u_rec</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">thetas</span><span class="p">)</span>
-            <span class="n">wcyl</span> <span class="o">=</span> <span class="n">v_rec</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">thetas</span><span class="p">)</span> <span class="o">+</span> <span class="n">u_rec</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">thetas</span><span class="p">)</span>
-            <span class="n">u</span> <span class="o">=</span> <span class="n">wcyl</span><span class="o">*</span><span class="n">sina</span> <span class="o">+</span> <span class="n">ucyl</span><span class="o">*</span><span class="n">cosa</span>
-            <span class="n">v</span> <span class="o">=</span> <span class="n">vcyl</span>
-            <span class="n">w</span> <span class="o">=</span> <span class="n">wcyl</span><span class="o">*</span><span class="n">cosa</span> <span class="o">-</span> <span class="n">ucyl</span><span class="o">*</span><span class="n">sina</span>
+            <span class="k">elif</span> <span class="n">sub_vector</span> <span class="ow">in</span> <span class="n">attributes</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">attr</span> <span class="o">=</span> <span class="n">attributes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sub_vector</span><span class="p">)</span>
+                <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">getattr</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">field</span><span class="o">.</span><span class="n">values</span><span class="p">])</span>
 
-            <span class="n">displ_vecs</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;u&#39;</span><span class="p">:</span><span class="n">u</span><span class="p">,</span> <span class="s">&#39;v&#39;</span><span class="p">:</span><span class="n">v</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">:</span><span class="n">w</span><span class="p">}</span>
-            <span class="n">uvw</span> <span class="o">=</span> <span class="n">displ_vecs</span><span class="p">[</span><span class="n">vec</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="n">sub_vector</span> <span class="ow">in</span> <span class="n">components</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">pos</span> <span class="o">=</span> <span class="n">components</span><span class="p">[</span><span class="n">sub_vector</span><span class="p">]</span>
+                <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">v</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">field</span><span class="o">.</span><span class="n">values</span><span class="p">])</span>
+
+            <span class="k">elif</span> <span class="n">sub_vector</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;U1&#39;</span><span class="p">,</span> <span class="s">&#39;UT1&#39;</span><span class="p">,</span> <span class="s">&#39;U2&#39;</span><span class="p">,</span> <span class="s">&#39;UT2&#39;</span><span class="p">,</span> <span class="s">&#39;U3&#39;</span><span class="p">,</span> <span class="s">&#39;UT3&#39;</span><span class="p">):</span>
+                <span class="n">uvw_rec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">val</span><span class="o">.</span><span class="n">data</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">field</span><span class="o">.</span><span class="n">values</span><span class="p">])</span>
+
+                <span class="n">u1_rec</span> <span class="o">=</span> <span class="n">uvw_rec</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">u2_rec</span> <span class="o">=</span> <span class="n">uvw_rec</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">u3_rec</span> <span class="o">=</span> <span class="n">uvw_rec</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]</span>
+
+                <span class="n">u3_cyl</span> <span class="o">=</span> <span class="n">u3_rec</span>
+                <span class="n">u2_cyl</span> <span class="o">=</span> <span class="n">u2_rec</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">thetas</span><span class="p">)</span> <span class="o">-</span> <span class="n">u1_rec</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">thetas</span><span class="p">)</span>
+                <span class="n">u1_cyl</span> <span class="o">=</span> <span class="n">u2_rec</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">thetas</span><span class="p">)</span> <span class="o">+</span> <span class="n">u1_rec</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">thetas</span><span class="p">)</span>
+
+                <span class="n">u1_cone</span> <span class="o">=</span> <span class="n">u1_cyl</span><span class="o">*</span><span class="n">cosa</span> <span class="o">+</span> <span class="n">u3_cyl</span><span class="o">*</span><span class="n">sina</span>
+                <span class="n">u2_cone</span> <span class="o">=</span> <span class="n">u2_cyl</span>
+                <span class="n">u3_cone</span> <span class="o">=</span> <span class="n">u3_cyl</span><span class="o">*</span><span class="n">cosa</span> <span class="o">-</span> <span class="n">u1_cyl</span><span class="o">*</span><span class="n">sina</span>
+
+                <span class="n">displ_vecs</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;U1&#39;</span><span class="p">:</span><span class="n">u1_cone</span><span class="p">,</span> <span class="s">&#39;U2&#39;</span><span class="p">:</span><span class="n">u2_cone</span><span class="p">,</span> <span class="s">&#39;U3&#39;</span><span class="p">:</span><span class="n">u3_cone</span><span class="p">,</span>
+                              <span class="s">&#39;UT1&#39;</span><span class="p">:</span><span class="n">u1_cone</span><span class="p">,</span> <span class="s">&#39;UT2&#39;</span><span class="p">:</span><span class="n">u2_cone</span><span class="p">,</span> <span class="s">&#39;UT3&#39;</span><span class="p">:</span><span class="n">u3_cone</span><span class="p">}</span>
+                <span class="n">out</span> <span class="o">=</span> <span class="n">displ_vecs</span><span class="p">[</span><span class="n">sub_vector</span><span class="p">]</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&#39;{0} cannot be used!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">sub_vector</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">nodal_out</span><span class="p">:</span>
+                <span class="n">firstElement</span> <span class="o">=</span> <span class="bp">None</span>
+                <span class="n">numIntPts</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">field</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">firstElement</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                        <span class="n">firstElement</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">elementLabel</span>
+                    <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">elementLabel</span> <span class="o">==</span> <span class="n">firstElement</span><span class="p">:</span>
+                        <span class="n">numIntPts</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">break</span>
+                <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">numIntPts</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="s">&#39;S8&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">elem_type</span> <span class="ow">and</span> <span class="n">nodal_out</span><span class="p">:</span>
+                <span class="n">center_nodes</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">elements</span><span class="p">:</span>
+                    <span class="n">center_nodes</span> <span class="o">+=</span> <span class="n">el</span><span class="o">.</span><span class="n">connectivity</span><span class="p">[</span><span class="mi">4</span><span class="p">:]</span>
+                <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">in1d</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">center_nodes</span><span class="p">)</span>
+                <span class="n">thetas</span> <span class="o">=</span> <span class="n">thetas</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+                <span class="n">coords</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+                <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
 
             <span class="n">zs</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span>
 
-            <span class="n">nt</span> <span class="o">=</span> <span class="n">numel_cir</span>
-            <span class="k">if</span> <span class="s">&#39;S8&#39;</span> <span class="ow">in</span> <span class="n">elem_type</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&#39;{0} elements!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">elem_type</span><span class="p">))</span>
-                <span class="c">#nt *= 2</span>
-
             <span class="c">#first sort</span>
+            <span class="n">nt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">numel_r</span>
             <span class="n">asort</span> <span class="o">=</span> <span class="n">zs</span><span class="o">.</span><span class="n">argsort</span><span class="p">()</span>
             <span class="n">zs</span> <span class="o">=</span> <span class="n">zs</span><span class="p">[</span><span class="n">asort</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">nt</span><span class="p">)</span>
             <span class="n">thetas</span> <span class="o">=</span> <span class="n">thetas</span><span class="p">[</span><span class="n">asort</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">nt</span><span class="p">)</span>
-            <span class="n">uvw</span> <span class="o">=</span> <span class="n">uvw</span><span class="p">[</span><span class="n">asort</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">nt</span><span class="p">)</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="n">asort</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">nt</span><span class="p">)</span>
 
             <span class="c">#second sort</span>
             <span class="n">asort</span> <span class="o">=</span> <span class="n">thetas</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">asorti</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">asort</span><span class="p">):</span>
                 <span class="n">zs</span><span class="p">[</span><span class="n">i</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">zs</span><span class="p">[</span><span class="n">i</span><span class="p">,:][</span><span class="n">asorti</span><span class="p">]</span>
                 <span class="n">thetas</span><span class="p">[</span><span class="n">i</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">thetas</span><span class="p">[</span><span class="n">i</span><span class="p">,:][</span><span class="n">asorti</span><span class="p">]</span>
-                <span class="n">uvw</span><span class="p">[</span><span class="n">i</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">uvw</span><span class="p">[</span><span class="n">i</span><span class="p">,:][</span><span class="n">asorti</span><span class="p">]</span>
+                <span class="n">out</span><span class="p">[</span><span class="n">i</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="n">i</span><span class="p">,:][</span><span class="n">asorti</span><span class="p">]</span>
 
             <span class="n">H</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">H</span>
             <span class="n">rtop</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rtop</span>
@@ -924,9 +1005,9 @@
             <span class="k">def</span> <span class="nf">fr</span><span class="p">(</span><span class="n">z</span><span class="p">):</span>
                 <span class="k">return</span> <span class="n">rbot</span> <span class="o">-</span> <span class="n">z</span><span class="o">*</span><span class="n">sina</span><span class="o">/</span><span class="n">cosa</span>
 
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpharad</span><span class="o">==</span><span class="mf">0.</span><span class="p">:</span>
-                <span class="n">plot_type</span><span class="o">=</span><span class="mi">4</span>
-            <span class="k">if</span> <span class="n">plot_type</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpharad</span> <span class="o">==</span> <span class="mf">0.</span><span class="p">:</span>
+                <span class="n">plot_type</span> <span class="o">=</span> <span class="mi">4</span>
+            <span class="k">if</span> <span class="n">plot_type</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">r_plot</span> <span class="o">=</span> <span class="n">fr</span><span class="p">(</span><span class="n">zs</span><span class="p">)</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpharad</span><span class="o">==</span><span class="mf">0.</span><span class="p">:</span>
                     <span class="n">r_plot_max</span> <span class="o">=</span> <span class="n">L</span>
@@ -934,25 +1015,25 @@
                     <span class="n">r_plot_max</span> <span class="o">=</span> <span class="n">rtop</span><span class="o">/</span><span class="n">sina</span> <span class="o">+</span> <span class="n">L</span>
                 <span class="n">y</span> <span class="o">=</span> <span class="n">r_plot_max</span> <span class="o">-</span> <span class="n">r_plot</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">thetas</span><span class="o">*</span><span class="n">sina</span><span class="p">)</span>
                 <span class="n">x</span> <span class="o">=</span> <span class="n">r_plot</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">thetas</span><span class="o">*</span><span class="n">sina</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">plot_type</span><span class="o">==</span><span class="mi">2</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">plot_type</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
                 <span class="n">r_plot</span> <span class="o">=</span> <span class="n">fr</span><span class="p">(</span><span class="n">zs</span><span class="p">)</span>
                 <span class="n">y</span> <span class="o">=</span> <span class="n">r_plot</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">thetas</span><span class="o">*</span><span class="n">sina</span><span class="p">)</span>
                 <span class="n">x</span> <span class="o">=</span> <span class="n">r_plot</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">thetas</span><span class="o">*</span><span class="n">sina</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">plot_type</span><span class="o">==</span><span class="mi">3</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">plot_type</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
                 <span class="n">r_plot</span> <span class="o">=</span> <span class="n">fr</span><span class="p">(</span><span class="n">zs</span><span class="p">)</span>
                 <span class="n">r_plot_max</span> <span class="o">=</span> <span class="n">rtop</span><span class="o">/</span><span class="n">sina</span> <span class="o">+</span> <span class="n">L</span>
                 <span class="n">y</span> <span class="o">=</span> <span class="n">r_plot_max</span> <span class="o">-</span> <span class="n">r_plot</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">thetas</span><span class="p">)</span>
                 <span class="n">x</span> <span class="o">=</span> <span class="n">r_plot</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">thetas</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">plot_type</span><span class="o">==</span><span class="mi">4</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">plot_type</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
                 <span class="n">x</span> <span class="o">=</span> <span class="n">fr</span><span class="p">(</span><span class="n">zs</span><span class="p">)</span><span class="o">*</span><span class="n">thetas</span>
                 <span class="n">y</span> <span class="o">=</span> <span class="n">zs</span>
-            <span class="k">elif</span> <span class="n">plot_type</span><span class="o">==</span><span class="mi">5</span><span class="p">:</span>
-                <span class="n">x</span> <span class="o">=</span> <span class="n">thetas</span>
+            <span class="k">elif</span> <span class="n">plot_type</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">fr</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">*</span><span class="n">thetas</span>
                 <span class="n">y</span> <span class="o">=</span> <span class="n">zs</span>
 
             <span class="n">cir</span> <span class="o">=</span> <span class="n">x</span>
             <span class="n">mer</span> <span class="o">=</span> <span class="n">y</span>
-            <span class="n">field</span> <span class="o">=</span> <span class="n">uvw</span>
+            <span class="n">field</span> <span class="o">=</span> <span class="n">out</span>
 
             <span class="k">if</span> <span class="ow">not</span> <span class="n">create_npz_only</span><span class="p">:</span>
                 <span class="n">levels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">field</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">num_levels</span><span class="p">)</span>
@@ -983,6 +1064,7 @@
                     <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_ticklabels</span><span class="p">([])</span>
                     <span class="n">ax</span><span class="o">.</span><span class="n">set_frame_on</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">save_png</span><span class="p">:</span>
+                    <span class="n">log</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">)</span>
                     <span class="n">log</span><span class="p">(</span><span class="s">&#39;Plot saved at: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pngname</span><span class="p">))</span>
                     <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
                     <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">pngname</span><span class="p">,</span> <span class="n">transparent</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
@@ -990,7 +1072,7 @@
                                 <span class="n">dpi</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span>
 
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">print</span><span class="p">(</span><span class="s">&#39;Matplotlib cannot be imported from Abaqus&#39;</span><span class="p">)</span>
+                <span class="n">log</span><span class="p">(</span><span class="s">&#39;Matplotlib cannot be imported from Abaqus&#39;</span><span class="p">)</span>
             <span class="n">np</span><span class="o">.</span><span class="n">savez</span><span class="p">(</span><span class="n">npzname</span><span class="p">,</span> <span class="n">cir</span><span class="o">=</span><span class="n">cir</span><span class="p">,</span> <span class="n">mer</span><span class="o">=</span><span class="n">mer</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="n">field</span><span class="p">)</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">pyname</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;import os</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
@@ -1007,7 +1089,7 @@
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;levels = np.linspace(field.min(), field.max(), {0})</span><span class="se">\n</span><span class="s">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                         <span class="n">num_levels</span><span class="p">))</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;ax.contourf(cir, mer, field, levels=levels)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
-                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;ax.grid(b=None)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;ax.grid(False)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;ax.set_aspect(&#39;{0}&#39;)</span><span class="se">\n</span><span class="s">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">aspect</span><span class="p">))</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;ax.xaxis.set_ticks_position(&#39;bottom&#39;)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;ax.yaxis.set_ticks_position(&#39;left&#39;)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
@@ -1026,13 +1108,17 @@
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;plt.savefig(pngname, transparent=True,</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;            bbox_inches=&#39;tight&#39;, pad_inches=0.05, dpi=400)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;plt.show()</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
-            <span class="k">print</span><span class="p">(</span><span class="s">&#39;Output exported to &quot;{0}&quot;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">npzname</span><span class="p">))</span>
-            <span class="k">print</span><span class="p">(</span><span class="s">&#39;Please run the file &quot;{0}&quot; to plot the output&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">log</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">)</span>
+            <span class="n">log</span><span class="p">(</span><span class="s">&#39;Output exported to &quot;{0}&quot;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">npzname</span><span class="p">))</span>
+            <span class="n">log</span><span class="p">(</span><span class="s">&#39;Please run the file &quot;{0}&quot; to plot the output&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                   <span class="n">pyname</span><span class="p">))</span>
+            <span class="n">log</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">)</span>
+
             <span class="k">return</span> <span class="n">cir</span><span class="p">,</span> <span class="n">mer</span><span class="p">,</span> <span class="n">field</span>
+
         <span class="k">except</span><span class="p">:</span>
             <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">()</span>
-            <span class="k">print</span><span class="p">(</span><span class="s">&#39;Opened plot could not be generated! :(&#39;</span><span class="p">)</span>
+            <span class="n">error</span><span class="p">(</span><span class="s">&#39;Opened plot could not be generated! :(&#39;</span><span class="p">)</span>
 
 </div>
     <span class="k">def</span> <span class="nf">check_completed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wait</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">print_found</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
@@ -1261,13 +1347,13 @@
         <li class="right" >
           <a href="../../../../np-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../../index.html">DESICOS 2.0.2 documentation</a> &raquo;</li>
+        <li><a href="../../../../index.html">DESICOS 2.1.0 documentation</a> &raquo;</li>
           <li><a href="../../../index.html" >Module code</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2015 Desicos Improved Software Team.
-      Last updated on Oct 21, 2014.
+      Last updated on Oct 24, 2014.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>

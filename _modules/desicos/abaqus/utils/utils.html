@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>desicos.abaqus.utils.utils &mdash; DESICOS 2.0.2 documentation</title>
+    <title>desicos.abaqus.utils.utils &mdash; DESICOS 2.1.0 documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     '2.0.2',
+        VERSION:     '2.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,7 +24,7 @@
     <script type="text/javascript" src="../../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../../../../_static/desicos.png"/>
-    <link rel="top" title="DESICOS 2.0.2 documentation" href="../../../../index.html" />
+    <link rel="top" title="DESICOS 2.1.0 documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" /> 
   </head>
   <body>
@@ -40,7 +40,7 @@
         <li class="right" >
           <a href="../../../../np-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../../index.html">DESICOS 2.0.2 documentation</a> &raquo;</li>
+        <li><a href="../../../../index.html">DESICOS 2.1.0 documentation</a> &raquo;</li>
           <li><a href="../../../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
@@ -105,8 +105,8 @@
 <span class="sd">        object.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">xlrd</span> <span class="kn">import</span> <span class="n">open_workbook</span>
-    <span class="kn">from</span> <span class="nn">xlutils.copy</span> <span class="kn">import</span> <span class="n">copy</span>
+    <span class="kn">from</span> <span class="nn">desicos.xlrd</span> <span class="kn">import</span> <span class="n">open_workbook</span>
+    <span class="kn">from</span> <span class="nn">desicos.xlutils.copy</span> <span class="kn">import</span> <span class="n">copy</span>
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">excel_name</span><span class="p">):</span>
         <span class="n">rb</span> <span class="o">=</span> <span class="n">open_workbook</span><span class="p">(</span><span class="n">excel_name</span><span class="p">,</span> <span class="n">formatting_info</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
         <span class="n">sheet_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">rb</span><span class="o">.</span><span class="n">sheets</span><span class="p">()]</span>
@@ -121,7 +121,7 @@
                 <span class="n">sheet</span> <span class="o">=</span> <span class="n">book</span><span class="o">.</span><span class="n">add_sheet</span><span class="p">(</span><span class="n">new_sheet_name</span><span class="p">)</span>
                 <span class="k">break</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="kn">from</span> <span class="nn">xlwt</span> <span class="kn">import</span> <span class="n">Workbook</span>
+        <span class="kn">from</span> <span class="nn">desicos.xlwt</span> <span class="kn">import</span> <span class="n">Workbook</span>
         <span class="n">book</span> <span class="o">=</span> <span class="n">Workbook</span><span class="p">()</span>
         <span class="n">sheet</span> <span class="o">=</span> <span class="n">book</span><span class="o">.</span><span class="n">add_sheet</span><span class="p">(</span><span class="n">sheet_name</span> <span class="o">+</span> <span class="s">&#39;_00&#39;</span><span class="p">)</span>
 
@@ -198,9 +198,13 @@
 
 
 <span class="k">def</span> <span class="nf">vec_calc_elem_cg</span><span class="p">(</span><span class="n">elements</span><span class="p">):</span>
-    <span class="n">vec_tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vectorize</span><span class="p">(</span><span class="n">calc_elem_cg</span><span class="p">,</span> <span class="n">otypes</span><span class="o">=</span><span class="p">[</span><span class="nb">object</span><span class="p">])</span>
-
-    <span class="k">return</span>  <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">vec_tmp</span><span class="p">(</span><span class="n">elements</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">FLOAT</span><span class="p">)</span>
+    <span class="n">nodes</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">elements</span><span class="p">:</span>
+        <span class="n">nodes</span> <span class="o">+=</span> <span class="n">elem</span><span class="o">.</span><span class="n">getNodes</span><span class="p">()</span>
+    <span class="n">coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">node</span><span class="o">.</span><span class="n">coordinates</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">])</span>
+    <span class="n">cgs</span> <span class="o">=</span> <span class="n">coords</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">elem</span><span class="o">.</span><span class="n">label</span> <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">elements</span><span class="p">])</span>
+    <span class="k">return</span>  <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">cgs</span><span class="p">,</span> <span class="n">labels</span><span class="p">[:,</span> <span class="bp">None</span><span class="p">]))</span>
 
 
 <span class="k">def</span> <span class="nf">func_sin_cos</span><span class="p">(</span><span class="n">n_terms</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
@@ -325,13 +329,13 @@
         <li class="right" >
           <a href="../../../../np-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../../index.html">DESICOS 2.0.2 documentation</a> &raquo;</li>
+        <li><a href="../../../../index.html">DESICOS 2.1.0 documentation</a> &raquo;</li>
           <li><a href="../../../index.html" >Module code</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2015 Desicos Improved Software Team.
-      Last updated on Oct 21, 2014.
+      Last updated on Oct 24, 2014.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>
