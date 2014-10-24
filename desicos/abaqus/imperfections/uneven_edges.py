@@ -1,4 +1,5 @@
 import numpy as np
+from numpy import deg2rad, rad2deg, pi
 
 from desicos.conecylDB.interpolate import interp
 
@@ -70,7 +71,7 @@ class UnevenBottomEdge(object):
     def rebuild(self):
         cc = self.impconf.conecyl
         self.thetadegs = [s.thetadeg for s in self.shims]
-        self.thetadegs += [s.thetadeg + 360*s.width/(2*np.pi*cc.rbot)
+        self.thetadegs += [s.thetadeg + 360*s.width/(2*pi*cc.rbot)
                            for s in self.shims]
         self.pts = []
 
@@ -189,17 +190,18 @@ class UnevenBottomEdge(object):
             measured_u3s = np.zeros((2, 100))
             measured_u3s[0, :] = np.linspace(0, 360, 100)
         #   calculating u3 for each node
-        u3_nodes = interp(np.rad2deg(theta_nodes), measured_u3s[0, :],
+        u3_nodes = interp(rad2deg(theta_nodes), measured_u3s[0, :],
                 measured_u3s[1, :], period=360)
 
         # contributions from shims
         hs = np.zeros_like(theta_nodes)
         for s in self.shims:
-            thetarad1 = np.deg2rad(s.thetadeg)
-            thetarad2 = np.deg2rad(s.thetadeg + 360*s.width/(2*np.pi*cc.rbot))
-            check = ((theta_nodes >= (thetarad1-0.01))
-                     & (theta_nodes <= (thetarad2+0.01)))
-            hs[check] += s.thick
+            trad1 = deg2rad(s.thetadeg)
+            trad2 = deg2rad(s.thetadeg + 360*s.width/(2*pi*cc.rbot))
+            thetarads = [trad1-0.001, trad1, trad2, trad2+0.001]
+            u3s = [0, s.thick, s.thick, 0]
+            tmp = interp(theta_nodes, thetarads, u3s, period=2*pi)
+            hs += tmp
         u3_nodes += hs
 
         # applying scaling_factor
@@ -299,7 +301,7 @@ class UnevenTopEdge(object):
     def rebuild(self):
         cc = self.impconf.conecyl
         self.thetadegs = [s.thetadeg for s in self.shims]
-        self.thetadegs += [s.thetadeg + 360*s.width/(2*np.pi*cc.rtop)
+        self.thetadegs += [s.thetadeg + 360*s.width/(2*pi*cc.rtop)
                            for s in self.shims]
         self.pts = []
 
@@ -425,21 +427,22 @@ class UnevenTopEdge(object):
             measured_u3s = np.zeros((2, 100))
             measured_u3s[0, :] = np.linspace(0, 360, 100)
         #   calculating u3 for each node
-        u3_nodes = interp(np.rad2deg(theta_nodes), measured_u3s[0, :],
+        u3_nodes = interp(rad2deg(theta_nodes), measured_u3s[0, :],
                 measured_u3s[1, :], period=360)
         #   applying load asymmetry according to cc.betarad and omega
-        betarad = np.deg2rad(cc.betadeg)
-        omegarad = np.deg2rad(cc.omegadeg)
+        betarad = deg2rad(cc.betadeg)
+        omegarad = deg2rad(cc.omegadeg)
         u3_nodes -= cc.rtop*np.tan(betarad)*np.cos(theta_nodes-omegarad)
 
         # contributions from shims
         hs = np.zeros_like(theta_nodes)
         for s in self.shims:
-            thetarad1 = np.deg2rad(s.thetadeg)
-            thetarad2 = np.deg2rad(s.thetadeg + 360*s.width/(2*np.pi*cc.rtop))
-            check = ((theta_nodes >= (thetarad1-0.01))
-                     & (theta_nodes <= (thetarad2+0.01)))
-            hs[check] += s.thick
+            trad1 = deg2rad(s.thetadeg)
+            trad2 = deg2rad(s.thetadeg + 360*s.width/(2*pi*cc.rtop))
+            thetarads = [trad1-0.001, trad1, trad2, trad2+0.001]
+            u3s = [0, s.thick, s.thick, 0]
+            tmp = interp(theta_nodes, thetarads, u3s, period=2*pi)
+            hs += tmp
         u3_nodes -= hs
 
         # applying scaling_factor
