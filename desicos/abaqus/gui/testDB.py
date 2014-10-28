@@ -743,7 +743,8 @@ class TestDB(AFXDataDialog):
         #
         FXTabItem(postBook, 'Opened Contour Plots', None, TAB_LEFT)
         postVF = FXVerticalFrame(postBook, FRAME_RAISED|FRAME_SUNKEN)
-        FXLabel(postVF, 'Plot current field output as an opened cone/cylinder')
+        FXLabel(postVF, 'Plot current field output as an opened cone/cylinder.'
+                + ' NOTE: For cylinders it will always be Plot type 5')
         FXLabel(postVF, '')
         postHF = FXHorizontalFrame(postVF)
         postVF1 = FXVerticalFrame(postHF, opts=LAYOUT_LEFT|LAYOUT_CENTER_Y)
@@ -1115,7 +1116,10 @@ class TestDB(AFXDataDialog):
             sendCommand(command)
             reload(gui_commands)
             gui_commands.load_study_gui(std_name, form)
-            outpath = os.path.join(TMP_DIR, std_name)
+            if std_name:
+                outpath = os.path.join(TMP_DIR, std_name)
+            else:
+                outpath = TMP_DIR
             message('The DESICOS study "%s.study" has been opened.' % outpath)
             message(' ')
             form.loaded_study = True
@@ -1151,7 +1155,10 @@ class TestDB(AFXDataDialog):
             return
         else:
             if not form.post_outpathKw.getValue():
-                outpath = os.path.join(TMP_DIR, std_name)
+                if std_name:
+                    outpath = os.path.join(TMP_DIR, std_name)
+                else:
+                    outpath = TMP_DIR
                 form.post_outpathKw.setValue(outpath)
 
         # post load shortening curve button
