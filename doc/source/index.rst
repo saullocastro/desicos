@@ -20,13 +20,14 @@ Installation
 
 **1) Downloading**
 
-The oficial releases are listed below:
+Latest Release:
 
-- `Version 2.1.0 <https://github.com/desicos/desicos/releases/tag/2.1.0>`_
+- `Version 2.1.1 <https://github.com/desicos/desicos/releases/tag/2.1.1>`_
 
-- `Version 1.0.0 <https://github.com/desicos/desicos/releases/tag/1.0.0>`_
+`Click here <https://github.com/desicos/desicos/releases>`_ to check all
+releases.
 
-The source code repository can be downloaded from `GitHub
+The bleeding edge source code version can be downloaded directly `from GitHub
 <https://github.com/desicos/desicos/archive/master.zip>`_ or cloned using `Git
 <http://git-scm.com/downloads>`_::
 
