@@ -1,4 +1,5 @@
 import os
+from os.path import basename
 import traceback
 import multiprocessing
 
@@ -1025,12 +1026,12 @@ class ConeCyl(object):
                 f.write("import os\n")
                 f.write("import numpy as np\n")
                 f.write("import matplotlib.pyplot as plt\n")
-                f.write("tmp = np.load('abaqus_output.npz')\n")
+                f.write("tmp = np.load(r'{0}')\n".format(basename(npzname)))
+                f.write("pngname = r'{0}'\n".format(basename(pngname)))
                 f.write("cir = tmp['cir']\n")
                 f.write("mer = tmp['mer']\n")
                 f.write("field = tmp['field']\n")
                 f.write("clean = {0}\n".format(clean))
-                f.write("pngname = '{0}'\n".format(pngname))
                 f.write("plt.figure(figsize={0})\n".format(figsize))
                 f.write("ax = plt.gca()\n")
                 f.write("levels = np.linspace(field.min(), field.max(), {0})\n".format(
@@ -1050,8 +1051,6 @@ class ConeCyl(object):
                 f.write("    ax.xaxis.set_ticklabels([])\n")
                 f.write("    ax.yaxis.set_ticklabels([])\n")
                 f.write("    ax.set_frame_on(False)\n")
-                f.write("if not pngname:\n")
-                f.write("    pngname = 'abaqus_result.png'\n")
                 f.write("plt.savefig(pngname, transparent=True,\n")
                 f.write("            bbox_inches='tight', pad_inches=0.05, dpi=400)\n")
                 f.write("plt.show()\n")
