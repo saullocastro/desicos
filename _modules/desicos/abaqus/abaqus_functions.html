@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>desicos.abaqus.abaqus_functions &mdash; DESICOS 2.1.0 documentation</title>
+    <title>desicos.abaqus.abaqus_functions &mdash; DESICOS 2.1.1 documentation</title>
     
     <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.1.0',
+        VERSION:     '2.1.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,7 +24,7 @@
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../../../_static/desicos.png"/>
-    <link rel="top" title="DESICOS 2.1.0 documentation" href="../../../index.html" />
+    <link rel="top" title="DESICOS 2.1.1 documentation" href="../../../index.html" />
     <link rel="up" title="Module code" href="../../index.html" /> 
   </head>
   <body>
@@ -40,7 +40,7 @@
         <li class="right" >
           <a href="../../../np-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">DESICOS 2.1.0 documentation</a> &raquo;</li>
+        <li><a href="../../../index.html">DESICOS 2.1.1 documentation</a> &raquo;</li>
           <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
@@ -63,8 +63,9 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">constants</span> <span class="kn">import</span> <span class="p">(</span><span class="n">TOL</span><span class="p">,</span> <span class="n">FLOAT</span><span class="p">,</span> <span class="n">COLORS</span><span class="p">,</span> <span class="n">COLOR_WHINE</span><span class="p">,</span> <span class="n">COLOR_DARK_BLUE</span><span class="p">,</span>
-        <span class="n">COLOR_BLACK</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">desicos.abaqus.utils.geom</span> <span class="kn">import</span> <span class="n">Plane</span>
+<span class="kn">from</span> <span class="nn">desicos.abaqus.constants</span> <span class="kn">import</span> <span class="p">(</span><span class="n">TOL</span><span class="p">,</span> <span class="n">FLOAT</span><span class="p">,</span> <span class="n">COLORS</span><span class="p">,</span> <span class="n">COLOR_WHINE</span><span class="p">,</span>
+        <span class="n">COLOR_DARK_BLUE</span><span class="p">,</span> <span class="n">COLOR_BLACK</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="configure_session"><a class="viewcode-back" href="../../../modules/abaqus/index.html#desicos.abaqus.abaqus_functions.configure_session">[docs]</a><span class="k">def</span> <span class="nf">configure_session</span><span class="p">():</span>
@@ -147,7 +148,7 @@
                                   <span class="n">minValue</span><span class="o">=-</span><span class="mi">180</span><span class="p">,</span>
                                   <span class="n">maxAutoCompute</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
                                   <span class="n">maxValue</span><span class="o">=</span><span class="mi">185</span><span class="p">)</span>
-        <span class="c">#</span>
+
         <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;FI_HSNFCCRT&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;FI_HSNFTCRT&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span>\
         <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;FI_HSNMCCRT&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;FI_HSNMTCRT&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
             <span class="n">ay</span><span class="o">.</span><span class="n">axisData</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">labelNumDigits</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
@@ -160,7 +161,7 @@
             <span class="n">curve</span><span class="o">.</span><span class="n">curveOptions</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">showSymbol</span><span class="o">=</span><span class="n">OFF</span><span class="p">)</span>
             <span class="n">ay</span><span class="o">.</span><span class="n">titleStyle</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">COLOR_WHINE</span><span class="p">)</span>
             <span class="n">ay</span><span class="o">.</span><span class="n">labelStyle</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">COLOR_WHINE</span><span class="p">)</span>
-        <span class="c">#</span>
+
         <span class="k">if</span> <span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;MS_HSNFCCRT&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;MS_HSNFTCRT&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span>
          <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;MS_HSNMCCRT&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;MS_HSNMTCRT&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span>
          <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;MS_MAX&#39;</span><span class="p">)</span>      <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;MS_MIN&#39;</span><span class="p">)</span>      <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
@@ -387,16 +388,16 @@
                       <span class="n">data</span><span class="o">=</span><span class="p">((</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">tuple_ids</span><span class="p">,</span> <span class="n">tuple_dof_values</span><span class="p">),))</span>
 
 
-<div class="viewcode-block" id="create_sketch_plane"><a class="viewcode-back" href="../../../modules/abaqus/index.html#desicos.abaqus.abaqus_functions.create_sketch_plane">[docs]</a><span class="k">def</span> <span class="nf">create_sketch_plane</span><span class="p">(</span><span class="n">cc</span><span class="p">,</span> <span class="n">entity</span><span class="p">):</span>
+<div class="viewcode-block" id="create_sketch_plane"><a class="viewcode-back" href="../../../modules/abaqus/index.html#desicos.abaqus.abaqus_functions.create_sketch_plane">[docs]</a><span class="k">def</span> <span class="nf">create_sketch_plane</span><span class="p">(</span><span class="n">cc</span><span class="p">,</span> <span class="n">thetadeg</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Creates a sketch plane tangent to the shell surface</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    cc : :class:`.ConeCyl` object</span>
+<span class="sd">        This object contains the necessary geometric data.</span>
 
-<span class="sd">    entity : object</span>
-<span class="sd">        Any object with the attribute: ``thetadeg``, usually a</span>
-<span class="sd">        :class:`.Imperfection`.</span>
+<span class="sd">    thetadeg : float</span>
+<span class="sd">        The angular position of the sketch plane in degrees.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -425,7 +426,7 @@
     <span class="n">p2</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">datums</span><span class="p">[</span><span class="n">pt</span><span class="o">.</span><span class="n">id</span><span class="p">]</span>
     <span class="n">pt</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">DatumPointByCoordinate</span><span class="p">(</span><span class="n">coords</span><span class="o">=</span><span class="p">(</span><span class="n">x3</span><span class="p">,</span> <span class="n">y3</span><span class="p">,</span> <span class="n">z3</span><span class="p">))</span>
     <span class="n">p3</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">datums</span><span class="p">[</span><span class="n">pt</span><span class="o">.</span><span class="n">id</span><span class="p">]</span>
-    <span class="n">plane</span> <span class="o">=</span> <span class="n">geom</span><span class="o">.</span><span class="n">Plane</span><span class="p">()</span>
+    <span class="n">plane</span> <span class="o">=</span> <span class="n">Plane</span><span class="p">()</span>
     <span class="n">plane</span><span class="o">.</span><span class="n">p1</span> <span class="o">=</span> <span class="n">p1</span>
     <span class="n">plane</span><span class="o">.</span><span class="n">p2</span> <span class="o">=</span> <span class="n">p2</span>
     <span class="n">plane</span><span class="o">.</span><span class="n">p3</span> <span class="o">=</span> <span class="n">p3</span>
@@ -433,6 +434,7 @@
     <span class="n">plane</span><span class="o">.</span><span class="n">create</span><span class="p">()</span>
     <span class="n">plane</span><span class="o">.</span><span class="n">thetadeg</span> <span class="o">=</span> <span class="n">entity</span><span class="o">.</span><span class="n">thetadeg</span>
     <span class="n">cc</span><span class="o">.</span><span class="n">sketch_planes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">plane</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="n">plane</span>
 
 </div>
@@ -553,13 +555,13 @@
         <li class="right" >
           <a href="../../../np-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">DESICOS 2.1.0 documentation</a> &raquo;</li>
+        <li><a href="../../../index.html">DESICOS 2.1.1 documentation</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2015 Desicos Improved Software Team.
-      Last updated on Oct 24, 2014.
+      Last updated on Oct 28, 2014.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Abaqus Plug-In (desicos.abaqus) &mdash; DESICOS 2.1.0 documentation</title>
+    <title>Abaqus Plug-In (desicos.abaqus) &mdash; DESICOS 2.1.1 documentation</title>
     
     <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.1.0',
+        VERSION:     '2.1.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,7 +24,7 @@
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../../_static/desicos.png"/>
-    <link rel="top" title="DESICOS 2.1.0 documentation" href="../../index.html" />
+    <link rel="top" title="DESICOS 2.1.1 documentation" href="../../index.html" />
     <link rel="up" title="Modules" href="../index.html" />
     <link rel="prev" title="Modules" href="../index.html" /> 
   </head>
@@ -44,7 +44,7 @@
         <li class="right" >
           <a href="../index.html" title="Modules"
              accesskey="P">previous</a> |</li>
-        <li><a href="../../index.html">DESICOS 2.1.0 documentation</a> &raquo;</li>
+        <li><a href="../../index.html">DESICOS 2.1.1 documentation</a> &raquo;</li>
           <li><a href="../index.html" accesskey="U">Modules</a> &raquo;</li> 
       </ul>
     </div>  
@@ -3192,17 +3192,19 @@ thickness imperfection in some cases.</p>
 
 <dl class="function">
 <dt id="desicos.abaqus.abaqus_functions.create_sketch_plane">
-<tt class="descclassname">desicos.abaqus.abaqus_functions.</tt><tt class="descname">create_sketch_plane</tt><big>(</big><em>cc</em>, <em>entity</em><big>)</big><a class="reference internal" href="../../_modules/desicos/abaqus/abaqus_functions.html#create_sketch_plane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.abaqus_functions.create_sketch_plane" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">desicos.abaqus.abaqus_functions.</tt><tt class="descname">create_sketch_plane</tt><big>(</big><em>cc</em>, <em>thetadeg</em><big>)</big><a class="reference internal" href="../../_modules/desicos/abaqus/abaqus_functions.html#create_sketch_plane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.abaqus_functions.create_sketch_plane" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a sketch plane tangent to the shell surface</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>cc</strong> : <a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl" title="desicos.abaqus.conecyl.conecyl.ConeCyl"><tt class="xref py py-class docutils literal"><span class="pre">ConeCyl</span></tt></a> object</p>
-<p><strong>entity</strong> : object</p>
 <blockquote>
-<div><p>Any object with the attribute: <tt class="docutils literal"><span class="pre">thetadeg</span></tt>, usually a
-<a class="reference internal" href="#desicos.abaqus.imperfections.imperfection.Imperfection" title="desicos.abaqus.imperfections.imperfection.Imperfection"><tt class="xref py py-class docutils literal"><span class="pre">Imperfection</span></tt></a>.</p>
+<div><p>This object contains the necessary geometric data.</p>
+</div></blockquote>
+<p><strong>thetadeg</strong> : float</p>
+<blockquote>
+<div><p>The angular position of the sketch plane in degrees.</p>
 </div></blockquote>
 </td>
 </tr>
@@ -3362,13 +3364,13 @@ thickness imperfection in some cases.</p>
         <li class="right" >
           <a href="../index.html" title="Modules"
              >previous</a> |</li>
-        <li><a href="../../index.html">DESICOS 2.1.0 documentation</a> &raquo;</li>
+        <li><a href="../../index.html">DESICOS 2.1.1 documentation</a> &raquo;</li>
           <li><a href="../index.html" >Modules</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2015 Desicos Improved Software Team.
-      Last updated on Oct 24, 2014.
+      Last updated on Oct 28, 2014.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>
