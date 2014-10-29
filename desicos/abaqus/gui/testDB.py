@@ -366,8 +366,8 @@ class TestDB(AFXDataDialog):
         FXLabel(nlVFc, 'Step Number for Each Load')
         FXLabel(nlVFc, '')
         self.axial_step = AFXTextField(nlVFc, 8, 'Axial loads:', form.axial_stepKw, opts=AFXTEXTFIELD_INTEGER)
-        AFXTextField(nlVFc, 8, 'Perturbation loads:', form.pload_stepKw, opts=AFXTEXTFIELD_INTEGER)
-        AFXTextField(nlVFc, 8, 'Pressure load:', form.pressure_stepKw, opts=AFXTEXTFIELD_INTEGER)
+        self.pload_step = AFXTextField(nlVFc, 8, 'Perturbation loads:', form.pload_stepKw, opts=AFXTEXTFIELD_INTEGER)
+        self.pressure_step = AFXTextField(nlVFc, 8, 'Pressure load:', form.pressure_stepKw, opts=AFXTEXTFIELD_INTEGER)
         # perturbation load step
         FXVerticalSeparator(nlHF)
         nlVF1 = FXVerticalFrame(nlHF)
@@ -1134,7 +1134,8 @@ class TestDB(AFXDataDialog):
         else:
             self.axial_displ.disable()
             self.axial_load.enable()
-            self.axial_step.enable()
+            if form.separate_load_stepsKw.getValue():
+                self.axial_step.enable()
 
         if form.separate_load_stepsKw.getValue():
             self.art_damp1.enable()
@@ -1143,6 +1144,10 @@ class TestDB(AFXDataDialog):
             self.initialInc1.enable()
             self.maxInc1.enable()
             self.maxNumInc1.enable()
+            self.pload_step.enable()
+            self.pressure_step.enable()
+            if not form.displ_controlledKw.getValue():
+                self.axial_step.enable()
         else:
             self.art_damp1.disable()
             self.damp_factor1.disable()
@@ -1150,6 +1155,10 @@ class TestDB(AFXDataDialog):
             self.initialInc1.disable()
             self.maxInc1.disable()
             self.maxNumInc1.disable()
+            self.pload_step.disable()
+            self.pressure_step.disable()
+            self.axial_step.disable()
+
 
         if not form.loaded_study:
             return
