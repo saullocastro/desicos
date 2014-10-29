@@ -18,13 +18,13 @@ def best_fit_cylinder(path, R, H, save=True, errorRtol=1.e-9,
 
     Parameters
     ----------
-    path : str or numpy.ndarray
+    path : str or np.ndarray
         The path of the file containing the data. Can be a full path using
         ``r"C:\Temp\inputfile.txt"``, for example.
         The input file must have 3 columns "`x` `y` `z`" expressed
         in Cartesian coordinates.
 
-        This input can also be a ``numpy.ndarray`` object, with `x`, `y`, `z`
+        This input can also be a ``np.ndarray`` object, with `x`, `y`, `z`
         in each corresponding column.
     R : float
         The nominal radius of the cylinder, used as a first guess for the
@@ -46,11 +46,11 @@ def best_fit_cylinder(path, R, H, save=True, errorRtol=1.e-9,
 
         ``out['R_best_fit']`` : float
             The best-fit radius of the input sample.
-        ``out['T']`` : numpy.ndarray
+        ``out['T']`` : np.ndarray
             The transformation matrix as a `3 \times 4` 2-D array.
-        ``out['input_pts']`` : numpy.ndarray
+        ``out['input_pts']`` : np.ndarray
             The input points in a `3 \times N` 2-D array.
-        ``out['output_pts']`` : numpy.ndarray
+        ``out['output_pts']`` : np.ndarray
             The transformed points in a `3 \times N` 2-D array.
 
     Examples
@@ -204,13 +204,13 @@ def calc_c0(path, m0=40, n0=40, funcnum=2, inverted_z=False,
 
     Parameters
     ----------
-    path : str or numpy.ndarray
+    path : str or np.ndarray
         The path of the file containing the data. Can be a full path using
         ``r"C:\Temp\inputfile.txt"``, for example.
         The input file must have 3 columns "`\theta` `z` `imp`" expressed
         in Cartesian coordinates.
 
-        This input can also be a ``numpy.ndarray`` object, with
+        This input can also be a ``np.ndarray`` object, with
         `\theta`, `z`, `imp` in each corresponding column.
     m0 : int
         Number of terms along the meridian (`z`).
@@ -236,7 +236,7 @@ def calc_c0(path, m0=40, n0=40, funcnum=2, inverted_z=False,
 
     Returns
     -------
-    out : numpy.ndarray
+    out : np.ndarray
         A 1-D array with the best-fit coefficients.
 
     '''
@@ -295,13 +295,13 @@ def calc_c0(path, m0=40, n0=40, funcnum=2, inverted_z=False,
     return c, residues
 
 def fa(m0, n0, zs_norm, thetas, funcnum=2):
-    """Calculates the matrix with the base functions for `w_0`.
+    """Calculates the matrix with the base functions for `w_0`
 
     The calculated matrix is directly used to calculate the `w_0` displacement
-    field, when the corresponding coefficients `c_0` are known, through:
+    field, when the corresponding coefficients `c_0` are known, through::
 
-        >>> a = fa(m0, n0, zs_norm, thetas, funcnum)
-        >>> w0 = a.dot(c0)
+        a = fa(m0, n0, zs_norm, thetas, funcnum)
+        w0 = a.dot(c0)
 
     Parameters
     ----------
@@ -309,10 +309,10 @@ def fa(m0, n0, zs_norm, thetas, funcnum=2):
         The number of terms along the meridian.
     n0 : int
         The number of terms along the circumference.
-    zs_norm : numpy.ndarray
+    zs_norm : np.ndarray
         The normalized `z` coordinates (from 0. to 1.) used to compute
         the base functions.
-    thetas : numpy.ndarray
+    thetas : np.ndarray
         The angles in radians representing the circumferential positions.
     funcnum : int, optional
         The function used for the approximation (see
@@ -330,10 +330,11 @@ def fa(m0, n0, zs_norm, thetas, funcnum=2):
         zs = zs_norm.ravel()
         ts = thetas.ravel()
         n = zs.shape[0]
-        TOL = 1.e-3
-        if abs(zs.min()) > TOL or abs(1 - zs.max()) > TOL:
-            log('zs.min()={0}'.format(zs.min()))
-            log('zs.max()={0}'.format(zs.max()))
+        zsmin = zs.min()
+        zsmax = zs.max()
+        if zsmin < 0 or zsmax > 1:
+            log('zs.min()={0}'.format(zsmin))
+            log('zs.max()={0}'.format(zsmax))
             raise ValueError('The zs array must be normalized!')
         if funcnum==1:
             a = np.array([[sin(i*pi*zs)*sin(j*ts), sin(i*pi*zs)*cos(j*ts)]
@@ -361,12 +362,12 @@ def fw0(m0, n0, c0, xs_norm, ts, funcnum=2):
         The number of terms along the meridian.
     n0 : int
         The number of terms along the circumference.
-    c0 : numpy.ndarray
+    c0 : np.ndarray
         The coefficients of the imperfection pattern.
-    xs_norm : numpy.ndarray
+    xs_norm : np.ndarray
         The meridian coordinate (`x`) normalized to be between ``0.`` and
         ``1.``.
-    ts : numpy.ndarray
+    ts : np.ndarray
         The angles in radians representing the circumferential coordinate
         (`\theta`).
     funcnum : int, optional
