@@ -513,7 +513,7 @@ def fa(m0, n0, zs_norm, thetas, funcnum=2):
     """Calculates the matrix with the base functions for `w_0`
 
     The calculated matrix is directly used to calculate the `w_0` displacement
-    field, when the corresponding coefficients `c_0` are known, through:
+    field, when the corresponding coefficients `c_0` are known, through::
 
         a = fa(m0, n0, zs_norm, thetas, funcnum)
         w0 = a.dot(c0)
