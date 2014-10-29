@@ -12,6 +12,7 @@ defaults = {
             'displ_controlled': True,
             'pressure_load': 0.,
             'pressure_step': 1,
+            'axial_displ': 1.5,
             'axial_load': 0,
             'axial_step': 2,
             'pload_step': 1,
