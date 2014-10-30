@@ -795,7 +795,12 @@ class ConeCyl(object):
         from abaqusConstants import NODAL
         import desicos.abaqus.abaqus_functions as abaqus_functions
 
-        part = mdb.models[self.model_name].parts[self.part_name_shell]
+        if self.model_name in mdb.models.keys():
+            part = mdb.models[self.model_name].parts[self.part_name_shell]
+        else:
+            text = 'The model corresponding to the active odb must be loaded'
+            raise RuntimeError(text)
+
         elements = part.elements
         nodes = part.nodes
         sina = np.sin(self.alpharad)
@@ -1024,8 +1029,11 @@ class ConeCyl(object):
             np.savez(npzname, cir=cir, mer=mer, field=field)
             with open(pyname, 'w') as f:
                 f.write("import os\n")
+                f.write("\n")
                 f.write("import numpy as np\n")
                 f.write("import matplotlib.pyplot as plt\n")
+                f.write("\n")
+                f.write("add_title = False\n")
                 f.write("tmp = np.load(r'{0}')\n".format(basename(npzname)))
                 f.write("pngname = r'{0}'\n".format(basename(pngname)))
                 f.write("cir = tmp['cir']\n")
@@ -1044,7 +1052,8 @@ class ConeCyl(object):
                 f.write("ax.xaxis.set_ticks([{0}, 0, {1}])\n".format(
                         -self.rtop*np.pi, self.rtop*np.pi))
                 f.write("ax.xaxis.set_ticklabels([r'$-\pi$', '$0$', r'$+\pi$'])\n")
-                f.write("ax.set_title(r'Abaqus, $PL=20 N$, $F_{{C}}=50 kN$, $w_{{PL}}=\beta$, $mm$')\n")
+                f.write("if add_title:\n")
+                f.write("    ax.set_title(r'Abaqus, $PL=20 N$, $F_{{C}}=50 kN$, $w_{{PL}}=\beta$, $mm$')\n")
                 f.write("if clean:\n")
                 f.write("    ax.xaxis.set_ticks_position('none')\n")
                 f.write("    ax.yaxis.set_ticks_position('none')\n")

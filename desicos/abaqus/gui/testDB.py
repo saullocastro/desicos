@@ -1159,6 +1159,12 @@ class TestDB(AFXDataDialog):
             self.pressure_step.disable()
             self.axial_step.disable()
 
+        # plot opened conecyl
+        for i, plot_type_button in enumerate(self.plot_type_buttons):
+            if plot_type_button.getState() == STATE_DOWN:
+                plot_type_button.setState(STATE_UP)
+                reload(gui_plot)
+                gui_plot.plot_opened_conecyl(plot_type=(i+1))
 
         if not form.loaded_study:
             return
@@ -1196,21 +1202,13 @@ class TestDB(AFXDataDialog):
             cc_name = form.model_to_postKw.getValue()
             gui_plot.plot_stress_analysis(std_name, cc_name)
 
-        # plot opened conecyl
-        for i, plot_type_button in enumerate(self.plot_type_buttons):
-            if plot_type_button.getState() == STATE_DOWN:
-                plot_type_button.setState(STATE_UP)
-                reload(gui_plot)
-                gui_plot.plot_opened_conecyl(std_name, plot_type=(i+1),
-                        outpath=form.post_outpathKw.getValue())
-
         # run models
         if self.exec_std.getState() == STATE_DOWN:
             self.exec_std.setState(STATE_UP)
             self.logcount = 10000
             ncpus = form.ncpusKw.getValue()
             command = ('import __main__\n' +
-                   '__main__.stds["{0}"].write_inputs()\n'.format(std_name))
+                       '__main__.stds["{0}"].write_inputs()\n'.format(std_name))
             sendCommand(command)
             reload(gui_commands)
             gui_commands.run_study(std_name, ncpus,

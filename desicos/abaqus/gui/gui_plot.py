@@ -36,28 +36,33 @@ def plot_stress_analysis(std_name, cc_name):
     return True
 
 
-def plot_opened_conecyl(std_name, plot_type, outpath):
+def plot_opened_conecyl(plot_type):
     cmdstr  = 'import __main__\n'
     cmdstr += 'import desicos.abaqus.abaqus_functions as abaqus_functions\n'
     cmdstr += 'odbdisplay = abaqus_functions.get_current_odbdisplay()\n'
     cmdstr += 'if odbdisplay:\n'
     cmdstr += '    cc_name = os.path.basename(odbdisplay.name).split(".")[0]\n'
-    cmdstr += '    fieldOutputKey = odbdisplay.primaryVariable[0]\n'
-    cmdstr += '    std = __main__.stds["{0}"]\n'.format(std_name)
+    cmdstr += '    if "_lb" in cc_name:\n'
+    cmdstr += '       std_name = cc_name[:-3]\n'
+    cmdstr += '    else:\n'
+    cmdstr += '       num = len("_model_") + len(cc_name.split("_")[-1])\n'
+    cmdstr += '       std_name = cc_name[:-num]\n'
+    cmdstr += '    if not "stds" in dir(__main__):\n'
+    cmdstr += '        raise RuntimeError("A study must be loaded or created")\n'
+    cmdstr += '    if std_name in __main__.stds.keys():\n'
+    cmdstr += '        std = __main__.stds[std_name]\n'
+    cmdstr += '    else:\n'
+    cmdstr += '        raise RuntimeError("The study corresponding to the active odb must be loaded or created")\n'
     cmdstr += '    for cc in std.ccs:\n'
     cmdstr += '        if cc.model_name == cc_name:\n'
     cmdstr += '            cc.plot_opened(plot_type={0},\n'.format(plot_type)
-    cmdstr += '                           outpath=r"{0}")\n'.format(outpath)
+    cmdstr += '                           outpath=std.study_dir)\n'
     cmdstr += '            break\n'
     cmdstr += 'else:\n'
     cmdstr += '    print("No active odb found!")\n'
-    try:
-        sendCommand(cmdstr)
-    except:
-        sendCommand("print('AbaqusException: VisError: " +
-                    "The current viewport is not associated with " +
-                    "an output database file. " +
-                    "Requested operation cancelled.')")
+    sendCommand(cmdstr)
+
     return True
+
 
 

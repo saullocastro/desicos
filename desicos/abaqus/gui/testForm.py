@@ -325,7 +325,8 @@ class TestForm(AFXForm):
             raise RuntimeError(str(e) + '\n' + msg)
         self.just_created_study = True
         self.loaded_study = True
-        os.chdir(os.path.join(TMP_DIR, self.std_nameKw.getValue()))
+        outpath = os.path.join(TMP_DIR, self.std_nameKw.getValue())
+        os.chdir(outpath)
         self.deactivateIfNeeded()
         return TRUE
         # Since this is a prototype application, just write the command to
