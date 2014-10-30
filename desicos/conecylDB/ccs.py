@@ -976,6 +976,7 @@ include_in_GUI = ['desicos_2014_z36',
                   'geier_1991_z21',
                   'geier_1991_z22',
                   'dinkler_2010',
+                  'castro_2014_c02',
                   ]
 
 include_in_GUI += [k for k in ccs.keys() if 'hilburger' in k]
