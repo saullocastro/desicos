@@ -427,9 +427,11 @@ def get_current_odbdisplay():
 
     viewport = session.viewports[session.currentViewportName]
     try:
-        return viewport.odbDisplay
+        name = viewport.odbDisplay.name
     except:
         return None
+
+    return viewport.odbDisplay
 
 
 def get_current_odb():
