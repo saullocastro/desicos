@@ -131,12 +131,13 @@ def _read_outputs_entity(cc, odb, entity, last_frame=False):
 
 
 def _read_axial_load_displ_history(cc, odb):
-    import utils
-
     step_name = cc.step2Name
     step = odb.steps[step_name]
     historyRegion = step.historyRegions['Node ASSEMBLY.2']
     zdisp_data = historyRegion.historyOutputs['U3'].data
     zload_data = historyRegion.historyOutputs['RF3'].data
-    cc.zdisp = [ value[1] for value in zdisp_data]
-    cc.zload = [-value[1] for value in zload_data]
+    cc.zdisp = [value[1] for value in zdisp_data]
+    if cc.displ_controlled:
+        cc.zload = [-value[1] for value in zload_data]
+    else:
+        cc.zload = [cc.axial_load*value[0] for value in zload_data]
