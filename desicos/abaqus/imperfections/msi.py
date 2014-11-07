@@ -9,6 +9,25 @@ from desicos.abaqus.apply_imperfections import (calc_translations_ABAQUS,
                                                 translate_nodes_ABAQUS,
                                                 translate_nodes_ABAQUS_c0)
 def calc_msi_amplitude(cc):
+    """Calculates the mid-surface imperfection of a ConeCyl model
+
+    .. note:: Must be called from Abaqus.
+
+    Parameters
+    ----------
+    cc : ConeCyl object
+        The :class:`.ConeCyl` object already
+
+    Returns
+    -------
+    max_amp : float
+        The maximum absolute amplitude.
+
+    """
+    if not cc.created_model:
+        warn('The finite element for the input ConeCyl object is not created')
+        return
+
     from abaqus import mdb
 
     part = mdb.models[cc.model_name].parts[cc.part_name_shell]
@@ -212,7 +231,7 @@ class MSI(object):
         if self.created:
             if force:
                 cc = self.impconf.conecyl
-                cc.created = False
+                cc.created_model = False
                 cc.rebuilt = False
                 cc.create_model()
             else:
