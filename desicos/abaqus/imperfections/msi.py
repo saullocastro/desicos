@@ -8,6 +8,19 @@ from desicos.abaqus.constants import *
 from desicos.abaqus.apply_imperfections import (calc_translations_ABAQUS,
                                                 translate_nodes_ABAQUS,
                                                 translate_nodes_ABAQUS_c0)
+def calc_msi_amplitude(cc):
+    from abaqus import mdb
+
+    part = mdb.models[cc.model_name].parts[cc.part_name_shell]
+    coords = np.array([n.coordinates for n in part.nodes])
+    xs, ys, zs = coords.T
+    node_rs = (xs**2 + ys**2)**0.5
+    pts = zs/cc.H
+    rs, zs = cc.r_z_from_pt(pts)
+    amps = (node_rs - rs)/np.cos(cc.alpharad)
+    max_amp = max(np.absolute(amps))
+
+    return max_amp
 
 class MSI(object):
     r"""Mid-Surface Imperfection
@@ -179,19 +192,9 @@ class MSI(object):
 
         """
         if self.created:
-            from abaqus import mdb
-
-            cc = self.impconf.conecyl
-            part = mdb.models[cc.model_name].parts[cc.part_name_shell]
-            coords = np.array([n.coordinates for n in part.nodes])
-            xs, ys, zs = coords.T
-            node_rs = (xs**2 + ys**2)**0.5
-            pts = zs/cc.H
-            rs, zs = cc.r_z_from_pt(pts)
-            amps = (node_rs - rs)/np.cos(cc.alpharad)
-            max_amp = max(np.absolute(amps))
-
-            return max_amp
+            return calc_msi_amplitude(self.impconf.conecyl)
+        else:
+            warn('Mid-surface imperfection not created')
 
     def create(self, force=False):
         """Applies the mid-surface imperfection in the finite element model
