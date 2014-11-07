@@ -51,6 +51,7 @@ def apply_imp_ms(
              imp_ms_power_parameter,
              imp_ms_num_sec_z,
              imp_ms_theta_z_format,
+             imp_ms_rotatedeg,
              ):
     std = __main__.stds[std_name]
     start = 0
@@ -59,11 +60,15 @@ def apply_imp_ms(
     # The nodal_translations stores the first search to save time
     # it starts with None
     nodal_translations = None
-    for i,scaling_factor in enumerate(imp_ms_scalings):
+    for i, scaling_factor in enumerate(imp_ms_scalings):
         scaling_factor = scaling_factor[0]
         if scaling_factor:
             cc = std.ccs[i+start]
-            msi = cc.impconf.add_msi(imp_ms, scaling_factor)
+            msi = cc.impconf.add_msi(
+                                     imp_ms=imp_ms,
+                                     scaling_factor=scaling_factor,
+                                     rotatedeg=imp_ms_rotatedeg,
+                                    )
             cc.impconf.rebuild()
             msi.stretch_H = imp_ms_stretch_H
             msi.use_theta_z_format = imp_ms_theta_z_format
@@ -84,7 +89,8 @@ def apply_imp_t(
              imp_t_ncp,
              imp_t_power_parameter,
              imp_t_num_sec_z,
-             imp_t_theta_z_format):
+             imp_t_theta_z_format,
+             imp_t_rotatedeg):
     std = __main__.stds[std_name]
     start = 0
     if std.calc_Pcr:

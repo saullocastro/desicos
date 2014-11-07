@@ -189,7 +189,6 @@ class TestForm(AFXForm):
         self.imp_ms_num_sec_zKw = AFXFloatKeyword(self.apply_imp_ms, 'imp_ms_num_sec_z', TRUE)
         self.imp_ms_theta_z_formatKw = AFXBoolKeyword(self.apply_imp_ms, 'imp_ms_theta_z_format', TRUE_FALSE, TRUE)
         self.imp_ms_rotatedegKw = AFXFloatKeyword(self.apply_imp_ms, 'imp_ms_rotatedeg', TRUE)
-        self.imp_t_rotatedegKw = AFXFloatKeyword(self.apply_imp_ms, 'imp_t_rotatedeg', TRUE)
         #
         self.imp_t_std_nameKw = AFXStringKeyword(self.apply_imp_t, 'std_name', TRUE)
         self.imp_thickKw = AFXStringKeyword(self.apply_imp_t, 'imp_thick', TRUE)
@@ -200,6 +199,7 @@ class TestForm(AFXForm):
         self.imp_t_power_parameterKw = AFXFloatKeyword(self.apply_imp_t, 'imp_t_power_parameter', TRUE)
         self.imp_t_num_sec_zKw = AFXFloatKeyword(self.apply_imp_t, 'imp_t_num_sec_z', TRUE)
         self.imp_t_theta_z_formatKw = AFXBoolKeyword(self.apply_imp_t, 'imp_t_theta_z_format', TRUE_FALSE, TRUE)
+        self.imp_t_rotatedegKw = AFXFloatKeyword(self.apply_imp_t, 'imp_t_rotatedeg', TRUE)
         self.loaded_study = False
         self.setDefault()
 

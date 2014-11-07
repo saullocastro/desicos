@@ -189,12 +189,12 @@ class MSI(object):
             self.ignore_bot_h = False
             self.ignore_top_h = False
         if self.ignore_bot_h==True:
-            if cc.resin_ring_bottom:
+            if cc.resin_add_BIR or cc.resin_add_BOR:
                 self.ignore_bot_h = cc.resin_bot_h
             else:
                 self.ignore_bot_h = False
         if self.ignore_top_h==True:
-            if cc.resin_ring_top:
+            if cc.resin_add_TIR or cc.resin_add_TOR:
                 self.ignore_top_h = cc.resin_top_h
             else:
                 self.ignore_top_h = False
