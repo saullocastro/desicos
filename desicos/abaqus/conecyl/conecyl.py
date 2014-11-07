@@ -6,7 +6,7 @@ import multiprocessing
 import numpy as np
 
 import desicos.conecylDB as conecylDB
-from desicos.logger import *
+from desicos.logger import log, warn, error
 from desicos.abaqus.constants import *
 from desicos.composite.laminate import read_stack
 from desicos.conecylDB import fetch
@@ -587,7 +587,7 @@ class ConeCyl(object):
         return r, z
 
 
-    def create_model(self):
+    def create_model(self, force=False):
         """Triggers the routines to create the model in Abaqus
 
         The auxiliary module ``_create_model.py`` is used, from where the
@@ -609,8 +609,18 @@ class ConeCyl(object):
                       os.chdir(os.path.join(DAHOME, 'conecyl'))
                       execfile('_create_model.py')
 
+        Parameters
+        ----------
+        force : bool, optional
+            Forces the model creation even if the finite element model
+            corresponding to this :class:`ConeCyl` object already exists.
 
         """
+        if self.created_model and not force:
+            warn('Finite element model already created')
+            warn('use "force=True" in order to proceed', level=1)
+            return
+
         self.rebuild()
         from _create_model import (_create_mesh, _create_load_steps,
                                    _create_loads_bcs)
@@ -618,7 +628,7 @@ class ConeCyl(object):
         _create_mesh(self)
         _create_load_steps(self)
         _create_loads_bcs(self)
-        created_model = True
+        self.created_model = True
 
 
     def write_job(self, submit=False, wait=True, multiple_cores=False):
