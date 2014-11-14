@@ -779,8 +779,9 @@ def _create_mesh(cc):
     if cc.resin_add_TOR:
         ring_names += ['Top_OR']
         resin_hs += [resin_top_h]
-    ra.rotate(instanceList=ring_names, axisPoint=(0.0, 0.0, 0),
-              axisDirection=(1,0,0), angle=90)
+    if ring_names:
+        ra.rotate(instanceList=ring_names, axisPoint=(0.0, 0.0, 0),
+                  axisDirection=(1,0,0), angle=90)
 
     # Distance matrix to find closest node pairs
     shell_nodes = ra.instances[inst_name_shell].nodes
