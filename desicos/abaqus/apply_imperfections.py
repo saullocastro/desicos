@@ -331,7 +331,7 @@ def translate_nodes_ABAQUS(imperfection_file_name,
             ignore_top_h = None
         else:
             log('Applying ignore_top_h: ignoring nodes with z >= {0}'.format(
-                ignore_top_h))
+                H_model - ignore_top_h))
             mask = coords[:, 2] < (H_model - ignore_top_h)
             coords = coords[mask]
             part_nodes = part_nodes[mask]
@@ -522,7 +522,7 @@ def translate_nodes_ABAQUS_c0(m0, n0, c0, funcnum,
             ignore_top_h = None
         else:
             log('Applying ignore_top_h: ignoring nodes with z >= {0}'.format(
-                ignore_top_h))
+                H_model - ignore_top_h))
             mask = coords[:, 2] < (H_model - ignore_top_h)
             coords = coords[mask]
             part_nodes = part_nodes[mask]
