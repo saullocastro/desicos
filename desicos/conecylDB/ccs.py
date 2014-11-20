@@ -446,7 +446,8 @@ ccs = {
         'database': 'desicos',
         },
     'desicos_2014_z36': {
-        'rbot': 400., # outer-surface radius
+        'msi': 'desicos_2014_z36',
+        'rbot': 401.125742327 - 0.75, # mid-surface radius
         'H': 800.,
         'elem_type': 'S8R5',
         'numel_r': 140,
