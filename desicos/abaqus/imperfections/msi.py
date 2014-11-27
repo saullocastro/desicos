@@ -131,9 +131,9 @@ class MSI(object):
                          is the desired behavior
     ``ignore_top_h``     Similar to ``ignore_bot_h``, but for the top edge.
     ``stretch_H``        If the measured imperfection does not cover the whole
-                         height it will be stretched. If ``stretch_H==True``,
-                         ``ignore_bot_h`` and ``ignore_top_h`` are
-                         automatically set to ``False``
+                         height it will be stretched. If
+                         ``stretch_H is True``, ``ignore_bot_h`` and
+                         ``ignore_top_h`` are automatically set to ``False``
     ===================  =====================================================
 
     """
@@ -191,12 +191,12 @@ class MSI(object):
         if self.stretch_H:
             self.ignore_bot_h = False
             self.ignore_top_h = False
-        if self.ignore_bot_h==True:
+        if self.ignore_bot_h is True:
             if cc.resin_add_BIR or cc.resin_add_BOR:
                 self.ignore_bot_h = cc.resin_bot_h
             else:
                 self.ignore_bot_h = False
-        if self.ignore_top_h==True:
+        if self.ignore_top_h is True:
             if cc.resin_add_TIR or cc.resin_add_TOR:
                 self.ignore_top_h = cc.resin_top_h
             else:
@@ -238,7 +238,7 @@ class MSI(object):
             else:
                 return
         cc = self.impconf.conecyl
-        if self.c0==None:
+        if self.c0 is None:
             self.nodal_translations = translate_nodes_ABAQUS(
                               imperfection_file_name = self.path,
                               model_name = cc.model_name,
