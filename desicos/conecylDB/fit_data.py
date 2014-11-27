@@ -609,7 +609,7 @@ def fw0(m0, n0, c0, xs_norm, ts, funcnum=2):
     return w0s.reshape(xs_norm.shape)
 
 
-def calc_T(alphadeg, betadeg, gammadeg, x0, y0, z0):
+def transf_matrix(alphadeg, betadeg, gammadeg, x0, y0, z0):
     r"""Calculates the transformation matrix
 
     The transformation matrix `[T]` is used to transform a set of points
