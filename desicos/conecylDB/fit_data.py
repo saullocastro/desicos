@@ -35,7 +35,7 @@ def best_fit_cylinder(path, H, R_expected=10., save=True, errorRtol=1.e-9,
      \\
               0 &            cos(\alpha) &            sin(\alpha) & \Delta y_0
      \\
-     sin(\beta) & -sin(\alpha)cos(\beta) &  cos(\alpha)cos(\beta) & \Delta x_0
+     sin(\beta) & -sin(\alpha)cos(\beta) &  cos(\alpha)cos(\beta) & \Delta z_0
      \\
            \end{bmatrix}
 
@@ -176,22 +176,10 @@ def best_fit_cylinder(path, H, R_expected=10., save=True, errorRtol=1.e-9,
         a, b, x0, y0, z0 = p
         a %= 2*np.pi
         b %= 2*np.pi
-        if False:
-            #NOTE kept for reference only...
-            g = 0.
-            # rotation in x, y, z
-            T = np.array([[cos(b)*cos(g),
-                           (sin(a)*sin(b)*cos(g) + cos(a)*sin(g)),
-                           (sin(a)*sin(g) - cos(a)*sin(b)*cos(g)), x0],
-                          [-cos(b)*sin(g),
-                           (cos(a)*cos(g) - sin(a)*sin(b)*sin(g)),
-                           (sin(a)*cos(g) + cos(a)*sin(b)*sin(g)), y0],
-                          [sin(b), -sin(a)*cos(b),  cos(a)*cos(b), z0]])
-        if True:
-            # rotation in x, y
-            T = np.array([[cos(b),  sin(a)*sin(b), -cos(a)*sin(b), x0],
-                          [     0,         cos(a),         sin(a), y0],
-                          [sin(b), -sin(a)*cos(b),  cos(a)*cos(b), z0]])
+        # rotation in x, y
+        T = np.array([[cos(b),  sin(a)*sin(b), -cos(a)*sin(b), x0],
+                      [     0,         cos(a),         sin(a), y0],
+                      [sin(b), -sin(a)*cos(b),  cos(a)*cos(b), z0]])
         return T
 
     i = 0
@@ -619,6 +607,64 @@ def fw0(m0, n0, c0, xs_norm, ts, funcnum=2):
         a = fa(m0, n0, xs_norm.ravel(), ts.ravel(), funcnum)
         w0s = a.dot(c0)
     return w0s.reshape(xs_norm.shape)
+
+
+def calc_T(alphadeg, betadeg, gammadeg, x0, y0, z0):
+    r"""Calculates the transformation matrix
+
+    The transformation matrix `[T]` is used to transform a set of points
+    from one coordinate system to another:
+
+    .. math::
+         [T] = \begin{bmatrix}
+         cos(\beta)cos(\gamma) &
+         sin(\alpha)sin(\beta)cos(\gamma) + cos(\alpha)sin(\gamma) &
+         sin(\alpha)sin(\gamma) - cos(\alpha)sin(\beta)cos(\gamma) &
+         \Delta x_0
+         \\
+         -cos(\beta)sin(\gamma) &
+         cos(\alpha)cos(\gamma) - sin(\alpha)sin(\beta)sin(\gamma)&
+         sin(\alpha)cos(\gamma) + cos(\alpha)sin(\beta)sin(\gamma) &
+         \Delta y_0
+         \\
+         sin(\beta) &
+         -sin(\alpha)cos(\beta) &
+         cos(\alpha)cos(\beta) &
+         \Delta z_0
+         \\
+               \end{bmatrix}
+
+    Parameters
+    ----------
+    alphadeg : float
+        Rotation around the x axis, in degrees.
+    betadeg : float
+        Rotation around the y axis, in degrees.
+    gammadeg : float
+        Rotation around the z axis, in degrees.
+    x0 : float
+        Translation along the x axis.
+    y0 : float
+        Translation along the y axis.
+    z0 : float
+        Translation along the z axis.
+
+    Returns
+    -------
+    T : np.ndarray
+        The 3 by 4 transformation matrix.
+
+    """
+    a = deg2rad(alphadeg)
+    b = deg2rad(betadeg)
+    g = deg2rad(gammadeg)
+    return np.array([[cos(b)*cos(g),
+                   (sin(a)*sin(b)*cos(g) + cos(a)*sin(g)),
+                   (sin(a)*sin(g) - cos(a)*sin(b)*cos(g)), x0],
+                  [-cos(b)*sin(g),
+                   (cos(a)*cos(g) - sin(a)*sin(b)*sin(g)),
+                   (sin(a)*cos(g) + cos(a)*sin(b)*sin(g)), y0],
+                  [sin(b), -sin(a)*cos(b),  cos(a)*cos(b), z0]])
 
 
 if __name__=='__main__':
