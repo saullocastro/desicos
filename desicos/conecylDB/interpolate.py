@@ -271,9 +271,9 @@ def interp(x, xp, fp, left=None, right=None, period=None):
         return np.interp(x, xp, fp)
 
 
-def interp_theta_z_imp(data, mesh, semi_angle, H_measured, H_model, R_model,
-        stretch_H=False, z_offset_bot=None, rotatedeg=0., num_sub=200, ncp=5,
-        power_parameter=2, ignore_bot_h=None, ignore_top_h=None):
+def interp_theta_z_imp(data, mesh, alphadeg, H_measured, H_model, R_bottom,
+        stretch_H=False, z_offset_bot=None, rotatedeg=0., num_sub=10, ncp=5,
+        power_parameter=2, ignore_bot_h=None, ignore_top_h=None, T=None):
     r"""Interpolates a data set in the `\theta, z, imp` format
 
     This function uses the inverse-weighted algorithm (:func:`.inv_weighted`).
@@ -283,10 +283,10 @@ def interp_theta_z_imp(data, mesh, semi_angle, H_measured, H_model, R_model,
     data : str or numpy.ndarray, shape (N, 3)
         The data or an array containing the imperfection file in the `(\theta,
         Z, imp)` format.
-    mesh : numpy.ndarray, shape (M, 2)
-        The new coordinates `(\theta, Z)` where the values will be
-        interpolated to.
-    semi_angle : float
+    mesh : numpy.ndarray, shape (M, 3)
+        The mesh coordinates `(x, y, z)` where the values will be interpolated
+        to.
+    alphadeg : float
         The cone semi-vertex angle in degrees.
     H_measured : float
         The total height of the measured test specimen, including eventual
@@ -294,8 +294,8 @@ def interp_theta_z_imp(data, mesh, semi_angle, H_measured, H_model, R_model,
     H_model : float
         The total height of the new model, including eventual resin rings at
         the edges.
-    R_model : float
-        The radius (at the bottom) of the new model.
+    R_bottom : float
+        The radius of the model taken at the bottom edge.
     stretch_H : bool, optional
         Tells if the height of the measured points, which is usually smaller
         than the height of the test specimen, should be stretched to fill
@@ -323,6 +323,9 @@ def interp_theta_z_imp(data, mesh, semi_angle, H_measured, H_model, R_model,
     ignore_top_h : None or float, optional
         Nodes close to the top edge are ignored according to this meridional
         distance.
+    T : None or np.ndarray, optional
+        A transformation matrix (cf. :func:`.transf_matrix`) required when the
+        mesh is not in the :ref:`default coordinate system <figure_conecyl>`.
 
     Returns
     -------
@@ -345,8 +348,8 @@ def interp_theta_z_imp(data, mesh, semi_angle, H_measured, H_model, R_model,
     if data.shape[1] != 3:
         raise ValueError('data must have shape (N, 3)')
 
-    if mesh.shape[1] != 2:
-        raise ValueError('Mesh must have shape (M, 2)')
+    if mesh.shape[1] != 3:
+        raise ValueError('Mesh must have shape (M, 3)')
 
     data3D = np.zeros((data.shape[0], 4), dtype=FLOAT)
 
@@ -356,32 +359,29 @@ def interp_theta_z_imp(data, mesh, semi_angle, H_measured, H_model, R_model,
     z = data[:, 1]
     z *= H_model
 
-    alpharad = np.deg2rad(semi_angle)
+    alpharad = np.deg2rad(alphadeg)
     tana = tan(alpharad)
 
     def r_local(z):
-        return R_model - z*tana
+        return R_bottom - z*tana
 
     data3D[:, 0] = r_local(z)*cos(data[:, 0])
     data3D[:, 1] = r_local(z)*sin(data[:, 0])
     data3D[:, 2] = z
     data3D[:, 3] = data[:, 2]
 
-    coords = np.zeros((mesh.shape[0], 3), dtype=FLOAT)
-    thetas = mesh[:, 0]
-    z = mesh[:, 1]
-    coords[:, 0] = r_local(z)*cos(thetas)
-    coords[:, 1] = r_local(z)*sin(thetas)
-    coords[:, 2] = z
-
-    ans = inv_weighted(data3D, coords, col=2, ncp=ncp, num_sub=num_sub,
+    if T is not None:
+        tmp = np.vstack((mesh.T, np.ones((1, mesh.shape[0]))))
+        mesh = np.dot(T, tmp).T
+        del tmp
+    ans = inv_weighted(data3D, mesh, col=2, ncp=ncp, num_sub=num_sub,
             power_parameter=power_parameter)
 
-    zrav = mesh[:, 1]
+    z_mesh = mesh[:, 2]
     if ignore_bot_h is not None:
-        ans[(zrav - zrav.min()) <= ignore_bot_h] = 0.
+        ans[(z_mesh - z_mesh.min()) <= ignore_bot_h] = 0.
     if ignore_top_h is not None:
-        ans[(zrav.max() - zrav) <= ignore_top_h] = 0.
+        ans[(z_mesh.max() - z_mesh) <= ignore_top_h] = 0.
 
     return ans
 

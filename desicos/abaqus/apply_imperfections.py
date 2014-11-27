@@ -42,7 +42,8 @@ def calc_translations_ABAQUS(imperfection_file_name,
                              use_theta_z_format=True,
                              ignore_bot_h=None,
                              ignore_top_h=None,
-                             sample_size=None):
+                             sample_size=None,
+                             T=None):
     r"""Reads an imperfection file and calculates the nodal translations
 
     Parameters
@@ -101,6 +102,9 @@ def calc_translations_ABAQUS(imperfection_file_name,
     sample_size : int, optional
         If the input file containing the measured data is too large it may be
         required to limit the sample size in order to avoid memory errors.
+    T : None or np.ndarray, optional
+        A transformation matrix (cf. :func:`.transf_matrix`) required when the
+        mesh is not in the :ref:`default coordinate system <figure_conecyl>`.
 
     """
     import abaqus
@@ -111,6 +115,11 @@ def calc_translations_ABAQUS(imperfection_file_name,
     part = mod.parts[part_name]
     part_nodes = np.array(part.nodes)
     coords = np.array([n.coordinates for n in part_nodes], dtype=FLOAT)
+
+    if T is not None:
+        tmp = np.vstack((coords.T, np.ones((1, coords.shape[0]))))
+        coords = np.dot(T, tmp).T
+        del tmp
 
     if ignore_bot_h is not None:
         if ignore_bot_h <= 0:
@@ -167,8 +176,6 @@ def calc_translations_ABAQUS(imperfection_file_name,
         trans[:, 1] = w0*cos(alpharad)*sin(thetas)
         trans[:, 2] = w0*sin(alpharad)
 
-        return trans
-
     else:
         #NOTE perhaps remove this in the future, when the imperfection files
         #     are stored as theta, z, amplitude only
@@ -194,8 +201,9 @@ def calc_translations_ABAQUS(imperfection_file_name,
                                 power_parameter = power_parameter,
                                 num_sec_z = num_sec_z,
                                 sample_size = sample_size)
+        trans = trans[:, :3]
 
-        return trans
+    return trans
 
 
 def translate_nodes_ABAQUS(imperfection_file_name,
@@ -218,7 +226,8 @@ def translate_nodes_ABAQUS(imperfection_file_name,
                            use_theta_z_format=False,
                            ignore_bot_h=None,
                            ignore_top_h=None,
-                           sample_size=None):
+                           sample_size=None,
+                           T=None):
     r"""Translates the nodes in Abaqus based on imperfection data
 
     The imperfection amplitude for each node is calculated using an inversed
@@ -296,6 +305,9 @@ def translate_nodes_ABAQUS(imperfection_file_name,
     sample_size : int, optional
         If the input file containing the measured data is too large it may be
         required to limit the sample size in order to avoid memory errors.
+    T : None or np.ndarray, optional
+        A transformation matrix (cf. :func:`.transf_matrix`) required when the
+        mesh is not in the :ref:`default coordinate system <figure_conecyl>`.
 
     Returns
     -------
@@ -315,6 +327,11 @@ def translate_nodes_ABAQUS(imperfection_file_name,
 
     part_nodes = np.array(part.nodes)
     coords = np.array([n.coordinates for n in part_nodes])
+
+    if T is not None:
+        tmp = np.vstack((coords.T, np.ones((1, coords.shape[0]))))
+        coords = np.dot(T, tmp).T
+        del tmp
 
     if ignore_bot_h is not None:
         if ignore_bot_h <= 0:
@@ -358,7 +375,8 @@ def translate_nodes_ABAQUS(imperfection_file_name,
                         use_theta_z_format = use_theta_z_format,
                         ignore_bot_h = ignore_bot_h,
                         ignore_top_h = ignore_top_h,
-                        sample_size = sample_size)
+                        sample_size = sample_size,
+                        T = T)
 
         else:
             trans = nodal_translations
@@ -370,8 +388,18 @@ def translate_nodes_ABAQUS(imperfection_file_name,
         log('    (using a scaling factor of {0})'.format(scaling_factor))
 
         new_coords = coords + trans*scaling_factor
+
+        if T is not None:
+            Tinv = np.zeros_like(T)
+            Tinv[:3, :3] = T[:3, :3].T
+            Tinv[:, 3] = -T[:, 3]
+            tmp = np.vstack((new_coords.T, np.ones((1, new_coords.shape[0]))))
+            new_coords = np.dot(Tinv, tmp).T
+            del tmp
+
         meshNodeArray = part.nodes.sequenceFromLabels(
                             [n.label for n in part_nodes])
+        new_coords = np.ascontiguousarray(new_coords)
         part.editNode(nodes=part_nodes.tolist(), coordinates=new_coords)
 
         log('Application of new nodal positions finished!')
@@ -410,7 +438,8 @@ def translate_nodes_ABAQUS(imperfection_file_name,
                          use_theta_z_format = use_theta_z_format,
                          ignore_bot_h = ignore_bot_h,
                          ignore_top_h = ignore_top_h,
-                         sample_size = sample_size)
+                         sample_size = sample_size,
+                         T = T)
 
         # applying translations
         viewport = session.viewports[session.currentViewportName]
@@ -418,11 +447,22 @@ def translate_nodes_ABAQUS(imperfection_file_name,
             format(model_name))
         log('    (using a scaling factor of {0})'.format(scaling_factor))
 
-        trans = nodal_translations[:, :3]
+        trans = nodal_translations
+
+        new_coords = coords + trans*scaling_factor
+
+        if T is not None:
+            Tinv = np.zeros_like(T)
+            Tinv[:3, :3] = T[:3, :3].T
+            Tinv[:, 3] = -T[:, 3]
+            tmp = np.vstack((new_coords.T, np.ones((1, new_coords.shape[0]))))
+            new_coords = np.dot(Tinv, tmp).T
+            del tmp
+
         meshNodeArray = part.nodes.sequenceFromLabels(
                             [n.label for n in part_nodes])
-        part.editNode(nodes=meshNodeArray,
-                      coordinates=(coords + trans*scaling_factor))
+        new_coords = np.ascontiguousarray(new_coords)
+        part.editNode(nodes=meshNodeArray, coordinates=new_coords)
 
         log('Application of new nodal positions finished!')
         # regenerating ra
@@ -441,7 +481,8 @@ def translate_nodes_ABAQUS_c0(m0, n0, c0, funcnum,
                               scaling_factor=1.,
                               fem_meridian_bot2top=True,
                               ignore_bot_h=None,
-                              ignore_top_h=None):
+                              ignore_top_h=None,
+                              T=None):
     r"""Translates the nodes in Abaqus based on a Fourier series
 
     The Fourier Series can be a half-sine, half-cosine or a complete Fourier
@@ -481,6 +522,9 @@ def translate_nodes_ABAQUS_c0(m0, n0, c0, funcnum,
         Used to ignore nodes from the bottom resin ring.
     ignore_top_h : None or float, optional
         Used to ignore nodes from the top resin ring.
+    T : None or np.ndarray, optional
+        A transformation matrix (cf. :func:`.transf_matrix`) required when the
+        mesh is not in the :ref:`default coordinate system <figure_conecyl>`.
 
     Returns
     -------
@@ -506,6 +550,11 @@ def translate_nodes_ABAQUS_c0(m0, n0, c0, funcnum,
 
     part_nodes = np.array(part.nodes)
     coords = np.array([n.coordinates for n in part_nodes])
+
+    if T is not None:
+        tmp = np.vstack((coords.T, np.ones((1, coords.shape[0]))))
+        coords = np.dot(T, tmp).T
+        del tmp
 
     if ignore_bot_h is not None:
         if ignore_bot_h <= 0:
@@ -555,8 +604,18 @@ def translate_nodes_ABAQUS_c0(m0, n0, c0, funcnum,
     log('    (using a scaling factor of {0})'.format(scaling_factor))
 
     new_coords = coords + nodal_translations
+
+    if T is not None:
+        Tinv = np.zeros_like(T)
+        Tinv[:3, :3] = T[:3, :3].T
+        Tinv[:, 3] = -T[:, 3]
+        tmp = np.vstack((new_coords.T, np.ones((1, new_coords.shape[0]))))
+        new_coords = np.dot(Tinv, tmp).T
+        del tmp
+
     meshNodeArray = part.nodes.sequenceFromLabels(
                         [n.label for n in part_nodes])
+    new_coords = np.ascontiguousarray(new_coords)
     part.editNode(nodes=meshNodeArray, coordinates=new_coords)
 
     log('Application of new nodal positions finished!')
