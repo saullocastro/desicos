@@ -11,7 +11,7 @@ from random import sample
 import os
 
 import numpy as np
-from numpy import sin, cos, pi
+from numpy import sin, cos, pi, deg2rad
 
 from desicos.logger import *
 from desicos.constants import FLOAT
@@ -413,7 +413,7 @@ def calc_c0(path, m0=50, n0=50, funcnum=2, fem_meridian_bot2top=True,
 
     ts = input_pts[:, 0].copy()
     if rotatedeg:
-        ts += np.deg2rad(rotatedeg)
+        ts += deg2rad(rotatedeg)
     zs = input_pts[:, 1]
     w0pts = input_pts[:, 2]
     #NOTE using `H_measured` did not allow a good fitting result
