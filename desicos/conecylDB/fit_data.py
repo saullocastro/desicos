@@ -613,7 +613,13 @@ def transf_matrix(alphadeg, betadeg, gammadeg, x0, y0, z0):
     r"""Calculates the transformation matrix
 
     The transformation matrix `[T]` is used to transform a set of points
-    from one coordinate system to another:
+    from one coordinate system to another.
+
+    Many routines in the ``desicos`` require a transformation matrix when
+    the coordinate system is different than :ref:`the default one
+    <figure_conecyl>`. In such cases the angles `\alpha, \beta, \gamma` and
+    the translations `\Delta x_0, \Delta y_0, \Delta z_0` represent how
+    the user's coordinate system differs from the default.
 
     .. math::
          [T] = \begin{bmatrix}
