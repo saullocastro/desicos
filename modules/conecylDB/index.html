@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Cone / Cylinder DataBase (desicos.conecylDB) &mdash; DESICOS 2.1.1 documentation</title>
+    <title>Cone / Cylinder DataBase (desicos.conecylDB) &mdash; DESICOS 2.1.2 documentation</title>
     
     <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.1.1',
+        VERSION:     '2.1.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,7 +24,7 @@
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../../_static/desicos.png"/>
-    <link rel="top" title="DESICOS 2.1.1 documentation" href="../../index.html" />
+    <link rel="top" title="DESICOS 2.1.2 documentation" href="../../index.html" />
     <link rel="up" title="Modules" href="../index.html" />
     <link rel="next" title="Tutorials" href="../../tutorials/index.html" /> 
   </head>
@@ -44,7 +44,7 @@
         <li class="right" >
           <a href="../../tutorials/index.html" title="Tutorials"
              accesskey="N">next</a> |</li>
-        <li><a href="../../index.html">DESICOS 2.1.1 documentation</a> &raquo;</li>
+        <li><a href="../../index.html">DESICOS 2.1.2 documentation</a> &raquo;</li>
           <li><a href="../index.html" accesskey="U">Modules</a> &raquo;</li> 
       </ul>
     </div>  
@@ -231,12 +231,12 @@ the raw data to the finite element coordinate system is illustrated below:</p>
 </div>
 <p>This transformation can be represented in matrix form as:</p>
 <div class="math">
-<p><img src="../../_images/math/effe0f4dcfe63338c0e21e4538584b9c6120bbc1.png" alt="[T] = \begin{bmatrix}
+<p><img src="../../_images/math/6af08a6d789de9da00a114322a9a0a74039b7712.png" alt="[T] = \begin{bmatrix}
 cos(\beta) &amp;  sin(\alpha)sin(\beta) &amp; -cos(\alpha)sin(\beta) &amp; \Delta x_0
 \\
          0 &amp;            cos(\alpha) &amp;            sin(\alpha) &amp; \Delta y_0
 \\
-sin(\beta) &amp; -sin(\alpha)cos(\beta) &amp;  cos(\alpha)cos(\beta) &amp; \Delta x_0
+sin(\beta) &amp; -sin(\alpha)cos(\beta) &amp;  cos(\alpha)cos(\beta) &amp; \Delta z_0
 \\
       \end{bmatrix}"/></p>
 </div><p>Note that <strong>five</strong> variables are unknowns:</p>
@@ -503,9 +503,10 @@ computational cost, as proposed by Castro et al. (2014):</p>
 <dd><p>Calculates the matrix with the base functions for <img class="math" src="../../_images/math/05342505402760ddea398cf4ac14bf08993c760f.png" alt="w_0"/></p>
 <p>The calculated matrix is directly used to calculate the <img class="math" src="../../_images/math/05342505402760ddea398cf4ac14bf08993c760f.png" alt="w_0"/> displacement
 field, when the corresponding coefficients <img class="math" src="../../_images/math/90dfad7e3008bd9296795faa349b4446f5e30197.png" alt="c_0"/> are known, through:</p>
-<blockquote>
-<div>a = fa(m0, n0, zs_norm, thetas, funcnum)
-w0 = a.dot(c0)</div></blockquote>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">a</span> <span class="o">=</span> <span class="n">fa</span><span class="p">(</span><span class="n">m0</span><span class="p">,</span> <span class="n">n0</span><span class="p">,</span> <span class="n">zs_norm</span><span class="p">,</span> <span class="n">thetas</span><span class="p">,</span> <span class="n">funcnum</span><span class="p">)</span>
+<span class="n">w0</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">c0</span><span class="p">)</span>
+</pre></div>
+</div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -639,6 +640,74 @@ imperfections.</p>
 </ul>
 </dd></dl>
 
+<dl class="function">
+<dt id="desicos.conecylDB.fit_data.transf_matrix">
+<tt class="descclassname">desicos.conecylDB.fit_data.</tt><tt class="descname">transf_matrix</tt><big>(</big><em>alphadeg</em>, <em>betadeg</em>, <em>gammadeg</em>, <em>x0</em>, <em>y0</em>, <em>z0</em><big>)</big><a class="reference internal" href="../../_modules/desicos/conecylDB/fit_data.html#transf_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.conecylDB.fit_data.transf_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the transformation matrix</p>
+<p>The transformation matrix <img class="math" src="../../_images/math/67a3504d8216387fe6fa8b8b80900da7976e9fa5.png" alt="[T]"/> is used to transform a set of points
+from one coordinate system to another.</p>
+<p>Many routines in the <tt class="docutils literal"><span class="pre">desicos</span></tt> require a transformation matrix when
+the coordinate system is different than <a class="reference internal" href="../abaqus/index.html#figure-conecyl"><em>the default one</em></a>. In such cases the angles <img class="math" src="../../_images/math/fb7317f479bdee3c6b8a6b5856e937afb7a14b87.png" alt="\alpha, \beta, \gamma"/> and
+the translations <img class="math" src="../../_images/math/f59ebec04a775c6e4bcd804402649a0afec85bab.png" alt="\Delta x_0, \Delta y_0, \Delta z_0"/> represent how
+the user&#8217;s coordinate system differs from the default.</p>
+<div class="math">
+<p><img src="../../_images/math/6550507383e73f0c0e960a008375d12f4281ce31.png" alt="[T] = \begin{bmatrix}
+cos(\beta)cos(\gamma) &amp;
+sin(\alpha)sin(\beta)cos(\gamma) + cos(\alpha)sin(\gamma) &amp;
+sin(\alpha)sin(\gamma) - cos(\alpha)sin(\beta)cos(\gamma) &amp;
+\Delta x_0
+\\
+-cos(\beta)sin(\gamma) &amp;
+cos(\alpha)cos(\gamma) - sin(\alpha)sin(\beta)sin(\gamma)&amp;
+sin(\alpha)cos(\gamma) + cos(\alpha)sin(\beta)sin(\gamma) &amp;
+\Delta y_0
+\\
+sin(\beta) &amp;
+-sin(\alpha)cos(\beta) &amp;
+cos(\alpha)cos(\beta) &amp;
+\Delta z_0
+\\
+      \end{bmatrix}"/></p>
+</div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>alphadeg</strong> : float</p>
+<blockquote>
+<div><p>Rotation around the x axis, in degrees.</p>
+</div></blockquote>
+<p><strong>betadeg</strong> : float</p>
+<blockquote>
+<div><p>Rotation around the y axis, in degrees.</p>
+</div></blockquote>
+<p><strong>gammadeg</strong> : float</p>
+<blockquote>
+<div><p>Rotation around the z axis, in degrees.</p>
+</div></blockquote>
+<p><strong>x0</strong> : float</p>
+<blockquote>
+<div><p>Translation along the x axis.</p>
+</div></blockquote>
+<p><strong>y0</strong> : float</p>
+<blockquote>
+<div><p>Translation along the y axis.</p>
+</div></blockquote>
+<p><strong>z0</strong> : float</p>
+<blockquote>
+<div><p>Translation along the z axis.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>T</strong> : np.ndarray</p>
+<blockquote class="last">
+<div><p>The 3 by 4 transformation matrix.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 <span class="target" id="module-desicos.conecylDB.interpolate"></span><div class="section" id="interpolate-desicos-conecyldb-interpolate">
 <h2>Interpolate (<a class="reference internal" href="#module-desicos.conecylDB.interpolate" title="desicos.conecylDB.interpolate"><tt class="xref py py-mod docutils literal"><span class="pre">desicos.conecylDB.interpolate</span></tt></a>)<a class="headerlink" href="#interpolate-desicos-conecyldb-interpolate" title="Permalink to this headline">¶</a></h2>
@@ -744,7 +813,7 @@ A simple check for increasing is:</p>
 
 <dl class="function">
 <dt id="desicos.conecylDB.interpolate.interp_theta_z_imp">
-<tt class="descclassname">desicos.conecylDB.interpolate.</tt><tt class="descname">interp_theta_z_imp</tt><big>(</big><em>data</em>, <em>mesh</em>, <em>semi_angle</em>, <em>H_measured</em>, <em>H_model</em>, <em>R_model</em>, <em>stretch_H=False</em>, <em>z_offset_bot=None</em>, <em>rotatedeg=0.0</em>, <em>num_sub=200</em>, <em>ncp=5</em>, <em>power_parameter=2</em>, <em>ignore_bot_h=None</em>, <em>ignore_top_h=None</em><big>)</big><a class="reference internal" href="../../_modules/desicos/conecylDB/interpolate.html#interp_theta_z_imp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.conecylDB.interpolate.interp_theta_z_imp" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">desicos.conecylDB.interpolate.</tt><tt class="descname">interp_theta_z_imp</tt><big>(</big><em>data</em>, <em>mesh</em>, <em>alphadeg</em>, <em>H_measured</em>, <em>H_model</em>, <em>R_bottom</em>, <em>stretch_H=False</em>, <em>z_offset_bot=None</em>, <em>rotatedeg=0.0</em>, <em>num_sub=10</em>, <em>ncp=5</em>, <em>power_parameter=2</em>, <em>ignore_bot_h=None</em>, <em>ignore_top_h=None</em>, <em>T=None</em><big>)</big><a class="reference internal" href="../../_modules/desicos/conecylDB/interpolate.html#interp_theta_z_imp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.conecylDB.interpolate.interp_theta_z_imp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Interpolates a data set in the <img class="math" src="../../_images/math/c3a7fd3e3545521bb2868d0432e60d90934e72e3.png" alt="\theta, z, imp"/> format</p>
 <p>This function uses the inverse-weighted algorithm (<a class="reference internal" href="#desicos.conecylDB.interpolate.inv_weighted" title="desicos.conecylDB.interpolate.inv_weighted"><tt class="xref py py-func docutils literal"><span class="pre">inv_weighted()</span></tt></a>).</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -756,12 +825,12 @@ A simple check for increasing is:</p>
 <div><p>The data or an array containing the imperfection file in the <img class="math" src="../../_images/math/c56e9d644de88a320dab061f1e91d9a511bc7687.png" alt="(\theta,
 Z, imp)"/> format.</p>
 </div></blockquote>
-<p><strong>mesh</strong> : numpy.ndarray, shape (M, 2)</p>
+<p><strong>mesh</strong> : numpy.ndarray, shape (M, 3)</p>
 <blockquote>
-<div><p>The new coordinates <img class="math" src="../../_images/math/843dfdabec67be21a238069c33e1c8eb2d7777b4.png" alt="(\theta, Z)"/> where the values will be
-interpolated to.</p>
+<div><p>The mesh coordinates <img class="math" src="../../_images/math/3d57531527c3863f804f95152e0bf4af89692242.png" alt="(x, y, z)"/> where the values will be interpolated
+to.</p>
 </div></blockquote>
-<p><strong>semi_angle</strong> : float</p>
+<p><strong>alphadeg</strong> : float</p>
 <blockquote>
 <div><p>The cone semi-vertex angle in degrees.</p>
 </div></blockquote>
@@ -775,9 +844,9 @@ resin rings at the edges.</p>
 <div><p>The total height of the new model, including eventual resin rings at
 the edges.</p>
 </div></blockquote>
-<p><strong>R_model</strong> : float</p>
+<p><strong>R_bottom</strong> : float</p>
 <blockquote>
-<div><p>The radius (at the bottom) of the new model.</p>
+<div><p>The radius of the model taken at the bottom edge.</p>
 </div></blockquote>
 <p><strong>stretch_H</strong> : bool, optional</p>
 <blockquote>
@@ -821,6 +890,11 @@ meridional distance.</p>
 <blockquote>
 <div><p>Nodes close to the top edge are ignored according to this meridional
 distance.</p>
+</div></blockquote>
+<p><strong>T</strong> : None or np.ndarray, optional</p>
+<blockquote>
+<div><p>A transformation matrix (cf. <a class="reference internal" href="#desicos.conecylDB.fit_data.transf_matrix" title="desicos.conecylDB.fit_data.transf_matrix"><tt class="xref py py-func docutils literal"><span class="pre">transf_matrix()</span></tt></a>) required when the
+mesh is not in the <a class="reference internal" href="../abaqus/index.html#figure-conecyl"><em>default coordinate system</em></a>.</p>
 </div></blockquote>
 </td>
 </tr>
@@ -1312,13 +1386,13 @@ and third columns, respectively.</p>
         <li class="right" >
           <a href="../../tutorials/index.html" title="Tutorials"
              >next</a> |</li>
-        <li><a href="../../index.html">DESICOS 2.1.1 documentation</a> &raquo;</li>
+        <li><a href="../../index.html">DESICOS 2.1.2 documentation</a> &raquo;</li>
           <li><a href="../index.html" >Modules</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2015 Desicos Improved Software Team.
-      Last updated on Oct 28, 2014.
+      Last updated on Nov 27, 2014.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>desicos.abaqus.imperfections.msi &mdash; DESICOS 2.1.1 documentation</title>
+    <title>desicos.abaqus.imperfections.msi &mdash; DESICOS 2.1.2 documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     '2.1.1',
+        VERSION:     '2.1.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,7 +24,7 @@
     <script type="text/javascript" src="../../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../../../../_static/desicos.png"/>
-    <link rel="top" title="DESICOS 2.1.1 documentation" href="../../../../index.html" />
+    <link rel="top" title="DESICOS 2.1.2 documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" /> 
   </head>
   <body>
@@ -40,7 +40,7 @@
         <li class="right" >
           <a href="../../../../np-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../../index.html">DESICOS 2.1.1 documentation</a> &raquo;</li>
+        <li><a href="../../../../index.html">DESICOS 2.1.2 documentation</a> &raquo;</li>
           <li><a href="../../../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
@@ -61,7 +61,42 @@
 <span class="kn">from</span> <span class="nn">desicos.abaqus.apply_imperfections</span> <span class="kn">import</span> <span class="p">(</span><span class="n">calc_translations_ABAQUS</span><span class="p">,</span>
                                                 <span class="n">translate_nodes_ABAQUS</span><span class="p">,</span>
                                                 <span class="n">translate_nodes_ABAQUS_c0</span><span class="p">)</span>
+<div class="viewcode-block" id="calc_msi_amplitude"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.msi.calc_msi_amplitude">[docs]</a><span class="k">def</span> <span class="nf">calc_msi_amplitude</span><span class="p">(</span><span class="n">cc</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Calculates the mid-surface imperfection of a ConeCyl model</span>
 
+<span class="sd">    .. note:: Must be called from Abaqus.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cc : ConeCyl object</span>
+<span class="sd">        The :class:`.ConeCyl` object already</span>
+<span class="sd">    force : bool, optional</span>
+<span class="sd">        Does not the check if the finite element model is already created.</span>
+
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    max_amp : float</span>
+<span class="sd">        The maximum absolute amplitude.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">force</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">cc</span><span class="o">.</span><span class="n">created_model</span><span class="p">:</span>
+        <span class="n">warn</span><span class="p">(</span><span class="s">&#39;The finite element for the input ConeCyl object is not created&#39;</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="kn">from</span> <span class="nn">abaqus</span> <span class="kn">import</span> <span class="n">mdb</span>
+
+    <span class="n">part</span> <span class="o">=</span> <span class="n">mdb</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="n">cc</span><span class="o">.</span><span class="n">model_name</span><span class="p">]</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="n">cc</span><span class="o">.</span><span class="n">part_name_shell</span><span class="p">]</span>
+    <span class="n">coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">n</span><span class="o">.</span><span class="n">coordinates</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">part</span><span class="o">.</span><span class="n">nodes</span><span class="p">])</span>
+    <span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">zs</span> <span class="o">=</span> <span class="n">coords</span><span class="o">.</span><span class="n">T</span>
+    <span class="n">node_rs</span> <span class="o">=</span> <span class="p">(</span><span class="n">xs</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">ys</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mf">0.5</span>
+    <span class="n">pts</span> <span class="o">=</span> <span class="n">zs</span><span class="o">/</span><span class="n">cc</span><span class="o">.</span><span class="n">H</span>
+    <span class="n">rs</span><span class="p">,</span> <span class="n">zs</span> <span class="o">=</span> <span class="n">cc</span><span class="o">.</span><span class="n">r_z_from_pt</span><span class="p">(</span><span class="n">pts</span><span class="p">)</span>
+    <span class="n">amps</span> <span class="o">=</span> <span class="p">(</span><span class="n">node_rs</span> <span class="o">-</span> <span class="n">rs</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">cc</span><span class="o">.</span><span class="n">alpharad</span><span class="p">)</span>
+    <span class="n">max_amp</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">absolute</span><span class="p">(</span><span class="n">amps</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">max_amp</span>
+</div>
 <div class="viewcode-block" id="MSI"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.msi.MSI">[docs]</a><span class="k">class</span> <span class="nc">MSI</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">r&quot;&quot;&quot;Mid-Surface Imperfection</span>
 
@@ -149,9 +184,9 @@
 <span class="sd">                         is the desired behavior</span>
 <span class="sd">    ``ignore_top_h``     Similar to ``ignore_bot_h``, but for the top edge.</span>
 <span class="sd">    ``stretch_H``        If the measured imperfection does not cover the whole</span>
-<span class="sd">                         height it will be stretched. If ``stretch_H==True``,</span>
-<span class="sd">                         ``ignore_bot_h`` and ``ignore_top_h`` are</span>
-<span class="sd">                         automatically set to ``False``</span>
+<span class="sd">                         height it will be stretched. If</span>
+<span class="sd">                         ``stretch_H is True``, ``ignore_bot_h`` and</span>
+<span class="sd">                         ``ignore_top_h`` are automatically set to ``False``</span>
 <span class="sd">    ===================  =====================================================</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -209,13 +244,13 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stretch_H</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ignore_bot_h</span> <span class="o">=</span> <span class="bp">False</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ignore_top_h</span> <span class="o">=</span> <span class="bp">False</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ignore_bot_h</span><span class="o">==</span><span class="bp">True</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">cc</span><span class="o">.</span><span class="n">resin_ring_bottom</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ignore_bot_h</span> <span class="ow">is</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">cc</span><span class="o">.</span><span class="n">resin_add_BIR</span> <span class="ow">or</span> <span class="n">cc</span><span class="o">.</span><span class="n">resin_add_BOR</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">ignore_bot_h</span> <span class="o">=</span> <span class="n">cc</span><span class="o">.</span><span class="n">resin_bot_h</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">ignore_bot_h</span> <span class="o">=</span> <span class="bp">False</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ignore_top_h</span><span class="o">==</span><span class="bp">True</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">cc</span><span class="o">.</span><span class="n">resin_ring_top</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ignore_top_h</span> <span class="ow">is</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">cc</span><span class="o">.</span><span class="n">resin_add_TIR</span> <span class="ow">or</span> <span class="n">cc</span><span class="o">.</span><span class="n">resin_add_TOR</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">ignore_top_h</span> <span class="o">=</span> <span class="n">cc</span><span class="o">.</span><span class="n">resin_top_h</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">ignore_top_h</span> <span class="o">=</span> <span class="bp">False</span>
@@ -232,19 +267,9 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">created</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">abaqus</span> <span class="kn">import</span> <span class="n">mdb</span>
-
-            <span class="n">cc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">conecyl</span>
-            <span class="n">part</span> <span class="o">=</span> <span class="n">mdb</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="n">cc</span><span class="o">.</span><span class="n">model_name</span><span class="p">]</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="n">cc</span><span class="o">.</span><span class="n">part_name_shell</span><span class="p">]</span>
-            <span class="n">coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">n</span><span class="o">.</span><span class="n">coordinates</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">part</span><span class="o">.</span><span class="n">nodes</span><span class="p">])</span>
-            <span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">zs</span> <span class="o">=</span> <span class="n">coords</span><span class="o">.</span><span class="n">T</span>
-            <span class="n">node_rs</span> <span class="o">=</span> <span class="p">(</span><span class="n">xs</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">ys</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mf">0.5</span>
-            <span class="n">pts</span> <span class="o">=</span> <span class="n">zs</span><span class="o">/</span><span class="n">cc</span><span class="o">.</span><span class="n">H</span>
-            <span class="n">rs</span><span class="p">,</span> <span class="n">zs</span> <span class="o">=</span> <span class="n">cc</span><span class="o">.</span><span class="n">r_z_from_pt</span><span class="p">(</span><span class="n">pts</span><span class="p">)</span>
-            <span class="n">amps</span> <span class="o">=</span> <span class="p">(</span><span class="n">node_rs</span> <span class="o">-</span> <span class="n">rs</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">cc</span><span class="o">.</span><span class="n">alpharad</span><span class="p">)</span>
-            <span class="n">max_amp</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">absolute</span><span class="p">(</span><span class="n">amps</span><span class="p">))</span>
-
-            <span class="k">return</span> <span class="n">max_amp</span>
+            <span class="k">return</span> <span class="n">calc_msi_amplitude</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">conecyl</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">warn</span><span class="p">(</span><span class="s">&#39;Mid-surface imperfection not created&#39;</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="MSI.create"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.msi.MSI.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Applies the mid-surface imperfection in the finite element model</span>
@@ -261,14 +286,12 @@
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">created</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">force</span><span class="p">:</span>
-                <span class="n">cc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">conecyl</span>
-                <span class="n">cc</span><span class="o">.</span><span class="n">created</span> <span class="o">=</span> <span class="bp">False</span>
-                <span class="n">cc</span><span class="o">.</span><span class="n">rebuilt</span> <span class="o">=</span> <span class="bp">False</span>
-                <span class="n">cc</span><span class="o">.</span><span class="n">create_model</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">created</span> <span class="o">=</span> <span class="bp">False</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">create</span><span class="p">()</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">return</span>
         <span class="n">cc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">conecyl</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">c0</span><span class="o">==</span><span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">c0</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">nodal_translations</span> <span class="o">=</span> <span class="n">translate_nodes_ABAQUS</span><span class="p">(</span>
                               <span class="n">imperfection_file_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span>
                               <span class="n">model_name</span> <span class="o">=</span> <span class="n">cc</span><span class="o">.</span><span class="n">model_name</span><span class="p">,</span>
@@ -368,13 +391,13 @@
         <li class="right" >
           <a href="../../../../np-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../../index.html">DESICOS 2.1.1 documentation</a> &raquo;</li>
+        <li><a href="../../../../index.html">DESICOS 2.1.2 documentation</a> &raquo;</li>
           <li><a href="../../../index.html" >Module code</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2015 Desicos Improved Software Team.
-      Last updated on Oct 28, 2014.
+      Last updated on Nov 27, 2014.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>

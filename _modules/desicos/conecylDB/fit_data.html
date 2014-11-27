@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>desicos.conecylDB.fit_data &mdash; DESICOS 2.1.1 documentation</title>
+    <title>desicos.conecylDB.fit_data &mdash; DESICOS 2.1.2 documentation</title>
     
     <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.1.1',
+        VERSION:     '2.1.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,7 +24,7 @@
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../../../_static/desicos.png"/>
-    <link rel="top" title="DESICOS 2.1.1 documentation" href="../../../index.html" />
+    <link rel="top" title="DESICOS 2.1.2 documentation" href="../../../index.html" />
     <link rel="up" title="Module code" href="../../index.html" /> 
   </head>
   <body>
@@ -40,7 +40,7 @@
         <li class="right" >
           <a href="../../../np-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">DESICOS 2.1.1 documentation</a> &raquo;</li>
+        <li><a href="../../../index.html">DESICOS 2.1.2 documentation</a> &raquo;</li>
           <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
@@ -64,7 +64,7 @@
 <span class="kn">import</span> <span class="nn">os</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">sin</span><span class="p">,</span> <span class="n">cos</span><span class="p">,</span> <span class="n">pi</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">sin</span><span class="p">,</span> <span class="n">cos</span><span class="p">,</span> <span class="n">pi</span><span class="p">,</span> <span class="n">deg2rad</span>
 
 <span class="kn">from</span> <span class="nn">desicos.logger</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">desicos.constants</span> <span class="kn">import</span> <span class="n">FLOAT</span>
@@ -88,7 +88,7 @@
 <span class="sd">     \\</span>
 <span class="sd">              0 &amp;            cos(\alpha) &amp;            sin(\alpha) &amp; \Delta y_0</span>
 <span class="sd">     \\</span>
-<span class="sd">     sin(\beta) &amp; -sin(\alpha)cos(\beta) &amp;  cos(\alpha)cos(\beta) &amp; \Delta x_0</span>
+<span class="sd">     sin(\beta) &amp; -sin(\alpha)cos(\beta) &amp;  cos(\alpha)cos(\beta) &amp; \Delta z_0</span>
 <span class="sd">     \\</span>
 <span class="sd">           \end{bmatrix}</span>
 
@@ -229,22 +229,10 @@
         <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">z0</span> <span class="o">=</span> <span class="n">p</span>
         <span class="n">a</span> <span class="o">%=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>
         <span class="n">b</span> <span class="o">%=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>
-        <span class="k">if</span> <span class="bp">False</span><span class="p">:</span>
-            <span class="c">#NOTE kept for reference only...</span>
-            <span class="n">g</span> <span class="o">=</span> <span class="mf">0.</span>
-            <span class="c"># rotation in x, y, z</span>
-            <span class="n">T</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">cos</span><span class="p">(</span><span class="n">b</span><span class="p">)</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">g</span><span class="p">),</span>
-                           <span class="p">(</span><span class="n">sin</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">b</span><span class="p">)</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="o">+</span> <span class="n">cos</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">g</span><span class="p">)),</span>
-                           <span class="p">(</span><span class="n">sin</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="o">-</span> <span class="n">cos</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">b</span><span class="p">)</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">g</span><span class="p">)),</span> <span class="n">x0</span><span class="p">],</span>
-                          <span class="p">[</span><span class="o">-</span><span class="n">cos</span><span class="p">(</span><span class="n">b</span><span class="p">)</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">g</span><span class="p">),</span>
-                           <span class="p">(</span><span class="n">cos</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="o">-</span> <span class="n">sin</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">b</span><span class="p">)</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">g</span><span class="p">)),</span>
-                           <span class="p">(</span><span class="n">sin</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="o">+</span> <span class="n">cos</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">b</span><span class="p">)</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">g</span><span class="p">)),</span> <span class="n">y0</span><span class="p">],</span>
-                          <span class="p">[</span><span class="n">sin</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="o">-</span><span class="n">sin</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">b</span><span class="p">),</span>  <span class="n">cos</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="n">z0</span><span class="p">]])</span>
-        <span class="k">if</span> <span class="bp">True</span><span class="p">:</span>
-            <span class="c"># rotation in x, y</span>
-            <span class="n">T</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">cos</span><span class="p">(</span><span class="n">b</span><span class="p">),</span>  <span class="n">sin</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="o">-</span><span class="n">cos</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="n">x0</span><span class="p">],</span>
-                          <span class="p">[</span>     <span class="mi">0</span><span class="p">,</span>         <span class="n">cos</span><span class="p">(</span><span class="n">a</span><span class="p">),</span>         <span class="n">sin</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="n">y0</span><span class="p">],</span>
-                          <span class="p">[</span><span class="n">sin</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="o">-</span><span class="n">sin</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">b</span><span class="p">),</span>  <span class="n">cos</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="n">z0</span><span class="p">]])</span>
+        <span class="c"># rotation in x, y</span>
+        <span class="n">T</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">cos</span><span class="p">(</span><span class="n">b</span><span class="p">),</span>  <span class="n">sin</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="o">-</span><span class="n">cos</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="n">x0</span><span class="p">],</span>
+                      <span class="p">[</span>     <span class="mi">0</span><span class="p">,</span>         <span class="n">cos</span><span class="p">(</span><span class="n">a</span><span class="p">),</span>         <span class="n">sin</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="n">y0</span><span class="p">],</span>
+                      <span class="p">[</span><span class="n">sin</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="o">-</span><span class="n">sin</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">b</span><span class="p">),</span>  <span class="n">cos</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="n">z0</span><span class="p">]])</span>
         <span class="k">return</span> <span class="n">T</span>
 
     <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
@@ -478,7 +466,7 @@
 
     <span class="n">ts</span> <span class="o">=</span> <span class="n">input_pts</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">rotatedeg</span><span class="p">:</span>
-        <span class="n">ts</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">rotatedeg</span><span class="p">)</span>
+        <span class="n">ts</span> <span class="o">+=</span> <span class="n">deg2rad</span><span class="p">(</span><span class="n">rotatedeg</span><span class="p">)</span>
     <span class="n">zs</span> <span class="o">=</span> <span class="n">input_pts</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
     <span class="n">w0pts</span> <span class="o">=</span> <span class="n">input_pts</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span>
     <span class="c">#NOTE using `H_measured` did not allow a good fitting result</span>
@@ -566,7 +554,7 @@
     <span class="sd">&quot;&quot;&quot;Calculates the matrix with the base functions for `w_0`</span>
 
 <span class="sd">    The calculated matrix is directly used to calculate the `w_0` displacement</span>
-<span class="sd">    field, when the corresponding coefficients `c_0` are known, through:</span>
+<span class="sd">    field, when the corresponding coefficients `c_0` are known, through::</span>
 
 <span class="sd">        a = fa(m0, n0, zs_norm, thetas, funcnum)</span>
 <span class="sd">        w0 = a.dot(c0)</span>
@@ -674,6 +662,70 @@
     <span class="k">return</span> <span class="n">w0s</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">xs_norm</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 
 </div>
+<div class="viewcode-block" id="transf_matrix"><a class="viewcode-back" href="../../../modules/conecylDB/index.html#desicos.conecylDB.fit_data.transf_matrix">[docs]</a><span class="k">def</span> <span class="nf">transf_matrix</span><span class="p">(</span><span class="n">alphadeg</span><span class="p">,</span> <span class="n">betadeg</span><span class="p">,</span> <span class="n">gammadeg</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">z0</span><span class="p">):</span>
+    <span class="sd">r&quot;&quot;&quot;Calculates the transformation matrix</span>
+
+<span class="sd">    The transformation matrix `[T]` is used to transform a set of points</span>
+<span class="sd">    from one coordinate system to another.</span>
+
+<span class="sd">    Many routines in the ``desicos`` require a transformation matrix when</span>
+<span class="sd">    the coordinate system is different than :ref:`the default one</span>
+<span class="sd">    &lt;figure_conecyl&gt;`. In such cases the angles `\alpha, \beta, \gamma` and</span>
+<span class="sd">    the translations `\Delta x_0, \Delta y_0, \Delta z_0` represent how</span>
+<span class="sd">    the user&#39;s coordinate system differs from the default.</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">         [T] = \begin{bmatrix}</span>
+<span class="sd">         cos(\beta)cos(\gamma) &amp;</span>
+<span class="sd">         sin(\alpha)sin(\beta)cos(\gamma) + cos(\alpha)sin(\gamma) &amp;</span>
+<span class="sd">         sin(\alpha)sin(\gamma) - cos(\alpha)sin(\beta)cos(\gamma) &amp;</span>
+<span class="sd">         \Delta x_0</span>
+<span class="sd">         \\</span>
+<span class="sd">         -cos(\beta)sin(\gamma) &amp;</span>
+<span class="sd">         cos(\alpha)cos(\gamma) - sin(\alpha)sin(\beta)sin(\gamma)&amp;</span>
+<span class="sd">         sin(\alpha)cos(\gamma) + cos(\alpha)sin(\beta)sin(\gamma) &amp;</span>
+<span class="sd">         \Delta y_0</span>
+<span class="sd">         \\</span>
+<span class="sd">         sin(\beta) &amp;</span>
+<span class="sd">         -sin(\alpha)cos(\beta) &amp;</span>
+<span class="sd">         cos(\alpha)cos(\beta) &amp;</span>
+<span class="sd">         \Delta z_0</span>
+<span class="sd">         \\</span>
+<span class="sd">               \end{bmatrix}</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    alphadeg : float</span>
+<span class="sd">        Rotation around the x axis, in degrees.</span>
+<span class="sd">    betadeg : float</span>
+<span class="sd">        Rotation around the y axis, in degrees.</span>
+<span class="sd">    gammadeg : float</span>
+<span class="sd">        Rotation around the z axis, in degrees.</span>
+<span class="sd">    x0 : float</span>
+<span class="sd">        Translation along the x axis.</span>
+<span class="sd">    y0 : float</span>
+<span class="sd">        Translation along the y axis.</span>
+<span class="sd">    z0 : float</span>
+<span class="sd">        Translation along the z axis.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    T : np.ndarray</span>
+<span class="sd">        The 3 by 4 transformation matrix.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">deg2rad</span><span class="p">(</span><span class="n">alphadeg</span><span class="p">)</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">deg2rad</span><span class="p">(</span><span class="n">betadeg</span><span class="p">)</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">deg2rad</span><span class="p">(</span><span class="n">gammadeg</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">cos</span><span class="p">(</span><span class="n">b</span><span class="p">)</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">g</span><span class="p">),</span>
+                   <span class="p">(</span><span class="n">sin</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">b</span><span class="p">)</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="o">+</span> <span class="n">cos</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">g</span><span class="p">)),</span>
+                   <span class="p">(</span><span class="n">sin</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="o">-</span> <span class="n">cos</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">b</span><span class="p">)</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">g</span><span class="p">)),</span> <span class="n">x0</span><span class="p">],</span>
+                  <span class="p">[</span><span class="o">-</span><span class="n">cos</span><span class="p">(</span><span class="n">b</span><span class="p">)</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">g</span><span class="p">),</span>
+                   <span class="p">(</span><span class="n">cos</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="o">-</span> <span class="n">sin</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">b</span><span class="p">)</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">g</span><span class="p">)),</span>
+                   <span class="p">(</span><span class="n">sin</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="o">+</span> <span class="n">cos</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">b</span><span class="p">)</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">g</span><span class="p">)),</span> <span class="n">y0</span><span class="p">],</span>
+                  <span class="p">[</span><span class="n">sin</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="o">-</span><span class="n">sin</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">b</span><span class="p">),</span>  <span class="n">cos</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="n">z0</span><span class="p">]])</span>
+
+</div>
 <span class="k">if</span> <span class="n">__name__</span><span class="o">==</span><span class="s">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
 
@@ -734,13 +786,13 @@
         <li class="right" >
           <a href="../../../np-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">DESICOS 2.1.1 documentation</a> &raquo;</li>
+        <li><a href="../../../index.html">DESICOS 2.1.2 documentation</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2015 Desicos Improved Software Team.
-      Last updated on Oct 28, 2014.
+      Last updated on Nov 27, 2014.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>

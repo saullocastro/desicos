@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>desicos.conecylDB.interpolate &mdash; DESICOS 2.1.1 documentation</title>
+    <title>desicos.conecylDB.interpolate &mdash; DESICOS 2.1.2 documentation</title>
     
     <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.1.1',
+        VERSION:     '2.1.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,7 +24,7 @@
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../../../_static/desicos.png"/>
-    <link rel="top" title="DESICOS 2.1.1 documentation" href="../../../index.html" />
+    <link rel="top" title="DESICOS 2.1.2 documentation" href="../../../index.html" />
     <link rel="up" title="Module code" href="../../index.html" /> 
   </head>
   <body>
@@ -40,7 +40,7 @@
         <li class="right" >
           <a href="../../../np-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">DESICOS 2.1.1 documentation</a> &raquo;</li>
+        <li><a href="../../../index.html">DESICOS 2.1.2 documentation</a> &raquo;</li>
           <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
@@ -324,9 +324,9 @@
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">xp</span><span class="p">,</span> <span class="n">fp</span><span class="p">)</span>
 
 </div>
-<div class="viewcode-block" id="interp_theta_z_imp"><a class="viewcode-back" href="../../../modules/conecylDB/index.html#desicos.conecylDB.interpolate.interp_theta_z_imp">[docs]</a><span class="k">def</span> <span class="nf">interp_theta_z_imp</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">semi_angle</span><span class="p">,</span> <span class="n">H_measured</span><span class="p">,</span> <span class="n">H_model</span><span class="p">,</span> <span class="n">R_model</span><span class="p">,</span>
-        <span class="n">stretch_H</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">z_offset_bot</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">rotatedeg</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">num_sub</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">ncp</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
-        <span class="n">power_parameter</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ignore_bot_h</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">ignore_top_h</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="interp_theta_z_imp"><a class="viewcode-back" href="../../../modules/conecylDB/index.html#desicos.conecylDB.interpolate.interp_theta_z_imp">[docs]</a><span class="k">def</span> <span class="nf">interp_theta_z_imp</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">alphadeg</span><span class="p">,</span> <span class="n">H_measured</span><span class="p">,</span> <span class="n">H_model</span><span class="p">,</span> <span class="n">R_bottom</span><span class="p">,</span>
+        <span class="n">stretch_H</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">z_offset_bot</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">rotatedeg</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">num_sub</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">ncp</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+        <span class="n">power_parameter</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ignore_bot_h</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">ignore_top_h</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">r&quot;&quot;&quot;Interpolates a data set in the `\theta, z, imp` format</span>
 
 <span class="sd">    This function uses the inverse-weighted algorithm (:func:`.inv_weighted`).</span>
@@ -336,10 +336,10 @@
 <span class="sd">    data : str or numpy.ndarray, shape (N, 3)</span>
 <span class="sd">        The data or an array containing the imperfection file in the `(\theta,</span>
 <span class="sd">        Z, imp)` format.</span>
-<span class="sd">    mesh : numpy.ndarray, shape (M, 2)</span>
-<span class="sd">        The new coordinates `(\theta, Z)` where the values will be</span>
-<span class="sd">        interpolated to.</span>
-<span class="sd">    semi_angle : float</span>
+<span class="sd">    mesh : numpy.ndarray, shape (M, 3)</span>
+<span class="sd">        The mesh coordinates `(x, y, z)` where the values will be interpolated</span>
+<span class="sd">        to.</span>
+<span class="sd">    alphadeg : float</span>
 <span class="sd">        The cone semi-vertex angle in degrees.</span>
 <span class="sd">    H_measured : float</span>
 <span class="sd">        The total height of the measured test specimen, including eventual</span>
@@ -347,8 +347,8 @@
 <span class="sd">    H_model : float</span>
 <span class="sd">        The total height of the new model, including eventual resin rings at</span>
 <span class="sd">        the edges.</span>
-<span class="sd">    R_model : float</span>
-<span class="sd">        The radius (at the bottom) of the new model.</span>
+<span class="sd">    R_bottom : float</span>
+<span class="sd">        The radius of the model taken at the bottom edge.</span>
 <span class="sd">    stretch_H : bool, optional</span>
 <span class="sd">        Tells if the height of the measured points, which is usually smaller</span>
 <span class="sd">        than the height of the test specimen, should be stretched to fill</span>
@@ -376,6 +376,9 @@
 <span class="sd">    ignore_top_h : None or float, optional</span>
 <span class="sd">        Nodes close to the top edge are ignored according to this meridional</span>
 <span class="sd">        distance.</span>
+<span class="sd">    T : None or np.ndarray, optional</span>
+<span class="sd">        A transformation matrix (cf. :func:`.transf_matrix`) required when the</span>
+<span class="sd">        mesh is not in the :ref:`default coordinate system &lt;figure_conecyl&gt;`.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -398,8 +401,8 @@
     <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;data must have shape (N, 3)&#39;</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;Mesh must have shape (M, 2)&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;Mesh must have shape (M, 3)&#39;</span><span class="p">)</span>
 
     <span class="n">data3D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">4</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">FLOAT</span><span class="p">)</span>
 
@@ -409,32 +412,29 @@
     <span class="n">z</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
     <span class="n">z</span> <span class="o">*=</span> <span class="n">H_model</span>
 
-    <span class="n">alpharad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">semi_angle</span><span class="p">)</span>
+    <span class="n">alpharad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">alphadeg</span><span class="p">)</span>
     <span class="n">tana</span> <span class="o">=</span> <span class="n">tan</span><span class="p">(</span><span class="n">alpharad</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">r_local</span><span class="p">(</span><span class="n">z</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">R_model</span> <span class="o">-</span> <span class="n">z</span><span class="o">*</span><span class="n">tana</span>
+        <span class="k">return</span> <span class="n">R_bottom</span> <span class="o">-</span> <span class="n">z</span><span class="o">*</span><span class="n">tana</span>
 
     <span class="n">data3D</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">r_local</span><span class="p">(</span><span class="n">z</span><span class="p">)</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
     <span class="n">data3D</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">r_local</span><span class="p">(</span><span class="n">z</span><span class="p">)</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
     <span class="n">data3D</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">z</span>
     <span class="n">data3D</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span>
 
-    <span class="n">coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">mesh</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">3</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">FLOAT</span><span class="p">)</span>
-    <span class="n">thetas</span> <span class="o">=</span> <span class="n">mesh</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
-    <span class="n">z</span> <span class="o">=</span> <span class="n">mesh</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
-    <span class="n">coords</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">r_local</span><span class="p">(</span><span class="n">z</span><span class="p">)</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">thetas</span><span class="p">)</span>
-    <span class="n">coords</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">r_local</span><span class="p">(</span><span class="n">z</span><span class="p">)</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">thetas</span><span class="p">)</span>
-    <span class="n">coords</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">z</span>
-
-    <span class="n">ans</span> <span class="o">=</span> <span class="n">inv_weighted</span><span class="p">(</span><span class="n">data3D</span><span class="p">,</span> <span class="n">coords</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ncp</span><span class="o">=</span><span class="n">ncp</span><span class="p">,</span> <span class="n">num_sub</span><span class="o">=</span><span class="n">num_sub</span><span class="p">,</span>
+    <span class="k">if</span> <span class="n">T</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">mesh</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))))</span>
+        <span class="n">mesh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">tmp</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+        <span class="k">del</span> <span class="n">tmp</span>
+    <span class="n">ans</span> <span class="o">=</span> <span class="n">inv_weighted</span><span class="p">(</span><span class="n">data3D</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ncp</span><span class="o">=</span><span class="n">ncp</span><span class="p">,</span> <span class="n">num_sub</span><span class="o">=</span><span class="n">num_sub</span><span class="p">,</span>
             <span class="n">power_parameter</span><span class="o">=</span><span class="n">power_parameter</span><span class="p">)</span>
 
-    <span class="n">zrav</span> <span class="o">=</span> <span class="n">mesh</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">z_mesh</span> <span class="o">=</span> <span class="n">mesh</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">ignore_bot_h</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-        <span class="n">ans</span><span class="p">[(</span><span class="n">zrav</span> <span class="o">-</span> <span class="n">zrav</span><span class="o">.</span><span class="n">min</span><span class="p">())</span> <span class="o">&lt;=</span> <span class="n">ignore_bot_h</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>
+        <span class="n">ans</span><span class="p">[(</span><span class="n">z_mesh</span> <span class="o">-</span> <span class="n">z_mesh</span><span class="o">.</span><span class="n">min</span><span class="p">())</span> <span class="o">&lt;=</span> <span class="n">ignore_bot_h</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>
     <span class="k">if</span> <span class="n">ignore_top_h</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-        <span class="n">ans</span><span class="p">[(</span><span class="n">zrav</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">zrav</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">ignore_top_h</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>
+        <span class="n">ans</span><span class="p">[(</span><span class="n">z_mesh</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">z_mesh</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">ignore_top_h</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>
 
     <span class="k">return</span> <span class="n">ans</span>
 
@@ -503,13 +503,13 @@
         <li class="right" >
           <a href="../../../np-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">DESICOS 2.1.1 documentation</a> &raquo;</li>
+        <li><a href="../../../index.html">DESICOS 2.1.2 documentation</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2015 Desicos Improved Software Team.
-      Last updated on Oct 28, 2014.
+      Last updated on Nov 27, 2014.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>

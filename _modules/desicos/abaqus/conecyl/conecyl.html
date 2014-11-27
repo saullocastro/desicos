@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>desicos.abaqus.conecyl.conecyl &mdash; DESICOS 2.1.1 documentation</title>
+    <title>desicos.abaqus.conecyl.conecyl &mdash; DESICOS 2.1.2 documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     '2.1.1',
+        VERSION:     '2.1.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,7 +24,7 @@
     <script type="text/javascript" src="../../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../../../../_static/desicos.png"/>
-    <link rel="top" title="DESICOS 2.1.1 documentation" href="../../../../index.html" />
+    <link rel="top" title="DESICOS 2.1.2 documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" /> 
   </head>
   <body>
@@ -40,7 +40,7 @@
         <li class="right" >
           <a href="../../../../np-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../../index.html">DESICOS 2.1.1 documentation</a> &raquo;</li>
+        <li><a href="../../../../index.html">DESICOS 2.1.2 documentation</a> &raquo;</li>
           <li><a href="../../../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
@@ -59,7 +59,7 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
 <span class="kn">import</span> <span class="nn">desicos.conecylDB</span> <span class="kn">as</span> <span class="nn">conecylDB</span>
-<span class="kn">from</span> <span class="nn">desicos.logger</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">desicos.logger</span> <span class="kn">import</span> <span class="n">log</span><span class="p">,</span> <span class="n">warn</span><span class="p">,</span> <span class="n">error</span>
 <span class="kn">from</span> <span class="nn">desicos.abaqus.constants</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">desicos.composite.laminate</span> <span class="kn">import</span> <span class="n">read_stack</span>
 <span class="kn">from</span> <span class="nn">desicos.conecylDB</span> <span class="kn">import</span> <span class="n">fetch</span>
@@ -640,7 +640,7 @@
         <span class="k">return</span> <span class="n">r</span><span class="p">,</span> <span class="n">z</span>
 
 </div>
-<div class="viewcode-block" id="ConeCyl.create_model"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl.create_model">[docs]</a>    <span class="k">def</span> <span class="nf">create_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ConeCyl.create_model"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl.create_model">[docs]</a>    <span class="k">def</span> <span class="nf">create_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Triggers the routines to create the model in Abaqus</span>
 
 <span class="sd">        The auxiliary module ``_create_model.py`` is used, from where the</span>
@@ -662,8 +662,18 @@
 <span class="sd">                      os.chdir(os.path.join(DAHOME, &#39;conecyl&#39;))</span>
 <span class="sd">                      execfile(&#39;_create_model.py&#39;)</span>
 
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        force : bool, optional</span>
+<span class="sd">            Forces the model creation even if the finite element model</span>
+<span class="sd">            corresponding to this :class:`ConeCyl` object already exists.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">created_model</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">force</span><span class="p">:</span>
+            <span class="n">warn</span><span class="p">(</span><span class="s">&#39;Finite element model already created&#39;</span><span class="p">)</span>
+            <span class="n">warn</span><span class="p">(</span><span class="s">&#39;use &quot;force=True&quot; in order to proceed&#39;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">return</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">rebuild</span><span class="p">()</span>
         <span class="kn">from</span> <span class="nn">_create_model</span> <span class="kn">import</span> <span class="p">(</span><span class="n">_create_mesh</span><span class="p">,</span> <span class="n">_create_load_steps</span><span class="p">,</span>
                                    <span class="n">_create_loads_bcs</span><span class="p">)</span>
@@ -671,7 +681,7 @@
         <span class="n">_create_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">_create_load_steps</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">_create_loads_bcs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="n">created_model</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">created_model</span> <span class="o">=</span> <span class="bp">True</span>
 
 </div>
 <div class="viewcode-block" id="ConeCyl.write_job"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl.write_job">[docs]</a>    <span class="k">def</span> <span class="nf">write_job</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">submit</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">wait</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">multiple_cores</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
@@ -848,7 +858,12 @@
         <span class="kn">from</span> <span class="nn">abaqusConstants</span> <span class="kn">import</span> <span class="n">NODAL</span>
         <span class="kn">import</span> <span class="nn">desicos.abaqus.abaqus_functions</span> <span class="kn">as</span> <span class="nn">abaqus_functions</span>
 
-        <span class="n">part</span> <span class="o">=</span> <span class="n">mdb</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">]</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">part_name_shell</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="ow">in</span> <span class="n">mdb</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">part</span> <span class="o">=</span> <span class="n">mdb</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">]</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">part_name_shell</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="s">&#39;The model corresponding to the active odb must be loaded&#39;</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
         <span class="n">elements</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">elements</span>
         <span class="n">nodes</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">nodes</span>
         <span class="n">sina</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpharad</span><span class="p">)</span>
@@ -1077,8 +1092,11 @@
             <span class="n">np</span><span class="o">.</span><span class="n">savez</span><span class="p">(</span><span class="n">npzname</span><span class="p">,</span> <span class="n">cir</span><span class="o">=</span><span class="n">cir</span><span class="p">,</span> <span class="n">mer</span><span class="o">=</span><span class="n">mer</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="n">field</span><span class="p">)</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">pyname</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;import os</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;import numpy as np</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;import matplotlib.pyplot as plt</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;add_title = False</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;tmp = np.load(r&#39;{0}&#39;)</span><span class="se">\n</span><span class="s">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">basename</span><span class="p">(</span><span class="n">npzname</span><span class="p">)))</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;pngname = r&#39;{0}&#39;</span><span class="se">\n</span><span class="s">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">basename</span><span class="p">(</span><span class="n">pngname</span><span class="p">)))</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;cir = tmp[&#39;cir&#39;]</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
@@ -1097,7 +1115,8 @@
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;ax.xaxis.set_ticks([{0}, 0, {1}])</span><span class="se">\n</span><span class="s">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                         <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">rtop</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rtop</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">))</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;ax.xaxis.set_ticklabels([r&#39;$-\pi$&#39;, &#39;$0$&#39;, r&#39;$+\pi$&#39;])</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
-                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;ax.set_title(r&#39;Abaqus, $PL=20 N$, $F_{{C}}=50 kN$, $w_{{PL}}=</span><span class="se">\b</span><span class="s">eta$, $mm$&#39;)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;if add_title:</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;    ax.set_title(r&#39;Abaqus, $PL=20 N$, $F_{{C}}=50 kN$, $w_{{PL}}=</span><span class="se">\b</span><span class="s">eta$, $mm$&#39;)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;if clean:</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;    ax.xaxis.set_ticks_position(&#39;none&#39;)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;    ax.yaxis.set_ticks_position(&#39;none&#39;)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
@@ -1346,13 +1365,13 @@
         <li class="right" >
           <a href="../../../../np-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../../index.html">DESICOS 2.1.1 documentation</a> &raquo;</li>
+        <li><a href="../../../../index.html">DESICOS 2.1.2 documentation</a> &raquo;</li>
           <li><a href="../../../index.html" >Module code</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2015 Desicos Improved Software Team.
-      Last updated on Oct 28, 2014.
+      Last updated on Nov 27, 2014.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Abaqus Plug-In (desicos.abaqus) &mdash; DESICOS 2.1.1 documentation</title>
+    <title>Abaqus Plug-In (desicos.abaqus) &mdash; DESICOS 2.1.2 documentation</title>
     
     <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.1.1',
+        VERSION:     '2.1.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,7 +24,7 @@
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../../_static/desicos.png"/>
-    <link rel="top" title="DESICOS 2.1.1 documentation" href="../../index.html" />
+    <link rel="top" title="DESICOS 2.1.2 documentation" href="../../index.html" />
     <link rel="up" title="Modules" href="../index.html" />
     <link rel="prev" title="Modules" href="../index.html" /> 
   </head>
@@ -44,7 +44,7 @@
         <li class="right" >
           <a href="../index.html" title="Modules"
              accesskey="P">previous</a> |</li>
-        <li><a href="../../index.html">DESICOS 2.1.1 documentation</a> &raquo;</li>
+        <li><a href="../../index.html">DESICOS 2.1.2 documentation</a> &raquo;</li>
           <li><a href="../index.html" accesskey="U">Modules</a> &raquo;</li> 
       </ul>
     </div>  
@@ -617,7 +617,7 @@ will be printed in the output</td>
 <tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.create_cutout" title="desicos.abaqus.conecyl.conecyl.ConeCyl.create_cutout"><tt class="xref py py-obj docutils literal"><span class="pre">create_cutout</span></tt></a>(theta,&nbsp;pt,&nbsp;d[,&nbsp;numel])</td>
 <td>Create a cutout in the shell surface.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.create_model" title="desicos.abaqus.conecyl.conecyl.ConeCyl.create_model"><tt class="xref py py-obj docutils literal"><span class="pre">create_model</span></tt></a>()</td>
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.create_model" title="desicos.abaqus.conecyl.conecyl.ConeCyl.create_model"><tt class="xref py py-obj docutils literal"><span class="pre">create_model</span></tt></a>([force])</td>
 <td>Triggers the routines to create the model in Abaqus</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.detach_results" title="desicos.abaqus.conecyl.conecyl.ConeCyl.detach_results"><tt class="xref py py-obj docutils literal"><span class="pre">detach_results</span></tt></a>(odb)</td>
@@ -756,7 +756,7 @@ improved.</p>
 
 <dl class="method">
 <dt id="desicos.abaqus.conecyl.conecyl.ConeCyl.create_model">
-<tt class="descname">create_model</tt><big>(</big><big>)</big><a class="reference internal" href="../../_modules/desicos/abaqus/conecyl/conecyl.html#ConeCyl.create_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.create_model" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">create_model</tt><big>(</big><em>force=False</em><big>)</big><a class="reference internal" href="../../_modules/desicos/abaqus/conecyl/conecyl.html#ConeCyl.create_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.create_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Triggers the routines to create the model in Abaqus</p>
 <p>The auxiliary module <tt class="docutils literal"><span class="pre">_create_model.py</span></tt> is used, from where the
 functions <tt class="docutils literal"><span class="pre">_create_mesh()</span></tt>, <tt class="docutils literal"><span class="pre">_create_load_steps()</span></tt> and
@@ -781,6 +781,19 @@ doing:</p>
 </pre></div>
 </div>
 </div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>force</strong> : bool, optional</p>
+<blockquote class="last">
+<div><p>Forces the model creation even if the finite element model
+corresponding to this <a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl" title="desicos.abaqus.conecyl.conecyl.ConeCyl"><tt class="xref py py-class docutils literal"><span class="pre">ConeCyl</span></tt></a> object already exists.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -1879,9 +1892,9 @@ is the desired behavior</td>
 </tr>
 <tr class="row-even"><td><tt class="docutils literal"><span class="pre">stretch_H</span></tt></td>
 <td>If the measured imperfection does not cover the whole
-height it will be stretched. If <tt class="docutils literal"><span class="pre">stretch_H==True</span></tt>,
-<tt class="docutils literal"><span class="pre">ignore_bot_h</span></tt> and <tt class="docutils literal"><span class="pre">ignore_top_h</span></tt> are
-automatically set to <tt class="docutils literal"><span class="pre">False</span></tt></td>
+height it will be stretched. If
+<tt class="docutils literal"><span class="pre">stretch_H</span> <span class="pre">is</span> <span class="pre">True</span></tt>, <tt class="docutils literal"><span class="pre">ignore_bot_h</span></tt> and
+<tt class="docutils literal"><span class="pre">ignore_top_h</span></tt> are automatically set to <tt class="docutils literal"><span class="pre">False</span></tt></td>
 </tr>
 </tbody>
 </table>
@@ -1950,6 +1963,38 @@ automatically set to <tt class="docutils literal"><span class="pre">False</span>
 </table>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="function">
+<dt id="desicos.abaqus.imperfections.msi.calc_msi_amplitude">
+<tt class="descclassname">desicos.abaqus.imperfections.msi.</tt><tt class="descname">calc_msi_amplitude</tt><big>(</big><em>cc</em>, <em>force=False</em><big>)</big><a class="reference internal" href="../../_modules/desicos/abaqus/imperfections/msi.html#calc_msi_amplitude"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.imperfections.msi.calc_msi_amplitude" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the mid-surface imperfection of a ConeCyl model</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Must be called from Abaqus.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>cc</strong> : ConeCyl object</p>
+<blockquote>
+<div><p>The <a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl" title="desicos.abaqus.conecyl.conecyl.ConeCyl"><tt class="xref py py-class docutils literal"><span class="pre">ConeCyl</span></tt></a> object already</p>
+</div></blockquote>
+<p><strong>force</strong> : bool, optional</p>
+<blockquote>
+<div><p>Does not the check if the finite element model is already created.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>max_amp</strong> : float</p>
+<blockquote class="last">
+<div><p>The maximum absolute amplitude.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
@@ -2415,7 +2460,7 @@ for all the shell and resin ring nodes, but the load asymmetry angle
 element model.</p>
 <dl class="function">
 <dt id="desicos.abaqus.apply_imperfections.calc_translations_ABAQUS">
-<tt class="descclassname">desicos.abaqus.apply_imperfections.</tt><tt class="descname">calc_translations_ABAQUS</tt><big>(</big><em>imperfection_file_name</em>, <em>model_name</em>, <em>part_name</em>, <em>H_model</em>, <em>H_measured</em>, <em>R_model</em>, <em>R_best_fit=None</em>, <em>semi_angle=0.0</em>, <em>stretch_H=False</em>, <em>z_offset_bot=None</em>, <em>rotatedeg=0.0</em>, <em>scaling_factor=1.0</em>, <em>r_TOL=1.0</em>, <em>num_closest_points=5</em>, <em>power_parameter=2</em>, <em>num_sec_z=50</em>, <em>use_theta_z_format=True</em>, <em>ignore_bot_h=None</em>, <em>ignore_top_h=None</em>, <em>sample_size=None</em><big>)</big><a class="reference internal" href="../../_modules/desicos/abaqus/apply_imperfections.html#calc_translations_ABAQUS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.apply_imperfections.calc_translations_ABAQUS" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">desicos.abaqus.apply_imperfections.</tt><tt class="descname">calc_translations_ABAQUS</tt><big>(</big><em>imperfection_file_name</em>, <em>model_name</em>, <em>part_name</em>, <em>H_model</em>, <em>H_measured</em>, <em>R_model</em>, <em>R_best_fit=None</em>, <em>semi_angle=0.0</em>, <em>stretch_H=False</em>, <em>z_offset_bot=None</em>, <em>rotatedeg=0.0</em>, <em>scaling_factor=1.0</em>, <em>r_TOL=1.0</em>, <em>num_closest_points=5</em>, <em>power_parameter=2</em>, <em>num_sec_z=50</em>, <em>use_theta_z_format=True</em>, <em>ignore_bot_h=None</em>, <em>ignore_top_h=None</em>, <em>sample_size=None</em>, <em>T=None</em><big>)</big><a class="reference internal" href="../../_modules/desicos/abaqus/apply_imperfections.html#calc_translations_ABAQUS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.apply_imperfections.calc_translations_ABAQUS" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads an imperfection file and calculates the nodal translations</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -2509,9 +2554,14 @@ to accelerate the searching algorithms</p>
 <div><p>Used to ignore nodes from the top resin ring.</p>
 </div></blockquote>
 <p><strong>sample_size</strong> : int, optional</p>
-<blockquote class="last">
+<blockquote>
 <div><p>If the input file containing the measured data is too large it may be
 required to limit the sample size in order to avoid memory errors.</p>
+</div></blockquote>
+<p><strong>T</strong> : None or np.ndarray, optional</p>
+<blockquote class="last">
+<div><p>A transformation matrix (cf. <a class="reference internal" href="../conecylDB/index.html#desicos.conecylDB.fit_data.transf_matrix" title="desicos.conecylDB.fit_data.transf_matrix"><tt class="xref py py-func docutils literal"><span class="pre">transf_matrix()</span></tt></a>) required when the
+mesh is not in the <a class="reference internal" href="#figure-conecyl"><em>default coordinate system</em></a>.</p>
 </div></blockquote>
 </td>
 </tr>
@@ -2638,7 +2688,7 @@ to create the new properties.</p>
 
 <dl class="function">
 <dt id="desicos.abaqus.apply_imperfections.translate_nodes_ABAQUS">
-<tt class="descclassname">desicos.abaqus.apply_imperfections.</tt><tt class="descname">translate_nodes_ABAQUS</tt><big>(</big><em>imperfection_file_name</em>, <em>model_name</em>, <em>part_name</em>, <em>H_model</em>, <em>H_measured</em>, <em>R_model</em>, <em>R_best_fit=None</em>, <em>semi_angle=0.0</em>, <em>stretch_H=False</em>, <em>z_offset_bot=None</em>, <em>rotatedeg=0.0</em>, <em>scaling_factor=1.0</em>, <em>r_TOL=1.0</em>, <em>num_closest_points=5</em>, <em>power_parameter=2</em>, <em>num_sec_z=50</em>, <em>nodal_translations=None</em>, <em>use_theta_z_format=False</em>, <em>ignore_bot_h=None</em>, <em>ignore_top_h=None</em>, <em>sample_size=None</em><big>)</big><a class="reference internal" href="../../_modules/desicos/abaqus/apply_imperfections.html#translate_nodes_ABAQUS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.apply_imperfections.translate_nodes_ABAQUS" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">desicos.abaqus.apply_imperfections.</tt><tt class="descname">translate_nodes_ABAQUS</tt><big>(</big><em>imperfection_file_name</em>, <em>model_name</em>, <em>part_name</em>, <em>H_model</em>, <em>H_measured</em>, <em>R_model</em>, <em>R_best_fit=None</em>, <em>semi_angle=0.0</em>, <em>stretch_H=False</em>, <em>z_offset_bot=None</em>, <em>rotatedeg=0.0</em>, <em>scaling_factor=1.0</em>, <em>r_TOL=1.0</em>, <em>num_closest_points=5</em>, <em>power_parameter=2</em>, <em>num_sec_z=50</em>, <em>nodal_translations=None</em>, <em>use_theta_z_format=False</em>, <em>ignore_bot_h=None</em>, <em>ignore_top_h=None</em>, <em>sample_size=None</em>, <em>T=None</em><big>)</big><a class="reference internal" href="../../_modules/desicos/abaqus/apply_imperfections.html#translate_nodes_ABAQUS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.apply_imperfections.translate_nodes_ABAQUS" title="Permalink to this definition">¶</a></dt>
 <dd><p>Translates the nodes in Abaqus based on imperfection data</p>
 <p>The imperfection amplitude for each node is calculated using an inversed
 weight function (see <a class="reference internal" href="../conecylDB/index.html#desicos.conecylDB.interpolate.inv_weighted" title="desicos.conecylDB.interpolate.inv_weighted"><tt class="xref py py-func docutils literal"><span class="pre">desicos.conecylDB.interpolate.inv_weighted()</span></tt></a>).</p>
@@ -2756,6 +2806,11 @@ avoid repeated calls to the interpolation functions.</p>
 <div><p>If the input file containing the measured data is too large it may be
 required to limit the sample size in order to avoid memory errors.</p>
 </div></blockquote>
+<p><strong>T</strong> : None or np.ndarray, optional</p>
+<blockquote>
+<div><p>A transformation matrix (cf. <a class="reference internal" href="../conecylDB/index.html#desicos.conecylDB.fit_data.transf_matrix" title="desicos.conecylDB.fit_data.transf_matrix"><tt class="xref py py-func docutils literal"><span class="pre">transf_matrix()</span></tt></a>) required when the
+mesh is not in the <a class="reference internal" href="#figure-conecyl"><em>default coordinate system</em></a>.</p>
+</div></blockquote>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>nodal_translations</strong> : numpy.ndarray</p>
@@ -2773,7 +2828,7 @@ model will already be translated.</p>
 
 <dl class="function">
 <dt id="desicos.abaqus.apply_imperfections.translate_nodes_ABAQUS_c0">
-<tt class="descclassname">desicos.abaqus.apply_imperfections.</tt><tt class="descname">translate_nodes_ABAQUS_c0</tt><big>(</big><em>m0</em>, <em>n0</em>, <em>c0</em>, <em>funcnum</em>, <em>model_name</em>, <em>part_name</em>, <em>H_model</em>, <em>semi_angle=0.0</em>, <em>scaling_factor=1.0</em>, <em>fem_meridian_bot2top=True</em>, <em>ignore_bot_h=None</em>, <em>ignore_top_h=None</em><big>)</big><a class="reference internal" href="../../_modules/desicos/abaqus/apply_imperfections.html#translate_nodes_ABAQUS_c0"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.apply_imperfections.translate_nodes_ABAQUS_c0" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">desicos.abaqus.apply_imperfections.</tt><tt class="descname">translate_nodes_ABAQUS_c0</tt><big>(</big><em>m0</em>, <em>n0</em>, <em>c0</em>, <em>funcnum</em>, <em>model_name</em>, <em>part_name</em>, <em>H_model</em>, <em>semi_angle=0.0</em>, <em>scaling_factor=1.0</em>, <em>fem_meridian_bot2top=True</em>, <em>ignore_bot_h=None</em>, <em>ignore_top_h=None</em>, <em>T=None</em><big>)</big><a class="reference internal" href="../../_modules/desicos/abaqus/apply_imperfections.html#translate_nodes_ABAQUS_c0"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.apply_imperfections.translate_nodes_ABAQUS_c0" title="Permalink to this definition">¶</a></dt>
 <dd><p>Translates the nodes in Abaqus based on a Fourier series</p>
 <p>The Fourier Series can be a half-sine, half-cosine or a complete Fourier
 Series as detailed in <a class="reference internal" href="../conecylDB/index.html#desicos.conecylDB.fit_data.calc_c0" title="desicos.conecylDB.fit_data.calc_c0"><tt class="xref py py-func docutils literal"><span class="pre">desicos.conecylDB.fit_data.calc_c0()</span></tt></a>.</p>
@@ -2836,6 +2891,11 @@ at the bottom or at the top.</p>
 <p><strong>ignore_top_h</strong> : None or float, optional</p>
 <blockquote>
 <div><p>Used to ignore nodes from the top resin ring.</p>
+</div></blockquote>
+<p><strong>T</strong> : None or np.ndarray, optional</p>
+<blockquote>
+<div><p>A transformation matrix (cf. <a class="reference internal" href="../conecylDB/index.html#desicos.conecylDB.fit_data.transf_matrix" title="desicos.conecylDB.fit_data.transf_matrix"><tt class="xref py py-func docutils literal"><span class="pre">transf_matrix()</span></tt></a>) required when the
+mesh is not in the <a class="reference internal" href="#figure-conecyl"><em>default coordinate system</em></a>.</p>
 </div></blockquote>
 </td>
 </tr>
@@ -3192,19 +3252,17 @@ thickness imperfection in some cases.</p>
 
 <dl class="function">
 <dt id="desicos.abaqus.abaqus_functions.create_sketch_plane">
-<tt class="descclassname">desicos.abaqus.abaqus_functions.</tt><tt class="descname">create_sketch_plane</tt><big>(</big><em>cc</em>, <em>thetadeg</em><big>)</big><a class="reference internal" href="../../_modules/desicos/abaqus/abaqus_functions.html#create_sketch_plane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.abaqus_functions.create_sketch_plane" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">desicos.abaqus.abaqus_functions.</tt><tt class="descname">create_sketch_plane</tt><big>(</big><em>cc</em>, <em>entity</em><big>)</big><a class="reference internal" href="../../_modules/desicos/abaqus/abaqus_functions.html#create_sketch_plane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.abaqus_functions.create_sketch_plane" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a sketch plane tangent to the shell surface</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>cc</strong> : <a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl" title="desicos.abaqus.conecyl.conecyl.ConeCyl"><tt class="xref py py-class docutils literal"><span class="pre">ConeCyl</span></tt></a> object</p>
+<p><strong>entity</strong> : object</p>
 <blockquote>
-<div><p>This object contains the necessary geometric data.</p>
-</div></blockquote>
-<p><strong>thetadeg</strong> : float</p>
-<blockquote>
-<div><p>The angular position of the sketch plane in degrees.</p>
+<div><p>Any object with the attribute: <tt class="docutils literal"><span class="pre">thetadeg</span></tt>, usually a
+<a class="reference internal" href="#desicos.abaqus.imperfections.imperfection.Imperfection" title="desicos.abaqus.imperfections.imperfection.Imperfection"><tt class="xref py py-class docutils literal"><span class="pre">Imperfection</span></tt></a>.</p>
 </div></blockquote>
 </td>
 </tr>
@@ -3364,13 +3422,13 @@ thickness imperfection in some cases.</p>
         <li class="right" >
           <a href="../index.html" title="Modules"
              >previous</a> |</li>
-        <li><a href="../../index.html">DESICOS 2.1.1 documentation</a> &raquo;</li>
+        <li><a href="../../index.html">DESICOS 2.1.2 documentation</a> &raquo;</li>
           <li><a href="../index.html" >Modules</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2015 Desicos Improved Software Team.
-      Last updated on Oct 28, 2014.
+      Last updated on Nov 27, 2014.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>
