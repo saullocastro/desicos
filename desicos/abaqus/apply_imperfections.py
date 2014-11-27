@@ -389,7 +389,7 @@ def translate_nodes_ABAQUS(imperfection_file_name,
                            n.label] for n in part_nodes], dtype=FLOAT)
 
         # calling translate_nodes function
-        if nodal_translations == None:
+        if nodal_translations is None:
             nodal_translations = calc_translations_ABAQUS(
                          imperfection_file_name = imperfection_file_name,
                          model_name = model_name,
@@ -670,7 +670,7 @@ def change_thickness_ABAQUS(imperfection_file_name,
     part_cyl_csys = part.datums[part_cyl_csys.id]
 
     if use_theta_z_format:
-        if elems_t == None or t_set == None:
+        if elems_t is None or t_set is None:
             log('Reading coordinates for elements...')
             elements = vec_calc_elem_cg(part.elements)
 
@@ -708,7 +708,7 @@ def change_thickness_ABAQUS(imperfection_file_name,
             log('Thickness differences already calculated!')
 
     else:
-        if elems_t == None or t_set == None:
+        if elems_t is None or t_set is None:
             # reading elements data
             log('Reading coordinates for elements...')
             elements = vec_calc_elem_cg(part.elements)
@@ -739,7 +739,7 @@ def change_thickness_ABAQUS(imperfection_file_name,
         log('More than {0:d} different thicknesses measured!'.format(
             max_len_t_set))
         log('Forcing a number_of_sets = {0:d}'.format(number_of_sets))
-    if number_of_sets == None or number_of_sets == 0:
+    if number_of_sets is None or number_of_sets == 0:
         number_of_sets = len(t_set)
         t_list = list(t_set)
         t_list.sort()
@@ -788,7 +788,7 @@ def change_thickness_ABAQUS(imperfection_file_name,
     return elems_t, t_set
 
 
-if __name__=='__main__':
+if __name__ == '__main__':
     cc = stds['desicos_study'].ccs[1]
     cc.created_model = False
     cc.create_model()
