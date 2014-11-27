@@ -141,7 +141,7 @@ def calc_translations_ABAQUS(imperfection_file_name,
 
         data3D = np.zeros((data.shape[0], 4), dtype=FLOAT)
         if rotatedeg:
-            data[:, 0] += np.deg2rad(rotatedeg)
+            data[:, 0] += deg2rad(rotatedeg)
         z = data[:, 1]
         z *= H_model
 
@@ -825,7 +825,7 @@ if __name__ == '__main__':
     ans = desicos.conecylDB.interpolate.inv_weighted(
             data, mesh_norm, num_sub=100, col=1, ncp=10, power_parameter=1.5)
 
-    alpharad = np.deg2rad(0.)
+    alpharad = deg2rad(0.)
     trans = np.zeros_like(coords)
     trans[:, 0] = ans*cos(mesh[:, 0])*cos(alpharad)
     trans[:, 1] = ans*sin(mesh[:, 0])*cos(alpharad)
