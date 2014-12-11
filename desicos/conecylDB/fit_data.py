@@ -429,7 +429,8 @@ def calc_c0(path, m0=50, n0=50, funcnum=2, fem_meridian_bot2top=True,
     log('Base functions calculated', level=1)
     c0, residues, rank, s = lstsq(a, w0pts)
     log('Finished scipy.linalg.lstsq', level=1)
-    if filter_m0!=None or filter_n0!=None:
+
+    if filter_m0 is not None or filter_n0 is not None:
         c0 = filter_c0(m0, n0, c0, filter_m0, filter_n0, funcnum=funcnum)
 
     return c0, residues
