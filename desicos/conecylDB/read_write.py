@@ -419,9 +419,9 @@ def xyzthick2thetazthick(path,
         The total height of the measured test specimen, including eventual
         resin rings at the edges.
     R_expected : float, optional
-        If ``use_best_fit==True`` this will be used as a first estimative that
+        If ``use_best_fit is True`` this will be used as a first estimative that
         can reduce the number of iterations up to convergence of the best fit
-        algorithms. If ``use_best_fit==False`` this will be considered the
+        algorithms. If ``use_best_fit is False`` this will be considered the
         ``R_best_fit``.
     use_best_fit : bool, optional
         If ``True`` it overwrites the values for: ``R_expected`` (for
@@ -459,7 +459,7 @@ def xyzthick2thetazthick(path,
 
     if use_best_fit:
         log('Finding the best-fit ...')
-        if alphadeg_measured==0.:
+        if alphadeg_measured == 0.:
             out = best_fit_cylinder(xyz, R_expected=R_expected, H=H_measured,
                     save=False, sample_size=sample_size)
             R_best_fit = out['R_best_fit']
