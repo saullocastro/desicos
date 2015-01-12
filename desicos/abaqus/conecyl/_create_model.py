@@ -1379,13 +1379,26 @@ def _create_loads_bcs(cc):
                                      userMode=DOF_MODE_MPC,
                                      userType=0, csys=ra_cyl_csys)
 
-        # NOTE needed for the "job_stopper.py"
+        if not cc.linear_buckling:
+            # NOTE needed for the "job_stopper.py"
+            text  = '** ---------------------------------------------------'
+            text += '\n**'
+            text += '\n*NODE PRINT, nset=RP_top'
+            text += '\nRF3, U3'
+            abaqus_functions.edit_keywords(mod=mod, text=text,
+                                           before_pattern="*End Step")
+    if len(cc.impconf.lbmis) > 0:
         text  = '** -------------------------------------------------------'
+        lb_name = cc.study.name + '_lb'
+        text += '\n*IMPERFECTION, STEP=1, FILE={0}'.format(lb_name)
+        for imp in cc.impconf.lbmis:
+            # editing "keywords" to include the imperfection file
+            text += '\n{0:d}, {1:f}'.format(int(imp.mode),
+                                  float(imp.scaling_factor))
         text += '\n**'
-        text += '\n*NODE PRINT, nset=RP_top'
-        text += '\nRF3, U3'
+        pattern = '*Step'
         abaqus_functions.edit_keywords(mod=mod, text=text,
-                                       before_pattern="*End Step")
+                                       before_pattern=pattern)
 
     vp = session.viewports[session.currentViewportName]
     part_shell = mod.parts[cc.part_name_shell]
