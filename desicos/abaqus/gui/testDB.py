@@ -1,4 +1,3 @@
-import json
 import os
 import ast
 
@@ -69,7 +68,7 @@ def cc_dict2form(ccname, cc, db, form):
         valuesStr = '0.0,0.5,,'
         for i in range(len(cc['ploads'])):
             pload = cc['ploads'][i]
-            valuesStr += '%2.1f,' % pload
+            valuesStr += '{0:2.1f},'.format(pload)
         valuesStr += 'end'
         valuesStr = valuesStr.replace(',end', '')
         form.pl_tableKw.setValues(valuesStr)
@@ -85,7 +84,7 @@ def cc_dict2form(ccname, cc, db, form):
 
 
 def message(string):
-    sendCommand("print(r'%s')" % string)
+    sendCommand("print(r'{0}')".format(string))
 
 
 ###########################################################################
@@ -94,8 +93,8 @@ def message(string):
 
 
 class TestDB(AFXDataDialog):
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    """
+    """
     def __init__(self, form):
         #
         # Init
@@ -243,7 +242,8 @@ class TestDB(AFXDataDialog):
             opts=AFXTABLE_EDITABLE|AFXTABLE_TYPE_FLOAT|AFXTABLE_STYLE_DEFAULT)
         laminateTable.setLeadingRows(1)
         laminateTable.setLeadingColumns(1)
-        laminateTable.setLeadingColumnLabels('\t'.join(['ply %02d'%i for i in xrange(1, 41)]))
+        laminateTable.setLeadingColumnLabels(
+                '\t'.join(['ply {0:02d}'.format(i) for i in range(1, 41)]))
         laminateTable.setColumnWidth(1, 300)
         laminateTable.setColumnWidth(2, 75)
         laminateTable.setColumnWidth(3, 75)
@@ -525,7 +525,7 @@ class TestDB(AFXDataDialog):
             self.imp_tables[k].setGridColor(1)
             colLabel = ''
             for i in range(1, maxIMP+1):
-                colLabel += k.upper() + '%02d\t' % i
+                colLabel += k.upper() + '{0:02d}\t'.format(i)
                 self.imp_tables[k].setColumnEditable(i, True)
                 self.imp_tables[k].setItemEditable(num_param + 1, i, False)
                 self.imp_tables[k].setColumnType(i,
@@ -533,7 +533,7 @@ class TestDB(AFXDataDialog):
             self.imp_tables[k].setLeadingRowLabels(colLabel)
             rowLabel = rowLabels[k]
             for i in range(1, maxModels+1):
-                rowLabel +=  rowLabels2[k] + ' %02d' % i
+                rowLabel +=  rowLabels2[k] + ' {0:02d}'.format(i)
             self.imp_tables[k].setLeadingColumnLabels(rowLabel)
             pngpath = os.path.join(DAHOME, 'gui', 'icons', pngs[k])
             icon = afxCreatePNGIcon(pngpath)
@@ -577,7 +577,7 @@ class TestDB(AFXDataDialog):
         self.imp_ms_sf.setLeadingRows(1)
         self.imp_ms_sf.setLeadingColumns(1)
         self.imp_ms_sf.setLeadingRowLabels('scaling factor')
-        colLabel = '\t'.join([('model %02d' % i) for i in xrange(1, max_models+1)])
+        colLabel = '\t'.join(['model {0:02d}'.format(i) for i in range(1, max_models+1)])
         self.imp_ms_sf.setLeadingColumnLabels(colLabel)
         FXLabel(impVF, '')
         FXLabel(impVF, '')
@@ -622,7 +622,7 @@ class TestDB(AFXDataDialog):
         self.imp_t_sf.setLeadingRows(1)
         self.imp_t_sf.setLeadingColumns(1)
         self.imp_t_sf.setLeadingRowLabels('scaling factor')
-        colLabel = '\t'.join([('model %02d' % i) for i in xrange(1, max_models+1)])
+        colLabel = '\t'.join(['model {0:02d}'.format(i) for i in range(1, max_models+1)])
         self.imp_t_sf.setLeadingColumnLabels(colLabel)
         FXLabel(impVF, '')
         FXLabel(impVF, '')
@@ -690,7 +690,9 @@ class TestDB(AFXDataDialog):
             'of reaction load drop it stops the analysis)',
             form.use_job_stopperKw)
         FXLabel(execVF2, '')
-        self.exec_std = FXButton(execVF2, 'Run study!')
+        self.clean_output = FXButton(execVF2, 'Clean output folder')
+        FXLabel(execVF2, '')
+        self.exec_std = FXButton(execVF2, 'Run study')
         self.exec_log = FXText(execHF, None, 0,
             TEXT_READONLY|TEXT_SHOWACTIVE|LAYOUT_FIX_WIDTH|LAYOUT_FIX_HEIGHT|
             LAYOUT_CENTER_X|LAYOUT_CENTER_Y, 0, 0, 500, 440)
@@ -986,11 +988,11 @@ class TestDB(AFXDataDialog):
         message('Saving...')
         self.form.laKw.setValue(self.lasw.getCurrent())
         self.logcount = 10000
-        command = 'import gui_commands\n'    +\
-                  'reload(gui_commands)\n' +\
-                  'gui_commands.save_study("%s", %s)\n' \
-                  % (str(self.form.std_nameKw.getValue()),
-                      str(self.form.get_params_from_gui()))
+        command = ('import gui_commands\n' +
+                   'reload(gui_commands)\n' +
+                   'gui_commands.save_study("{0}", {1})\n'.format(
+                       str(self.form.std_nameKw.getValue()),
+                       str(self.form.get_params_from_gui())))
         sendCommand(command)
         self.extraUpdates()
 
@@ -1112,7 +1114,7 @@ class TestDB(AFXDataDialog):
             self.logcount = 10000
             command = ('import gui_commands\n' +
                        'reload(gui_commands)\n' +
-                       'gui_commands.load_study("%s")\n' % std_name)
+                       'gui_commands.load_study("{0}")\n'.format(std_name))
             sendCommand(command)
             reload(gui_commands)
             gui_commands.load_study_gui(std_name, form)
@@ -1120,7 +1122,8 @@ class TestDB(AFXDataDialog):
                 outpath = os.path.join(TMP_DIR, std_name)
             else:
                 outpath = TMP_DIR
-            message('The DESICOS study "%s.study" has been opened.' % outpath)
+            message('The DESICOS study "{0}.study" has been opened.'.format(
+                    outpath))
             message(' ')
             form.loaded_study = True
             os.chdir(outpath)
@@ -1213,6 +1216,14 @@ class TestDB(AFXDataDialog):
             reload(gui_commands)
             gui_commands.run_study(std_name, ncpus,
                     form.use_job_stopperKw.getValue())
+        # clear output folder
+        if self.clean_output.getState() == STATE_DOWN:
+            self.exec_std.setState(STATE_UP)
+            self.logcount = 10000
+            showAFXWarningDialog(self, 'Confirm Action?\n' +
+                                 'All output files will be deleted!',
+                    AFXDialog.YES | AFXDialog.NO,
+                    self.form, self.form.ID_DEL_OUT_FOLDER)
 
         #if form.laKw.getValue() == False:
         #    self.la_beta.disable()

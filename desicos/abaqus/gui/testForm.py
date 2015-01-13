@@ -1,5 +1,4 @@
 import os
-import __main__
 
 import numpy
 from abaqusGui import *
@@ -60,24 +59,24 @@ params = ['rbot', 'H', 'alphadeg','betadeg','omegadeg',
 'imp_ms_num_sec_z', 'imp_t_num_sec_z',
 'imp_ms_rotatedeg', 'imp_t_rotatedeg',
 'imp_num_sets']
-class TestForm(AFXForm):
 
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+class TestForm(AFXForm):
+    """
+    """
     def __init__(self, owner):
 
         # Construct the base class.
         #
+        self.owner = owner
         AFXForm.__init__(self, owner)
-        self.__main__ = __main__
         # Command
         #
-        #self.cmd = AFXGuiCommand(self, 'myCommand', 'myObject')
-        #self.kw1 = AFXStringKeyword(self.cmd, 'kw1', TRUE)
-        #self.kw2 = AFXIntKeyword(self.cmd, 'kw2', TRUE)
-        #self.kw3 = AFXFloatKeyword(self.cmd, 'kw3', TRUE)
         TRUE_FALSE = 1
+        self.ID_DEL_OUT_FOLDER = 999
+        FXMAPFUNC(self, SEL_COMMAND, self.ID_DEL_OUT_FOLDER,
+                self.onCmdDelOutFolder)
         self.cmd = AFXGuiCommand(self, 'create_study', 'gui_commands')
-        #TODO use the getCommandString()of AFXGuiCommand for these two too...
         self.apply_imp_ms = AFXGuiCommand(self, 'apply_imp_ms', 'gui_commands')
         self.apply_imp_t = AFXGuiCommand(self, 'apply_imp_t', 'gui_commands')
         #
@@ -203,6 +202,7 @@ class TestForm(AFXForm):
         self.loaded_study = False
         self.setDefault()
 
+
     def get_params_from_gui(self):
         params_from_gui = {}
         for param in params:
@@ -215,6 +215,7 @@ class TestForm(AFXForm):
                 value = obj.getValue()
             params_from_gui[param] = value
         return params_from_gui
+
 
     def read_params_from_gui(self, params_from_gui = {}):
         for param, value in params_from_gui.iteritems():
@@ -276,9 +277,8 @@ class TestForm(AFXForm):
                     if update_values:
                         getattr(self, attrname).setValueToDefault()
 
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    def getFirstDialog(self):
 
+    def getFirstDialog(self):
         # Note: The style below is used for the prototype application to
         # allow the dialog to be reloaded while the application is
         # still running. In a non-prototype application you would use:
@@ -290,14 +290,14 @@ class TestForm(AFXForm):
         #
         path = TMP_DIR
         sendCommand('import os')
-        sendCommand('if not os.path.isdir(r"%s"):\n' %path +\
-                     '    os.makedirs(r"%s")' % path)
-        sendCommand('os.chdir(r"%s")' % path)
+        sendCommand('if not os.path.isdir(r"{0}"):\n'.format(path) +
+                     '    os.makedirs(r"{0}")'.format(path))
+        sendCommand('os.chdir(r"{0}")'.format(path))
         self.just_created_study = False
         reload(testDB)
         return testDB.TestDB(self)
 
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     def issueCommands(self):
         self.laKw.setValue(self.db.lasw.getCurrent())
         a = self.cmd.getCommandString()
@@ -342,3 +342,15 @@ class TestForm(AFXForm):
         #self.deactivateIfNeeded()
         #return TRUE
 
+
+    def onCmdDelOutFolder(self, form, sender, sel, ptr):
+        if sender.getPressedButtonId() == AFXDialog.ID_CLICKED_YES:
+            std_name = self.std_to_postKw.getValue()
+            command = ('import gui_commands\n' +
+                       'reload(gui_commands)\n' +
+                       'gui_commands.clean_output_folder("{0}")\n'.format(
+                           std_name))
+            sendCommand(command)
+            showAFXInformationDialog(self.db, 'Output folder cleaned!')
+        else:
+            pass

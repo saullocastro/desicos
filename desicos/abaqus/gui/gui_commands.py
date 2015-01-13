@@ -1,5 +1,6 @@
 import os
 import subprocess
+import shutil
 
 import __main__
 
@@ -288,11 +289,26 @@ def run_study(std_name, ncpus, use_job_stopper):
     subprocess.Popen(run_cmd, shell=True)
 
 
+def clean_output_folder(std_name):
+    stds = __main__.stds
+    if not std_name in stds.keys():
+        print('Study has not been created!')
+        print('')
+        return
+    try:
+        std = stds[std_name]
+        shutil.rmtree(std.output_dir, ignore_errors=True)
+        os.makedirs(std.output_dir)
+    except:
+        pass
+    print('Folder {0} has been cleaned!'.format(std.output_dir))
+
+
 def save_study(std_name, params_from_gui):
     stds = __main__.stds
     if not std_name in stds.keys():
-        print 'Study has not been created!'
-        print ' '
+        print('Study has not been created!')
+        print(' ')
         return
     std = stds[std_name]
     std.params_from_gui = params_from_gui
@@ -301,9 +317,9 @@ def save_study(std_name, params_from_gui):
         os.makedirs(TMP_DIR)
     os.chdir(TMP_DIR)
     __main__.mdb.saveAs(pathName = std_name + '.cae')
-    print r'The DESICOS study has been saved to "{0}.study".'.format(
-          os.path.join(std.tmp_dir, std_name))
-    print ' '
+    print(r'The DESICOS study has been saved to "{0}.study".'.format(
+          os.path.join(std.tmp_dir, std_name)))
+    print(' ')
 
 
 def load_study(std_name):
@@ -325,8 +341,8 @@ def load_study(std_name):
 
     for cc in std.ccs:
         if not cc.model_name in mdb.models.keys():
-            print 'Could not load objects for model {0}!'.format(
-                   cc.model_name)
+            print('Could not load objects for model {0}!'.format(
+                   cc.model_name))
             continue
         abaqus_functions.set_colors_ti(cc)
 

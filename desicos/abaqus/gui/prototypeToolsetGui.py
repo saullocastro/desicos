@@ -8,19 +8,17 @@ import testForm
 ###########################################################################
 
 class PrototypeToolsetGui(AFXToolsetGui):
-
     [
         ID_FORM,
     ] = range(AFXToolsetGui.ID_LAST, AFXToolsetGui.ID_LAST+1)
 
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     def __init__(self):
-
         # Construct the base class.
         #
         AFXToolsetGui.__init__(self, 'Test Toolset')
 
-        FXMAPFUNC(self, SEL_COMMAND, self.ID_FORM, PrototypeToolsetGui.onCmdForm)
+        FXMAPFUNC(self, SEL_COMMAND, self.ID_FORM,
+                  PrototypeToolsetGui.onCmdForm)
 
         self.form = testForm.TestForm(self)
 
@@ -35,9 +33,9 @@ class PrototypeToolsetGui(AFXToolsetGui):
         self.dialogBtn = AFXToolButton(group, '\tRun DESICOS plug-in',
                                        dialogIcon, self.form,
                                        AFXMode.ID_ACTIVATE)
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    def onCmdForm(self, sender, sel, ptr):
 
+
+    def onCmdForm(self, sender, sel, ptr):
         # Reload the form module and reconstruct the form so that any
         # changes to that module are updated.
         #
