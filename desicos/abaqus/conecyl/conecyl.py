@@ -187,6 +187,9 @@ class ConeCyl(object):
     ``resin_tir_w2``       Upper face width of the top inner ring
     ``resin_tor_w1``       Lower face width of the top outer ring
     ``resin_tor_w2``       Upper face width of the top outer ring
+    ``use_DLR_bc``         Apply boundary conditions used at DLR. It consists
+                           on using all the resin rings plus lateral radial
+                           constraints
     =====================  ==================================================
 
     =====================  ==================================================
@@ -276,6 +279,7 @@ class ConeCyl(object):
         self.resin_tir_w2 = 1*25.4
         self.resin_tor_w1 = 1*25.4
         self.resin_tor_w2 = 1*25.4
+        self.use_DLR_bc = False
 
         # laminaprop related
         # laminaprop below from COCOMAT, see Degenhardt, 2010

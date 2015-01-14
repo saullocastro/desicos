@@ -300,6 +300,7 @@ class TestDB(AFXDataDialog):
         AFXTextField(bcVAfig_VA, 8, 'Resin Elastic Modulus:' , form.resin_EKw, opts=AFXTEXTFIELD_FLOAT)
         AFXTextField(bcVAfig_VA, 8, 'Resin Poisson`s ratio:', form.resin_nuKw, opts=AFXTEXTFIELD_FLOAT)
         AFXTextField(bcVAfig_VA, 8, 'Elements along the resin edge:', form.resin_numelKw, opts=AFXTEXTFIELD_INTEGER)
+        FXCheckButton(bcVAfig_VA, 'Use DLR Boundary Conditions', form.use_DLR_bcKw)
         FXHorizontalSeparator(bcVAfig)
         # bottom edge
         FXLabel(bcVAbot, 'Bottom Edge')
@@ -311,8 +312,8 @@ class TestDB(AFXDataDialog):
         FXLabel(bcVAbot, '')
         FXLabel(bcVAbot, '')
         FXLabel(bcVAbot, '')
-        FXCheckButton(bcVAbot, 'Inner Resin Ring Bottom', form.resin_add_BIRKw)
-        FXCheckButton(bcVAbot, 'Outer Resin Ring Bottom', form.resin_add_BORKw)
+        self.resin_add_BIR = FXCheckButton(bcVAbot, 'Inner Resin Ring Bottom', form.resin_add_BIRKw)
+        self.resin_add_BOR = FXCheckButton(bcVAbot, 'Outer Resin Ring Bottom', form.resin_add_BORKw)
         FXLabel(bcVAbot, '')
         FXLabel(bcVAbot, '')
         bcVAbot_VA = AFXVerticalAligner(bcVAbot)
@@ -331,8 +332,8 @@ class TestDB(AFXDataDialog):
         FXLabel(bcVAtop, '')
         FXLabel(bcVAtop, '')
         FXLabel(bcVAtop, '')
-        FXCheckButton(bcVAtop, 'Inner Resin Ring Top' , form.resin_add_TIRKw)
-        FXCheckButton(bcVAtop, 'Outer Resin Ring Top' , form.resin_add_TORKw)
+        self.resin_add_TIR = FXCheckButton(bcVAtop, 'Inner Resin Ring Top' , form.resin_add_TIRKw)
+        self.resin_add_TOR = FXCheckButton(bcVAtop, 'Outer Resin Ring Top' , form.resin_add_TORKw)
         FXLabel(bcVAtop, '')
         FXLabel(bcVAtop, '')
         bcVAtop_VA = AFXVerticalAligner(bcVAtop)
@@ -1161,6 +1162,21 @@ class TestDB(AFXDataDialog):
             self.pload_step.disable()
             self.pressure_step.disable()
             self.axial_step.disable()
+
+        if form.use_DLR_bcKw.getValue():
+            form.resin_add_BIRKw.setValue(True)
+            form.resin_add_BORKw.setValue(True)
+            form.resin_add_TIRKw.setValue(True)
+            form.resin_add_TORKw.setValue(True)
+            self.resin_add_BIR.disable()
+            self.resin_add_BOR.disable()
+            self.resin_add_TIR.disable()
+            self.resin_add_TOR.disable()
+        else:
+            self.resin_add_BIR.enable()
+            self.resin_add_BOR.enable()
+            self.resin_add_TIR.enable()
+            self.resin_add_TOR.enable()
 
         # plot opened conecyl
         for i, plot_type_button in enumerate(self.plot_type_buttons):

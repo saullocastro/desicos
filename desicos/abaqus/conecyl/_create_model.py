@@ -914,28 +914,79 @@ def _create_mesh(cc):
 
     if cc.resin_add_BIR:
         faces = ra.instances['Bottom_IR'].faces
+        ra.Set(cells=inst_bir.cells, name='resin_ring_Bottom_IR')
+
         bot_IR_faces = faces.getByBoundingBox(-2*rbot, -2*rbot, -0.0001,
                                                2*rbot, 2*rbot, 0.0001)
         ra.Set(faces=bot_IR_faces, name='Bottom_IR_faces')
-        ra.Set(cells=inst_bir.cells, name='resin_ring_Bottom_IR')
+
+        zi = resin_bot_h/2.
+        r = fr(zi) - cosa*tshell/2. - (resin_bir_w1 + resin_bir_w2)/2.
+        thetas = np.linspace(0, 2*np.pi, 1000)
+        x = r*np.cos(thetas)
+        y = r*np.sin(thetas)
+        z = np.ones_like(x)*zi
+        a = np.vstack((x, y, z)).T
+        a = tuple([(tuple(ai),) for ai in a])
+        bot_IR_faces_side = faces.findAt(*a)
+        ra.Set(faces=bot_IR_faces_side, name='Bottom_IR_faces_side')
+
     if cc.resin_add_BOR:
         faces = ra.instances['Bottom_OR'].faces
+        ra.Set(cells=inst_bor.cells, name='resin_ring_Bottom_OR')
+
         bot_OR_faces = faces.getByBoundingBox(-2*rbot, -2*rbot, -0.0001,
                                                2*rbot, 2*rbot, 0.0001)
         ra.Set(faces=bot_OR_faces, name='Bottom_OR_faces')
-        ra.Set(cells=inst_bor.cells, name='resin_ring_Bottom_OR')
+
+        zi = resin_bot_h/2.
+        r = fr(zi) + cosa*tshell/2. + (resin_bor_w1 + resin_bor_w2)/2.
+        thetas = np.linspace(0, 2*np.pi, 1000)
+        x = r*np.cos(thetas)
+        y = r*np.sin(thetas)
+        z = np.ones_like(x)*zi
+        a = np.vstack((x, y, z)).T
+        a = tuple([(tuple(ai),) for ai in a])
+        bot_OR_faces_side = faces.findAt(*a)
+        ra.Set(faces=bot_OR_faces_side, name='Bottom_OR_faces_side')
+
     if cc.resin_add_TIR:
+        ra.Set(cells=inst_tir.cells, name='resin_ring_Top_IR')
+
         faces = ra.instances['Top_IR'].faces
         top_IR_faces = faces.getByBoundingBox(-2*rbot, -2*rbot, 0.999*H,
                                                2*rbot, 2*rbot, 1.001*H)
         ra.Set(faces=top_IR_faces, name='Top_IR_faces')
-        ra.Set(cells=inst_tir.cells, name='resin_ring_Top_IR')
+
+        zi = H-resin_top_h/2.
+        r = fr(zi) - cosa*tshell/2. - (resin_tir_w1 + resin_tir_w2)/2.
+        thetas = np.linspace(0, 2*np.pi, 1000)
+        x = r*np.cos(thetas)
+        y = r*np.sin(thetas)
+        z = np.ones_like(x)*zi
+        a = np.vstack((x, y, z)).T
+        a = tuple([(tuple(ai),) for ai in a])
+        top_IR_faces_side = faces.findAt(*a)
+        ra.Set(faces=top_IR_faces_side, name='Top_IR_faces_side')
+
     if cc.resin_add_TOR:
+        ra.Set(cells=inst_tor.cells, name='resin_ring_Top_OR')
+
         faces = ra.instances['Top_OR'].faces
         top_OR_faces = faces.getByBoundingBox(-2*rbot, -2*rbot, 0.999*H,
                                                2*rbot, 2*rbot, 1.001*H)
         ra.Set(faces=top_OR_faces, name='Top_OR_faces')
-        ra.Set(cells=inst_tor.cells, name='resin_ring_Top_OR')
+
+        zi = H-resin_top_h/2.
+        r = fr(zi) + cosa*tshell/2. + (resin_tor_w1 + resin_tor_w2)/2.
+        thetas = np.linspace(0, 2*np.pi, 1000)
+        x = r*np.cos(thetas)
+        y = r*np.sin(thetas)
+        z = np.ones_like(x)*zi
+        a = np.vstack((x, y, z)).T
+        a = tuple([(tuple(ai),) for ai in a])
+        top_OR_faces_side = faces.findAt(*a)
+        ra.Set(faces=top_OR_faces_side, name='Top_OR_faces_side')
 
     edges_shell = ra.instances[inst_name_shell].edges
     shell_bottom_edges = edges_shell.getByBoundingBox(
@@ -1079,6 +1130,18 @@ def _create_loads_bcs(cc):
                                ur3=UNSET,
                                amplitude=UNSET, distributionType=UNIFORM,
                                fieldName='', localCsys=ra_cyl_csys)
+            if cc.use_DLR_bc:
+                region = ra.sets['Bottom_IR_faces_side']
+                mod.DisplacementBC(name='BC_Bottom_IR_side',
+                                   createStepName='Initial', region=region,
+                                   u1=bc_fix_bottom_uR,
+                                   u2=UNSET,
+                                   u3=UNSET,
+                                   ur1=UNSET,
+                                   ur2=UNSET,
+                                   ur3=UNSET,
+                                   amplitude=UNSET, distributionType=UNIFORM,
+                                   fieldName='', localCsys=ra_cyl_csys)
     if cc.resin_add_BOR:
         if (bc_fix_bottom_uR==SET or bc_fix_bottom_v==SET or
             bc_fix_bottom_u3==SET):
@@ -1093,6 +1156,19 @@ def _create_loads_bcs(cc):
                                ur3=UNSET,
                                amplitude=UNSET, distributionType=UNIFORM,
                                fieldName='', localCsys=ra_cyl_csys)
+            if cc.use_DLR_bc:
+                region = ra.sets['Bottom_OR_faces_side']
+                mod.DisplacementBC(name='BC_Bottom_OR_side',
+                                   createStepName='Initial', region=region,
+                                   u1=bc_fix_bottom_uR,
+                                   u2=UNSET,
+                                   u3=UNSET,
+                                   ur1=UNSET,
+                                   ur2=UNSET,
+                                   ur3=UNSET,
+                                   amplitude=UNSET, distributionType=UNIFORM,
+                                   fieldName='', localCsys=ra_cyl_csys)
+
     ur1_bottom = UNSET
     ur2_bottom = UNSET
     ur3_bottom = UNSET
@@ -1136,6 +1212,18 @@ def _create_loads_bcs(cc):
                                ur3=UNSET,
                                amplitude=UNSET, distributionType=UNIFORM,
                                fieldName='', localCsys=ra_cyl_csys)
+            if cc.use_DLR_bc:
+                region = ra.sets['Top_IR_faces_side']
+                mod.DisplacementBC(name='BC_Top_IR_side',
+                                   createStepName='Initial', region=region,
+                                   u1=bc_fix_top_uR,
+                                   u2=UNSET,
+                                   u3=UNSET,
+                                   ur1=UNSET,
+                                   ur2=UNSET,
+                                   ur3=UNSET,
+                                   amplitude=UNSET, distributionType=UNIFORM,
+                                   fieldName='', localCsys=ra_cyl_csys)
     if cc.resin_add_TOR:
         if cc.bc_fix_top_uR or cc.bc_fix_top_v:
             region = ra.sets['Top_OR_faces']
@@ -1149,6 +1237,18 @@ def _create_loads_bcs(cc):
                                ur3=UNSET,
                                amplitude=UNSET, distributionType=UNIFORM,
                                fieldName='', localCsys=ra_cyl_csys)
+            if cc.use_DLR_bc:
+                region = ra.sets['Top_OR_faces_side']
+                mod.DisplacementBC(name='BC_Top_OR_side',
+                                   createStepName='Initial', region=region,
+                                   u1=bc_fix_top_uR,
+                                   u2=UNSET,
+                                   u3=UNSET,
+                                   ur1=UNSET,
+                                   ur2=UNSET,
+                                   ur3=UNSET,
+                                   amplitude=UNSET, distributionType=UNIFORM,
+                                   fieldName='', localCsys=ra_cyl_csys)
     ur1_top = UNSET
     ur2_top = UNSET
     ur3_top = UNSET

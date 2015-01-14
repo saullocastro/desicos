@@ -43,6 +43,7 @@ defaults = {
             'resin_tir_w2': 25.4,
             'resin_tor_w1': 25.4,
             'resin_tor_w2': 25.4,
+            'use_DLR_bc': False,
             # analysis parameters
             'damping_factor1': 1.e-7,
             'damping_factor2': 1.e-7,

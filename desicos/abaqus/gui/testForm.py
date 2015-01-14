@@ -41,6 +41,7 @@ params = ['rbot', 'H', 'alphadeg','betadeg','omegadeg',
 'resin_E', 'resin_nu', 'resin_numel',
 'resin_bot_h', 'resin_bir_w1', 'resin_bir_w2', 'resin_bor_w1', 'resin_bor_w2',
 'resin_top_h', 'resin_tir_w1', 'resin_tir_w2', 'resin_tor_w1', 'resin_tor_w2',
+'use_DLR_bc',
 'use_job_stopper',
 'laminate','stack',
 'allowables', 'timeInterval', 'stress_output',
@@ -148,6 +149,7 @@ class TestForm(AFXForm):
         self.resin_tir_w2Kw = AFXFloatKeyword(self.cmd, 'resin_tir_w2', TRUE)
         self.resin_tor_w1Kw = AFXFloatKeyword(self.cmd, 'resin_tor_w1', TRUE)
         self.resin_tor_w2Kw = AFXFloatKeyword(self.cmd, 'resin_tor_w2', TRUE)
+        self.use_DLR_bcKw = AFXBoolKeyword(self.cmd, 'use_DLR_bc', TRUE_FALSE, TRUE)
 
         self.laminapropKw = AFXTupleKeyword(self.dummy, 'laminaprop',FALSE)
         self.allowablesKw = AFXTupleKeyword(self.cmd, 'allowables', TRUE)
