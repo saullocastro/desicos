@@ -351,6 +351,11 @@ class TestForm(AFXForm):
                        'gui_commands.clean_output_folder("{0}")\n'.format(
                            std_name))
             sendCommand(command)
-            showAFXInformationDialog(self.db, 'Output folder cleaned!')
+            path = os.path.join(TMP_DIR, std_name, 'outputs')
+            if len(os.listdir(path)) == 0:
+                text = 'Folder {0} has been cleaned!'.format(path)
+            else:
+                text = 'Some files in {0} cannot be removed!'.format(path)
+            showAFXInformationDialog(self.db, text)
         else:
             pass

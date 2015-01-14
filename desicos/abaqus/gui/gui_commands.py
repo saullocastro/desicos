@@ -295,13 +295,17 @@ def clean_output_folder(std_name):
         print('Study has not been created!')
         print('')
         return
+    std = stds[std_name]
+    cwd = os.getcwd()
+    os.chdir(std.output_dir)
     try:
-        std = stds[std_name]
-        shutil.rmtree(std.output_dir, ignore_errors=True)
-        os.makedirs(std.output_dir)
+        if os.name == 'nt':
+            print os.system('del /q *.*')
+        else:
+            print os.system('rm *.*')
     except:
         pass
-    print('Folder {0} has been cleaned!'.format(std.output_dir))
+    os.chdir(cwd)
 
 
 def save_study(std_name, params_from_gui):
