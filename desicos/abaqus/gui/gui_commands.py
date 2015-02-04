@@ -356,10 +356,44 @@ def load_study(std_name):
         abaqus_functions.set_colors_ti(cc)
 
 
+def reconstruct_params_from_gui(std):
+    params = {}
+    for attr in ccattrs:
+        if attr in ('laminapropKeys', 'allowables', 'stack', 'plyts',
+                    'damping_factor1', 'damping_factor2'):
+            continue
+        value = getattr(std.ccs[0], attr)
+        params[attr] = value
+
+    # Set artificial_dampingX and damping_factorX manually
+    damping_attrs = [('damping_factor1', 'artificial_damping1'),
+                     ('damping_factor2', 'artificial_damping2')]
+    for damp_attr, art_attr in damping_attrs:
+        value = getattr(std.ccs[0], damp_attr)
+        params[damp_attr] = value if (value is not None) else 0.
+        params[art_attr] = value is not None
+
+    # Set laminate properties
+    # TODO: more complicated layups, interaction with lamina/allowable DB
+    params['stack'] = ','.join(map(str, std.ccs[0].stack))
+    params['plyt'] = str(std.ccs[0].plyts[0])
+    params['laminaprop'] = ','.join(map(str, std.ccs[0].laminaprops[0]))
+    params['laminapropKey'] = 'Enter New'
+    params['allowables'] = ','.join(map(str, std.ccs[0].allowables[0]))
+    params['allowablesKey'] = 'Enter New'
+
+    # TODO: imperfections etc.
+    std.params_from_gui = params
+
+
 def load_study_gui(std_name, form):
     std = study.Study()
     std.tmp_dir = TMP_DIR
     std.name = std_name
     std = std.load()
+    saved_from_gui = len(std.params_from_gui) != 0
+    if not saved_from_gui:
+        reconstruct_params_from_gui(std)
     form.read_params_from_gui(std.params_from_gui)
+    return saved_from_gui
 

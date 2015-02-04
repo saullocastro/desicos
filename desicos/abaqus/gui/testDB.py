@@ -1118,7 +1118,8 @@ class TestDB(AFXDataDialog):
                        'gui_commands.load_study("{0}")\n'.format(std_name))
             sendCommand(command)
             reload(gui_commands)
-            gui_commands.load_study_gui(std_name, form)
+            if not gui_commands.load_study_gui(std_name, form):
+                message('Warning: The loaded study was not saved from the GUI. Layup and imperfection data may be missing.')
             if std_name:
                 outpath = os.path.join(TMP_DIR, std_name)
             else:
