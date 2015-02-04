@@ -18,7 +18,7 @@ class ConeCyl(object):
 
     Carries all the information necessary to create a finite element model for
     the analysis of conical and cylindrical structures. The tables below show
-    the attributes grouped by cathegory.
+    the attributes grouped by category.
 
     =====================  ==================================================
     General Attributes     Description
