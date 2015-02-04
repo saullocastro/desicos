@@ -120,7 +120,6 @@ def apply_imp_t(
 
 def create_study(**kwargs):
     # setting defaults
-    allowables = kwargs.get('allowables')
     pl_table = kwargs.get('pl_table')
     pload_step = kwargs.get('pload_step')
     d_table = kwargs.get('d_table')
@@ -172,6 +171,7 @@ def create_study(**kwargs):
     kwargs['plyts'] = [float(i) if i!='' else float(laminate[0,1])
                        for i in laminate[:len(stack),1]]
     #TODO currently only one allowable is allowed for stress analysis
+    kwargs['allowables'] = [kwargs['allowables'] for _ in stack]
     #allowablesKeys = [float(i) if i!='' else laminate[0,3] \
     #         for i in laminate[:len(stack),1]]
     #

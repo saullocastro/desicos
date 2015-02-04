@@ -291,6 +291,7 @@ class ConeCyl(object):
         self.stack = []
         self.plyts = []
         self.laminaprops = []
+        self.allowable = None
         self.allowables  = []
         self.laminapropKey  = 'material'
         self.laminapropKeys  = []
@@ -464,8 +465,8 @@ class ConeCyl(object):
         for cutout in self.cutouts:
             cutout.rebuild()
 
-        if not isinstance(self.allowables, list):
-            self.allowables = [self.allowables for i in self.stack]
+        if self.allowable and not self.allowables:
+            self.allowables = [self.allowable for i in self.stack]
 
         # laminapropKeys
         if not self.laminapropKeys:
