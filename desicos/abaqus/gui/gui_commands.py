@@ -338,11 +338,12 @@ def load_study(std_name):
     vpname = __main__.session.currentViewportName
     __main__.session.viewports[vpname].setValues(displayedObject = None)
     mdb = __main__.mdb
-    mod = mdb.models[std_name + '_model_01']
-    p = mod.parts['Shell']
-    __main__.session.viewports[vpname].setValues(displayedObject = p)
-    a = mod.rootAssembly
-    a.regenerate()
+    if std.ccs[0].model_name in mdb.models.keys():
+        mod = mdb.models[std.ccs[0].model_name]
+        p = mod.parts['Shell']
+        __main__.session.viewports[vpname].setValues(displayedObject = p)
+        a = mod.rootAssembly
+        a.regenerate()
 
     for cc in std.ccs:
         if not cc.model_name in mdb.models.keys():

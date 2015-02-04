@@ -54,8 +54,6 @@ class Study(object):
             cc.tmp_dir = self.tmp_dir
             cc.study_dir = self.study_dir
             cc.output_dir = self.output_dir
-            cc.rename = False
-            cc.model_name = self.name + '_model_{0:02d}'.format(cc.index+1)
             cc.rebuild()
         self.excel_name = os.path.join(self.study_dir,
                                        '{0}.xls'.format(self.name))
