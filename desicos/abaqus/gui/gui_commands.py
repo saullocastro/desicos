@@ -18,7 +18,6 @@ ccattrs = ['rbot','H','alphadeg','plyts',
 'axial_displ', 'axial_load', 'axial_step',
 'pressure_load', 'pressure_step',
 #'Nxxtop', 'Nxxtop_vec',
-'artificial_damping1', 'artificial_damping2',
 'damping_factor1', 'minInc1', 'initialInc1', 'maxInc1', 'maxNumInc1',
 'damping_factor2', 'minInc2', 'initialInc2', 'maxInc2', 'maxNumInc2',
 'bc_fix_bottom_uR', 'bc_fix_bottom_v', 'bc_bottom_clamped',
@@ -200,6 +199,13 @@ def create_study(**kwargs):
         else:
             omegadegs = []
     num_models = max(num_models, len(betadegs), len(omegadegs))
+    #
+    # damping
+    #
+    if not kwargs['artificial_damping1']:
+        kwargs['damping_factor1'] = None
+    if not kwargs['artificial_damping2']:
+        kwargs['damping_factor2'] = None
     #
     std_name = find_std_name(kwargs.get('std_name'))
     #
