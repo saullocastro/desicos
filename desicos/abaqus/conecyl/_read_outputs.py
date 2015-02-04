@@ -24,8 +24,8 @@ def read_outputs(self, last_frame=False, last_cross_section=True,
             if description.find('EigenValue') > -1:
                 pcr = float(description.split('EigenValue =')[1].strip())
                 pcrs.append(pcr)
-        self.zdisp = np.linspace(       0., self.axial_displ,10)
-        self.zload = np.linspace(min(pcrs),        min(pcrs),10)
+        self.zdisp = np.linspace(       0., self.axial_displ or 1., 10)
+        self.zload = np.linspace(min(pcrs),              min(pcrs), 10)
         self.detach_results(odb)
         return True
 
