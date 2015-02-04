@@ -130,9 +130,6 @@ def create_study(**kwargs):
     omegadeg = kwargs.get('omegadeg', 0.)
     betadegs = kwargs.get('betadegs')
     omegadegs = kwargs.get('omegadegs')
-    kwargs['plyts'] = kwargs.get('plyts', [])
-    kwargs['stack'] = kwargs.get('stack', [])
-    kwargs['laminapropKeys'] = kwargs.get('laminapropKeys', [])
 
     imp_num = {}
     imp_num['pl'] = kwargs.get('pl_num')
