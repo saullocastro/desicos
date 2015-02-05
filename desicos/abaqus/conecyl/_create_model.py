@@ -1174,7 +1174,7 @@ def _create_loads_bcs(cc):
     ur1_bottom = UNSET
     ur2_bottom = UNSET
     ur3_bottom = UNSET
-    if (not (cc.resin_add_BIR or cc.resin_add_BOR) and cc.bc_bottom_clamped):
+    if cc.bc_bottom_clamped:
         ur1_bottom = SET
         ur2_bottom = SET
         ur3_bottom = SET
@@ -1254,13 +1254,11 @@ def _create_loads_bcs(cc):
     ur1_top = UNSET
     ur2_top = UNSET
     ur3_top = UNSET
-    if (not (cc.resin_add_TIR or cc.resin_add_TOR) and cc.bc_top_clamped):
+    if cc.bc_top_clamped:
         ur1_top = SET
         ur2_top = SET
         ur3_top = SET
-    if (cc.bc_fix_top_uR or cc.bc_fix_top_v
-        or (not (cc.resin_add_TIR or cc.resin_add_TOR) and
-            cc.bc_top_clamped)):
+    if cc.bc_fix_top_uR or cc.bc_fix_top_v or cc.bc_top_clamped:
         mod.DisplacementBC(name='BC_Top_Shell',
                            createStepName='Initial',
                            region=Region(edges=shell_top_edges),

@@ -145,9 +145,9 @@ class ConeCyl(object):
                            Figure 1 <figure_conecyl>`)
     ``bc_bottom_clamped``  ``bool``, if the bottom edge should be clamped
 
-                           .. note:: Only applicable when
-                                     ``cc.resin_add_BIR==False and``
-                                     ``cc.resin_add_BOR==False``
+                           .. note:: Until version 2.1.3 (inclusive), this
+                                     setting would not apply if
+                                     ``cc.resin_add_BIR or cc.resin_add_BOR``
 
     ``bc_fix_top_uR``      ``bool``, if the radial displacement should be
                            constrained at the top edge (:ref:`cf. Figure 1
@@ -157,9 +157,9 @@ class ConeCyl(object):
                            Figure 1 <figure_conecyl>`)
     ``bc_top_clamped``     ``bool``, if the top edge should be clamped
 
-                           .. note:: Only applicable when
-                                     ``cc.resin_add_TIR==False and ``
-                                     ``cc.resin_add_TOR==False``
+                           .. note:: Until version 2.1.3 (inclusive), this
+                                     setting would not apply if
+                                     ``cc.resin_add_TIR or cc.resin_add_TOR``
     =====================  ==================================================
 
     =====================  ==================================================
