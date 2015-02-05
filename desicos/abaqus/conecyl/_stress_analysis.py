@@ -174,8 +174,6 @@ def calc_frames(cc, frames=None, MSlimits=[0.0,0.2,0.5], frame_indexes=[]):
     else:
         iframes = [frames[i] for i in frame_indexes]
     max_id = iframes[-1].frameId
-    print_ms_tsai_hill = [True for i in MSlimits]
-    print_ms_tsai_wu = [True for i in MSlimits]
     i_mslimit = 0
     # finding frame first buckling and first minimum
     fb_load = 0.
