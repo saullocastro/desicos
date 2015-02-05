@@ -156,6 +156,11 @@ def plot_stress_analysis(self, disp_force_frame = 'DISP'):
         xaxis = [i for i in range(len(self.zdisp))]
         xlabel = 'Frame index'
     for key in keys:
+        # Verify that failure data is present, before attempting to plot
+        if len(self.hashin_max_ms) == 0:
+            continue
+        if key not in next(self.hashin_max_ms.itervalues()):
+            continue
         xs = []; ms = []; fi = []
         for f_num in self.hashin_max_ms.keys():
             xs.append(xaxis[f_num])
