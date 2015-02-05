@@ -735,7 +735,7 @@ class TestDB(AFXDataDialog):
         postVF2 = FXVerticalFrame(postVF, opts=LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
         self.model_to_post = AFXComboBox(postVF2, 0, 10, 'Select model:',
                              form.model_to_postKw)
-        FXLabel(postVF2, 'Stress analysis using the Hashin criterion (implemented for composite/monolitic only)')
+        FXLabel(postVF2, 'Stress analysis using the Hashin and Tsai-Wu criteria (implemented for composite/monolitic only)')
         FXLabel(postVF2, 'This macro performs an envolope among all elements, ' +\
                         'among all the plies, considering for each ply: the ' +\
                         'bottom, the middle and the top')

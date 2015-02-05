@@ -89,6 +89,8 @@ def _create_mesh(cc):
             if i < len(cc.allowables) and material_type <> ISOTROPIC:
                 ALLOWABLES=tuple([abs(j) for j in cc.allowables[i]])
                 myMat.HashinDamageInitiation(table=(ALLOWABLES,))
+                ALLOWABLES_TSAI_WU = ALLOWABLES[0:5] + (-0.5,)
+                myMat.elastic.FailStress(table=(ALLOWABLES_TSAI_WU, ))
     abaqus_functions.create_composite_layup(name='CompositePlate',
             stack=cc.stack, plyts=cc.plyts, mat_names=mat_names,
             part=part_shell, part_csys=part_csys,
@@ -1311,7 +1313,7 @@ def _create_loads_bcs(cc):
                     region=set_shell_faces,
                     createStepName=cc.step2Name,
                     variables=('S', 'HSNFTCRT', 'HSNFCCRT', 'HSNMTCRT',
-                        'HSNMCCRT'),
+                        'HSNMCCRT', 'CFAILURE'),
                     layupNames = ('INST_SHELL.CompositePlate',),
                     layupLocationMethod = ALL_LOCATIONS,
                     timeInterval=cc.timeInterval,

@@ -68,8 +68,8 @@ def calc_frame(cc, frame, frame_i, max_id, check_print_report = True):
     print 'processing frame % 4d / % 4d, axial displ = %1.3f, reaction load = %1.2f' \
           % (frame_id, max_id, cc.zdisp[frame_i], cc.zload[frame_i])
 
-    all_failure_keys = ['HSNFCCRT', 'HSNFTCRT', 'HSNMCCRT', 'HSNMTCRT']
-    all_failure_labels = ['Hashin,FC','Hashin,FT','Hashin,MC','Hashin,MT']
+    all_failure_keys = ['HSNFCCRT', 'HSNFTCRT', 'HSNMCCRT', 'HSNMTCRT', 'TSAIW']
+    all_failure_labels = ['Hashin,FC','Hashin,FT','Hashin,MC','Hashin,MT', 'Tsai-Wu']
     failure_keys = [key for key in all_failure_keys if key in f.fieldOutputs.keys()]
     failure_headers = dict(zip(all_failure_keys, all_failure_labels))
     raw_failure_data = {}

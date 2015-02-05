@@ -95,8 +95,9 @@ def configure_session():
                                   maxAutoCompute=False,
                                   maxValue=185)
         #
-        if name.find('FI_HSNFCCRT') > -1 or name.find('FI_HSNFTCRT') > -1\
-        or name.find('FI_HSNMCCRT') > -1 or name.find('FI_HSNMTCRT') > -1:
+        if (name.find('FI_HSNFCCRT') > -1 or name.find('FI_HSNFTCRT') > -1
+         or name.find('FI_HSNMCCRT') > -1 or name.find('FI_HSNMTCRT') > -1
+         or name.find('FI_TSAIW')    > -1):
             ay.axisData.setValues(labelNumDigits=1,
                                   minAutoCompute=False,
                                   minValue=0,
@@ -110,6 +111,7 @@ def configure_session():
         #
         if (name.find('MS_HSNFCCRT') > -1 or name.find('MS_HSNFTCRT') > -1
          or name.find('MS_HSNMCCRT') > -1 or name.find('MS_HSNMTCRT') > -1
+         or name.find('MS_TSAIW')    > -1
          or name.find('MS_MAX')      > -1 or name.find('MS_MIN')      > -1):
             ay.axisData.setValues(labelNumDigits=1,
                                   minAutoCompute=False,

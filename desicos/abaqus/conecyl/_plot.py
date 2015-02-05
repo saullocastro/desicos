@@ -140,11 +140,12 @@ def plot_displacements(self, step_num=1, frame_num = -1):
                 legendLabel  = 'Max displacement = %f mm' % maxdisp)
 
 def plot_stress_analysis(self, disp_force_frame = 'DISP'):
-    keys = ['HSNFCCRT','HSNFTCRT','HSNMCCRT','HSNMTCRT']
+    keys = ['HSNFCCRT','HSNFTCRT','HSNMCCRT','HSNMTCRT', 'TSAIW']
     names = { 'HSNFCCRT': 'Hashin, Fiber Compression',
               'HSNFTCRT': 'Hashin, Fiber Tension',
               'HSNMCCRT': 'Hashin, Matrix Compression',
-              'HSNMTCRT': 'Hashin, Matrix Tension' }
+              'HSNMTCRT': 'Hashin, Matrix Tension',
+              'TSAIW': 'Tsai-Wu'}
     dff = disp_force_frame.upper()
     if   dff == 'DISP':
         xlabel = 'End-Shortening, mm'
