@@ -238,7 +238,7 @@ class TestForm(AFXForm):
             laminapropKeys = [self.laminapropKeyKw.getValue()]
             plyts = [self.plytKw.getValue()]
             stack = [float(i) for i in self.stackKw.getValues().split(',')]
-            tmp = numpy.empty((40,3),dtype='|S50')
+            tmp = numpy.empty((testDB.NUM_PLIES, 3), dtype='|S50')
             tmp.fill('')
             tmp[:len(laminapropKeys),0] = laminapropKeys
             tmp[:len(plyts),1] = plyts

@@ -18,7 +18,7 @@ class ConeCyl(object):
 
     Carries all the information necessary to create a finite element model for
     the analysis of conical and cylindrical structures. The tables below show
-    the attributes grouped by cathegory.
+    the attributes grouped by category.
 
     =====================  ==================================================
     General Attributes     Description
@@ -291,6 +291,7 @@ class ConeCyl(object):
         self.stack = []
         self.plyts = []
         self.laminaprops = []
+        self.allowable = None
         self.allowables  = []
         self.laminapropKey  = 'material'
         self.laminapropKeys  = []
@@ -464,8 +465,8 @@ class ConeCyl(object):
         for cutout in self.cutouts:
             cutout.rebuild()
 
-        if not isinstance(self.allowables, list):
-            self.allowables = [self.allowables for i in self.stack]
+        if self.allowable and not self.allowables:
+            self.allowables = [self.allowable for i in self.stack]
 
         # laminapropKeys
         if not self.laminapropKeys:

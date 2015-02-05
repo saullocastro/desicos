@@ -18,7 +18,6 @@ ccattrs = ['rbot','H','alphadeg','plyts',
 'axial_displ', 'axial_load', 'axial_step',
 'pressure_load', 'pressure_step',
 #'Nxxtop', 'Nxxtop_vec',
-'artificial_damping1', 'artificial_damping2',
 'damping_factor1', 'minInc1', 'initialInc1', 'maxInc1', 'maxNumInc1',
 'damping_factor2', 'minInc2', 'initialInc2', 'maxInc2', 'maxNumInc2',
 'bc_fix_bottom_uR', 'bc_fix_bottom_v', 'bc_bottom_clamped',
@@ -120,7 +119,6 @@ def apply_imp_t(
 
 def create_study(**kwargs):
     # setting defaults
-    allowables = kwargs.get('allowables')
     pl_table = kwargs.get('pl_table')
     pload_step = kwargs.get('pload_step')
     d_table = kwargs.get('d_table')
@@ -131,9 +129,6 @@ def create_study(**kwargs):
     omegadeg = kwargs.get('omegadeg', 0.)
     betadegs = kwargs.get('betadegs')
     omegadegs = kwargs.get('omegadegs')
-    kwargs['plyts'] = kwargs.get('plyts', [])
-    kwargs['stack'] = kwargs.get('stack', [])
-    kwargs['laminapropKeys'] = kwargs.get('laminapropKeys', [])
 
     imp_num = {}
     imp_num['pl'] = kwargs.get('pl_num')
@@ -172,6 +167,7 @@ def create_study(**kwargs):
     kwargs['plyts'] = [float(i) if i!='' else float(laminate[0,1])
                        for i in laminate[:len(stack),1]]
     #TODO currently only one allowable is allowed for stress analysis
+    kwargs['allowables'] = [kwargs['allowables'] for _ in stack]
     #allowablesKeys = [float(i) if i!='' else laminate[0,3] \
     #         for i in laminate[:len(stack),1]]
     #
@@ -203,6 +199,13 @@ def create_study(**kwargs):
         else:
             omegadegs = []
     num_models = max(num_models, len(betadegs), len(omegadegs))
+    #
+    # damping
+    #
+    if not kwargs['artificial_damping1']:
+        kwargs['damping_factor1'] = None
+    if not kwargs['artificial_damping2']:
+        kwargs['damping_factor2'] = None
     #
     std_name = find_std_name(kwargs.get('std_name'))
     #
@@ -338,11 +341,12 @@ def load_study(std_name):
     vpname = __main__.session.currentViewportName
     __main__.session.viewports[vpname].setValues(displayedObject = None)
     mdb = __main__.mdb
-    mod = mdb.models[std_name + '_model_01']
-    p = mod.parts['Shell']
-    __main__.session.viewports[vpname].setValues(displayedObject = p)
-    a = mod.rootAssembly
-    a.regenerate()
+    if std.ccs[0].model_name in mdb.models.keys():
+        mod = mdb.models[std.ccs[0].model_name]
+        p = mod.parts['Shell']
+        __main__.session.viewports[vpname].setValues(displayedObject = p)
+        a = mod.rootAssembly
+        a.regenerate()
 
     for cc in std.ccs:
         if not cc.model_name in mdb.models.keys():
@@ -352,10 +356,44 @@ def load_study(std_name):
         abaqus_functions.set_colors_ti(cc)
 
 
+def reconstruct_params_from_gui(std):
+    params = {}
+    for attr in ccattrs:
+        if attr in ('laminapropKeys', 'allowables', 'stack', 'plyts',
+                    'damping_factor1', 'damping_factor2'):
+            continue
+        value = getattr(std.ccs[0], attr)
+        params[attr] = value
+
+    # Set artificial_dampingX and damping_factorX manually
+    damping_attrs = [('damping_factor1', 'artificial_damping1'),
+                     ('damping_factor2', 'artificial_damping2')]
+    for damp_attr, art_attr in damping_attrs:
+        value = getattr(std.ccs[0], damp_attr)
+        params[damp_attr] = value if (value is not None) else 0.
+        params[art_attr] = value is not None
+
+    # Set laminate properties
+    # TODO: more complicated layups, interaction with lamina/allowable DB
+    params['stack'] = ','.join(map(str, std.ccs[0].stack))
+    params['plyt'] = str(std.ccs[0].plyts[0])
+    params['laminaprop'] = ','.join(map(str, std.ccs[0].laminaprops[0]))
+    params['laminapropKey'] = 'Enter New'
+    params['allowables'] = ','.join(map(str, std.ccs[0].allowables[0]))
+    params['allowablesKey'] = 'Enter New'
+
+    # TODO: imperfections etc.
+    std.params_from_gui = params
+
+
 def load_study_gui(std_name, form):
     std = study.Study()
     std.tmp_dir = TMP_DIR
     std.name = std_name
     std = std.load()
+    saved_from_gui = len(std.params_from_gui) != 0
+    if not saved_from_gui:
+        reconstruct_params_from_gui(std)
     form.read_params_from_gui(std.params_from_gui)
+    return saved_from_gui
 
