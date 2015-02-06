@@ -134,33 +134,53 @@ class ConeCyl(object):
               distributed or applied in a reference point based on the defined
               boundary conditions
 
-    =====================  ==================================================
-    Boundary Conditions    Description
-    =====================  ==================================================
-    ``bc_fix_bottom_uR``   ``bool``, if the radial displacement should be
-                           constrained at the bottom edge (:ref:`cf. Figure 1
-                           <figure_conecyl>`)
-    ``bc_fix_bottom_v``    ``bool``, if the circumferential displacement
-                           should be constrained at the bottom edge (:ref:`cf.
-                           Figure 1 <figure_conecyl>`)
-    ``bc_bottom_clamped``  ``bool``, if the bottom edge should be clamped
+    =========================  ==================================================
+    Boundary Conditions        Description
+    =========================  ==================================================
+    ``bc_fix_bottom_uR``       ``bool``, if the radial displacement should be
+                               constrained at the bottom edge (:ref:`cf. Figure 1
+                               <figure_conecyl>`)
+    ``bc_fix_bottom_v``        ``bool``, if the circumferential displacement
+                               should be constrained at the bottom edge (:ref:`cf.
+                               Figure 1 <figure_conecyl>`)
+    ``bc_bottom_clamped``      ``bool``, if the bottom edge should be clamped
 
-                           .. note:: Until version 2.1.3 (inclusive), this
-                                     setting would not apply if
-                                     ``cc.resin_add_BIR or cc.resin_add_BOR``
+                               .. note:: Until version 2.1.3 (inclusive), this
+                                         setting would not apply if
+                                         ``cc.resin_add_BIR or cc.resin_add_BOR``
 
-    ``bc_fix_top_uR``      ``bool``, if the radial displacement should be
-                           constrained at the top edge (:ref:`cf. Figure 1
-                           <figure_conecyl>`)
-    ``bc_fix_top_v``       ``bool``, if the circumferential displacement
-                           should be constrained at the top edge (:ref:`cf.
-                           Figure 1 <figure_conecyl>`)
-    ``bc_top_clamped``     ``bool``, if the top edge should be clamped
+    ``bc_fix_bottom_side_uR``  ``bool``, if the radial displacement should be
+                               constrained at the inner / outer side faces of
+                               the bottom resin rings (when present).
+    ``bc_fix_bottom_side_v``   ``bool``, if the circumferential displacement
+                               should be constrained at the inner / outer side
+                               faces of the bottom resin rings (when present).
+    ``bc_fix_bottom_side_u3`` ``bool``, if the vertical displacement should be
+                               should be constrained at the inner / outer side
+                               faces of the bottom resin rings (when present).
 
-                           .. note:: Until version 2.1.3 (inclusive), this
-                                     setting would not apply if
-                                     ``cc.resin_add_TIR or cc.resin_add_TOR``
-    =====================  ==================================================
+    ``bc_fix_top_uR``          ``bool``, if the radial displacement should be
+                               constrained at the top edge (:ref:`cf. Figure 1
+                               <figure_conecyl>`)
+    ``bc_fix_top_v``           ``bool``, if the circumferential displacement
+                               should be constrained at the top edge (:ref:`cf.
+                               Figure 1 <figure_conecyl>`)
+    ``bc_top_clamped``         ``bool``, if the top edge should be clamped
+
+                               .. note:: Until version 2.1.3 (inclusive), this
+                                         setting would not apply if
+                                         ``cc.resin_add_TIR or cc.resin_add_TOR``
+
+    ``bc_fix_top_side_uR``     ``bool``, if the radial displacement should be
+                               constrained at the inner / outer side faces of
+                               the top resin rings (when present).
+    ``bc_fix_top_side_v``      ``bool``, if the circumferential displacement
+                               should be constrained at the inner / outer side
+                               faces of the top resin rings (when present).
+    ``bc_fix_top_side_u3``    ``bool``, if the vertical displacement should be
+                               should be constrained at the inner / outer side
+                               faces of the top resin rings (when present).
+    =========================  ==================================================
 
     =====================  ==================================================
     Resin Rings            Description (:ref:`the attributes are illustrated
@@ -188,8 +208,8 @@ class ConeCyl(object):
     ``resin_tor_w1``       Lower face width of the top outer ring
     ``resin_tor_w2``       Upper face width of the top outer ring
     ``use_DLR_bc``         Apply boundary conditions used at DLR. It consists
-                           on using all the resin rings plus lateral radial
-                           constraints
+                           on using all the resin rings plus radial
+                           constraints only on the side faces of the resin.
     =====================  ==================================================
 
     =====================  ==================================================
@@ -314,9 +334,15 @@ class ConeCyl(object):
         # boundary conditions
         self.bc_fix_bottom_uR = True
         self.bc_fix_bottom_v = True
+        self.bc_fix_bottom_side_uR = False
+        self.bc_fix_bottom_side_v = False
+        self.bc_fix_bottom_side_u3 = False
         self.bc_bottom_clamped = True
         self.bc_fix_top_uR = True
         self.bc_fix_top_v = True
+        self.bc_fix_top_side_uR = False
+        self.bc_fix_top_side_v = False
+        self.bc_fix_top_side_u3 = False
         self.bc_top_clamped = True
         self.bc_gaps_bottom_edge = False
         self.bc_gaps_top_edge = False
@@ -510,7 +536,14 @@ class ConeCyl(object):
             self.bc_gaps_bottom_edge = False
 
         # defining if top edge will have GAP elements
-        if self.bc_fix_top_uR and self.bc_fix_top_v:
+        # This is the case if displacment ctrl is used, and either:
+        # - the top edge is uneven
+        # - the relevant faces are not constrained fully (both uR and v),
+        #       so a pin-type MPC cannot be used.
+        top_needs_gap = not (self.bc_fix_top_uR and self.bc_fix_top_v)
+        side_needs_gap = self.bc_fix_top_side_u3 and not (
+            self.bc_fix_top_side_uR and self.bc_fix_top_side_v)
+        if not (top_needs_gap or side_needs_gap):
             if self.displ_controlled:
                 if self.impconf.uneven_top_edge:
                     self.bc_gaps_top_edge = True
@@ -539,6 +572,19 @@ class ConeCyl(object):
                  'conditions!')
             warn('Using a concentrated load at the reference point!')
             self.distr_load_top = False
+
+        # Apply DLR boundary conditions
+        if self.use_DLR_bc:
+            self.resin_add_BIR = True
+            self.resin_add_BOR = True
+            self.resin_add_TIR = True
+            self.resin_add_TOR = True
+            self.bc_fix_bottom_side_uR = True
+            self.bc_fix_bottom_side_v  = False
+            self.bc_fix_bottom_side_u3 = False
+            self.bc_fix_top_side_uR    = True
+            self.bc_fix_top_side_v     = False
+            self.bc_fix_top_side_u3    = False
 
         if save_rebuild:
             self.rebuilt = True

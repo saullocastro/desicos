@@ -1100,15 +1100,16 @@ def _create_loads_bcs(cc):
                            amplitude=UNSET, distributionType=UNIFORM,
                            fieldName='', localCsys=ra_cyl_csys)
 
-    bc_fix_bottom_uR = UNSET
-    if cc.bc_fix_bottom_uR:
-        bc_fix_bottom_uR = SET
-    bc_fix_bottom_v = UNSET
-    if cc.bc_fix_bottom_v:
-        bc_fix_bottom_v = SET
-    bc_fix_bottom_u3 = SET
+    bc_fix_bottom_uR      = SET if cc.bc_fix_bottom_uR      else UNSET
+    bc_fix_bottom_v       = SET if cc.bc_fix_bottom_v       else UNSET
+    bc_fix_bottom_u3      = SET
+    bc_fix_bottom_side_uR = SET if cc.bc_fix_bottom_side_uR else UNSET
+    bc_fix_bottom_side_v  = SET if cc.bc_fix_bottom_side_v  else UNSET
+    bc_fix_bottom_side_u3 = SET if cc.bc_fix_bottom_side_u3 else UNSET
+
     if cc.impconf.uneven_bottom_edge:
         bc_fix_bottom_u3 = UNSET
+        bc_fix_bottom_side_u3 = UNSET
         mod.DisplacementBC(name='BC_RP_bot',
                            createStepName='Initial', region=set_RP_bot,
                            u1=SET, u2=SET, u3=SET,
@@ -1132,18 +1133,19 @@ def _create_loads_bcs(cc):
                                ur3=UNSET,
                                amplitude=UNSET, distributionType=UNIFORM,
                                fieldName='', localCsys=ra_cyl_csys)
-            if cc.use_DLR_bc:
-                region = ra.sets['Bottom_IR_faces_side']
-                mod.DisplacementBC(name='BC_Bottom_IR_side',
-                                   createStepName='Initial', region=region,
-                                   u1=bc_fix_bottom_uR,
-                                   u2=UNSET,
-                                   u3=UNSET,
-                                   ur1=UNSET,
-                                   ur2=UNSET,
-                                   ur3=UNSET,
-                                   amplitude=UNSET, distributionType=UNIFORM,
-                                   fieldName='', localCsys=ra_cyl_csys)
+        if (bc_fix_bottom_side_uR==SET or bc_fix_bottom_side_v==SET or
+            bc_fix_bottom_side_u3==SET):
+            region = ra.sets['Bottom_IR_faces_side']
+            mod.DisplacementBC(name='BC_Bottom_IR_side',
+                               createStepName='Initial', region=region,
+                               u1=bc_fix_bottom_side_uR,
+                               u2=bc_fix_bottom_side_v,
+                               u3=bc_fix_bottom_side_u3,
+                               ur1=UNSET,
+                               ur2=UNSET,
+                               ur3=UNSET,
+                               amplitude=UNSET, distributionType=UNIFORM,
+                               fieldName='', localCsys=ra_cyl_csys)
     if cc.resin_add_BOR:
         if (bc_fix_bottom_uR==SET or bc_fix_bottom_v==SET or
             bc_fix_bottom_u3==SET):
@@ -1158,18 +1160,19 @@ def _create_loads_bcs(cc):
                                ur3=UNSET,
                                amplitude=UNSET, distributionType=UNIFORM,
                                fieldName='', localCsys=ra_cyl_csys)
-            if cc.use_DLR_bc:
-                region = ra.sets['Bottom_OR_faces_side']
-                mod.DisplacementBC(name='BC_Bottom_OR_side',
-                                   createStepName='Initial', region=region,
-                                   u1=bc_fix_bottom_uR,
-                                   u2=UNSET,
-                                   u3=UNSET,
-                                   ur1=UNSET,
-                                   ur2=UNSET,
-                                   ur3=UNSET,
-                                   amplitude=UNSET, distributionType=UNIFORM,
-                                   fieldName='', localCsys=ra_cyl_csys)
+        if (bc_fix_bottom_side_uR==SET or bc_fix_bottom_side_v==SET or
+            bc_fix_bottom_side_u3==SET):
+            region = ra.sets['Bottom_OR_faces_side']
+            mod.DisplacementBC(name='BC_Bottom_OR_side',
+                               createStepName='Initial', region=region,
+                               u1=bc_fix_bottom_side_uR,
+                               u2=bc_fix_bottom_side_v,
+                               u3=bc_fix_bottom_side_u3,
+                               ur1=UNSET,
+                               ur2=UNSET,
+                               ur3=UNSET,
+                               amplitude=UNSET, distributionType=UNIFORM,
+                               fieldName='', localCsys=ra_cyl_csys)
 
     ur1_bottom = UNSET
     ur2_bottom = UNSET
@@ -1193,12 +1196,10 @@ def _create_loads_bcs(cc):
                            distributionType=UNIFORM, fieldName='',
                            localCsys=ra_cyl_csys)
 
-    bc_fix_top_uR = UNSET
-    if cc.bc_fix_top_uR:
-        bc_fix_top_uR = SET
-    bc_fix_top_v = UNSET
-    if cc.bc_fix_top_v:
-        bc_fix_top_v = SET
+    bc_fix_top_uR      = SET if cc.bc_fix_top_uR      else UNSET
+    bc_fix_top_v       = SET if cc.bc_fix_top_v       else UNSET
+    bc_fix_top_side_uR = SET if cc.bc_fix_top_side_uR else UNSET
+    bc_fix_top_side_v  = SET if cc.bc_fix_top_side_v  else UNSET
 
     # boundary conditions at the top edge
     if cc.resin_add_TIR:
@@ -1214,18 +1215,18 @@ def _create_loads_bcs(cc):
                                ur3=UNSET,
                                amplitude=UNSET, distributionType=UNIFORM,
                                fieldName='', localCsys=ra_cyl_csys)
-            if cc.use_DLR_bc:
-                region = ra.sets['Top_IR_faces_side']
-                mod.DisplacementBC(name='BC_Top_IR_side',
-                                   createStepName='Initial', region=region,
-                                   u1=bc_fix_top_uR,
-                                   u2=UNSET,
-                                   u3=UNSET,
-                                   ur1=UNSET,
-                                   ur2=UNSET,
-                                   ur3=UNSET,
-                                   amplitude=UNSET, distributionType=UNIFORM,
-                                   fieldName='', localCsys=ra_cyl_csys)
+        if cc.bc_fix_top_side_uR or cc.bc_fix_top_side_v:
+            region = ra.sets['Top_IR_faces_side']
+            mod.DisplacementBC(name='BC_Top_IR_side',
+                               createStepName='Initial', region=region,
+                               u1=bc_fix_top_side_uR,
+                               u2=bc_fix_top_side_v,
+                               u3=UNSET,
+                               ur1=UNSET,
+                               ur2=UNSET,
+                               ur3=UNSET,
+                               amplitude=UNSET, distributionType=UNIFORM,
+                               fieldName='', localCsys=ra_cyl_csys)
     if cc.resin_add_TOR:
         if cc.bc_fix_top_uR or cc.bc_fix_top_v:
             region = ra.sets['Top_OR_faces']
@@ -1239,18 +1240,18 @@ def _create_loads_bcs(cc):
                                ur3=UNSET,
                                amplitude=UNSET, distributionType=UNIFORM,
                                fieldName='', localCsys=ra_cyl_csys)
-            if cc.use_DLR_bc:
-                region = ra.sets['Top_OR_faces_side']
-                mod.DisplacementBC(name='BC_Top_OR_side',
-                                   createStepName='Initial', region=region,
-                                   u1=bc_fix_top_uR,
-                                   u2=UNSET,
-                                   u3=UNSET,
-                                   ur1=UNSET,
-                                   ur2=UNSET,
-                                   ur3=UNSET,
-                                   amplitude=UNSET, distributionType=UNIFORM,
-                                   fieldName='', localCsys=ra_cyl_csys)
+        if cc.bc_fix_top_side_uR or cc.bc_fix_top_side_v:
+            region = ra.sets['Top_OR_faces_side']
+            mod.DisplacementBC(name='BC_Top_OR_side',
+                               createStepName='Initial', region=region,
+                               u1=bc_fix_top_side_uR,
+                               u2=bc_fix_top_side_v,
+                               u3=UNSET,
+                               ur1=UNSET,
+                               ur2=UNSET,
+                               ur3=UNSET,
+                               amplitude=UNSET, distributionType=UNIFORM,
+                               fieldName='', localCsys=ra_cyl_csys)
     ur1_top = UNSET
     ur2_top = UNSET
     ur3_top = UNSET
@@ -1463,18 +1464,24 @@ def _create_loads_bcs(cc):
                                  userMode=DOF_MODE_MPC,
                                  userType=0, csys=ra_cyl_csys)
         if cc.resin_add_TIR:
-            top_IR_faces = ra.sets['Top_IR_faces'].faces
+            all_TIR_faces = [ra.sets['Top_IR_faces']]
+            if cc.bc_fix_top_side_u3:
+                all_TIR_faces.append(ra.sets['Top_IR_faces_side'])
+            set_all_TIR_faces = ra.SetByBoolean(name='Top_IR_faces_all', sets=all_TIR_faces)
             mod.MultipointConstraint(name='MPC_RP_Top_IR',
                                      controlPoint=set_RP_top,
-                                     surface=Region(faces=top_IR_faces),
+                                     surface=Region(faces=set_all_TIR_faces.faces),
                                      mpcType=PIN_MPC,
                                      userMode=DOF_MODE_MPC,
                                      userType=0, csys=ra_cyl_csys)
         if cc.resin_add_TOR:
-            top_OR_faces = ra.sets['Top_OR_faces'].faces
+            all_TOR_faces = [ra.sets['Top_OR_faces']]
+            if cc.bc_fix_top_side_u3:
+                all_TOR_faces.append(ra.sets['Top_OR_faces_side'])
+            set_all_TOR_faces = ra.SetByBoolean(name='Top_OR_faces_all', sets=all_TOR_faces)
             mod.MultipointConstraint(name='MPC_RP_Top_OR',
                                      controlPoint=set_RP_top,
-                                     surface=Region(faces=top_OR_faces),
+                                     surface=Region(faces=set_all_TOR_faces.faces),
                                      mpcType=PIN_MPC,
                                      userMode=DOF_MODE_MPC,
                                      userType=0, csys=ra_cyl_csys)

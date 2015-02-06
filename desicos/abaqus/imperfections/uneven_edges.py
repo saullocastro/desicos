@@ -407,6 +407,12 @@ class UnevenTopEdge(object):
             # taking nodes that are not pinned to the shell
             check = (r_nodes < (cc.rtop - cosa*0.51*tshell))
             nodes = np.hstack((nodes, tmp[check]))
+            if cc.bc_fix_top_side_u3:
+                tmp = np.array(ra.sets['Top_IR_faces_side'].nodes)
+                coords = np.array([n.coordinates for n in tmp])
+                # taking nodes that are not on the top edge
+                check = (coords[:,2] < (cc.H-0.1))
+                nodes = np.hstack((nodes, tmp[check]))
         if cc.resin_add_TOR:
             tmp = np.array(ra.sets['Top_OR_faces'].nodes)
             coords = np.array([n.coordinates for n in tmp])
@@ -414,6 +420,12 @@ class UnevenTopEdge(object):
             # taking nodes that are not pinned to the shell
             check = (r_nodes > (cc.rtop + cosa*0.51*tshell))
             nodes = np.hstack((nodes, tmp[check]))
+            if cc.bc_fix_top_side_u3:
+                tmp = np.array(ra.sets['Top_OR_faces_side'].nodes)
+                coords = np.array([n.coordinates for n in tmp])
+                # taking nodes that are not on the top edge
+                check = (coords[:,2] < (cc.H-0.1))
+                nodes = np.hstack((nodes, tmp[check]))
         coords = np.array([n.coordinates for n in nodes])
         r_nodes = np.sqrt(coords[:,0]**2 + coords[:,1]**2)
         theta_nodes = np.arctan2(coords[:,1], coords[:,0])
