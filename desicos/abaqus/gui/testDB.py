@@ -306,14 +306,18 @@ class TestDB(AFXDataDialog):
         FXLabel(bcVAbot, 'Bottom Edge')
         FXLabel(bcVAbot, '')
         FXLabel(bcVAbot, '')
-        FXCheckButton(bcVAbot, 'Fix Radial Displ.' , form.bc_fix_bottom_uRKw)
-        FXCheckButton(bcVAbot, 'Fix Circumferential Displ.' , form.bc_fix_bottom_vKw)
-        FXCheckButton(bcVAbot, 'Clamp Shell Edge' , form.bc_bottom_clampedKw)
-        FXLabel(bcVAbot, '')
+        FXCheckButton(bcVAbot, 'Fix Radial displ. of shell edge / resin bottom' , form.bc_fix_bottom_uRKw)
+        FXCheckButton(bcVAbot, 'Fix Circumferential displ. of shell edge / resin bottom' , form.bc_fix_bottom_vKw)
+        FXCheckButton(bcVAbot, 'Clamp shell edge' , form.bc_bottom_clampedKw)
         FXLabel(bcVAbot, '')
         FXLabel(bcVAbot, '')
         self.resin_add_BIR = FXCheckButton(bcVAbot, 'Inner Resin Ring Bottom', form.resin_add_BIRKw)
         self.resin_add_BOR = FXCheckButton(bcVAbot, 'Outer Resin Ring Bottom', form.resin_add_BORKw)
+        FXLabel(bcVAbot, '')
+        FXLabel(bcVAbot, '')
+        self.bc_fix_bottom_side_uR = FXCheckButton(bcVAbot, 'Fix Radial displ. of resin sides' , form.bc_fix_bottom_side_uRKw)
+        self.bc_fix_bottom_side_v = FXCheckButton(bcVAbot, 'Fix Circumferential displ. of resin sides' , form.bc_fix_bottom_side_vKw)
+        self.bc_fix_bottom_side_u3 = FXCheckButton(bcVAbot, 'Fix Radial displ. of resin sides' , form.bc_fix_bottom_side_u3Kw)
         FXLabel(bcVAbot, '')
         FXLabel(bcVAbot, '')
         bcVAbot_VA = AFXVerticalAligner(bcVAbot)
@@ -326,14 +330,18 @@ class TestDB(AFXDataDialog):
         FXLabel(bcVAtop, 'Top Edge')
         FXLabel(bcVAtop, '')
         FXLabel(bcVAtop, '')
-        FXCheckButton(bcVAtop, 'Fix Radial Displ.' , form.bc_fix_top_uRKw)
-        FXCheckButton(bcVAtop, 'Fix Circumferential Displ.' , form.bc_fix_top_vKw)
-        FXCheckButton(bcVAtop, 'Clamp Shell Edge' , form.bc_top_clampedKw)
-        FXLabel(bcVAtop, '')
+        FXCheckButton(bcVAtop, 'Fix Radial displ. of shell edge / resin top' , form.bc_fix_top_uRKw)
+        FXCheckButton(bcVAtop, 'Fix Circumferential displ. of shell edge / resin top' , form.bc_fix_top_vKw)
+        FXCheckButton(bcVAtop, 'Clamp shell edge' , form.bc_top_clampedKw)
         FXLabel(bcVAtop, '')
         FXLabel(bcVAtop, '')
         self.resin_add_TIR = FXCheckButton(bcVAtop, 'Inner Resin Ring Top' , form.resin_add_TIRKw)
         self.resin_add_TOR = FXCheckButton(bcVAtop, 'Outer Resin Ring Top' , form.resin_add_TORKw)
+        FXLabel(bcVAtop, '')
+        FXLabel(bcVAtop, '')
+        self.bc_fix_top_side_uR = FXCheckButton(bcVAtop, 'Fix Radial displ. of resin sides' , form.bc_fix_top_side_uRKw)
+        self.bc_fix_top_side_v = FXCheckButton(bcVAtop, 'Fix Circumferential displ. of resin sides' , form.bc_fix_top_side_vKw)
+        self.bc_fix_top_side_u3 = FXCheckButton(bcVAtop, 'Fix Radial displ. of resin sides' , form.bc_fix_top_side_u3Kw)
         FXLabel(bcVAtop, '')
         FXLabel(bcVAtop, '')
         bcVAtop_VA = AFXVerticalAligner(bcVAtop)
@@ -1164,20 +1172,25 @@ class TestDB(AFXDataDialog):
             self.pressure_step.disable()
             self.axial_step.disable()
 
+        # Apply DLR boundary conditions
+        DLR_BC = {
+            'resin_add_BIR' : True,
+            'resin_add_BOR' : True,
+            'resin_add_TIR' : True,
+            'resin_add_TOR' : True,
+            'bc_fix_bottom_side_uR' : True,
+            'bc_fix_bottom_side_v' : False,
+            'bc_fix_bottom_side_u3' : False,
+            'bc_fix_top_side_uR' : True,
+            'bc_fix_top_side_v' : False,
+            'bc_fix_top_side_u3' : False}
         if form.use_DLR_bcKw.getValue():
-            form.resin_add_BIRKw.setValue(True)
-            form.resin_add_BORKw.setValue(True)
-            form.resin_add_TIRKw.setValue(True)
-            form.resin_add_TORKw.setValue(True)
-            self.resin_add_BIR.disable()
-            self.resin_add_BOR.disable()
-            self.resin_add_TIR.disable()
-            self.resin_add_TOR.disable()
+            for key, value in DLR_BC.iteritems():
+                getattr(self, key).disable()
+                getattr(form, key+'Kw').setValue(value)
         else:
-            self.resin_add_BIR.enable()
-            self.resin_add_BOR.enable()
-            self.resin_add_TIR.enable()
-            self.resin_add_TOR.enable()
+            for key in DLR_BC:
+                getattr(self, key).enable()
 
         # plot opened conecyl
         for i, plot_type_button in enumerate(self.plot_type_buttons):

@@ -35,7 +35,9 @@ params = ['rbot', 'H', 'alphadeg','betadeg','omegadeg',
 'damping_factor1', 'minInc1', 'initialInc1', 'maxInc1', 'maxNumInc1',
 'damping_factor2', 'minInc2', 'initialInc2', 'maxInc2', 'maxNumInc2',
 'bc_fix_bottom_uR', 'bc_fix_bottom_v', 'bc_bottom_clamped',
+'bc_fix_bottom_side_uR', 'bc_fix_bottom_side_v', 'bc_fix_bottom_side_u3',
 'bc_fix_top_uR', 'bc_fix_top_v', 'bc_top_clamped',
+'bc_fix_top_side_uR', 'bc_fix_top_side_v', 'bc_fix_top_side_u3',
 'resin_add_BIR', 'resin_add_BOR',
 'resin_add_TIR', 'resin_add_TOR',
 'resin_E', 'resin_nu', 'resin_numel',
@@ -127,9 +129,15 @@ class TestForm(AFXForm):
         self.bc_fix_bottom_uRKw = AFXBoolKeyword(self.cmd, 'bc_fix_bottom_uR', TRUE_FALSE, TRUE)
         self.bc_fix_bottom_vKw = AFXBoolKeyword(self.cmd, 'bc_fix_bottom_v', TRUE_FALSE, TRUE)
         self.bc_bottom_clampedKw = AFXBoolKeyword(self.cmd, 'bc_bottom_clamped', TRUE_FALSE, TRUE)
+        self.bc_fix_bottom_side_uRKw = AFXBoolKeyword(self.cmd, 'bc_fix_bottom_side_uR', TRUE_FALSE, TRUE)
+        self.bc_fix_bottom_side_vKw = AFXBoolKeyword(self.cmd, 'bc_fix_bottom_side_v', TRUE_FALSE, TRUE)
+        self.bc_fix_bottom_side_u3Kw = AFXBoolKeyword(self.cmd, 'bc_fix_bottom_side_u3', TRUE_FALSE, TRUE)
         self.bc_fix_top_uRKw = AFXBoolKeyword(self.cmd, 'bc_fix_top_uR', TRUE_FALSE, TRUE)
         self.bc_fix_top_vKw = AFXBoolKeyword(self.cmd, 'bc_fix_top_v', TRUE_FALSE, TRUE)
         self.bc_top_clampedKw = AFXBoolKeyword(self.cmd, 'bc_top_clamped', TRUE_FALSE, TRUE)
+        self.bc_fix_top_side_uRKw = AFXBoolKeyword(self.cmd, 'bc_fix_top_side_uR', TRUE_FALSE, TRUE)
+        self.bc_fix_top_side_vKw = AFXBoolKeyword(self.cmd, 'bc_fix_top_side_v', TRUE_FALSE, TRUE)
+        self.bc_fix_top_side_u3Kw = AFXBoolKeyword(self.cmd, 'bc_fix_top_side_u3', TRUE_FALSE, TRUE)
 
         # resin rings
         self.resin_EKw = AFXFloatKeyword(self.cmd, 'resin_E', TRUE)
