@@ -1136,6 +1136,7 @@ class TestDB(AFXDataDialog):
                     outpath))
             message(' ')
             form.loaded_study = True
+            self.update_database(True)
             os.chdir(outpath)
             return
 
