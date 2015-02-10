@@ -50,8 +50,8 @@ if not os.path.isdir(localDB_path):
     try:
         os.makedirs(localDB_path)
         _mydump({}, local_ccs_path)
-        _mydump(local_laminaprops_path)
-        _mydump(local_allowables_path)
+        _mydump({}, local_laminaprops_path)
+        _mydump({}, local_allowables_path)
     except:
         msg = error('localDB not found and not created!')
 
