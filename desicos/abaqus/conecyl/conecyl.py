@@ -60,15 +60,15 @@ class ConeCyl(object):
     ``laminapropKeys``     ``list`` a list of strings when different lamina
                            property names are given for each ply (overwrites
                            ``laminapropKey`` when given)
-    ``laminaprop``         ``list``, lamina properties given as
-                           ``[E11, E22, nu12, G12, G13, G23]``
-    ``laminaprops``        ``list`` a list of lists when different lamina
+    ``laminaprop``         ``tuple``, lamina properties given as
+                           ``(E11, E22, nu12, G12, G13, G23)``
+    ``laminaprops``        ``list`` a list of tuples when different lamina
                            properties should be used for each ply (overwrites
                            ``laminaprop``, ``laminapropKey`` and
                            ``laminapropKeys``, when given)
-    ``allowable``          ``list``, lamina allowables given as
-                           ``[S11t, S11c, S22t, S22c, S12, S13]``
-    ``allowables``         ``list`` a list of lists when different lamina
+    ``allowable``          ``tuple``, lamina allowables given as
+                           ``(S11t, S11c, S22t, S22c, S12, S13)``
+    ``allowables``         ``list`` a list of tuples when different lamina
                            allowables should be used for each ply
     =====================  ==================================================
 
@@ -492,7 +492,7 @@ class ConeCyl(object):
             cutout.rebuild()
 
         if self.allowable and not self.allowables:
-            self.allowables = [self.allowable for i in self.stack]
+            self.allowables = [tuple(self.allowable) for i in self.stack]
 
         # laminapropKeys
         if not self.laminapropKeys:
@@ -502,7 +502,7 @@ class ConeCyl(object):
         if not self.laminaprops:
             laminaprops = fetch('laminaprops')
             if self.laminaprop:
-                self.laminaprops = [self.laminaprop for i in self.stack]
+                self.laminaprops = [tuple(self.laminaprop) for i in self.stack]
             else:
                 self.laminaprops = [laminaprops[k] for k in self.laminapropKeys]
 
