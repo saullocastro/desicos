@@ -399,6 +399,14 @@ class ConeCyl(object):
         self.force_output = False
 
 
+    def __setstate__(self, attrs):
+        # Called during unpickling (i.e. loading)
+        # Calling __init__ prevents problems with missing attributes,
+        # when loading from older versions
+        self.__init__()
+        self.__dict__.update(attrs)
+
+
     def from_DB(self, name_DB=''):
         """Fetch all the cone/cylinder data from the database
 
