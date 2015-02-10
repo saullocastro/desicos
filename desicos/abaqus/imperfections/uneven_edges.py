@@ -22,7 +22,7 @@ class Shim(object):
         self.thick = thick
         self.width = width
         self.edge = edge
-        if edge!=None:
+        if edge is not None:
             self.edge.shims.append(self)
 
 
@@ -64,7 +64,7 @@ class UnevenBottomEdge(object):
 
     def __bool__(self):
         cc = self.impconf.conecyl
-        return (bool(self.shims) or bool(self.measured_u3s!=None) or
+        return (bool(self.shims) or bool(self.measured_u3s is not None) or
                 bool(cc.bc_gaps_bottom_edge))
 
 
@@ -184,7 +184,7 @@ class UnevenBottomEdge(object):
         # calculating gaps
         #
         # contributions from measured edge imperfection
-        if self.measured_u3s!=None:
+        if self.measured_u3s is not None:
             measured_u3s = np.asarray(self.measured_u3s)
         else:
             measured_u3s = np.zeros((2, 100))
@@ -295,7 +295,7 @@ class UnevenTopEdge(object):
     def __bool__(self):
         cc = self.impconf.conecyl
         return (bool(self.betadeg) or bool(self.shims) or
-                bool(self.measured_u3s!=None) or bool(cc.bc_gaps_top_edge))
+                bool(self.measured_u3s is not None) or bool(cc.bc_gaps_top_edge))
 
 
     def rebuild(self):
@@ -433,7 +433,7 @@ class UnevenTopEdge(object):
         # calculating gaps
         #
         # contributions from measured edge imperfection
-        if self.measured_u3s!=None:
+        if self.measured_u3s is not None:
             measured_u3s = np.asarray(self.measured_u3s)
         else:
             measured_u3s = np.zeros((2, 100))

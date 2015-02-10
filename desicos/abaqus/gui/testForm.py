@@ -242,7 +242,7 @@ class TestForm(AFXForm):
         # compatibility session
         # laminate from laminapropKeys, plyt, stack
         #
-        if params_from_gui.get('laminate', None)==None:
+        if params_from_gui.get('laminate', None) is None:
             laminapropKeys = [self.laminapropKeyKw.getValue()]
             plyts = [self.plytKw.getValue()]
             stack = [float(i) for i in self.stackKw.getValues().split(',')]
@@ -257,7 +257,7 @@ class TestForm(AFXForm):
 
     def setDefault(self,update_values=True, input_dict=None):
         using_defaults = False
-        if input_dict == None:
+        if input_dict is None:
             using_defaults = True
             input_dict = gui_defaults.defaults
         ignore_list = ['stack','laminate','ploads','laminaprop',

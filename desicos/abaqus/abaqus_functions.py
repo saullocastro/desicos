@@ -218,7 +218,7 @@ def edit_keywords(mod, text, before_pattern=None, insert=False):
     """
     mod.keywordBlock.synchVersions(storeNodesAndElements=False)
     sieBlocks=mod.keywordBlock.sieBlocks
-    if before_pattern==None:
+    if before_pattern is None:
         index=len(sieBlocks) - 2
     else:
         index=None
@@ -227,7 +227,7 @@ def edit_keywords(mod, text, before_pattern=None, insert=False):
             if sieBlock.find(before_pattern) > -1:
                 index=i-1
                 break
-        if index==None:
+        if index is None:
             print 'WARNING - *edit_keywords failed !'
             print '          %s pattern not found !' % before_pattern
             #TODO better error handling here...

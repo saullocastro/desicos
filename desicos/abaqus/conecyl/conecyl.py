@@ -469,11 +469,11 @@ class ConeCyl(object):
                 self.num_of_steps = 2
 
         # angle in radians
-        if self.alphadeg != None:
+        if self.alphadeg is not None:
             self.alpharad = np.deg2rad(self.alphadeg)
 
         self.rtop = self.rbot
-        if self.rbot != None and self.H != None and self.alpharad != None:
+        if self.rbot is not None and self.H is not None and self.alpharad is not None:
             self.rtop = self.rbot - np.tan(self.alpharad) * self.H
         self.L = self.H/np.cos(self.alpharad)
 
@@ -1051,7 +1051,7 @@ class ConeCyl(object):
 
             if not create_npz_only:
                 levels = np.linspace(field.min(), field.max(), num_levels)
-                if ax==None:
+                if ax is None:
                     fig = plt.figure(figsize=figsize)
                     ax = fig.add_subplot(111)
                 else:
@@ -1217,7 +1217,7 @@ class ConeCyl(object):
         cutobj.theta = theta
         cutobj.pt = pt
         cutobj.d = d
-        if numel != None:
+        if numel is not None:
             cutobj.numel = numel
         cutobj.index = len(self.cutouts)
         cutobj.conecyl = self

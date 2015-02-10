@@ -1026,7 +1026,7 @@ def _create_load_steps(cc):
         if cc.separate_load_steps:
             cc.step1Name = 'constant_loads'
             cc.step2Name = 'incremented_loads'
-            if damping_factor1==None:
+            if damping_factor1 is None:
                 mod.StaticStep(name='constant_loads', previous='Initial',
                         nlgeom=ON, maxNumInc=maxNumInc1,
                         stabilizationMethod=NONE, initialInc=initialInc1,
@@ -1039,7 +1039,7 @@ def _create_load_steps(cc):
                         initialInc=initialInc1, minInc=minInc1,
                         maxInc=maxInc1, extrapolation=LINEAR)
 
-            if damping_factor2==None:
+            if damping_factor2 is None:
                 mod.StaticStep(name='incremented_loads',
                         previous='constant_loads', nlgeom=ON,
                         maxNumInc=maxNumInc2, stabilizationMethod=NONE,
@@ -1056,7 +1056,7 @@ def _create_load_steps(cc):
         else:
             cc.step1Name = 'incremented_loads'
             cc.step2Name = 'incremented_loads'
-            if damping_factor2==None:
+            if damping_factor2 is None:
                 mod.StaticStep(name='incremented_loads', previous='Initial',
                         nlgeom=ON, maxNumInc=maxNumInc2,
                         stabilizationMethod=NONE, initialInc=initialInc2,

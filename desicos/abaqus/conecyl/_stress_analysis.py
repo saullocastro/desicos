@@ -176,7 +176,7 @@ def calc_frame(cc, frame, frame_i, max_id, check_print_report = True):
                                          )])
 
 def calc_frames(cc, frames=None, MSlimits=[0.0,0.2,0.5], frame_indexes=[]):
-    if frames == None:
+    if frames is None:
         frames = cc.attach_results().steps[cc.step2Name].frames
     if frame_indexes == []:
         iframes = frames

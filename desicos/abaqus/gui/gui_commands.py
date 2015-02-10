@@ -184,7 +184,7 @@ def create_study(**kwargs):
         betadegs  = [betadeg for i in range(num_models)]
         omegadegs = [omegadeg for i in range(num_models)]
     elif la == 2:
-        if betadegs != None:
+        if betadegs is not None:
             new_betadegs = []
             for betadeg in betadegs:
                 if betadeg:
@@ -192,7 +192,7 @@ def create_study(**kwargs):
             betadegs = new_betadegs
         else:
             betadegs = []
-        if omegadegs != None:
+        if omegadegs is not None:
             new_omegadegs = []
             for omegadeg in omegadegs:
                 if omegadeg:
