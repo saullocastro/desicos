@@ -15,6 +15,7 @@ from desicos.abaqus.utils import remove_special_characters as rsc
 from desicos.abaqus.constants import *
 
 NUM_PLIES = 40
+MAX_MODELS = 40
 
 
 def cc_form2dict(db, form):
@@ -102,7 +103,6 @@ class TestDB(AFXDataDialog):
         self.form = form
         self.form.db = self
         #
-        max_models = 40
         self.logcount = 10000
         self.lamMatrix = {'A':None, 'B':None, 'D':None}
         #
@@ -472,11 +472,11 @@ class TestDB(AFXDataDialog):
         self.imp_current_num['ax'] = 16
         self.imp_current_num['lbmi'] = 16
         self.imp_current_num['cut'] = 16
-        self.imp_maxModels['pl'] = max_models
-        self.imp_maxModels['d'] = max_models
-        self.imp_maxModels['ax'] = max_models
-        self.imp_maxModels['lbmi'] = max_models
-        self.imp_maxModels['cut'] = max_models
+        self.imp_maxModels['pl'] = MAX_MODELS
+        self.imp_maxModels['d'] = MAX_MODELS
+        self.imp_maxModels['ax'] = MAX_MODELS
+        self.imp_maxModels['lbmi'] = MAX_MODELS
+        self.imp_maxModels['cut'] = MAX_MODELS
         self.imp_num_params['pl'] = 2
         self.imp_num_params['d'] = 4
         self.imp_num_params['ax'] = 2
@@ -581,12 +581,12 @@ class TestDB(AFXDataDialog):
         FXLabel(impHF, '    ')
         impVF2 = FXVerticalFrame(impHF)
         FXLabel(impVF2, 'scaling factor=0 will NOT\napply the imperfection', opts=LAYOUT_CENTER_X)
-        self.imp_ms_sf = AFXTable(impVF2, 21, 2,(max_models+1), 2, form.imp_ms_scalingsKw, 0,
+        self.imp_ms_sf = AFXTable(impVF2, 21, 2,(MAX_MODELS+1), 2, form.imp_ms_scalingsKw, 0,
             opts=AFXTABLE_EDITABLE|AFXTABLE_TYPE_FLOAT|AFXTABLE_STYLE_DEFAULT)
         self.imp_ms_sf.setLeadingRows(1)
         self.imp_ms_sf.setLeadingColumns(1)
         self.imp_ms_sf.setLeadingRowLabels('scaling factor')
-        colLabel = '\t'.join(['model {0:02d}'.format(i) for i in range(1, max_models+1)])
+        colLabel = '\t'.join(['model {0:02d}'.format(i) for i in range(1, MAX_MODELS+1)])
         self.imp_ms_sf.setLeadingColumnLabels(colLabel)
         FXLabel(impVF, '')
         FXLabel(impVF, '')
@@ -625,13 +625,13 @@ class TestDB(AFXDataDialog):
         FXLabel(impHF, '    ')
         impVF2 = FXVerticalFrame(impHF)
         FXLabel(impVF2, 'scaling factor=0 will NOT\napply the imperfection', opts=LAYOUT_CENTER_X)
-        self.imp_t_sf = AFXTable(impVF2, 21, 2,(max_models+1), 2,
+        self.imp_t_sf = AFXTable(impVF2, 21, 2,(MAX_MODELS+1), 2,
             form.imp_t_scalingsKw, 0,
             opts=AFXTABLE_EDITABLE|AFXTABLE_TYPE_FLOAT|AFXTABLE_STYLE_DEFAULT)
         self.imp_t_sf.setLeadingRows(1)
         self.imp_t_sf.setLeadingColumns(1)
         self.imp_t_sf.setLeadingRowLabels('scaling factor')
-        colLabel = '\t'.join(['model {0:02d}'.format(i) for i in range(1, max_models+1)])
+        colLabel = '\t'.join(['model {0:02d}'.format(i) for i in range(1, MAX_MODELS+1)])
         self.imp_t_sf.setLeadingColumnLabels(colLabel)
         FXLabel(impVF, '')
         FXLabel(impVF, '')
@@ -663,14 +663,14 @@ class TestDB(AFXDataDialog):
         self.lasw.setCurrent(self.form.laKw.getValue())
         #
         liFB = FXHorizontalFrame(self.lasw)
-        self.betadegs = AFXTable(liFB, 21, 2,(max_models+1), 2,
+        self.betadegs = AFXTable(liFB, 21, 2,(MAX_MODELS+1), 2,
             form.betadegsKw, 0,
             opts=AFXTABLE_EDITABLE|AFXTABLE_TYPE_FLOAT|AFXTABLE_STYLE_DEFAULT)
         self.betadegs.setLeadingRows(1)
         self.betadegs.setLeadingColumns(1)
         self.betadegs.setLeadingRowLabels('beta (degrees)')
         self.betadegs.setLeadingColumnLabels(colLabel)
-        self.omegadegs = AFXTable(liFB, 21, 2,(max_models+1), 2,
+        self.omegadegs = AFXTable(liFB, 21, 2,(MAX_MODELS+1), 2,
             form.omegadegsKw, 0,
             opts=AFXTABLE_EDITABLE|AFXTABLE_TYPE_FLOAT|AFXTABLE_STYLE_DEFAULT)
         self.omegadegs.setLeadingRows(1)
