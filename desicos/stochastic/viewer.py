@@ -277,7 +277,7 @@ class DesicosViewer3D(object):
 		self.ren.AddActor(surfaceActor);
 
 	def addWidgets(self,opt=None):
-		if opt!=None:
+		if opt is not None:
 			if opt.has_key('caption'):
 				self.caption=opt['caption']
 			if opt.has_key('showAxes'):
@@ -391,11 +391,11 @@ class DesicosViewer3D(object):
 			c.SetYTitle(self.ylabel)
 			c.SetZTitle(self.zlabel)
 
-			if self.xrange != None:
+			if self.xrange is not None:
 				c.SetXAxisRange(self.xrange)
-			if self.yrange != None:
+			if self.yrange is not None:
 				c.SetYAxisRange(self.yrange)
-			if self.zrange != None:
+			if self.zrange is not None:
 				c.SetZAxisRange(self.zrange)
 			c.GetProperty().SetColor(0., 0., 0.)
 			c.SetCamera(self.ren.GetActiveCamera())

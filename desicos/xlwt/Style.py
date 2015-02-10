@@ -85,7 +85,7 @@ class StyleCollection(object):
         self._default_xf = self._add_style(self.default_style)[0]
 
     def add(self, style):
-        if style == None:
+        if style is None:
             return 0x10
         return self._add_style(style)[1]
 

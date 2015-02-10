@@ -36,7 +36,7 @@ def read_file(file_name,
     mps = np.loadtxt(file_name, dtype=FLOAT)
     r = np.sqrt(mps[:, 0]**2 + mps[:, 1]**2)
     # measuring model dimensions
-    if R_best_fit == None:
+    if R_best_fit is None:
         R_best_fit   = np.average(r)
         warn('The cylinder average radius of the measured points ' +
              'assumed to be {0:1.2f}'.format(R_best_fit))

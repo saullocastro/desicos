@@ -1,6 +1,7 @@
 import __main__
 
 import numpy as np
+from itertools import chain
 
 def get_allow(cc, s11, s22):
     #TODO allowables for each ply
@@ -66,12 +67,18 @@ def calc_frame(cc, frame, frame_i, max_id, check_print_report = True):
     frame_id = frame.frameId
     print 'processing frame % 4d / % 4d, axial displ = %1.3f, reaction load = %1.2f' \
           % (frame_id, max_id, cc.zdisp[frame_i], cc.zload[frame_i])
-    hashin = {'HSNFCCRT':None, 'HSNFTCRT':None, 'HSNMCCRT':None, 'HSNMTCRT':None}
-    hashin_max = {'HSNFCCRT':None, 'HSNFTCRT':None, 'HSNMCCRT':None, 'HSNMTCRT':None}
-    hashin_max_ms = {'HSNFCCRT':None, 'HSNFTCRT':None, 'HSNMCCRT':None, 'HSNMTCRT':None}
-    hashin_max_pos = {'HSNFCCRT':None, 'HSNFTCRT':None, 'HSNMCCRT':None, 'HSNMTCRT':None}
-    hashin_pts = {'HSNFCCRT':None, 'HSNFTCRT':None, 'HSNMCCRT':None, 'HSNMTCRT':None}
-    hashin_fields = {'HSNFCCRT':[]  , 'HSNFTCRT':[]  , 'HSNMCCRT':[]  , 'HSNMTCRT':[]  }
+
+    all_failure_keys = ['HSNFCCRT', 'HSNFTCRT', 'HSNMCCRT', 'HSNMTCRT', 'TSAIW']
+    all_failure_labels = ['Hashin,FC','Hashin,FT','Hashin,MC','Hashin,MT', 'Tsai-Wu']
+    failure_keys = [key for key in all_failure_keys if key in f.fieldOutputs.keys()]
+    failure_headers = dict(zip(all_failure_keys, all_failure_labels))
+    raw_failure_data = {}
+    failure_max = {}
+    failure_max_ms = {}
+    failure_max_pos = {}
+    failure_pts = {}
+    failure_fields = dict((key, []) for key in failure_keys)
+
     stress = {'S11':None, 'S22':None, 'S12':None }
     stress_min = {'S11':None, 'S22':None, 'S12':None }
     stress_min_ms = {'S11':None, 'S22':None, 'S12':None }
@@ -81,17 +88,18 @@ def calc_frame(cc, frame, frame_i, max_id, check_print_report = True):
     stress_max_pos = {'S11':None, 'S22':None, 'S12':None }
     stress_pts = {'S11':None, 'S22':None, 'S12':None }
     stress_fields = {'S11':[]  , 'S22':[]  , 'S12':[]   }
-    for key in hashin.keys():
-        hashin[key] = f.fieldOutputs[key]
-        hashin_pts[key] = f.fieldOutputs[key].locations[0].sectionPoints
+
+    for key in failure_keys:
+        raw_failure_data[key] = f.fieldOutputs[key]
+        failure_pts[key] = f.fieldOutputs[key].locations[0].sectionPoints
     for key in stress.keys():
         stress[key] = f.fieldOutputs['S'].getScalarField(componentLabel=key)
         stress_pts[key] = f.fieldOutputs['S'].locations[0].sectionPoints
-    for key in hashin.keys():
-        for pt in hashin_pts[key]:
-            hashin_fields[key].append(hashin[key].getSubset(sectionPoint=pt))
-        hashin_max[key], hashin_max_pos[key] =\
-            abaqus.maxEnvelope(hashin_fields[key])
+    for key in failure_keys:
+        for pt in failure_pts[key]:
+            failure_fields[key].append(raw_failure_data[key].getSubset(sectionPoint=pt))
+        failure_max[key], failure_max_pos[key] =\
+            abaqus.maxEnvelope(failure_fields[key])
     for key in stress.keys():
         for pt in stress_pts[key]:
             stress_fields[key].append(stress[key].getSubset(sectionPoint=pt))
@@ -103,8 +111,8 @@ def calc_frame(cc, frame, frame_i, max_id, check_print_report = True):
         envelope_values(stress_min, stress_min_pos, 'min')
     stress_max_num, stress_max_pos_num =\
         envelope_values(stress_max, stress_max_pos, 'max')
-    hashin_max_num, hashin_max_pos_num =\
-        envelope_values(hashin_max, hashin_max_pos, 'max')
+    failure_max_num, failure_max_pos_num =\
+        envelope_values(failure_max, failure_max_pos, 'max')
     As11, As22, As12 = get_allow(cc, stress_min_num['S11'], stress_min_num['S22'])
     stress_min_ms['S11'] = abs(As11 / stress_min_num['S11']) - 1.
     stress_min_ms['S22'] = abs(As22 / stress_min_num['S22']) - 1.
@@ -113,69 +121,68 @@ def calc_frame(cc, frame, frame_i, max_id, check_print_report = True):
     stress_max_ms['S11'] = abs(As11 / stress_max_num['S11']) - 1.
     stress_max_ms['S22'] = abs(As22 / stress_max_num['S22']) - 1.
     stress_max_ms['S12'] = abs(As12 / stress_max_num['S12']) - 1.
-    for key in hashin_max_num.keys():
-        hashin_max_ms[key] = 1./np.sqrt(hashin_max_num[key]) - 1.
+    for key in failure_max_num.keys():
+        failure_max_ms[key] = 1./np.sqrt(failure_max_num[key]) - 1.
     cc.stress_min_num    [frame_id] = stress_min_num
     cc.stress_min_ms     [frame_id] = stress_min_ms
     cc.stress_min_pos_num[frame_id] = stress_min_pos_num
     cc.stress_max_num    [frame_id] = stress_max_num
     cc.stress_max_ms     [frame_id] = stress_max_ms
     cc.stress_max_pos_num[frame_id] = stress_max_pos_num
-    cc.hashin_max_num    [frame_id] = hashin_max_num
-    cc.hashin_max_ms     [frame_id] = hashin_max_ms
-    cc.hashin_max_pos_num[frame_id] = hashin_max_pos_num
+    # Keep the old hashin_xx names for ConeCyl properties,
+    # to maintain backwards compatibility
+    cc.hashin_max_num    [frame_id] = failure_max_num
+    cc.hashin_max_ms     [frame_id] = failure_max_ms
+    cc.hashin_max_pos_num[frame_id] = failure_max_pos_num
     if check_print_report:
-        print '\t'.join(['','Hashin,FC','Hashin,FT','Hashin,MC','Hashin,MT',
-                       'S11min','S11max','S22min','S22max','S12min','S12max'])
-        hsn = cc.hashin_max_num[frame_id]
+        print '\t'.join(chain([''],
+                              [failure_headers[key] for key in failure_keys],
+                              ['S11min','S11max','S22min','S22max','S12min','S12max']))
+        fail = cc.hashin_max_num[frame_id]
         smin = cc.stress_min_num[frame_id]
         smax = cc.stress_max_num[frame_id]
 
-        print '\t'.join([str(i) for i in [
-          'stress',
-          hsn['HSNFCCRT'], hsn['HSNFTCRT'], hsn['HSNMCCRT'], hsn['HSNMTCRT'],
-          smin['S11'],     smax['S11'],     smin['S22'],     smax['S22'],
-          smin['S12'],     smax['S12']
-                                         ]])
-        hsnpos = cc.hashin_max_pos_num[frame_id]
+        print '\t'.join([str(i) for i in chain(
+          ['stress'],
+          [fail[key] for key in failure_keys],
+          [smin['S11'],     smax['S11'],     smin['S22'],     smax['S22'],
+           smin['S12'],     smax['S12']]
+                                         )])
+        failpos = cc.hashin_max_pos_num[frame_id]
         sminpos = cc.stress_min_pos_num[frame_id]
         smaxpos = cc.stress_max_pos_num[frame_id]
         indexes = [0,1,2]
         names = ['ply num', 'ply angle', 'ply pos']
         for i in indexes:
-            print '\t'.join([str(i) for i in [
-              names[i],
-              nap(cc,hsnpos['HSNFCCRT'])[i],nap(cc,hsnpos['HSNFTCRT'])[i],
-              nap(cc,hsnpos['HSNMCCRT'])[i],nap(cc,hsnpos['HSNMTCRT'])[i],
-              nap(cc,    sminpos['S11'])[i],nap(cc,    smaxpos['S11'])[i],
-              nap(cc,    sminpos['S22'])[i],nap(cc,    smaxpos['S22'])[i],
-              nap(cc,    sminpos['S12'])[i],nap(cc,    smaxpos['S12'])[i],
-                                             ]])
+            print '\t'.join([str(i) for i in chain(
+              [names[i]],
+              [nap(cc,failpos[key])[i] for key in failure_keys],
+              [nap(cc,    sminpos['S11'])[i],nap(cc,    smaxpos['S11'])[i],
+               nap(cc,    sminpos['S22'])[i],nap(cc,    smaxpos['S22'])[i],
+               nap(cc,    sminpos['S12'])[i],nap(cc,    smaxpos['S12'])[i]]
+                                             )])
         print '\t'.join([str(i) for i in [
             'allowables', 1.,1.,1.,1.,As11c,As11t,As22c,As22t,As12,As12
            ]])
-        hsnms = cc.hashin_max_ms[frame_id]
+        failms = cc.hashin_max_ms[frame_id]
         sminms = cc.stress_min_ms[frame_id]
         smaxms = cc.stress_max_ms[frame_id]
-        print '\t'.join([str(i) for i in [
-            'margin of safety',
-            hsnms['HSNFCCRT'], hsnms['HSNFTCRT'],
-            hsnms['HSNMCCRT'], hsnms['HSNMTCRT'],
-            sminms['S11']    , smaxms['S11']    ,
-            sminms['S22']    , smaxms['S22']    ,
-            sminms['S12']    , smaxms['S12']
-                                         ]])
+        print '\t'.join([str(i) for i in chain(
+            ['margin of safety'],
+            [failms[key] for key in failure_keys],
+            [sminms['S11'], smaxms['S11'],
+             sminms['S22'], smaxms['S22'],
+             sminms['S12'], smaxms['S12']]
+                                         )])
 
 def calc_frames(cc, frames=None, MSlimits=[0.0,0.2,0.5], frame_indexes=[]):
-    if frames == None:
+    if frames is None:
         frames = cc.attach_results().steps[cc.step2Name].frames
     if frame_indexes == []:
         iframes = frames
     else:
         iframes = [frames[i] for i in frame_indexes]
     max_id = iframes[-1].frameId
-    print_ms_tsai_hill = [True for i in MSlimits]
-    print_ms_tsai_wu = [True for i in MSlimits]
     i_mslimit = 0
     # finding frame first buckling and first minimum
     fb_load = 0.

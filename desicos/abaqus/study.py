@@ -247,6 +247,10 @@ class Study(object):
         limit = len(self.ccs[start].impconf.imperfections)
         for i in range(limit):
             imp_ref = self.ccs[start].impconf.imperfections[i]
+            if not any(cc.impconf.imperfections[i] for cc in self.ccs[start:]):
+                warn("imperfection '{0}' is zero for all ConeCyl objects, skipping...".format(
+                     imp_ref.name))
+                continue
             xaxis_label = imp_ref.xaxis_label
             for pre in ['fb','gb']:
                 curve = []

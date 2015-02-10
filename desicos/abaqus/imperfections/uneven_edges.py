@@ -22,7 +22,7 @@ class Shim(object):
         self.thick = thick
         self.width = width
         self.edge = edge
-        if edge!=None:
+        if edge is not None:
             self.edge.shims.append(self)
 
 
@@ -64,7 +64,7 @@ class UnevenBottomEdge(object):
 
     def __bool__(self):
         cc = self.impconf.conecyl
-        return (bool(self.shims) or bool(self.measured_u3s!=None) or
+        return (bool(self.shims) or bool(self.measured_u3s is not None) or
                 bool(cc.bc_gaps_bottom_edge))
 
 
@@ -184,7 +184,7 @@ class UnevenBottomEdge(object):
         # calculating gaps
         #
         # contributions from measured edge imperfection
-        if self.measured_u3s!=None:
+        if self.measured_u3s is not None:
             measured_u3s = np.asarray(self.measured_u3s)
         else:
             measured_u3s = np.zeros((2, 100))
@@ -295,7 +295,7 @@ class UnevenTopEdge(object):
     def __bool__(self):
         cc = self.impconf.conecyl
         return (bool(self.betadeg) or bool(self.shims) or
-                bool(self.measured_u3s!=None) or bool(cc.bc_gaps_top_edge))
+                bool(self.measured_u3s is not None) or bool(cc.bc_gaps_top_edge))
 
 
     def rebuild(self):
@@ -407,6 +407,12 @@ class UnevenTopEdge(object):
             # taking nodes that are not pinned to the shell
             check = (r_nodes < (cc.rtop - cosa*0.51*tshell))
             nodes = np.hstack((nodes, tmp[check]))
+            if cc.bc_fix_top_side_u3:
+                tmp = np.array(ra.sets['Top_IR_faces_side'].nodes)
+                coords = np.array([n.coordinates for n in tmp])
+                # taking nodes that are not on the top edge
+                check = (coords[:,2] < (cc.H-0.1))
+                nodes = np.hstack((nodes, tmp[check]))
         if cc.resin_add_TOR:
             tmp = np.array(ra.sets['Top_OR_faces'].nodes)
             coords = np.array([n.coordinates for n in tmp])
@@ -414,6 +420,12 @@ class UnevenTopEdge(object):
             # taking nodes that are not pinned to the shell
             check = (r_nodes > (cc.rtop + cosa*0.51*tshell))
             nodes = np.hstack((nodes, tmp[check]))
+            if cc.bc_fix_top_side_u3:
+                tmp = np.array(ra.sets['Top_OR_faces_side'].nodes)
+                coords = np.array([n.coordinates for n in tmp])
+                # taking nodes that are not on the top edge
+                check = (coords[:,2] < (cc.H-0.1))
+                nodes = np.hstack((nodes, tmp[check]))
         coords = np.array([n.coordinates for n in nodes])
         r_nodes = np.sqrt(coords[:,0]**2 + coords[:,1]**2)
         theta_nodes = np.arctan2(coords[:,1], coords[:,0])
@@ -421,7 +433,7 @@ class UnevenTopEdge(object):
         # calculating gaps
         #
         # contributions from measured edge imperfection
-        if self.measured_u3s!=None:
+        if self.measured_u3s is not None:
             measured_u3s = np.asarray(self.measured_u3s)
         else:
             measured_u3s = np.zeros((2, 100))

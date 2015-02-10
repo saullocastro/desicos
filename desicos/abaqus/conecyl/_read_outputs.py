@@ -58,7 +58,7 @@ def _read_outputs_entity(cc, odb, entity, last_frame=False):
     # reseting values
     nodes_dict = {}
     for node in nodes:
-        if node == None:
+        if node is None:
             continue
         nodes_dict[node.id] = node
         for step_name in step_names:
