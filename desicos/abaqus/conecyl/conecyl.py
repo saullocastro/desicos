@@ -494,16 +494,11 @@ class ConeCyl(object):
         self.rmesh = ((self.rbot - self.rtop)*self.rtop/self.rbot + self.rtop)
         self.mesh_size = 2*np.pi*self.rmesh/self.numel_r
 
-        # imperfections
-        if self.betadeg:
-            self.impconf.uneven_top_edge.betadeg = self.betadeg
-            self.impconf.uneven_top_edge.omegadeg = self.omegadeg
-        self.impconf.rebuild()
-
         # cutouts
         for cutout in self.cutouts:
             cutout.rebuild()
 
+        # allowables
         if self.allowable and not self.allowables:
             self.allowables = [tuple(self.allowable) for i in self.stack]
 
@@ -532,6 +527,12 @@ class ConeCyl(object):
         # calculating ABD matrix
         if self.direct_ABD_input:
             self.calc_ABD_matrix()
+
+        # imperfections
+        if self.betadeg:
+            self.impconf.uneven_top_edge.betadeg = self.betadeg
+            self.impconf.uneven_top_edge.omegadeg = self.omegadeg
+        self.impconf.rebuild()
 
         # model_name
         if self.rename:
