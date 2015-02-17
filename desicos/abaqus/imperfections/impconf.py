@@ -66,6 +66,14 @@ class ImpConf(object):
         self.conecyl = None
 
 
+    def __setstate__(self, attrs):
+        # Called during unpickling (i.e. loading)
+        # Calling __init__ prevents problems with missing attributes,
+        # when loading from older versions
+        self.__init__()
+        self.__dict__.update(attrs)
+
+
     def add_axisymmetric(self, pt, b, wb):
         """Adds an Axisymmetric Imperfection (AI)
 
