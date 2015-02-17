@@ -92,10 +92,11 @@ def _create_mesh(cc):
                 myMat.HashinDamageInitiation(table=(ALLOWABLES,))
                 ALLOWABLES_TSAI_WU = ALLOWABLES[0:5] + (-0.5,)
                 myMat.elastic.FailStress(table=(ALLOWABLES_TSAI_WU, ))
+    face_set = part_shell.Set(name='part_shell_faces', faces=part_shell.faces)
     abaqus_functions.create_composite_layup(name='CompositePlate',
             stack=cc.stack, plyts=cc.plyts, mat_names=mat_names,
             part=part_shell, part_csys=part_csys,
-            region=Region(faces=part_shell.faces))
+            region=face_set)
 
     # Creating the resin material.
     if (cc.resin_add_BIR or cc.resin_add_BOR
