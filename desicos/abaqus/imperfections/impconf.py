@@ -11,6 +11,7 @@ from lbmi import LBMI
 from msi import MSI
 from ti import TI
 from cutout import Cutout
+from ppi import PPI
 
 
 class ImpConf(object):
@@ -48,6 +49,8 @@ class ImpConf(object):
     msis               ``list`` of :class:`.MSI` (Mid-Surface Imperfection)
                        objects
     cutouts            ``list`` of :class:`.Cutout` objects
+    ppi                :class:`.PPI` (Ply Piece Imperfection) object or
+                       ``None`` if not set
     ================== ======================================================
 
     """
@@ -64,6 +67,7 @@ class ImpConf(object):
         self.msis = []
         self.tis = []
         self.cutouts = []
+        self.ppi = None
         self.rename = True
         self.name = ''
         self.conecyl = None
@@ -439,6 +443,32 @@ class ImpConf(object):
         return cutout
 
 
+    def add_ppi(self, info, extra_height):
+        """Adds Ply Piece Imperfection (PPI)
+
+        There can be only one of these, so calling this function overrides the
+        previous imperfection, if any.
+        Note: Applicable for cones only!
+
+        Parameters
+        ----------
+        info : list
+            `List of dictionaries with info about the layup of this cone.
+            See :class:`.PPI` for more details
+        extra_height : float
+            Extra height above and below the cone height (`cc.H`) to consider
+            in the ply placement model.
+        Returns
+        -------
+        ppi : :class:`.PPI` object.
+        """
+        if self.ppi is not None:
+            warn('PPI object already set, overriding...')
+        self.ppi = PPI(info, extra_height)
+        self.ppi.impconf = self
+        return self.ppi
+
+
     def rebuild(self):
         self.imperfections = []
         i = -1
@@ -484,6 +514,12 @@ class ImpConf(object):
             cutout.index = i
             cutout.rebuild()
             self.imperfections.append(cutout)
+        # ply piece imperfection
+        if self.ppi is not None:
+            i += 1
+            self.ppi.index = i
+            self.ppi.rebuild()
+            self.imperfections.append(self.ppi)
         # thickness imperfection (TI)
         for ti in self.tis:
             i += 1
