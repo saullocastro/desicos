@@ -1019,7 +1019,9 @@ class ConeCyl(object):
         try:
             thetas, zs, field = self.extract_fiber_orientation(ply_index, use_elements)
             x, y = self.transform_plot_data(thetas, zs, plot_type)
-            self.plot_field_data(x, y, field, **kwargs)
+            lines = self.impconf.ppi.get_ply_lines(ply_index)
+            lines = [self.transform_plot_data(thetas, zs, plot_type) for thetas, zs in lines]
+            self.plot_field_data(x, y, field, lines=lines, **kwargs)
         except:
             traceback.print_exc()
             error('Opened orientation plot could not be generated! :(')
