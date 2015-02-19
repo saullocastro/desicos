@@ -9,7 +9,7 @@ from desicos.logger import log, warn, error
 from desicos.abaqus.constants import *
 from desicos.composite.laminate import read_stack
 from desicos.conecylDB import fetch
-from desicos.abaqus.utils import vec_calc_elem_cg
+from desicos.abaqus.utils import make_uniform_cells
 
 
 class ConeCyl(object):
@@ -1018,6 +1018,7 @@ class ConeCyl(object):
             return
         try:
             thetas, zs, field = self.extract_fiber_orientation(ply_index, use_elements)
+            thetas, zs, field = make_uniform_cells(thetas, zs, field)
             x, y = self.transform_plot_data(thetas, zs, plot_type)
             lines = self.impconf.ppi.get_ply_lines(ply_index)
             lines = [self.transform_plot_data(thetas, zs, plot_type) for thetas, zs in lines]
