@@ -143,6 +143,9 @@ def create_study(**kwargs):
     ax_table = kwargs.get('ax_table')
     lbmi_table = kwargs.get('lbmi_table')
     cut_table = kwargs.get('cut_table')
+    ppi_enabled = kwargs.get('ppi_enabled')
+    ppi_extra_height = kwargs.get('ppi_extra_height')
+    ppi_table = kwargs.get('ppi_table')
     betadeg = kwargs.get('betadeg', 0.)
     omegadeg = kwargs.get('omegadeg', 0.)
     betadegs = kwargs.get('betadegs')
@@ -291,6 +294,18 @@ def create_study(**kwargs):
                 numel = cut_table[2][j]
                 d     = cut_table[i_model][j]
                 cc.create_cutout(theta, pt, d, numel)
+        ## adding ply piece imperfection
+        if ppi_enabled:
+            info = []
+            for row in ppi_table:
+                if row is False:
+                    continue # False may be appended if there is only one row
+                keys = ['starting_position', 'rel_ang_offset', 'max_width', 'eccentricity']
+                try:
+                    info.append(dict((key, float(row[i])) for i, key in enumerate(keys) if row[i] != ''))
+                except ValueError, e:
+                    raise ValueError('Invalid non-numeric value in Ply Piece Imperfection table:' + e.message.split(':')[-1])
+            cc.impconf.add_ppi(info, ppi_extra_height)
         std.add_cc(cc)
     std.create_models(write_input_files=False)
     #for i in range(pload_num):
