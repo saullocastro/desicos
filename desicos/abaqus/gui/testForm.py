@@ -178,6 +178,9 @@ class TestForm(AFXForm):
         self.ppi_extra_heightKw = AFXFloatKeyword(self.cmd, 'ppi_extra_height', TRUE)
         # Use AFXTABLE_TYPE_STRING to avoid default=0
         self.ppi_tableKw = AFXTableKeyword(self.cmd, 'ppi_table', TRUE, 0, -1, AFXTABLE_TYPE_STRING)
+        self.plot_imp_modelKw = AFXStringKeyword(self.dummy, 'plot_imp_model', FALSE)
+        self.plot_ply_indexKw = AFXIntKeyword(self.dummy, 'plot_ply_index', FALSE)
+        self.plot_imp_typeKw = AFXStringKeyword(self.dummy, 'plot_imp_type', FALSE)
         #
         #
         self.laminapropKeyKw = AFXStringKeyword(self.dummy, 'laminapropKey', FALSE)
