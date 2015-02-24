@@ -948,6 +948,93 @@ class ConeCyl(object):
         return (thetas, zs, out)
 
 
+    def transform_raw_plot_data(self, thetas, zs, values, plot_type):
+        r"""Transform raw, unsorted plot data into something plottable
+
+        Parameters
+        ----------
+        theta : numpy.array
+            Array of circumferential coordinates
+        z : numpy.array
+            Array of vertical coordinates
+        values : numpy.array
+            Array of values corresponding to the coordinates
+        plot_type : int, optional
+            For cylinders only ``4`` and ``5`` are valid.
+            For cones all the following types can be used:
+
+            - ``1``: concave up (default for cones)
+            - ``2``: concave down
+            - ``3``: stretched closed
+            - ``4``: stretched opened (`r(z) \times \theta` vs. `H`)
+            - ``5``: stretched opened (`r_{bottom}` vs. `H`)
+
+        Returns
+        -------
+        out : tuple
+            Where ``out[0]`` and ``out[1]`` contain the horizontal and
+            vertical grids of coordinates and ``out[2]`` the corresponding
+            field output.
+
+        """
+        sina = np.sin(self.alpharad)
+        cosa = np.cos(self.alpharad)
+
+        valid_plot_types = (1, 2, 3, 4, 5)
+        if not plot_type in valid_plot_types:
+            raise ValueError('Valid values for plot_type are:\n\t\t' +
+                             ' or '.join(map(str, valid_plot_types)))
+
+        #first sort
+        nt = self.numel_r
+        asort = zs.argsort()
+        zs = zs[asort].reshape(-1, nt)
+        thetas = thetas[asort].reshape(-1, nt)
+        values = values[asort].reshape(-1, nt)
+
+        #second sort
+        asort = thetas.argsort(axis=1)
+        for i, asorti in enumerate(asort):
+            zs[i,:] = zs[i,:][asorti]
+            thetas[i,:] = thetas[i,:][asorti]
+            values[i,:] = values[i,:][asorti]
+
+        H = self.H
+        rtop = self.rtop
+        rbot = self.rbot
+        L = H/cosa
+
+        def fr(z):
+            return rbot - z*sina/cosa
+
+        if self.alpharad == 0.:
+            plot_type = 4
+        if plot_type == 1:
+            r_plot = fr(zs)
+            if self.alpharad==0.:
+                r_plot_max = L
+            else:
+                r_plot_max = rtop/sina + L
+            y = r_plot_max - r_plot*np.cos(thetas*sina)
+            x = r_plot*np.sin(thetas*sina)
+        elif plot_type == 2:
+            r_plot = fr(zs)
+            y = r_plot*np.cos(thetas*sina)
+            x = r_plot*np.sin(thetas*sina)
+        elif plot_type == 3:
+            r_plot = fr(zs)
+            r_plot_max = rtop/sina + L
+            y = r_plot_max - r_plot*np.cos(thetas)
+            x = r_plot*np.sin(thetas)
+        elif plot_type == 4:
+            x = fr(zs)*thetas
+            y = zs
+        elif plot_type == 5:
+            x = fr(0)*thetas
+            y = zs
+        return x, y, values
+
+
     def plot_opened(self, ignore=[], create_npz_only=False, ax=None,
             figsize=(3.3, 3.3), save_png=True, aspect='equal', clean=True,
             plot_type=1, outpath='', pngname='plot_from_abaqus.png',
@@ -1011,8 +1098,6 @@ class ConeCyl(object):
         importable from Abaqus.
 
         """
-        sina = np.sin(self.alpharad)
-        cosa = np.cos(self.alpharad)
 
         npzname = npzname.split('.npz')[0] + '.npz'
         pyname = pyname.split('.py')[0] + '.py'
@@ -1022,11 +1107,6 @@ class ConeCyl(object):
         pyname = os.path.join(outpath, pyname)
         pngname = os.path.join(outpath, pngname)
 
-        valid_plot_types = (1, 2, 3, 4, 5)
-        if not plot_type in valid_plot_types:
-            raise ValueError('Valid values for plot_type are:\n\t\t' +
-                             ' or '.join(map(str, valid_plot_types)))
-
         if not create_npz_only:
             try:
                 import matplotlib.pyplot as plt
@@ -1035,58 +1115,7 @@ class ConeCyl(object):
                 create_npz_only = True
         try:
             thetas, zs, out = self.extract_field_output(ignore)
-
-            #first sort
-            nt = self.numel_r
-            asort = zs.argsort()
-            zs = zs[asort].reshape(-1, nt)
-            thetas = thetas[asort].reshape(-1, nt)
-            out = out[asort].reshape(-1, nt)
-
-            #second sort
-            asort = thetas.argsort(axis=1)
-            for i, asorti in enumerate(asort):
-                zs[i,:] = zs[i,:][asorti]
-                thetas[i,:] = thetas[i,:][asorti]
-                out[i,:] = out[i,:][asorti]
-
-            H = self.H
-            rtop = self.rtop
-            rbot = self.rbot
-            L = H/cosa
-
-            def fr(z):
-                return rbot - z*sina/cosa
-
-            if self.alpharad == 0.:
-                plot_type = 4
-            if plot_type == 1:
-                r_plot = fr(zs)
-                if self.alpharad==0.:
-                    r_plot_max = L
-                else:
-                    r_plot_max = rtop/sina + L
-                y = r_plot_max - r_plot*np.cos(thetas*sina)
-                x = r_plot*np.sin(thetas*sina)
-            elif plot_type == 2:
-                r_plot = fr(zs)
-                y = r_plot*np.cos(thetas*sina)
-                x = r_plot*np.sin(thetas*sina)
-            elif plot_type == 3:
-                r_plot = fr(zs)
-                r_plot_max = rtop/sina + L
-                y = r_plot_max - r_plot*np.cos(thetas)
-                x = r_plot*np.sin(thetas)
-            elif plot_type == 4:
-                x = fr(zs)*thetas
-                y = zs
-            elif plot_type == 5:
-                x = fr(0)*thetas
-                y = zs
-
-            cir = x
-            mer = y
-            field = out
+            cir, mer, field = self.transform_raw_plot_data(thetas, zs, out, plot_type)
 
             if not create_npz_only:
                 levels = np.linspace(field.min(), field.max(), num_levels)
