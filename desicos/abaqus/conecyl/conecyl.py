@@ -1114,8 +1114,8 @@ class ConeCyl(object):
             except:
                 create_npz_only = True
         try:
-            thetas, zs, out = self.extract_field_output(ignore)
-            cir, mer, field = self.transform_raw_plot_data(thetas, zs, out, plot_type)
+            thetas, zs, values = self.extract_field_output(ignore)
+            x, y, field = self.transform_raw_plot_data(thetas, zs, values, plot_type)
 
             if not create_npz_only:
                 levels = np.linspace(field.min(), field.max(), num_levels)
@@ -1129,7 +1129,7 @@ class ConeCyl(object):
                         save_png = False
                     else:
                         raise ValueError('"ax" must be an Axes object')
-                ax.contourf(cir, mer, field, levels=levels)
+                ax.contourf(x, y, field, levels=levels)
                 ax.grid(False)
                 ax.set_aspect(aspect)
                 ax.xaxis.set_ticks_position('bottom')
@@ -1155,7 +1155,7 @@ class ConeCyl(object):
 
             else:
                 log('Matplotlib cannot be imported from Abaqus')
-            np.savez(npzname, cir=cir, mer=mer, field=field)
+            np.savez(npzname, x=x, y=y, field=field)
             with open(pyname, 'w') as f:
                 f.write("import os\n")
                 f.write("\n")
@@ -1165,15 +1165,15 @@ class ConeCyl(object):
                 f.write("add_title = False\n")
                 f.write("tmp = np.load(r'{0}')\n".format(basename(npzname)))
                 f.write("pngname = r'{0}'\n".format(basename(pngname)))
-                f.write("cir = tmp['cir']\n")
-                f.write("mer = tmp['mer']\n")
+                f.write("x = tmp['x']\n")
+                f.write("y = tmp['y']\n")
                 f.write("field = tmp['field']\n")
                 f.write("clean = {0}\n".format(clean))
                 f.write("plt.figure(figsize={0})\n".format(figsize))
                 f.write("ax = plt.gca()\n")
                 f.write("levels = np.linspace(field.min(), field.max(), {0})\n".format(
                         num_levels))
-                f.write("ax.contourf(cir, mer, field, levels=levels)\n")
+                f.write("ax.contourf(x, y, field, levels=levels)\n")
                 f.write("ax.grid(False)\n")
                 f.write("ax.set_aspect('{0}')\n".format(aspect))
                 f.write("ax.xaxis.set_ticks_position('bottom')\n")
@@ -1198,7 +1198,7 @@ class ConeCyl(object):
                   pyname))
             log('')
 
-            return cir, mer, field
+            return x, y, field
 
         except:
             traceback.print_exc()
