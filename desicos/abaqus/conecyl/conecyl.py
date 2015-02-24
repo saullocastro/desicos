@@ -1035,19 +1035,21 @@ class ConeCyl(object):
         return x, y, values
 
 
-    def plot_opened(self, ignore=[], create_npz_only=False, ax=None,
+    def plot_field_data(self, x, y, field, create_npz_only=False, ax=None,
             figsize=(3.3, 3.3), save_png=True, aspect='equal', clean=True,
-            plot_type=1, outpath='', pngname='plot_from_abaqus.png',
+            outpath='', pngname='plot_from_abaqus.png',
             npzname='plot_from_abaqus.npz', pyname='plot_from_abaqus.py',
             num_levels=400):
-        r"""Print a field output for a cylinder/cone model from Abaqus
+        r"""Print data field output to a file
 
         Parameters
         ----------
-        ignore : list, optional
-            A list with the node ids to be ignored. It must contain any nodes
-            outside the mapped mesh included in
-            ``parts['part_name_shell'].nodes``.
+        x : numpy.array
+            Grid of x-coordinates to plot
+        y : numpy.array
+            Grid of y-coordinates to plot
+        field : numpy.array
+            Grid of field data to plot
         create_npz_only : bool, optional
             If ``True`` only the data belonging to the desired field output
             will be saved in a ``.npz`` file, and no plotting is performed.
@@ -1062,15 +1064,6 @@ class ConeCyl(object):
             method.
         clean : bool, optional
             Clean axes ticks, grids, spines etc.
-        plot_type : int, optional
-            For cylinders only ``4`` and ``5`` are valid.
-            For cones all the following types can be used:
-
-            - ``1``: concave up (default for cones)
-            - ``2``: concave down
-            - ``3``: stretched closed
-            - ``4``: stretched opened (`r(z) \times \theta` vs. `H`)
-            - ``5``: stretched opened (`r_{bottom}` vs. `H`)
         outpath : str, optional
             Output path where the data from Abaqus and the plots are
             saved (see notes).
@@ -1083,13 +1076,6 @@ class ConeCyl(object):
         num_levels : int, optional
             Number of contour levels (higher values make the contour smoother).
 
-        Returns
-        -------
-        out : tuple
-            Where ``out[0]`` and ``out[1]`` contain the circumferential and
-            meridional grids of coordinates and ``out[2]`` the corresponding
-            field output.
-
         Notes
         -----
         The data is saved using ``np.savez()`` into ``outpath`` as
@@ -1098,7 +1084,6 @@ class ConeCyl(object):
         importable from Abaqus.
 
         """
-
         npzname = npzname.split('.npz')[0] + '.npz'
         pyname = pyname.split('.py')[0] + '.py'
         pngname = pngname.split('.png')[0] + '.png'
@@ -1113,93 +1098,125 @@ class ConeCyl(object):
                 import matplotlib
             except:
                 create_npz_only = True
+
+        if not create_npz_only:
+            levels = np.linspace(field.min(), field.max(), num_levels)
+            if ax is None:
+                fig = plt.figure(figsize=figsize)
+                ax = fig.add_subplot(111)
+            else:
+                if isinstance(ax, matplotlib.axes.Axes):
+                    ax = ax
+                    fig = ax.figure
+                    save_png = False
+                else:
+                    raise ValueError('"ax" must be an Axes object')
+            ax.contourf(x, y, field, levels=levels)
+            ax.grid(False)
+            ax.set_aspect(aspect)
+            ax.xaxis.set_ticks_position('bottom')
+            ax.yaxis.set_ticks_position('left')
+            #lim = self.rtop*np.pi
+            #ax.xaxis.set_ticks([-lim, 0, lim])
+            #ax.xaxis.set_ticklabels([r'$-\pi$', '$0$', r'$+\pi$'])
+            #ax.set_title(
+                #r'$PL=20 N$, $F_{{C}}=50 kN$, $w_{{PL}}=\beta$, $mm$')
+            if clean:
+                ax.xaxis.set_ticks_position('none')
+                ax.yaxis.set_ticks_position('none')
+                ax.xaxis.set_ticklabels([])
+                ax.yaxis.set_ticklabels([])
+                ax.set_frame_on(False)
+            if save_png:
+                log('')
+                log('Plot saved at: {0}'.format(pngname))
+                plt.tight_layout()
+                plt.savefig(pngname, transparent=True,
+                            bbox_inches='tight', pad_inches=0.05,
+                            dpi=400)
+
+        else:
+            log('Matplotlib cannot be imported from Abaqus')
+        np.savez(npzname, x=x, y=y, field=field)
+        with open(pyname, 'w') as f:
+            f.write("import os\n")
+            f.write("\n")
+            f.write("import numpy as np\n")
+            f.write("import matplotlib.pyplot as plt\n")
+            f.write("\n")
+            f.write("add_title = False\n")
+            f.write("tmp = np.load(r'{0}')\n".format(basename(npzname)))
+            f.write("pngname = r'{0}'\n".format(basename(pngname)))
+            f.write("x = tmp['x']\n")
+            f.write("y = tmp['y']\n")
+            f.write("field = tmp['field']\n")
+            f.write("clean = {0}\n".format(clean))
+            f.write("plt.figure(figsize={0})\n".format(figsize))
+            f.write("ax = plt.gca()\n")
+            f.write("levels = np.linspace(field.min(), field.max(), {0})\n".format(
+                    num_levels))
+            f.write("ax.contourf(x, y, field, levels=levels)\n")
+            f.write("ax.grid(False)\n")
+            f.write("ax.set_aspect('{0}')\n".format(aspect))
+            f.write("ax.xaxis.set_ticks_position('bottom')\n")
+            f.write("ax.yaxis.set_ticks_position('left')\n")
+            f.write("ax.xaxis.set_ticks([{0}, 0, {1}])\n".format(
+                    -self.rtop*np.pi, self.rtop*np.pi))
+            f.write("ax.xaxis.set_ticklabels([r'$-\pi$', '$0$', r'$+\pi$'])\n")
+            f.write("if add_title:\n")
+            f.write("    ax.set_title(r'Abaqus, $PL=20 N$, $F_{{C}}=50 kN$, $w_{{PL}}=\beta$, $mm$')\n")
+            f.write("if clean:\n")
+            f.write("    ax.xaxis.set_ticks_position('none')\n")
+            f.write("    ax.yaxis.set_ticks_position('none')\n")
+            f.write("    ax.xaxis.set_ticklabels([])\n")
+            f.write("    ax.yaxis.set_ticklabels([])\n")
+            f.write("    ax.set_frame_on(False)\n")
+            f.write("plt.savefig(pngname, transparent=True,\n")
+            f.write("            bbox_inches='tight', pad_inches=0.05, dpi=400)\n")
+            f.write("plt.show()\n")
+        log('')
+        log('Output exported to "{0}"'.format(npzname))
+        log('Please run the file "{0}" to plot the output'.format(
+              pyname))
+        log('')
+
+
+    def plot_opened(self, ignore=[], plot_type=1, **kwargs):
+        r"""Print a field output for a cylinder/cone model from Abaqus
+
+        Parameters
+        ----------
+        ignore : list, optional
+            A list with the node ids to be ignored. It must contain any nodes
+            outside the mapped mesh included in
+            ``parts['part_name_shell'].nodes``.
+        plot_type : int, optional
+            For cylinders only ``4`` and ``5`` are valid.
+            For cones all the following types can be used:
+
+            - ``1``: concave up (default for cones)
+            - ``2``: concave down
+            - ``3``: stretched closed
+            - ``4``: stretched opened (`r(z) \times \theta` vs. `H`)
+            - ``5``: stretched opened (`r_{bottom}` vs. `H`)
+        kwargs : dict
+            Other keyword args will be directly passed to ``plot_field_data``
+            See the documentation of that method for more details.
+
+        Returns
+        -------
+        out : tuple
+            Where ``out[0]`` and ``out[1]`` contain the circumferential and
+            meridional grids of coordinates and ``out[2]`` the corresponding
+            field output.
+
+        """
+
         try:
             thetas, zs, values = self.extract_field_output(ignore)
             x, y, field = self.transform_raw_plot_data(thetas, zs, values, plot_type)
-
-            if not create_npz_only:
-                levels = np.linspace(field.min(), field.max(), num_levels)
-                if ax is None:
-                    fig = plt.figure(figsize=figsize)
-                    ax = fig.add_subplot(111)
-                else:
-                    if isinstance(ax, matplotlib.axes.Axes):
-                        ax = ax
-                        fig = ax.figure
-                        save_png = False
-                    else:
-                        raise ValueError('"ax" must be an Axes object')
-                ax.contourf(x, y, field, levels=levels)
-                ax.grid(False)
-                ax.set_aspect(aspect)
-                ax.xaxis.set_ticks_position('bottom')
-                ax.yaxis.set_ticks_position('left')
-                #lim = self.rtop*np.pi
-                #ax.xaxis.set_ticks([-lim, 0, lim])
-                #ax.xaxis.set_ticklabels([r'$-\pi$', '$0$', r'$+\pi$'])
-                #ax.set_title(
-                    #r'$PL=20 N$, $F_{{C}}=50 kN$, $w_{{PL}}=\beta$, $mm$')
-                if clean:
-                    ax.xaxis.set_ticks_position('none')
-                    ax.yaxis.set_ticks_position('none')
-                    ax.xaxis.set_ticklabels([])
-                    ax.yaxis.set_ticklabels([])
-                    ax.set_frame_on(False)
-                if save_png:
-                    log('')
-                    log('Plot saved at: {0}'.format(pngname))
-                    plt.tight_layout()
-                    plt.savefig(pngname, transparent=True,
-                                bbox_inches='tight', pad_inches=0.05,
-                                dpi=400)
-
-            else:
-                log('Matplotlib cannot be imported from Abaqus')
-            np.savez(npzname, x=x, y=y, field=field)
-            with open(pyname, 'w') as f:
-                f.write("import os\n")
-                f.write("\n")
-                f.write("import numpy as np\n")
-                f.write("import matplotlib.pyplot as plt\n")
-                f.write("\n")
-                f.write("add_title = False\n")
-                f.write("tmp = np.load(r'{0}')\n".format(basename(npzname)))
-                f.write("pngname = r'{0}'\n".format(basename(pngname)))
-                f.write("x = tmp['x']\n")
-                f.write("y = tmp['y']\n")
-                f.write("field = tmp['field']\n")
-                f.write("clean = {0}\n".format(clean))
-                f.write("plt.figure(figsize={0})\n".format(figsize))
-                f.write("ax = plt.gca()\n")
-                f.write("levels = np.linspace(field.min(), field.max(), {0})\n".format(
-                        num_levels))
-                f.write("ax.contourf(x, y, field, levels=levels)\n")
-                f.write("ax.grid(False)\n")
-                f.write("ax.set_aspect('{0}')\n".format(aspect))
-                f.write("ax.xaxis.set_ticks_position('bottom')\n")
-                f.write("ax.yaxis.set_ticks_position('left')\n")
-                f.write("ax.xaxis.set_ticks([{0}, 0, {1}])\n".format(
-                        -self.rtop*np.pi, self.rtop*np.pi))
-                f.write("ax.xaxis.set_ticklabels([r'$-\pi$', '$0$', r'$+\pi$'])\n")
-                f.write("if add_title:\n")
-                f.write("    ax.set_title(r'Abaqus, $PL=20 N$, $F_{{C}}=50 kN$, $w_{{PL}}=\beta$, $mm$')\n")
-                f.write("if clean:\n")
-                f.write("    ax.xaxis.set_ticks_position('none')\n")
-                f.write("    ax.yaxis.set_ticks_position('none')\n")
-                f.write("    ax.xaxis.set_ticklabels([])\n")
-                f.write("    ax.yaxis.set_ticklabels([])\n")
-                f.write("    ax.set_frame_on(False)\n")
-                f.write("plt.savefig(pngname, transparent=True,\n")
-                f.write("            bbox_inches='tight', pad_inches=0.05, dpi=400)\n")
-                f.write("plt.show()\n")
-            log('')
-            log('Output exported to "{0}"'.format(npzname))
-            log('Please run the file "{0}" to plot the output'.format(
-                  pyname))
-            log('')
-
+            self.plot_field_data(x, y, field, **kwargs)
             return x, y, field
-
         except:
             traceback.print_exc()
             error('Opened plot could not be generated! :(')
