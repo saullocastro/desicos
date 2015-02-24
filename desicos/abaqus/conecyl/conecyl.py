@@ -803,6 +803,151 @@ class ConeCyl(object):
         return _plot.plot_xy(self, xs, ys, **kwargs)
 
 
+    def extract_field_output(self, ignore=[]):
+        r"""Extract the current field output for a cylinder/cone from Abaqus
+
+        Parameters
+        ----------
+        ignore : list, optional
+            A list with the node ids to be ignored. It must contain any nodes
+            outside the mapped mesh included in
+            ``parts['part_name_shell'].nodes``.
+
+        Returns
+        -------
+        out : tuple
+            Where ``out[0]`` and ``out[1]`` contain the circumferential (theta)
+            and vertical (z) coordinates and ``out[2]`` the corresponding
+            values. The order of the arrays is arbitrary.
+
+        """
+        from abaqus import mdb
+        from abaqusConstants import NODAL
+        import desicos.abaqus.abaqus_functions as abaqus_functions
+
+        if self.model_name in mdb.models.keys():
+            part = mdb.models[self.model_name].parts[self.part_name_shell]
+        else:
+            text = 'The model corresponding to the active odb must be loaded'
+            raise RuntimeError(text)
+
+        elements = part.elements
+        nodes = part.nodes
+        sina = np.sin(self.alpharad)
+        cosa = np.cos(self.alpharad)
+
+        odb = abaqus_functions.get_current_odb()
+        odbDisplay = abaqus_functions.get_current_odbdisplay()
+        frame = abaqus_functions.get_current_frame()
+        fieldOutputKey = odbDisplay.primaryVariable[0]
+        sub_vector = odbDisplay.primaryVariable[5]
+
+        frame_num = int(frame.frameValue)
+        field = frame.fieldOutputs[fieldOutputKey]
+        nodal_out = False
+        if field.values[0].position == NODAL:
+            nodal_out = True
+
+        if nodal_out:
+            odbSet = odb.rootAssembly.nodeSets['SHELL_FACES']
+            coords = np.array([n.coordinates for n in nodes])
+            labels = np.array([n.label for n in nodes])
+            if ignore:
+                mask = np.in1d(labels, ignore)
+                labels = labels[mask]
+                coords = coords[mask]
+            thetas = np.arctan2(coords[:, 1], coords[:, 0])
+        else:
+            odbSet = odb.rootAssembly.elementSets['SHELL_FACES']
+            coords = utils.vec_calc_elem_cg(elements)
+            thetas = np.arctan2(coords[:, 1], coords[:, 0])
+
+        field = field.getSubset(region=odbSet)
+
+        attributes = {
+                      'Magnitude': 'magnitude',
+                      'Mises': 'mises',
+                      'Min. In-Plane Principal': 'minInPlanePrincipal',
+                      'Max. In-Plane Principal': 'maxInPlanePrincipal',
+                      'Min. Principal': 'minPrincipal',
+                      'Mid. Principal': 'midPrincipal',
+                      'Max. Principal': 'maxPrincipal',
+                      'Out-of-Plane Principal': 'outOfPlanePrincipal',
+                      'Tresca': 'tresca',
+                      'Third Invariant': 'inv3',
+                     }
+        components = {
+                      'S11': 0,
+                      'S22': 1,
+                      'S33': 2,
+                      'S12': 3,
+                      'SF1': 0,
+                      'SF2': 1,
+                      'SF3': 3,
+                      'SM2': 0,
+                      'SM1': 1,
+                      'SM3': 2,
+                     }
+
+        if sub_vector == '':
+            out = np.array([val.data for val in field.values])
+
+        elif sub_vector in attributes.keys():
+            attr = attributes.get(sub_vector)
+            out = np.array([getattr(v, attr) for v in field.values])
+
+        elif sub_vector in components.keys():
+            pos = components[sub_vector]
+            out = np.array([v.data[pos] for v in field.values])
+
+        elif sub_vector in ('U1', 'UT1', 'U2', 'UT2', 'U3', 'UT3'):
+            uvw_rec = np.array([val.data for val in field.values])
+
+            u1_rec = uvw_rec[:,0]
+            u2_rec = uvw_rec[:,1]
+            u3_rec = uvw_rec[:,2]
+
+            u3_cyl = u3_rec
+            u2_cyl = u2_rec*np.cos(thetas) - u1_rec*np.sin(thetas)
+            u1_cyl = u2_rec*np.sin(thetas) + u1_rec*np.cos(thetas)
+
+            u1_cone = u1_cyl*cosa + u3_cyl*sina
+            u2_cone = u2_cyl
+            u3_cone = u3_cyl*cosa - u1_cyl*sina
+
+            displ_vecs = {'U1':u1_cone, 'U2':u2_cone, 'U3':u3_cone,
+                          'UT1':u1_cone, 'UT2':u2_cone, 'UT3':u3_cone}
+            out = displ_vecs[sub_vector]
+
+        else:
+            raise NotImplementedError('{0} cannot be used!'.format(
+                sub_vector))
+
+        if not nodal_out:
+            firstElement = None
+            numIntPts = 0
+            for v in field.values:
+                if firstElement is None:
+                    firstElement = v.elementLabel
+                if v.elementLabel == firstElement:
+                    numIntPts += 1
+                else:
+                    break
+            out = out.reshape(-1, numIntPts).mean(axis=1)
+
+        if 'S8' in self.elem_type and nodal_out:
+            center_nodes = []
+            for el in elements:
+                center_nodes += el.connectivity[4:]
+            mask = np.in1d(labels, center_nodes)
+            thetas = thetas[mask]
+            coords = coords[mask]
+            out = out[mask]
+
+        zs = coords[:, 2]
+        return (thetas, zs, out)
+
+
     def plot_opened(self, ignore=[], create_npz_only=False, ax=None,
             figsize=(3.3, 3.3), save_png=True, aspect='equal', clean=True,
             plot_type=1, outpath='', pngname='plot_from_abaqus.png',
@@ -866,18 +1011,6 @@ class ConeCyl(object):
         importable from Abaqus.
 
         """
-        from abaqus import mdb
-        from abaqusConstants import NODAL
-        import desicos.abaqus.abaqus_functions as abaqus_functions
-
-        if self.model_name in mdb.models.keys():
-            part = mdb.models[self.model_name].parts[self.part_name_shell]
-        else:
-            text = 'The model corresponding to the active odb must be loaded'
-            raise RuntimeError(text)
-
-        elements = part.elements
-        nodes = part.nodes
         sina = np.sin(self.alpharad)
         cosa = np.cos(self.alpharad)
 
@@ -888,12 +1021,6 @@ class ConeCyl(object):
         npzname = os.path.join(outpath, npzname)
         pyname = os.path.join(outpath, pyname)
         pngname = os.path.join(outpath, pngname)
-
-        odb = abaqus_functions.get_current_odb()
-        odbDisplay = abaqus_functions.get_current_odbdisplay()
-        frame = abaqus_functions.get_current_frame()
-        fieldOutputKey = odbDisplay.primaryVariable[0]
-        sub_vector = odbDisplay.primaryVariable[5]
 
         valid_plot_types = (1, 2, 3, 4, 5)
         if not plot_type in valid_plot_types:
@@ -907,109 +1034,7 @@ class ConeCyl(object):
             except:
                 create_npz_only = True
         try:
-            frame_num = int(frame.frameValue)
-            field = frame.fieldOutputs[fieldOutputKey]
-            nodal_out = False
-            if field.values[0].position == NODAL:
-                nodal_out = True
-
-            if nodal_out:
-                odbSet = odb.rootAssembly.nodeSets['SHELL_FACES']
-                coords = np.array([n.coordinates for n in nodes])
-                labels = np.array([n.label for n in nodes])
-                if ignore:
-                    mask = np.in1d(labels, ignore)
-                    labels = labels[mask]
-                    coords = coords[mask]
-                thetas = np.arctan2(coords[:, 1], coords[:, 0])
-            else:
-                odbSet = odb.rootAssembly.elementSets['SHELL_FACES']
-                coords = vec_calc_elem_cg(elements)
-                thetas = np.arctan2(coords[:, 1], coords[:, 0])
-
-            field = field.getSubset(region=odbSet)
-
-            attributes = {
-                          'Magnitude': 'magnitude',
-                          'Mises': 'mises',
-                          'Min. In-Plane Principal': 'minInPlanePrincipal',
-                          'Max. In-Plane Principal': 'maxInPlanePrincipal',
-                          'Min. Principal': 'minPrincipal',
-                          'Mid. Principal': 'midPrincipal',
-                          'Max. Principal': 'maxPrincipal',
-                          'Out-of-Plane Principal': 'outOfPlanePrincipal',
-                          'Tresca': 'tresca',
-                          'Third Invariant': 'inv3',
-                         }
-            components = {
-                          'S11': 0,
-                          'S22': 1,
-                          'S33': 2,
-                          'S12': 3,
-                          'SF1': 0,
-                          'SF2': 1,
-                          'SF3': 3,
-                          'SM2': 0,
-                          'SM1': 1,
-                          'SM3': 2,
-                         }
-
-            if sub_vector == '':
-                out = np.array([val.data for val in field.values])
-
-            elif sub_vector in attributes.keys():
-                attr = attributes.get(sub_vector)
-                out = np.array([getattr(v, attr) for v in field.values])
-
-            elif sub_vector in components.keys():
-                pos = components[sub_vector]
-                out = np.array([v.data[pos] for v in field.values])
-
-            elif sub_vector in ('U1', 'UT1', 'U2', 'UT2', 'U3', 'UT3'):
-                uvw_rec = np.array([val.data for val in field.values])
-
-                u1_rec = uvw_rec[:,0]
-                u2_rec = uvw_rec[:,1]
-                u3_rec = uvw_rec[:,2]
-
-                u3_cyl = u3_rec
-                u2_cyl = u2_rec*np.cos(thetas) - u1_rec*np.sin(thetas)
-                u1_cyl = u2_rec*np.sin(thetas) + u1_rec*np.cos(thetas)
-
-                u1_cone = u1_cyl*cosa + u3_cyl*sina
-                u2_cone = u2_cyl
-                u3_cone = u3_cyl*cosa - u1_cyl*sina
-
-                displ_vecs = {'U1':u1_cone, 'U2':u2_cone, 'U3':u3_cone,
-                              'UT1':u1_cone, 'UT2':u2_cone, 'UT3':u3_cone}
-                out = displ_vecs[sub_vector]
-
-            else:
-                raise NotImplementedError('{0} cannot be used!'.format(
-                    sub_vector))
-
-            if not nodal_out:
-                firstElement = None
-                numIntPts = 0
-                for v in field.values:
-                    if firstElement is None:
-                        firstElement = v.elementLabel
-                    if v.elementLabel == firstElement:
-                        numIntPts += 1
-                    else:
-                        break
-                out = out.reshape(-1, numIntPts).mean(axis=1)
-
-            if 'S8' in self.elem_type and nodal_out:
-                center_nodes = []
-                for el in elements:
-                    center_nodes += el.connectivity[4:]
-                mask = np.in1d(labels, center_nodes)
-                thetas = thetas[mask]
-                coords = coords[mask]
-                out = out[mask]
-
-            zs = coords[:, 2]
+            thetas, zs, out = self.extract_field_output(ignore)
 
             #first sort
             nt = self.numel_r
