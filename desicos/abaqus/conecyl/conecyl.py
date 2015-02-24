@@ -912,8 +912,8 @@ class ConeCyl(object):
         return _plot.plot_field_data(**kwargs)
 
 
-    def plot_opened(self, ignore=[], plot_type=1, **kwargs):
-        r"""Print a field output for a cylinder/cone model from Abaqus
+    def plot_current_field_opened(self, ignore=[], plot_type=1, **kwargs):
+        r"""Print the current field output for a cylinder/cone model from Abaqus
 
         Parameters
         ----------
@@ -950,7 +950,7 @@ class ConeCyl(object):
             return x, y, field
         except:
             traceback.print_exc()
-            error('Opened plot could not be generated! :(')
+            error('Opened field plot could not be generated! :(')
 
 
     def check_completed(self, wait=False, print_found=False):
