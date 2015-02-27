@@ -1312,6 +1312,11 @@ class ConeCyl(object):
             if valid:
                 thetadegs += imp.thetadegs
                 pts += imp.pts
+        stringerconf = getattr(self, 'stringerconf', None)
+        if stringerconf is not None:
+            for stringer in self.stringerconf.stringers:
+                thetadegs += [stringer.thetadeg]
+
         self.thetadegs = sorted(list(set(thetadegs)))
         self.pts = sorted(list(set(pts)))
         return self.thetadegs, self.pts
