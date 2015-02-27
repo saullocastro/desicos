@@ -11,6 +11,7 @@ from lbmi import LBMI
 from msi import MSI
 from ti import TI
 
+
 class ImpConf(object):
     """Imperfection Configuration
 
@@ -64,6 +65,7 @@ class ImpConf(object):
         self.name = ''
         self.conecyl = None
 
+
     def add_axisymmetric(self, pt, b, wb):
         """Adds an Axisymmetric Imperfection (AI)
 
@@ -85,6 +87,7 @@ class ImpConf(object):
         ax.impconf = self
         self.axisymmetrics.append(ax)
         return ax
+
 
     def add_dimple(self, thetadeg, pt, a, b, wb):
         """Adds a Dimple Imperfection (DI)
@@ -110,6 +113,7 @@ class ImpConf(object):
         self.dimples.append(d)
         return d
 
+
     def add_lbmi(self, mode, scaling_factor):
         """Adds a Linear Buckling Mode-shaped Imperfection (LBMI)
 
@@ -129,6 +133,7 @@ class ImpConf(object):
         lbmi.impconf = self
         self.lbmis.append(lbmi)
         return lbmi
+
 
     def add_measured_u3s_bottom_edge(self, thetadegs, u3s):
         r"""Adds a measured uneven bottom edge
@@ -154,6 +159,7 @@ class ImpConf(object):
         """
         self.uneven_bottom_edge.add_measured_u3s(thetadegs, u3s)
 
+
     def add_measured_u3s_top_edge(self, thetadegs, u3s):
         r"""Adds a measured uneven top edge
 
@@ -177,6 +183,7 @@ class ImpConf(object):
 
         """
         self.uneven_top_edge.add_measured_u3s(thetadegs, u3s)
+
 
     def add_msi(self, imp_ms='', scaling_factor=1., R_best_fit=None,
                 H_measured=None, path=None, use_theta_z_format=True,
@@ -291,6 +298,7 @@ class ImpConf(object):
         self.msis.append(msi)
         return msi
 
+
     def add_pload(self, thetadeg, pt, pltotal, step=1):
         """Adds a Perturbation Load
 
@@ -318,6 +326,7 @@ class ImpConf(object):
         self.ploads.append(pload)
         return pload
 
+
     def add_shim_bottom_edge(self, thetadeg, thick, width):
         """Adds a Shim to the bottom edge
 
@@ -338,6 +347,7 @@ class ImpConf(object):
         shim = Shim(thetadeg, thick, width, self.uneven_bottom_edge)
         return shim
 
+
     def add_shim_top_edge(self, thetadeg, thick, width):
         """Adds a Shim to the top edge
 
@@ -357,6 +367,7 @@ class ImpConf(object):
         """
         shim = Shim(thetadeg, thick, width, self.uneven_top_edge)
         return shim
+
 
     def add_ti(self, imp_thick, scaling_factor):
         """Adds Thickness Imperfection (TI)
@@ -382,6 +393,7 @@ class ImpConf(object):
         ti.scaling_factor = scaling_factor
         self.tis.append(ti)
         return ti
+
 
     def rebuild(self):
         self.imperfections = []
@@ -441,6 +453,7 @@ class ImpConf(object):
                         (len(self.ploads), len(self.dimples),
                           len(self.axisymmetrics), len(self.lbmis),
                           len(self.msis), len(self.tis))
+
 
     def create(self):
         for imp in self.tis:
