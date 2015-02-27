@@ -236,7 +236,8 @@ def edit_keywords(mod, text, before_pattern=None, insert=False):
 
 
 def create_composite_layup(name, stack, plyts, mat_names, region, part,
-                           part_csys, symmetric=False, scaling_factor=1.):
+                           part_csys, symmetric=False, scaling_factor=1.,
+                           axis_normal=2):
     r"""Creates a composite layup
 
     Parameters
@@ -265,6 +266,8 @@ def create_composite_layup(name, stack, plyts, mat_names, region, part,
     scaling_factor : float, optional
         A scaling factor to be applied to each ply thickness. Used to apply
         thickness imperfection in some cases.
+    axis_normal : int, optional
+        Reference
 
     """
     from abaqusConstants import (MIDDLE_SURFACE, FROM_SECTION, SHELL, ON, OFF,
@@ -282,13 +285,21 @@ def create_composite_layup(name, stack, plyts, mat_names, region, part,
                     poissonDefinition=DEFAULT,
                     temperature=GRADIENT,
                     useDensity=OFF)
+    if axis_normal == 1:
+        axis = AXIS_1
+    elif axis_normal == 2:
+        axis = AXIS_2
+    elif axis_normal == 3:
+        axis = AXIS_3
+    else:
+        raise ValueError('Invalid value for `axis_normal`')
     myLayup.ReferenceOrientation(orientationType=SYSTEM,
                                  localCsys=part_csys,
                                  fieldName='',
                                  additionalRotationType=ROTATION_NONE,
                                  angle=0.,
                                  additionalRotationField='',
-                                 axis=AXIS_2)
+                                 axis=axis)
     #CREATING ALL PLIES
     numIntPoints=3
     if len(stack)==1:
