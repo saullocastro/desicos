@@ -27,7 +27,7 @@ class BladeComposite(Stringer):
     """
     def __init__(self, thetadeg, wbot, wtop, stack, plyts, laminaprops,
                  numel_flange=4):
-        self.thetadegs = [thetadeg]
+        self.thetadeg = thetadeg
         self.wbot = wbot
         self.wtop = wtop
         self.stack = stack
@@ -51,9 +51,9 @@ class BladeComposite(Stringer):
         from abaqusConstants import (STANDALONE, THREE_D, DEFORMABLE_BODY,
                                      FIXED, QUAD, STRUCTURED, ON, XZPLANE,
                                      CARTESIAN, LAMINA, COMPUTED,
-                                     SURFACE_TO_SURFACE)
+                                     SURFACE_TO_SURFACE, OFF)
 
-        cc = self.stringer_conf.conecyl
+        cc = self.stringerconf.conecyl
         mod = mdb.models[cc.model_name]
         vp = session.viewports[session.currentViewportName]
         count = 1
@@ -62,7 +62,7 @@ class BladeComposite(Stringer):
                 count += 1
         self.name = 'StringerBladeComposite_{0:02d}'.format(count)
 
-        thetarad = np.deg2rad(thetadeg)
+        thetarad = np.deg2rad(self.thetadeg)
         L = cc.L
         sina = sin(cc.alpharad)
         cosa = cos(cc.alpharad)
@@ -107,7 +107,7 @@ class BladeComposite(Stringer):
         material_type = LAMINA
         if same_laminaprop:
             mat_name = 'MatStringer_{0:02d}'.format(count)
-            mat_names = [mat_name for _ in laminaprops]
+            mat_names = [mat_name for _ in self.laminaprops]
             myMat = mod.Material(name=mat_name)
             myMat.Elastic(table=(laminaprop,), type=material_type)
         else:
@@ -148,19 +148,18 @@ class BladeComposite(Stringer):
         # assemblying part
         ra = mod.rootAssembly
         ra.Instance(name=self.name, part=part, dependent=ON)
-        ra.rotate(instanceList=(self.name, ),
+        ra.rotate(instanceList=(self.name,),
                   axisPoint=(0.0, 0.0, 0.0),
                   axisDirection=(1.0, 0.0, 0.0),
                   angle=90.0)
-        if thetadeg > 0:
-            ra.rotate(instanceList=(self.name, ),
+        if self.thetadeg > 0:
+            ra.rotate(instanceList=(self.name,),
                       axisPoint=(0.0, 0.0, 0.0),
                       axisDirection=(0.0, 0.0, 1.0),
-                      angle=thetadeg)
+                      angle=self.thetadeg)
         ra.translate(instanceList=(self.name,),
                      vector=(rbot*cos(thetarad), rbot*sin(thetarad), 0.))
         vp.setValues(displayedObject=ra)
-
 
         # tieing stringer to the shell surface
         inst_shell = ra.instances['INST_SHELL']
@@ -202,7 +201,7 @@ class BladeIsotropic(BladeComposite):
 
     """
     def __init__(self, thetadeg, wbot, wtop, h, E, nu, numel_flange=4):
-        self.thetadegs = [thetadeg]
+        self.thetadeg = thetadeg
         self.wbot = wbot
         self.wtop = wtop
         self.stack = [0]

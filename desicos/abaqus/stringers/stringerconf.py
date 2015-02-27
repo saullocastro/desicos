@@ -34,6 +34,7 @@ class StringerConf(object):
         stringer = BladeComposite(thetadeg=thetadeg, wbot=wbot, wtop=wtop,
                 stack=stack, plyts=plyts, laminaprops=laminaprops,
                 numel_flange=numel_flange)
+        stringer.stringerconf = self
         self.stringers.append(stringer)
 
 
