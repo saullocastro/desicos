@@ -9,6 +9,7 @@ from desicos.logger import warn
 from desicos.abaqus import abaqus_functions
 from desicos.abaqus.constants import NUM_LB_MODES
 
+
 def _create_mesh(cc):
     cc.rebuild()
     fr = cc.fr
@@ -1006,6 +1007,7 @@ def _create_mesh(cc):
     refPoints1=(rps[rp_top.id],)
     ra.Set(referencePoints=refPoints1, name='RP_top')
 
+
 def _create_load_steps(cc):
     mod = mdb.models[cc.model_name]
     ra = mod.rootAssembly
@@ -1076,6 +1078,7 @@ def _create_load_steps(cc):
     # create the job
     job = mdb.Job(name=mod.name, model=mod.name, numCpus=ncpus,
                   numDomains=ncpus)
+
 
 def _create_loads_bcs(cc):
     mod = mdb.models[cc.model_name]
@@ -1353,6 +1356,10 @@ def _create_loads_bcs(cc):
                                  createStepName=cc.step1Name,
                                  variables=('U3','RF3' ),
                                  region=set_RP_top)
+
+    # creating stringers
+    for stringer in getattr(self, 'stringerconf', []):
+        stringer.create()
 
     if not cc.linear_buckling:
         # applying imperfections

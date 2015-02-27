@@ -21,6 +21,8 @@ User Interface (GUI) or using the Python API.
     :members:
 .. automodule:: desicos.abaqus.abaqus_functions
     :members:
+.. automodule:: desicos.abaqus.stringers
+    :members:
 
 """
 import conecyl

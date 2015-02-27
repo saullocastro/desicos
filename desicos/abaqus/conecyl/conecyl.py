@@ -33,6 +33,8 @@ class ConeCyl(object):
                            already created in Abaqus
     ``impconf``            The corresponding imperfection configuration (see
                            :class:`.ImpConf`)
+    ``stringerconf``       The corresponding stringer configuration (see
+                           :class:`.StringerConf`)
     =====================  ==================================================
 
     =====================  ==================================================
@@ -240,6 +242,7 @@ class ConeCyl(object):
     """
     def __init__(self):
         import desicos.abaqus.imperfections as imperfections
+        import desicos.abaqus.stringers as stringers
 
         self.index = 0
         self.name_DB = ''
@@ -309,6 +312,8 @@ class ConeCyl(object):
         self.separate_load_steps = True
         self.impconf = imperfections.ImpConf()
         self.impconf.conecyl = self
+        self.stringerconf = stringers.StringerConf()
+        self.stringerconf.conecyl = self
 
         # boundary conditions
         self.bc_fix_bottom_uR = True
