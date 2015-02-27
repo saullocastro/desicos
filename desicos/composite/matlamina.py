@@ -241,7 +241,7 @@ def read_laminaprop(laminaprop=None):
     matlam = MatLamina()
 
     #laminaProp = (e1, e2, nu12, g12, g13, g23, e3, nu13, nu23)
-    if laminaprop == None:
+    if laminaprop is None:
         log.error('laminaprop must be a tuple in the following format:\n\t'
                   +'(e1, e2, nu12, g12, g13, g23, e3, nu13, nu23)')
     if len(laminaprop) == 3: #ISOTROPIC

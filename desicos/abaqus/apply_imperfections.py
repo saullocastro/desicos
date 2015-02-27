@@ -354,7 +354,7 @@ def translate_nodes_ABAQUS(imperfection_file_name,
             part_nodes = part_nodes[mask]
 
     if use_theta_z_format:
-        if nodal_translations == None:
+        if nodal_translations is None:
             trans = calc_translations_ABAQUS(
                         imperfection_file_name = imperfection_file_name,
                         model_name = model_name,

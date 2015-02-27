@@ -989,7 +989,7 @@ class DesicosStGenUI(QMainWindow):
 		row=0
 		for i in im:
 			self.saveCopyPropsCB.addItem(i)
-		if self.input1CC != None:
+		if self.input1CC is not None:
 			try:
 				idx=im.index(self.input1CC)
 				self.saveCopyPropsCB.setCurrentIndex(idx)

@@ -68,7 +68,7 @@ class Cutout(object):
         self.name      = 'cutout_%d' % self.index
 
     def get_cs_mer( self ):
-        if self.conecyl == None:
+        if self.conecyl is None:
             print 'ERROR - cutout.py - find_meridians - conecyl not defined!'
             raise
         for meridian in self.conecyl.meridians:
@@ -78,9 +78,9 @@ class Cutout(object):
                 self.meridian  = meridian
             if abs( meridian.theta - self.theta2 ) < TOL:
                 self.meridian2 = meridian
-        if self.meridian1 == None\
-        or self.meridian  == None\
-        or self.meridian2 == None:
+        if self.meridian1 is None\
+        or self.meridian  is None\
+        or self.meridian2 is None:
             print 'ERROR - cutout.py - find_meridians - meridian not found!'
 
         for cross_section in self.conecyl.cross_sections:
@@ -90,9 +90,9 @@ class Cutout(object):
                 self.cross_section  = cross_section
             if abs( cross_section.z - self.zup ) < TOL:
                 self.cross_section_up  = cross_section
-        if self.cross_section_low == None\
-        or self.cross_section     == None\
-        or self.cross_section_up  == None:
+        if self.cross_section_low is None\
+        or self.cross_section     is None\
+        or self.cross_section_up  is None:
             print 'ERROR - cutout.py - find_cross_sections - cross_section not found!'
 
     def find_faces( self ):

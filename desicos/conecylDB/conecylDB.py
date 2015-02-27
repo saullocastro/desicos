@@ -32,15 +32,20 @@ which_path = {'ccs': local_ccs_path,
 def _myload(path):
     if not os.path.isfile(path):
         try:
-            json.dump({}, open(path, 'w'))
+            with open(path) as f:
+                json.dump({}, f)
         except:
             msg = error('{0} could not be loaded!'.format(path))
             return {}
-    return json.load(open(path))
+    with open(path) as f:
+        data = json.load(f)
+    # Tuples are converted to lists during saving, fix that
+    return dict((k, tuple(v) if isinstance(v, list) else v) for k,v in data.iteritems())
 
 def _mydump(obj, path):
     try:
-        json.dump(obj, open(path, 'w'))
+        with open(path, 'w') as f:
+            json.dump(obj, f)
         return 0
     except:
         msg = error('{0} could not be dumped in {1}!'.format(obj, path))
@@ -50,8 +55,8 @@ if not os.path.isdir(localDB_path):
     try:
         os.makedirs(localDB_path)
         _mydump({}, local_ccs_path)
-        _mydump(local_laminaprops_path)
-        _mydump(local_allowables_path)
+        _mydump({}, local_laminaprops_path)
+        _mydump({}, local_allowables_path)
     except:
         msg = error('localDB not found and not created!')
 

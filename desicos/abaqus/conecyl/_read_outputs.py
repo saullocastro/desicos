@@ -24,8 +24,8 @@ def read_outputs(self, last_frame=False, last_cross_section=True,
             if description.find('EigenValue') > -1:
                 pcr = float(description.split('EigenValue =')[1].strip())
                 pcrs.append(pcr)
-        self.zdisp = np.linspace(       0., self.axial_displ,10)
-        self.zload = np.linspace(min(pcrs),        min(pcrs),10)
+        self.zdisp = np.linspace(       0., self.axial_displ or 1., 10)
+        self.zload = np.linspace(min(pcrs),              min(pcrs), 10)
         self.detach_results(odb)
         return True
 
@@ -58,7 +58,7 @@ def _read_outputs_entity(cc, odb, entity, last_frame=False):
     # reseting values
     nodes_dict = {}
     for node in nodes:
-        if node == None:
+        if node is None:
             continue
         nodes_dict[node.id] = node
         for step_name in step_names:

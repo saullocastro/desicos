@@ -140,11 +140,12 @@ def plot_displacements(self, step_num=1, frame_num = -1):
                 legendLabel  = 'Max displacement = %f mm' % maxdisp)
 
 def plot_stress_analysis(self, disp_force_frame = 'DISP'):
-    keys = ['HSNFCCRT','HSNFTCRT','HSNMCCRT','HSNMTCRT']
+    keys = ['HSNFCCRT','HSNFTCRT','HSNMCCRT','HSNMTCRT', 'TSAIW']
     names = { 'HSNFCCRT': 'Hashin, Fiber Compression',
               'HSNFTCRT': 'Hashin, Fiber Tension',
               'HSNMCCRT': 'Hashin, Matrix Compression',
-              'HSNMTCRT': 'Hashin, Matrix Tension' }
+              'HSNMTCRT': 'Hashin, Matrix Tension',
+              'TSAIW': 'Tsai-Wu'}
     dff = disp_force_frame.upper()
     if   dff == 'DISP':
         xlabel = 'End-Shortening, mm'
@@ -156,6 +157,11 @@ def plot_stress_analysis(self, disp_force_frame = 'DISP'):
         xaxis = [i for i in range(len(self.zdisp))]
         xlabel = 'Frame index'
     for key in keys:
+        # Verify that failure data is present, before attempting to plot
+        if len(self.hashin_max_ms) == 0:
+            continue
+        if key not in next(self.hashin_max_ms.itervalues()):
+            continue
         xs = []; ms = []; fi = []
         for f_num in self.hashin_max_ms.keys():
             xs.append(xaxis[f_num])

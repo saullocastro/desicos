@@ -10,13 +10,13 @@ session.graphicsOptions.setValues(backgroundStyle=SOLID,
     backgroundColor='#FFFFFF')
 vp = session.viewports[session.currentViewportName]
 session.psOptions.setValues(logo=OFF,
-			resolution=DPI_1200,
-			shadingQuality=EXTRA_FINE)
+            resolution=DPI_1200,
+            shadingQuality=EXTRA_FINE)
 session.printOptions.setValues( reduceColors=False )
 def save_contour( cc, frame_num = None, sufix = 'change_sufix', closeODB=False):
     odb = cc.attach_results()
     prev = 0.
-    if frame_num == None:
+    if frame_num is None:
         for i in range( len(cc.zload) ):
             zload = cc.zload[i]
             if abs(zload) < abs(prev):
@@ -30,7 +30,7 @@ def save_contour( cc, frame_num = None, sufix = 'change_sufix', closeODB=False):
                 break
         print 'Detected: incrementNumber', incrementNumber, 'frame_num', frame_num
         sufix = 'first_buckling'
-	if frame_num == None: frame_num = -1
+    if frame_num is None: frame_num = -1
     else:
         frame_num = frame_num
         sufix = sufix

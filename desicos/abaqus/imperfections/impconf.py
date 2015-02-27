@@ -267,10 +267,10 @@ class ImpConf(object):
         msi.ignore_top_h = ignore_top_h
         msi.stretch_H = stretch_H
 
-        if c0!=None and not (m0 and n0 and funcnum):
+        if c0 is not None and not (m0 and n0 and funcnum):
             raise ValueError('Parameter "c0" must be supplied with ' +
                              '"m0", "n0" and "funcnum"')
-        elif c0!=None and m0 and n0 and funcnum:
+        elif c0 is not None and m0 and n0 and funcnum:
             if funcnum==1:
                 size = 2
             elif funcnum==2:

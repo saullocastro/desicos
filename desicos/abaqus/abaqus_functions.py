@@ -95,8 +95,9 @@ def configure_session():
                                   maxAutoCompute=False,
                                   maxValue=185)
         #
-        if name.find('FI_HSNFCCRT') > -1 or name.find('FI_HSNFTCRT') > -1\
-        or name.find('FI_HSNMCCRT') > -1 or name.find('FI_HSNMTCRT') > -1:
+        if (name.find('FI_HSNFCCRT') > -1 or name.find('FI_HSNFTCRT') > -1
+         or name.find('FI_HSNMCCRT') > -1 or name.find('FI_HSNMTCRT') > -1
+         or name.find('FI_TSAIW')    > -1):
             ay.axisData.setValues(labelNumDigits=1,
                                   minAutoCompute=False,
                                   minValue=0,
@@ -110,6 +111,7 @@ def configure_session():
         #
         if (name.find('MS_HSNFCCRT') > -1 or name.find('MS_HSNFTCRT') > -1
          or name.find('MS_HSNMCCRT') > -1 or name.find('MS_HSNMTCRT') > -1
+         or name.find('MS_TSAIW')    > -1
          or name.find('MS_MAX')      > -1 or name.find('MS_MIN')      > -1):
             ay.axisData.setValues(labelNumDigits=1,
                                   minAutoCompute=False,
@@ -216,7 +218,7 @@ def edit_keywords(mod, text, before_pattern=None, insert=False):
     """
     mod.keywordBlock.synchVersions(storeNodesAndElements=False)
     sieBlocks=mod.keywordBlock.sieBlocks
-    if before_pattern==None:
+    if before_pattern is None:
         index=len(sieBlocks) - 2
     else:
         index=None
@@ -225,7 +227,7 @@ def edit_keywords(mod, text, before_pattern=None, insert=False):
             if sieBlock.find(before_pattern) > -1:
                 index=i-1
                 break
-        if index==None:
+        if index is None:
             print 'WARNING - *edit_keywords failed !'
             print '          %s pattern not found !' % before_pattern
             #TODO better error handling here...

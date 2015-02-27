@@ -16,7 +16,7 @@ def cyl2rec( r, theta, z ):
 
 
 def getGeomImperfection(r,z,RB,RT=None):
-    if RT == None:
+    if RT is None:
         RT=RB
     return r -(RB+ (RT-RB)*z)
 
@@ -26,7 +26,7 @@ def getImperfectionArray(tht,z,IM,fx,fy):
 
 
 def getImperfectionArray3D(data,nx,ny,H,RB,RT=None):
-    if RT == None:
+    if RT is None:
         RT=RB
 
     x,y,z=data[0],data[1],data[2]

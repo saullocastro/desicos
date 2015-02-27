@@ -15,6 +15,7 @@ from desicos.abaqus.utils import remove_special_characters as rsc
 from desicos.abaqus.constants import *
 
 NUM_PLIES = 40
+MAX_MODELS = 40
 
 
 def cc_form2dict(db, form):
@@ -102,7 +103,6 @@ class TestDB(AFXDataDialog):
         self.form = form
         self.form.db = self
         #
-        max_models = 40
         self.logcount = 10000
         self.lamMatrix = {'A':None, 'B':None, 'D':None}
         #
@@ -306,14 +306,18 @@ class TestDB(AFXDataDialog):
         FXLabel(bcVAbot, 'Bottom Edge')
         FXLabel(bcVAbot, '')
         FXLabel(bcVAbot, '')
-        FXCheckButton(bcVAbot, 'Fix Radial Displ.' , form.bc_fix_bottom_uRKw)
-        FXCheckButton(bcVAbot, 'Fix Circumferential Displ.' , form.bc_fix_bottom_vKw)
-        FXCheckButton(bcVAbot, 'Clamp Shell Edge' , form.bc_bottom_clampedKw)
-        FXLabel(bcVAbot, '')
+        FXCheckButton(bcVAbot, 'Fix Radial displ. of shell edge / resin bottom' , form.bc_fix_bottom_uRKw)
+        FXCheckButton(bcVAbot, 'Fix Circumferential displ. of shell edge / resin bottom' , form.bc_fix_bottom_vKw)
+        FXCheckButton(bcVAbot, 'Clamp shell edge' , form.bc_bottom_clampedKw)
         FXLabel(bcVAbot, '')
         FXLabel(bcVAbot, '')
         self.resin_add_BIR = FXCheckButton(bcVAbot, 'Inner Resin Ring Bottom', form.resin_add_BIRKw)
         self.resin_add_BOR = FXCheckButton(bcVAbot, 'Outer Resin Ring Bottom', form.resin_add_BORKw)
+        FXLabel(bcVAbot, '')
+        FXLabel(bcVAbot, '')
+        self.bc_fix_bottom_side_uR = FXCheckButton(bcVAbot, 'Fix Radial displ. of resin sides' , form.bc_fix_bottom_side_uRKw)
+        self.bc_fix_bottom_side_v = FXCheckButton(bcVAbot, 'Fix Circumferential displ. of resin sides' , form.bc_fix_bottom_side_vKw)
+        self.bc_fix_bottom_side_u3 = FXCheckButton(bcVAbot, 'Fix Radial displ. of resin sides' , form.bc_fix_bottom_side_u3Kw)
         FXLabel(bcVAbot, '')
         FXLabel(bcVAbot, '')
         bcVAbot_VA = AFXVerticalAligner(bcVAbot)
@@ -326,14 +330,18 @@ class TestDB(AFXDataDialog):
         FXLabel(bcVAtop, 'Top Edge')
         FXLabel(bcVAtop, '')
         FXLabel(bcVAtop, '')
-        FXCheckButton(bcVAtop, 'Fix Radial Displ.' , form.bc_fix_top_uRKw)
-        FXCheckButton(bcVAtop, 'Fix Circumferential Displ.' , form.bc_fix_top_vKw)
-        FXCheckButton(bcVAtop, 'Clamp Shell Edge' , form.bc_top_clampedKw)
-        FXLabel(bcVAtop, '')
+        FXCheckButton(bcVAtop, 'Fix Radial displ. of shell edge / resin top' , form.bc_fix_top_uRKw)
+        FXCheckButton(bcVAtop, 'Fix Circumferential displ. of shell edge / resin top' , form.bc_fix_top_vKw)
+        FXCheckButton(bcVAtop, 'Clamp shell edge' , form.bc_top_clampedKw)
         FXLabel(bcVAtop, '')
         FXLabel(bcVAtop, '')
         self.resin_add_TIR = FXCheckButton(bcVAtop, 'Inner Resin Ring Top' , form.resin_add_TIRKw)
         self.resin_add_TOR = FXCheckButton(bcVAtop, 'Outer Resin Ring Top' , form.resin_add_TORKw)
+        FXLabel(bcVAtop, '')
+        FXLabel(bcVAtop, '')
+        self.bc_fix_top_side_uR = FXCheckButton(bcVAtop, 'Fix Radial displ. of resin sides' , form.bc_fix_top_side_uRKw)
+        self.bc_fix_top_side_v = FXCheckButton(bcVAtop, 'Fix Circumferential displ. of resin sides' , form.bc_fix_top_side_vKw)
+        self.bc_fix_top_side_u3 = FXCheckButton(bcVAtop, 'Fix Radial displ. of resin sides' , form.bc_fix_top_side_u3Kw)
         FXLabel(bcVAtop, '')
         FXLabel(bcVAtop, '')
         bcVAtop_VA = AFXVerticalAligner(bcVAtop)
@@ -464,11 +472,11 @@ class TestDB(AFXDataDialog):
         self.imp_current_num['ax'] = 16
         self.imp_current_num['lbmi'] = 16
         #self.imp_current_num['cut'] = 16
-        self.imp_maxModels['pl'] = max_models
-        self.imp_maxModels['d'] = max_models
-        self.imp_maxModels['ax'] = max_models
-        self.imp_maxModels['lbmi'] = max_models
-        #self.imp_maxModels['cut'] = max_models
+        self.imp_maxModels['pl'] = MAX_MODELS
+        self.imp_maxModels['d'] = MAX_MODELS
+        self.imp_maxModels['ax'] = MAX_MODELS
+        self.imp_maxModels['lbmi'] = MAX_MODELS
+        #self.imp_maxModels['cut'] = MAX_MODELS
         self.imp_num_params['pl'] = 2
         self.imp_num_params['d'] = 4
         self.imp_num_params['ax'] = 2
@@ -574,12 +582,12 @@ class TestDB(AFXDataDialog):
         FXLabel(impHF, '    ')
         impVF2 = FXVerticalFrame(impHF)
         FXLabel(impVF2, 'scaling factor=0 will NOT\napply the imperfection', opts=LAYOUT_CENTER_X)
-        self.imp_ms_sf = AFXTable(impVF2, 21, 2,(max_models+1), 2, form.imp_ms_scalingsKw, 0,
+        self.imp_ms_sf = AFXTable(impVF2, 21, 2,(MAX_MODELS+1), 2, form.imp_ms_scalingsKw, 0,
             opts=AFXTABLE_EDITABLE|AFXTABLE_TYPE_FLOAT|AFXTABLE_STYLE_DEFAULT)
         self.imp_ms_sf.setLeadingRows(1)
         self.imp_ms_sf.setLeadingColumns(1)
         self.imp_ms_sf.setLeadingRowLabels('scaling factor')
-        colLabel = '\t'.join(['model {0:02d}'.format(i) for i in range(1, max_models+1)])
+        colLabel = '\t'.join(['model {0:02d}'.format(i) for i in range(1, MAX_MODELS+1)])
         self.imp_ms_sf.setLeadingColumnLabels(colLabel)
         FXLabel(impVF, '')
         FXLabel(impVF, '')
@@ -618,13 +626,13 @@ class TestDB(AFXDataDialog):
         FXLabel(impHF, '    ')
         impVF2 = FXVerticalFrame(impHF)
         FXLabel(impVF2, 'scaling factor=0 will NOT\napply the imperfection', opts=LAYOUT_CENTER_X)
-        self.imp_t_sf = AFXTable(impVF2, 21, 2,(max_models+1), 2,
+        self.imp_t_sf = AFXTable(impVF2, 21, 2,(MAX_MODELS+1), 2,
             form.imp_t_scalingsKw, 0,
             opts=AFXTABLE_EDITABLE|AFXTABLE_TYPE_FLOAT|AFXTABLE_STYLE_DEFAULT)
         self.imp_t_sf.setLeadingRows(1)
         self.imp_t_sf.setLeadingColumns(1)
         self.imp_t_sf.setLeadingRowLabels('scaling factor')
-        colLabel = '\t'.join(['model {0:02d}'.format(i) for i in range(1, max_models+1)])
+        colLabel = '\t'.join(['model {0:02d}'.format(i) for i in range(1, MAX_MODELS+1)])
         self.imp_t_sf.setLeadingColumnLabels(colLabel)
         FXLabel(impVF, '')
         FXLabel(impVF, '')
@@ -656,14 +664,14 @@ class TestDB(AFXDataDialog):
         self.lasw.setCurrent(self.form.laKw.getValue())
         #
         liFB = FXHorizontalFrame(self.lasw)
-        self.betadegs = AFXTable(liFB, 21, 2,(max_models+1), 2,
+        self.betadegs = AFXTable(liFB, 21, 2,(MAX_MODELS+1), 2,
             form.betadegsKw, 0,
             opts=AFXTABLE_EDITABLE|AFXTABLE_TYPE_FLOAT|AFXTABLE_STYLE_DEFAULT)
         self.betadegs.setLeadingRows(1)
         self.betadegs.setLeadingColumns(1)
         self.betadegs.setLeadingRowLabels('beta (degrees)')
         self.betadegs.setLeadingColumnLabels(colLabel)
-        self.omegadegs = AFXTable(liFB, 21, 2,(max_models+1), 2,
+        self.omegadegs = AFXTable(liFB, 21, 2,(MAX_MODELS+1), 2,
             form.omegadegsKw, 0,
             opts=AFXTABLE_EDITABLE|AFXTABLE_TYPE_FLOAT|AFXTABLE_STYLE_DEFAULT)
         self.omegadegs.setLeadingRows(1)
@@ -736,7 +744,7 @@ class TestDB(AFXDataDialog):
         postVF2 = FXVerticalFrame(postVF, opts=LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
         self.model_to_post = AFXComboBox(postVF2, 0, 10, 'Select model:',
                              form.model_to_postKw)
-        FXLabel(postVF2, 'Stress analysis using the Hashin criterion (implemented for composite/monolitic only)')
+        FXLabel(postVF2, 'Stress analysis using the Hashin and Tsai-Wu criteria (implemented for composite/monolitic only)')
         FXLabel(postVF2, 'This macro performs an envolope among all elements, ' +\
                         'among all the plies, considering for each ply: the ' +\
                         'bottom, the middle and the top')
@@ -1120,7 +1128,8 @@ class TestDB(AFXDataDialog):
                        'gui_commands.load_study("{0}")\n'.format(std_name))
             sendCommand(command)
             reload(gui_commands)
-            gui_commands.load_study_gui(std_name, form)
+            if not gui_commands.load_study_gui(std_name, form):
+                message('Warning: The loaded study was not saved from the GUI. Layup and imperfection data may be missing.')
             if std_name:
                 outpath = os.path.join(TMP_DIR, std_name)
             else:
@@ -1165,20 +1174,25 @@ class TestDB(AFXDataDialog):
             self.pressure_step.disable()
             self.axial_step.disable()
 
+        # Apply DLR boundary conditions
+        DLR_BC = {
+            'resin_add_BIR' : True,
+            'resin_add_BOR' : True,
+            'resin_add_TIR' : True,
+            'resin_add_TOR' : True,
+            'bc_fix_bottom_side_uR' : True,
+            'bc_fix_bottom_side_v' : False,
+            'bc_fix_bottom_side_u3' : False,
+            'bc_fix_top_side_uR' : True,
+            'bc_fix_top_side_v' : False,
+            'bc_fix_top_side_u3' : False}
         if form.use_DLR_bcKw.getValue():
-            form.resin_add_BIRKw.setValue(True)
-            form.resin_add_BORKw.setValue(True)
-            form.resin_add_TIRKw.setValue(True)
-            form.resin_add_TORKw.setValue(True)
-            self.resin_add_BIR.disable()
-            self.resin_add_BOR.disable()
-            self.resin_add_TIR.disable()
-            self.resin_add_TOR.disable()
+            for key, value in DLR_BC.iteritems():
+                getattr(self, key).disable()
+                getattr(form, key+'Kw').setValue(value)
         else:
-            self.resin_add_BIR.enable()
-            self.resin_add_BOR.enable()
-            self.resin_add_TIR.enable()
-            self.resin_add_TOR.enable()
+            for key in DLR_BC:
+                getattr(self, key).enable()
 
         # plot opened conecyl
         for i, plot_type_button in enumerate(self.plot_type_buttons):

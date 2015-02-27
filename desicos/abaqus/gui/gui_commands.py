@@ -1,6 +1,7 @@
 import os
 import subprocess
 import shutil
+from itertools import chain
 
 import __main__
 
@@ -11,6 +12,7 @@ import desicos.conecylDB as conecylDB
 import desicos.abaqus.conecyl as conecyl
 import desicos.abaqus.study as study
 from desicos.abaqus.constants import TMP_DIR
+from desicos.conecylDB import fetch, save
 
 ccattrs = ['rbot','H','alphadeg','plyts',
 'stack', 'numel_r', 'elem_type',
@@ -18,11 +20,12 @@ ccattrs = ['rbot','H','alphadeg','plyts',
 'axial_displ', 'axial_load', 'axial_step',
 'pressure_load', 'pressure_step',
 #'Nxxtop', 'Nxxtop_vec',
-'artificial_damping1', 'artificial_damping2',
 'damping_factor1', 'minInc1', 'initialInc1', 'maxInc1', 'maxNumInc1',
 'damping_factor2', 'minInc2', 'initialInc2', 'maxInc2', 'maxNumInc2',
 'bc_fix_bottom_uR', 'bc_fix_bottom_v', 'bc_bottom_clamped',
+'bc_fix_bottom_side_uR', 'bc_fix_bottom_side_v', 'bc_fix_bottom_side_u3',
 'bc_fix_top_uR', 'bc_fix_top_v', 'bc_top_clamped',
+'bc_fix_top_side_uR', 'bc_fix_top_side_v', 'bc_fix_top_side_u3',
 'resin_add_BIR', 'resin_add_BOR', 'resin_add_TIR', 'resin_add_TOR',
 'use_DLR_bc',
 'resin_E', 'resin_nu', 'resin_numel',
@@ -120,7 +123,6 @@ def apply_imp_t(
 
 def create_study(**kwargs):
     # setting defaults
-    allowables = kwargs.get('allowables')
     pl_table = kwargs.get('pl_table')
     pload_step = kwargs.get('pload_step')
     d_table = kwargs.get('d_table')
@@ -131,9 +133,6 @@ def create_study(**kwargs):
     omegadeg = kwargs.get('omegadeg', 0.)
     betadegs = kwargs.get('betadegs')
     omegadegs = kwargs.get('omegadegs')
-    kwargs['plyts'] = kwargs.get('plyts', [])
-    kwargs['stack'] = kwargs.get('stack', [])
-    kwargs['laminapropKeys'] = kwargs.get('laminapropKeys', [])
 
     imp_num = {}
     imp_num['pl'] = kwargs.get('pl_num')
@@ -172,6 +171,7 @@ def create_study(**kwargs):
     kwargs['plyts'] = [float(i) if i!='' else float(laminate[0,1])
                        for i in laminate[:len(stack),1]]
     #TODO currently only one allowable is allowed for stress analysis
+    kwargs['allowables'] = [kwargs['allowables'] for _ in stack]
     #allowablesKeys = [float(i) if i!='' else laminate[0,3] \
     #         for i in laminate[:len(stack),1]]
     #
@@ -186,7 +186,7 @@ def create_study(**kwargs):
         betadegs  = [betadeg for i in range(num_models)]
         omegadegs = [omegadeg for i in range(num_models)]
     elif la == 2:
-        if betadegs != None:
+        if betadegs is not None:
             new_betadegs = []
             for betadeg in betadegs:
                 if betadeg:
@@ -194,7 +194,7 @@ def create_study(**kwargs):
             betadegs = new_betadegs
         else:
             betadegs = []
-        if omegadegs != None:
+        if omegadegs is not None:
             new_omegadegs = []
             for omegadeg in omegadegs:
                 if omegadeg:
@@ -203,6 +203,13 @@ def create_study(**kwargs):
         else:
             omegadegs = []
     num_models = max(num_models, len(betadegs), len(omegadegs))
+    #
+    # damping
+    #
+    if not kwargs['artificial_damping1']:
+        kwargs['damping_factor1'] = None
+    if not kwargs['artificial_damping2']:
+        kwargs['damping_factor2'] = None
     #
     std_name = find_std_name(kwargs.get('std_name'))
     #
@@ -338,11 +345,12 @@ def load_study(std_name):
     vpname = __main__.session.currentViewportName
     __main__.session.viewports[vpname].setValues(displayedObject = None)
     mdb = __main__.mdb
-    mod = mdb.models[std_name + '_model_01']
-    p = mod.parts['Shell']
-    __main__.session.viewports[vpname].setValues(displayedObject = p)
-    a = mod.rootAssembly
-    a.regenerate()
+    if std.ccs[0].model_name in mdb.models.keys():
+        mod = mdb.models[std.ccs[0].model_name]
+        p = mod.parts['Shell']
+        __main__.session.viewports[vpname].setValues(displayedObject = p)
+        a = mod.rootAssembly
+        a.regenerate()
 
     for cc in std.ccs:
         if not cc.model_name in mdb.models.keys():
@@ -352,10 +360,115 @@ def load_study(std_name):
         abaqus_functions.set_colors_ti(cc)
 
 
+def get_new_key(which, key, value):
+    # Given a DB key and value
+    # Check whether value is already in the DB, if not add it
+    # and return a key that can be used to reference to 'value'
+    value = tuple(value) # Convert list to tuple, if needed
+    existing = fetch(which)
+    # Inverse mapping. Sorting keeps result reliable if there are duplicated values.
+    inv_existing = dict((v, k) for k, v in sorted(existing.iteritems(), reverse=True))
+    if key in existing and existing[key] == value:
+        # Key already exists and with the correct value, reuse it
+        return key
+    if value in inv_existing:
+        # There is already a name for this value in the DB, use it
+        return str(inv_existing[value])
+    # Find a new (not yet used) name and save in the DB
+    new_key = key
+    i = 1
+    while new_key in existing:
+        new_key = '{0}_{1:04d}'.format(key, i)
+        i += 1
+    save(which, new_key, value)
+    return new_key
+
+
+def reconstruct_params_from_gui(std):
+    # First cc is often a linear one, so use the last cc as 'template'
+    # XX - it is assumed that all other ccs use the same parameters
+    cc = std.ccs[-1]
+    params = {}
+    for attr in ccattrs:
+        if attr in ('laminapropKeys', 'allowables', 'stack', 'plyts',
+                    'damping_factor1', 'damping_factor2'):
+            continue
+        value = getattr(cc, attr)
+        params[attr] = value
+
+    # Set artificial_dampingX and damping_factorX manually
+    damping_attrs = [('damping_factor1', 'artificial_damping1'),
+                     ('damping_factor2', 'artificial_damping2')]
+    for damp_attr, art_attr in damping_attrs:
+        value = getattr(cc, damp_attr)
+        params[damp_attr] = value if (value is not None) else 0.
+        params[art_attr] = value is not None
+
+    # Prevent the GUI from complaining about unset parameters
+    for attr in ('axial_load', 'axial_displ', 'pressure_load'):
+        if params[attr] is None:
+            params[attr] = 0
+
+    # Set laminate properties
+    if not (len(cc.laminaprops) == len(cc.stack) == len(cc.plyts) ==
+            len(cc.laminapropKeys)):
+        raise ValueError('Loaded ConeCyl object has inconsistent stack length!')
+    laminapropKeys = []
+    for key, value in zip(cc.laminapropKeys, cc.laminaprops):
+        laminapropKeys.append(get_new_key('laminaprops', key, value))
+    params['laminapropKey'] = laminapropKeys[0]
+    # allowableKey is not saved, so reuse laminapropKey for the name
+    # TODO: Per-ply allowables
+    params['allowablesKey'] = get_new_key('allowables',
+                cc.laminapropKeys[0], cc.allowables[0])
+
+    # Construct laminate table
+    # import here to avoid circular reference
+    from testDB import NUM_PLIES, MAX_MODELS
+    tmp = numpy.empty((NUM_PLIES, 3), dtype='|S50')
+    tmp.fill('')
+    tmp[:len(laminapropKeys),0] = laminapropKeys
+    tmp[:len(cc.plyts),1] = cc.plyts
+    tmp[:len(cc.stack),2] = cc.stack
+    params['laminate'] = ','.join(['('+','.join(i)+')' for i in tmp])
+
+    # Apply perturbation loads
+    # TODO: other imperfections
+    all_ploads = list(chain.from_iterable(cc.impconf.ploads for cc in std.ccs))
+    all_ploads = map(lambda pl: (pl.thetadeg, pl.pt), all_ploads)
+    # Filter duplicates, to obtain a list of unique pload parameter combinations
+    seen = set()
+    all_ploads = [x for x in all_ploads if not (x in seen or seen.add(x))]
+    params['pl_num'] = len(all_ploads)
+    nonlinear_ccs = filter(lambda cc: not cc.linear_buckling, std.ccs)
+    # TODO: unduplicate magic numbers (here, in create_study and in testDB)
+    # It'll only get worse when adding other imperfections as well
+    if params['pl_num'] > 32:
+        raise ValueError('Too many different perturbation load parameters')
+    if len(nonlinear_ccs) > MAX_MODELS:
+        raise ValueError('Too many different models')
+    tmp = numpy.empty((len(nonlinear_ccs) + 3, 32), dtype='|S50')
+    tmp.fill('')
+    tmp[0,:len(all_ploads)] = [thetadeg for thetadeg, pt in all_ploads]
+    tmp[1,:len(all_ploads)] = [pt for thetadeg, pt in all_ploads]
+    for row, cc in enumerate(nonlinear_ccs, start=3):
+         for pl in cc.impconf.ploads:
+            assert (pl.thetadeg, pl.pt) in all_ploads
+            tmp[row,all_ploads.index((pl.thetadeg, pl.pt))] = pl.pltotal
+    params['pl_table'] = ','.join(['('+','.join(i)+')' for i in tmp])
+
+    params['std_name'] = std.name
+    std.params_from_gui = params
+
+
 def load_study_gui(std_name, form):
     std = study.Study()
     std.tmp_dir = TMP_DIR
     std.name = std_name
     std = std.load()
+    saved_from_gui = len(std.params_from_gui) != 0
+    if not saved_from_gui:
+        reconstruct_params_from_gui(std)
     form.read_params_from_gui(std.params_from_gui)
+    return saved_from_gui
 

@@ -179,7 +179,7 @@ def read_xyz(path,
         mps = np.loadtxt(path, dtype=FLOAT)
     r = np.sqrt(mps[:, 0]**2 + mps[:, 1]**2)
     # measuring model dimensions
-    if R_best_fit == None:
+    if R_best_fit is None:
         R   = np.average(r)
         warn('The cylinder average radius of the measured points\n\t' +
              'assumed to be {0:1.2f}'.format(R_best_fit))

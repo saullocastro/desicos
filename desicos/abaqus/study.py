@@ -54,8 +54,6 @@ class Study(object):
             cc.tmp_dir = self.tmp_dir
             cc.study_dir = self.study_dir
             cc.output_dir = self.output_dir
-            cc.rename = False
-            cc.model_name = self.name + '_model_{0:02d}'.format(cc.index+1)
             cc.rebuild()
         self.excel_name = os.path.join(self.study_dir,
                                        '{0}.xls'.format(self.name))
@@ -249,6 +247,10 @@ class Study(object):
         limit = len(self.ccs[start].impconf.imperfections)
         for i in range(limit):
             imp_ref = self.ccs[start].impconf.imperfections[i]
+            if not any(cc.impconf.imperfections[i] for cc in self.ccs[start:]):
+                warn("imperfection '{0}' is zero for all ConeCyl objects, skipping...".format(
+                     imp_ref.name))
+                continue
             xaxis_label = imp_ref.xaxis_label
             for pre in ['fb','gb']:
                 curve = []
