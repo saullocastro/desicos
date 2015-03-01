@@ -35,6 +35,9 @@ class BladeComposite(Stringer):
         self.laminaprops = laminaprops
         self.numel_flange = numel_flange
 
+    @property
+    def thetadegs(self):
+        return [self.thetadeg]
 
     def create(self):
         #TODO

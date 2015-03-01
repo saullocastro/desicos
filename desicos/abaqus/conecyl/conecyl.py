@@ -1315,7 +1315,7 @@ class ConeCyl(object):
         stringerconf = getattr(self, 'stringerconf', None)
         if stringerconf is not None:
             for stringer in self.stringerconf.stringers:
-                thetadegs += [stringer.thetadeg]
+                thetadegs += stringer.thetadegs
 
         self.thetadegs = sorted(list(set(thetadegs)))
         self.pts = sorted(list(set(pts)))
