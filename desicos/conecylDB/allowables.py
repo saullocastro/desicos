@@ -19,6 +19,8 @@ entries can be added here if one wishes to update the static database.
 """
 #allowables = ( s11t,s11c,s22t,s22c,s12,s13 )
 allowables = {
+    'desicos_2015_IM78552_DLR':
+        (2530.8, -1049., 58.72, -241., 125.43, 125.43),
     'degenhardt_2010_IM78552_cocomat':
         (1741., -855., 29., -283., 98., 90.),
     'degenhardt_2010_IM78552_isa':

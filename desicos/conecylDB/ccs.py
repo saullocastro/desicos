@@ -452,7 +452,7 @@ ccs = {
         'elem_type': 'S8R5',
         'numel_r': 140,
         'plyt': 0.125,
-        'laminapropKey': 'degenhardt_2010_IM78552_cocomat',
+        'laminapropKey': 'desicos_2015_IM78552_DLR',
         'stack': [34, -34, 0, 0, 53, -53],
         'axial_displ': 0.5,
         'ploads': [1., 2., 3., 5., 10., 15., 20., 25.],
@@ -935,7 +935,6 @@ ccs = {
 ccs['wp2_pfh_des_01'] = ccs['astrium_1_less_3x0_plies']
 ccs['wp2_pfh_des_02'] = ccs['astrium_3_7a_original']
 ccs['castro_2014_c02'] = ccs['astrium_3_7a_original']
-ccs['desicos_2014_z37'] = ccs['desicos_2014_z36']
 
 include_in_GUI = ['desicos_2014_z36',
                   'desicos_2014_c17',
