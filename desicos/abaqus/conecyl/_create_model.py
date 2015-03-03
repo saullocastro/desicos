@@ -1502,7 +1502,8 @@ def _create_loads_bcs(cc):
             text += '\n*NODE PRINT, nset=RP_top'
             text += '\nRF3, U3'
             abaqus_functions.edit_keywords(mod=mod, text=text,
-                                           before_pattern="*End Step")
+                                           before_pattern="*End Step",
+                                           insert=True)
     if len(cc.impconf.lbmis) > 0:
         text  = '** -------------------------------------------------------'
         lb_name = cc.study.name + '_lb'
