@@ -817,15 +817,15 @@ class ConeCyl(object):
         out : tuple
             Where ``out[0]`` and ``out[1]`` contain the circumferential (theta)
             and vertical (z) coordinates and ``out[2]`` the corresponding
-            values. The order of the arrays is arbitrary.
+            values.
 
         """
         import _plot
         return _plot.extract_field_output(self, ignore)
 
 
-    def transform_raw_plot_data(self, thetas, zs, values, plot_type):
-        r"""Transform raw, unsorted plot data into something plottable
+    def transform_plot_data(self, thetas, zs, plot_type):
+        r"""Transform coordinates of plot data, to prepare for plotting
 
         Parameters
         ----------
@@ -833,8 +833,6 @@ class ConeCyl(object):
             Array of circumferential coordinates
         z : numpy.array
             Array of vertical coordinates
-        values : numpy.array
-            Array of values corresponding to the coordinates
         plot_type : int, optional
             For cylinders only ``4`` and ``5`` are valid.
             For cones all the following types can be used:
@@ -849,12 +847,11 @@ class ConeCyl(object):
         -------
         out : tuple
             Where ``out[0]`` and ``out[1]`` contain the horizontal and
-            vertical grids of coordinates and ``out[2]`` the corresponding
-            field output.
+            vertical grids of coordinates.
 
         """
         import _plot
-        return _plot.transform_raw_plot_data(self, thetas, zs, values, plot_type)
+        return _plot.transform_plot_data(self, thetas, zs, plot_type)
 
 
     def plot_field_data(self, x, y, field, create_npz_only=False, ax=None,
@@ -945,8 +942,8 @@ class ConeCyl(object):
         """
 
         try:
-            thetas, zs, values = self.extract_field_output(ignore)
-            x, y, field = self.transform_raw_plot_data(thetas, zs, values, plot_type)
+            thetas, zs, field = self.extract_field_output(ignore)
+            x, y = self.transform_plot_data(thetas, zs, plot_type)
             self.plot_field_data(x, y, field, **kwargs)
             return x, y, field
         except:

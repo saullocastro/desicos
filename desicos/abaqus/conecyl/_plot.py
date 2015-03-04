@@ -341,10 +341,29 @@ def extract_field_output(self, ignore):
         out = out[mask]
 
     zs = coords[:, 2]
-    return (thetas, zs, out)
+    return _sort_field_data(thetas, zs, out, self.numel_r)
 
 
-def transform_raw_plot_data(self, thetas, zs, values, plot_type):
+def _sort_field_data(thetas, zs, values, num_thetas):
+    # Sort unorganized field data and put it into a matrix
+
+    # First sort, by z
+    asort = zs.argsort()
+    zs = zs[asort].reshape(-1, num_thetas)
+    thetas = thetas[asort].reshape(-1, num_thetas)
+    values = values[asort].reshape(-1, num_thetas)
+
+    # Second sort, by theta
+    asort = thetas.argsort(axis=1)
+    for i, asorti in enumerate(asort):
+        zs[i,:] = zs[i,:][asorti]
+        thetas[i,:] = thetas[i,:][asorti]
+        values[i,:] = values[i,:][asorti]
+
+    return thetas, zs, values
+
+
+def transform_plot_data(self, thetas, zs, plot_type):
     sina = np.sin(self.alpharad)
     cosa = np.cos(self.alpharad)
 
@@ -352,20 +371,6 @@ def transform_raw_plot_data(self, thetas, zs, values, plot_type):
     if not plot_type in valid_plot_types:
         raise ValueError('Valid values for plot_type are:\n\t\t' +
                          ' or '.join(map(str, valid_plot_types)))
-
-    #first sort
-    nt = self.numel_r
-    asort = zs.argsort()
-    zs = zs[asort].reshape(-1, nt)
-    thetas = thetas[asort].reshape(-1, nt)
-    values = values[asort].reshape(-1, nt)
-
-    #second sort
-    asort = thetas.argsort(axis=1)
-    for i, asorti in enumerate(asort):
-        zs[i,:] = zs[i,:][asorti]
-        thetas[i,:] = thetas[i,:][asorti]
-        values[i,:] = values[i,:][asorti]
 
     H = self.H
     rtop = self.rtop
@@ -400,7 +405,7 @@ def transform_raw_plot_data(self, thetas, zs, values, plot_type):
     elif plot_type == 5:
         x = fr(0)*thetas
         y = zs
-    return x, y, values
+    return x, y
 
 
 def plot_field_data(self, x, y, field, create_npz_only, ax, figsize, save_png,
