@@ -332,16 +332,28 @@ def extract_field_output(self, ignore):
         out = out.reshape(-1, numIntPts).mean(axis=1)
 
     if 'S8' in self.elem_type and nodal_out:
-        center_nodes = []
-        for el in elements:
-            center_nodes += el.connectivity[4:]
-        mask = np.in1d(labels, center_nodes)
-        thetas = thetas[mask]
-        coords = coords[mask]
-        out = out[mask]
+        # Add (by interpolation) data for the element centroids as well
+        # to create a regular grid
+
+        # Values of interpolation functions at centroid: -0.25 for corner
+        # nodes, 0.5 for side nodes
+        INTERP = np.array([-0.25, -0.25, -0.25, -0.25, 0.5, 0.5, 0.5, 0.5])
+        el_coords = utils.vec_calc_elem_cg(elements)
+        el_thetas = np.arctan2(el_coords[:, 1], el_coords[:, 0])
+        el_out = np.zeros_like(el_thetas)
+        for i, el in enumerate(elements):
+            # el.connectivity can't be used, as it uses node indices, not labels
+            mask = np.in1d(labels, [n.label for n in el.getNodes()])
+            el_out[i] = np.dot(INTERP, out[mask])
+        coords = np.vstack((coords, el_coords[:,:3]))
+        thetas = np.hstack((thetas, el_thetas))
+        out = np.hstack((out, el_out))
+        num_thetas = 2*self.numel_r
+    else:
+        num_thetas = self.numel_r
 
     zs = coords[:, 2]
-    return _sort_field_data(thetas, zs, out, self.numel_r)
+    return _sort_field_data(thetas, zs, out, num_thetas)
 
 
 def _sort_field_data(thetas, zs, values, num_thetas):
