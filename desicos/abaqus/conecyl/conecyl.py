@@ -858,7 +858,7 @@ class ConeCyl(object):
             figsize=(3.3, 3.3), save_png=True, aspect='equal', clean=True,
             outpath='', pngname='plot_from_abaqus.png',
             npzname='plot_from_abaqus.npz', pyname='plot_from_abaqus.py',
-            num_levels=400):
+            num_levels=400, show_colorbar=True):
         r"""Print data field output to a file
 
         Parameters
@@ -894,6 +894,8 @@ class ConeCyl(object):
             The file name for the generated Python file.
         num_levels : int, optional
             Number of contour levels (higher values make the contour smoother).
+        show_colorbar : bool, optional
+            Include a color bar in the figure.
 
         Notes
         -----

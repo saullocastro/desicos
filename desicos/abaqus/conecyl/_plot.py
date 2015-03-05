@@ -421,7 +421,8 @@ def transform_plot_data(self, thetas, zs, plot_type):
 
 
 def plot_field_data(self, x, y, field, create_npz_only, ax, figsize, save_png,
-        aspect, clean, outpath, pngname, npzname, pyname, num_levels):
+        aspect, clean, outpath, pngname, npzname, pyname, num_levels,
+        show_colorbar):
     npzname = npzname.split('.npz')[0] + '.npz'
     pyname = pyname.split('.py')[0] + '.py'
     pngname = pngname.split('.png')[0] + '.png'
@@ -449,7 +450,9 @@ def plot_field_data(self, x, y, field, create_npz_only, ax, figsize, save_png,
                 save_png = False
             else:
                 raise ValueError('"ax" must be an Axes object')
-        ax.contourf(x, y, field, levels=levels)
+        contours = ax.contourf(x, y, field, levels=levels)
+        if show_colorbar:
+            plt.colorbar(contours, ax=ax, shrink=0.5, format='%.4g', use_gridspec=True)
         ax.grid(False)
         ax.set_aspect(aspect)
         #ax.set_title(
@@ -489,11 +492,14 @@ def plot_field_data(self, x, y, field, create_npz_only, ax, figsize, save_png,
         f.write("y = tmp['y']\n")
         f.write("field = tmp['field']\n")
         f.write("clean = {0}\n".format(clean))
+        f.write("show_colorbar = {0}\n".format(show_colorbar))
         f.write("plt.figure(figsize={0})\n".format(figsize))
         f.write("ax = plt.gca()\n")
         f.write("levels = np.linspace(field.min(), field.max(), {0})\n".format(
                 num_levels))
-        f.write("ax.contourf(x, y, field, levels=levels)\n")
+        f.write("contours = ax.contourf(x, y, field, levels=levels)\n")
+        f.write("if show_colorbar:\n")
+        f.write("    plt.colorbar(contours, ax=ax, shrink=0.5, format='%.4g', use_gridspec=True)\n")
         f.write("ax.grid(False)\n")
         f.write("ax.set_aspect('{0}')\n".format(aspect))
         f.write("if add_title:\n")
