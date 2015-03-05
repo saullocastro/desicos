@@ -452,11 +452,6 @@ def plot_field_data(self, x, y, field, create_npz_only, ax, figsize, save_png,
         ax.contourf(x, y, field, levels=levels)
         ax.grid(False)
         ax.set_aspect(aspect)
-        ax.xaxis.set_ticks_position('bottom')
-        ax.yaxis.set_ticks_position('left')
-        #lim = self.rtop*np.pi
-        #ax.xaxis.set_ticks([-lim, 0, lim])
-        #ax.xaxis.set_ticklabels([r'$-\pi$', '$0$', r'$+\pi$'])
         #ax.set_title(
             #r'$PL=20 N$, $F_{{C}}=50 kN$, $w_{{PL}}=\beta$, $mm$')
         if clean:
@@ -465,6 +460,11 @@ def plot_field_data(self, x, y, field, create_npz_only, ax, figsize, save_png,
             ax.xaxis.set_ticklabels([])
             ax.yaxis.set_ticklabels([])
             ax.set_frame_on(False)
+        else:
+            ax.xaxis.set_ticks_position('bottom')
+            ax.yaxis.set_ticks_position('left')
+            ax.xaxis.set_ticks([-self.rbot*np.pi, 0, self.rbot*np.pi])
+            ax.xaxis.set_ticklabels([r'$-\pi$', '$0$', r'$+\pi$'])
         if save_png:
             log('')
             log('Plot saved at: {0}'.format(pngname))
@@ -496,19 +496,20 @@ def plot_field_data(self, x, y, field, create_npz_only, ax, figsize, save_png,
         f.write("ax.contourf(x, y, field, levels=levels)\n")
         f.write("ax.grid(False)\n")
         f.write("ax.set_aspect('{0}')\n".format(aspect))
-        f.write("ax.xaxis.set_ticks_position('bottom')\n")
-        f.write("ax.yaxis.set_ticks_position('left')\n")
-        f.write("ax.xaxis.set_ticks([{0}, 0, {1}])\n".format(
-                -self.rtop*np.pi, self.rtop*np.pi))
-        f.write("ax.xaxis.set_ticklabels([r'$-\pi$', '$0$', r'$+\pi$'])\n")
         f.write("if add_title:\n")
-        f.write("    ax.set_title(r'Abaqus, $PL=20 N$, $F_{{C}}=50 kN$, $w_{{PL}}=\beta$, $mm$')\n")
+        f.write("    ax.set_title(r'Abaqus, $PL=20 N$, $F_{{C}}=50 kN$, $w_{{PL}}=\\beta$, $mm$')\n")
         f.write("if clean:\n")
         f.write("    ax.xaxis.set_ticks_position('none')\n")
         f.write("    ax.yaxis.set_ticks_position('none')\n")
         f.write("    ax.xaxis.set_ticklabels([])\n")
         f.write("    ax.yaxis.set_ticklabels([])\n")
         f.write("    ax.set_frame_on(False)\n")
+        f.write("else:\n")
+        f.write("    ax.xaxis.set_ticks_position('bottom')\n")
+        f.write("    ax.yaxis.set_ticks_position('left')\n")
+        f.write("    ax.xaxis.set_ticks([{0}, 0, {1}])\n".format(
+                -self.rbot*np.pi, self.rbot*np.pi))
+        f.write("    ax.xaxis.set_ticklabels([r'$-\\pi$', '$0$', r'$+\\pi$'])\n")
         f.write("plt.savefig(pngname, transparent=True,\n")
         f.write("            bbox_inches='tight', pad_inches=0.05, dpi=400)\n")
         f.write("plt.show()\n")
