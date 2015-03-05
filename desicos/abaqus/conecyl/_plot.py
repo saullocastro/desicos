@@ -456,7 +456,7 @@ def transform_plot_data(self, thetas, zs, plot_type):
 
 def plot_field_data(self, x, y, field, create_npz_only, ax, figsize, save_png,
         aspect, clean, outpath, pngname, npzname, pyname, num_levels,
-        show_colorbar):
+        show_colorbar, lines):
     npzname = npzname.split('.npz')[0] + '.npz'
     pyname = pyname.split('.py')[0] + '.py'
     pngname = pngname.split('.png')[0] + '.png'
@@ -464,6 +464,15 @@ def plot_field_data(self, x, y, field, create_npz_only, ax, figsize, save_png,
     npzname = os.path.join(outpath, npzname)
     pyname = os.path.join(outpath, pyname)
     pngname = os.path.join(outpath, pngname)
+
+    if lines: # not empty or None
+        # Concatenate all lines into a single matrix, separated by 'sep'
+        sep = np.array([[float('NaN')], [float('NaN')]])
+        all_lines = (2*len(lines) - 1)*[sep]
+        all_lines[::2] = [np.array(l, copy=False) for l in lines]
+        line = np.hstack(all_lines)
+    else:
+        line = np.empty((2, 0))
 
     if not create_npz_only:
         try:
@@ -487,6 +496,7 @@ def plot_field_data(self, x, y, field, create_npz_only, ax, figsize, save_png,
         contours = ax.contourf(x, y, field, levels=levels)
         if show_colorbar:
             plt.colorbar(contours, ax=ax, shrink=0.5, format='%.4g', use_gridspec=True)
+        ax.plot(line[0,:], line[1,:], 'k-', linewidth=0.5)
         ax.grid(False)
         ax.set_aspect(aspect)
         #ax.set_title(
@@ -512,7 +522,7 @@ def plot_field_data(self, x, y, field, create_npz_only, ax, figsize, save_png,
 
     else:
         log('Matplotlib cannot be imported from Abaqus')
-    np.savez(npzname, x=x, y=y, field=field)
+    np.savez(npzname, x=x, y=y, field=field, line=line)
     with open(pyname, 'w') as f:
         f.write("import os\n")
         f.write("\n")
@@ -526,6 +536,7 @@ def plot_field_data(self, x, y, field, create_npz_only, ax, figsize, save_png,
         f.write("x = tmp['x']\n")
         f.write("y = tmp['y']\n")
         f.write("field = tmp['field']\n")
+        f.write("line = tmp['line']\n")
         f.write("clean = {0}\n".format(clean))
         f.write("show_colorbar = {0}\n".format(show_colorbar))
         f.write("plt.figure(figsize={0})\n".format(figsize))
@@ -540,6 +551,7 @@ def plot_field_data(self, x, y, field, create_npz_only, ax, figsize, save_png,
         f.write("                        ticks=[field.min(), field.max()])\n")
         f.write("    cbar.outline.remove()\n")
         f.write("    cbar.ax.tick_params(labelsize=14, pad=0., tick2On=False)\n")
+        f.write("ax.plot(line[0,:], line[1,:], 'k-', linewidth=0.5)\n")
         f.write("ax.grid(False)\n")
         f.write("ax.set_aspect('{0}')\n".format(aspect))
         f.write("if add_title:\n")

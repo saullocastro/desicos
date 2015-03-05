@@ -885,7 +885,7 @@ class ConeCyl(object):
             figsize=(3.3, 3.3), save_png=True, aspect='equal', clean=True,
             outpath='', pngname='plot_from_abaqus.png',
             npzname='plot_from_abaqus.npz', pyname='plot_from_abaqus.py',
-            num_levels=400, show_colorbar=True):
+            num_levels=400, show_colorbar=True, lines=None):
         r"""Print data field output to a file
 
         Parameters
@@ -923,6 +923,10 @@ class ConeCyl(object):
             Number of contour levels (higher values make the contour smoother).
         show_colorbar : bool, optional
             Include a color bar in the figure.
+        lines : list, optional
+            List of lines to draw on top of the contour plot. Each line is
+            either a 2-tuple (list of x-coords, list of y-coords), or a 2xN
+            numpy array.
 
         Notes
         -----
