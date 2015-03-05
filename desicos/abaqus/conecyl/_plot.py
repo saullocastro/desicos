@@ -356,6 +356,40 @@ def extract_field_output(self, ignore):
     return _sort_field_data(thetas, zs, out, num_thetas)
 
 
+def extract_fiber_orientation(self, ply_index, use_elements):
+    if use_elements:
+        from abaqus import mdb
+
+        if self.model_name in mdb.models.keys():
+            part = mdb.models[self.model_name].parts[self.part_name_shell]
+        else:
+            raise RuntimeError("Cannot obtain element locations, model for '{0}' is not loaded".format(self.model_name))
+
+        elements = part.elements
+        coords = utils.vec_calc_elem_cg(elements)
+        thetas = np.arctan2(coords[:, 1], coords[:, 0])
+        zs = coords[:, 2]
+    else:
+        thetas = np.linspace(-np.pi, np.pi, self.numel_r + 1)
+        thetas = (thetas[:-1] + thetas[1:]) / 2
+        mean_circumf = np.pi*(self.rtop + self.rbot)
+        # Estimate num elements in vertical direction
+        numel_z = int(np.ceil(float(self.L) / mean_circumf * self.numel_r))
+        zs = np.linspace(0, self.H, numel_z + 1)
+        zs = (zs[:-1] + zs[1:]) / 2
+        thetas, zs = np.meshgrid(thetas, zs)
+        thetas = thetas.flatten()
+        zs = zs.flatten()
+        # Determine coords
+        rs = self.fr(zs)
+        xs = rs*np.cos(thetas)
+        ys = rs*np.sin(thetas)
+        coords = np.column_stack([xs, ys, zs])
+    out = np.array(self.impconf.ppi.fiber_orientation(ply_index, coords))
+
+    return _sort_field_data(thetas, zs, out, self.numel_r)
+
+
 def _sort_field_data(thetas, zs, values, num_thetas):
     # Sort unorganized field data and put it into a matrix
 

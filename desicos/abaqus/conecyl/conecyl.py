@@ -824,6 +824,33 @@ class ConeCyl(object):
         return _plot.extract_field_output(self, ignore)
 
 
+    def extract_fiber_orientation(self, ply_index, use_elements):
+        r"""Get the fiber orientation at the centroid of each element
+
+        Parameters
+        ----------
+        ply_index : int
+            Index of the ply of interest
+        use_elements : bool
+            If ``True``, use the actual element centroids (from Abaqus)
+            If ``False``, estimate their locations instead.
+
+        Returns
+        -------
+        out : tuple
+            Where ``out[0]`` and ``out[1]`` contain the circumferential (theta)
+            and vertical (z) coordinates and ``out[2]`` the corresponding
+            values.
+
+        Notes
+        -----
+        Must be called from Abaqus if ``use_elements == True``
+
+        """
+        import _plot
+        return _plot.extract_fiber_orientation(self, ply_index, use_elements)
+
+
     def transform_plot_data(self, thetas, zs, plot_type):
         r"""Transform coordinates of plot data, to prepare for plotting
 
@@ -951,6 +978,47 @@ class ConeCyl(object):
         except:
             traceback.print_exc()
             error('Opened field plot could not be generated! :(')
+
+
+    def plot_orientation_opened(self, ply_index, use_elements, plot_type=1, **kwargs):
+        r"""Make a fiber orientation plot from the current cone model
+
+        Only valid for cones that have a ply piece imperfection.
+
+        Parameters
+        ----------
+        ply_index : int
+            Index of the ply of interest
+        use_elements : bool
+            If ``True``, use the actual element centroids (from Abaqus)
+            If ``False``, estimate their locations instead.
+        plot_type : int, optional
+            For cones all the following types can be used:
+
+            - ``1``: concave up (default for cones)
+            - ``2``: concave down
+            - ``3``: stretched closed
+            - ``4``: stretched opened (`r(z) \times \theta` vs. `H`)
+            - ``5``: stretched opened (`r_{bottom}` vs. `H`)
+        kwargs : dict
+            Other keyword args will be passed to ``plot_field_data``
+            See the documentation of that method for more details.
+
+        Notes
+        -----
+        Must be called from Abaqus if ``use_elements == True``
+
+        """
+        if self.impconf.ppi is None:
+            error('Cannot plot orientations: ConeCyl object has no ply piece imperfection!')
+            return
+        try:
+            thetas, zs, field = self.extract_fiber_orientation(ply_index, use_elements)
+            x, y = self.transform_plot_data(thetas, zs, plot_type)
+            self.plot_field_data(x, y, field, **kwargs)
+        except:
+            traceback.print_exc()
+            error('Opened orientation plot could not be generated! :(')
 
 
     def check_completed(self, wait=False, print_found=False):
