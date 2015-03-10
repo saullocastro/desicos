@@ -1360,10 +1360,8 @@ def _create_loads_bcs(cc):
                                  region=set_RP_top)
 
     # creating stringers
-    stringerconf = getattr(cc, 'stringerconf', None)
-    if stringerconf is not None:
-        for stringer in stringerconf.stringers:
-            stringer.create()
+    for stringer in cc.stringerconf.stringers:
+        stringer.create()
 
     if not cc.linear_buckling:
         # applying imperfections
