@@ -60,8 +60,8 @@ def plot_opened_conecyl(plot_type):
     cmdstr += '\n'
     cmdstr += 'for cc in std.ccs:\n'
     cmdstr += '    if cc.model_name == cc_name:\n'
-    cmdstr += '        cc.plot_opened(plot_type={0},\n'.format(plot_type)
-    cmdstr += '                       outpath=std.study_dir)\n'
+    cmdstr += '        cc.plot_current_field_opened(plot_type={0},\n'.format(plot_type)
+    cmdstr += '                                     outpath=std.study_dir)\n'
     cmdstr += '        break\n'
     sendCommand(cmdstr)
 

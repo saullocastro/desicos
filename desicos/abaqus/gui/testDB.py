@@ -243,7 +243,7 @@ class TestDB(AFXDataDialog):
         laminateTable.setLeadingRows(1)
         laminateTable.setLeadingColumns(1)
         laminateTable.setLeadingColumnLabels(
-                '\t'.join(['ply {0:02d}'.format(i) for i in range(1, 41)]))
+                '\t'.join(['ply {0:02d}'.format(i) for i in range(1, NUM_PLIES+1)]))
         laminateTable.setColumnWidth(1, 300)
         laminateTable.setColumnWidth(2, 75)
         laminateTable.setColumnWidth(3, 75)
@@ -593,7 +593,7 @@ class TestDB(AFXDataDialog):
         FXLabel(impVF, '')
         self.apply_imp_ms = FXButton(impVF, 'Apply Mid-Surface Imperfections')
         #
-        # Tabs / Mid-Surface Imperfections / Thickness imperfections
+        # Tabs / Geometric Imperfections / Thickness imperfections
         #
         FXTabItem(impBook, 'Thickness imperfections', None, TAB_LEFT)
         impVF = FXVerticalFrame(impBook, LAYOUT_FILL_Y|FRAME_RAISED|FRAME_SUNKEN)
@@ -1035,8 +1035,6 @@ class TestDB(AFXDataDialog):
             # does it faster
 
         # linking variables
-        num_plies = form.laminateKw.getNumRows()
-        #
         std_name = form.std_to_postKw.getValue()
         #
         self.logcount += 1

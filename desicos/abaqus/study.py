@@ -93,7 +93,7 @@ class Study(object):
     def load_by_name(self, name):
         self.name = name
         self.rebuild()
-        self.load()
+        return self.load()
 
     def add_cc_fromDB(self, name):
         cc = ConeCyl()
