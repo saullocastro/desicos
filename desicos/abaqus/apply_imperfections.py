@@ -794,7 +794,7 @@ def change_thickness_ABAQUS(imperfection_file_name,
     # creating sets
     t_list = []
     max_len_t_set = 100
-    if len(t_set) >= max_len_t_set:
+    if len(t_set) >= max_len_t_set and number_of_sets in (None, 0):
         number_of_sets = 10
         log('More than {0:d} different thicknesses measured!'.format(
             max_len_t_set))
