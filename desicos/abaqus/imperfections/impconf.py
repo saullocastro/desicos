@@ -12,6 +12,7 @@ from msi import MSI
 from ti import TI
 from cutout import Cutout
 from ppi import PPI
+from ffi import FFI
 
 
 class ImpConf(object):
@@ -51,6 +52,8 @@ class ImpConf(object):
     cutouts            ``list`` of :class:`.Cutout` objects
     ppi                :class:`.PPI` (Ply Piece Imperfection) object or
                        ``None`` if not set
+    ffi                :class:`.FFI` (Fiber Fraction Imperfection) object or
+                       ``None`` if not set
     ================== ======================================================
 
     """
@@ -68,6 +71,7 @@ class ImpConf(object):
         self.tis = []
         self.cutouts = []
         self.ppi = None
+        self.ffi = None
         self.rename = True
         self.name = ''
         self.conecyl = None
@@ -469,7 +473,42 @@ class ImpConf(object):
         return self.ppi
 
 
+    def add_ffi(self, nominal_vf, E_matrix, nu_matrix, use_ti, global_sf=None):
+        """Adds Fiber Fraction Imperfection (FFI)
+
+        There can be only one of these, so calling this function overrides the
+        previous imperfection, if any.
+
+        Parameters
+        ----------
+        nominal_vf : float
+            Nominal fiber volume fraction of the material
+        E_matrix : float
+            Young's modulus of the matrix material
+        nu_matrix : float
+            Poisson's ratio of the matrix material
+        use_ti : bool
+            If ``True``, create varying material properties according to the
+            thickness imperfection data (if present).
+        global_sf : float or ``None``
+            Global scaling factor to apply to the material thickness.
+            Set to ``None`` to disable. The global scaling may be overridden
+            by a thickness imperfection, if ``use_ti`` (see above) is ``True``.
+
+        Returns
+        -------
+        ffi : :class:`.FFI` object.
+
+        """
+        if self.ffi is not None:
+            warn('FFI object already set, overriding...')
+        self.ffi = FFI(nominal_vf, E_matrix, nu_matrix, use_ti, global_sf)
+        self.ffi.impconf = self
+        return self.ffi
+
+
     def rebuild(self):
+        # TODO: Reduce the amount of code duplication?
         self.imperfections = []
         i = -1
         # uneven bottom edge
@@ -520,6 +559,12 @@ class ImpConf(object):
             self.ppi.index = i
             self.ppi.rebuild()
             self.imperfections.append(self.ppi)
+        # fiber fraction imperfection
+        if self.ffi is not None:
+            i += 1
+            self.ffi.index = i
+            self.ffi.rebuild()
+            self.imperfections.append(self.ffi)
         # thickness imperfection (TI)
         for ti in self.tis:
             i += 1
