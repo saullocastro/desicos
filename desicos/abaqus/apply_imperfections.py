@@ -816,32 +816,32 @@ def change_thickness_ABAQUS(imperfection_file_name,
         sets_ids[index].append(int(elem_id))
     # putting elements in sets
     original_layup = part.compositeLayups['CompositePlate']
-    plyts     = [ply.thickness for ply in original_layup.plies.values()]
-    mat_names = [ply.material  for ply in original_layup.plies.values()]
     for i, set_ids in enumerate(sets_ids):
         if len(set_ids) == 0:
             # since t_set_norm * t_model <> t_set originally measured
             # there may be empty set_ids at the end
             continue
         elements = part.elements.sequenceFromLabels(labels=set_ids)
-        sufix = 'measured_imp_t_{0:03d}'.format(i)
-        set_name = 'Set_' + sufix
+        suffix = 'measured_imp_t_{0:03d}'.format(i)
+        set_name = 'Set_' + suffix
         log('Creating set ({0: 7d} elements): {1}'.format(
             len(set_ids), set_name))
         part.Set(name = set_name, elements = elements)
         region = part.sets[set_name]
-        layup_name = 'CLayup_' + sufix
+        layup_name = 'CLayup_' + suffix
         t_diff = (float(t_list[i]) - t_model) * scaling_factor
         t_scaling_factor = (t_model + t_diff)/t_model
-        abaqus_functions.create_composite_layup(
-                    name = layup_name,
-                    stack = stack,
-                    plyts = plyts,
-                    mat_names = mat_names,
-                    region = region,
-                    part = part,
-                    part_csys = part_cyl_csys,
-                    scaling_factor = t_scaling_factor)
+
+        def modify_ply(index, kwargs):
+            kwargs['thickness'] *= t_scaling_factor
+            kwargs['region'] = region
+            return kwargs
+
+        layup = part.CompositeLayup(name=layup_name,
+                                    objectToCopy=original_layup)
+        layup.resume()
+        abaqus_functions.modify_composite_layup(part=part,
+            layup_name=layup_name, modify_func=modify_ply)
     # suppress needed to put the new properties to the input file
     original_layup.suppress()
 
