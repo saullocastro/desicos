@@ -146,6 +146,9 @@ def create_study(**kwargs):
     ppi_enabled = kwargs.get('ppi_enabled')
     ppi_extra_height = kwargs.get('ppi_extra_height')
     ppi_table = kwargs.get('ppi_table')
+    ffi_scalings = kwargs.get('ffi_scalings')
+    while len(ffi_scalings) > 0 and ffi_scalings[-1] in [(0, False), False]:
+        ffi_scalings = ffi_scalings[:-1]
     betadeg = kwargs.get('betadeg', 0.)
     omegadeg = kwargs.get('omegadeg', 0.)
     betadegs = kwargs.get('betadegs')
@@ -175,6 +178,7 @@ def create_study(**kwargs):
             continue
         imp_table = imp_tables[k]
         num_models = max(num_models, len(imp_table)-(num_params[k]+1))
+    num_models = max(num_models, len(ffi_scalings))
     #
     # Cleaning up input values
     #
@@ -306,6 +310,18 @@ def create_study(**kwargs):
                 except ValueError, e:
                     raise ValueError('Invalid non-numeric value in Ply Piece Imperfection table:' + e.message.split(':')[-1])
             cc.impconf.add_ppi(info, ppi_extra_height)
+        # adding fiber fraction imperfection
+        i_model = i-1
+        if i_model < len(ffi_scalings):
+            global_sf, use_ti = ffi_scalings[i_model]
+            if global_sf == 0:
+                global_sf = None
+            if use_ti or (global_sf is not None):
+                cc.impconf.add_ffi(nominal_vf=kwargs['ffi_nominal_vf'],
+                                   E_matrix=kwargs['ffi_E_matrix'],
+                                   nu_matrix=kwargs['ffi_nu_matrix'],
+                                   use_ti=use_ti,
+                                   global_sf=global_sf)
         std.add_cc(cc)
     std.create_models(write_input_files=False)
     #for i in range(pload_num):

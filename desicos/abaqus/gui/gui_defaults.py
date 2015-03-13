@@ -92,6 +92,9 @@ defaults = {
             'imp_t_rotatedeg': 0.,
             'ppi_enabled': False,
             'ppi_extra_height': 0,
+            'ffi_nominal_vf' : 0.5,
+            'ffi_E_matrix' : 4000,
+            'ffi_nu_matrix' : 0.3,
             'use_job_stopper': False,
            }
 
