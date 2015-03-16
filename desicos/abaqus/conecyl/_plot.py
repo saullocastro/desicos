@@ -390,6 +390,29 @@ def extract_fiber_orientation(self, ply_index, use_elements):
     return _sort_field_data(thetas, zs, out, self.numel_r)
 
 
+def extract_thickness_data(self):
+    from abaqus import mdb
+
+    if self.model_name in mdb.models.keys():
+        part = mdb.models[self.model_name].parts[self.part_name_shell]
+    else:
+        raise RuntimeError("Cannot obtain element locations, model for '{0}' is not loaded".format(self.model_name))
+
+    elements = part.elements
+    coords = utils.vec_calc_elem_cg(elements)
+    thetas = np.arctan2(coords[:, 1], coords[:, 0])
+    zs = coords[:, 2]
+    labels = coords[:, 3]
+    thicks = np.zeros_like(zs)
+    for layup in part.compositeLayups.values():
+        if not layup.suppressed:
+            el_set = part.sets[layup.plies[0].region[0]]
+            layup_els = np.array([e. label for e in el_set.elements])
+            layup_thickness = sum(p.thickness for p in layup.plies.values())
+            thicks[np.in1d(labels, layup_els)] = layup_thickness
+    return _sort_field_data(thetas, zs, thicks, self.numel_r)
+
+
 def _sort_field_data(thetas, zs, values, num_thetas):
     # Sort unorganized field data and put it into a matrix
 

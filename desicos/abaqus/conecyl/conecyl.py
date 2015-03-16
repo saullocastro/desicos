@@ -851,6 +851,25 @@ class ConeCyl(object):
         return _plot.extract_fiber_orientation(self, ply_index, use_elements)
 
 
+    def extract_thickness_data(self):
+        r"""Get the thickness at the centroid of each element
+
+        Returns
+        -------
+        out : tuple
+            Where ``out[0]`` and ``out[1]`` contain the circumferential (theta)
+            and vertical (z) coordinates and ``out[2]`` the corresponding
+            thicknesses.
+
+        Notes
+        -----
+        Must be called from Abaqus
+
+        """
+        import _plot
+        return _plot.extract_thickness_data(self)
+
+
     def transform_plot_data(self, thetas, zs, plot_type):
         r"""Transform coordinates of plot data, to prepare for plotting
 
@@ -1026,6 +1045,39 @@ class ConeCyl(object):
         except:
             traceback.print_exc()
             error('Opened orientation plot could not be generated! :(')
+
+
+    def plot_thickness_opened(self, plot_type=1, **kwargs):
+        r"""Make an opened thickness plot from the current conecyl model
+
+        Parameters
+        ----------
+        plot_type : int, optional
+            For cylinders only ``4`` and ``5`` are valid.
+            For cones all the following types can be used:
+
+            - ``1``: concave up (default for cones)
+            - ``2``: concave down
+            - ``3``: stretched closed
+            - ``4``: stretched opened (`r(z) \times \theta` vs. `H`)
+            - ``5``: stretched opened (`r_{bottom}` vs. `H`)
+        kwargs : dict
+            Other keyword args will be passed to ``plot_field_data``
+            See the documentation of that method for more details.
+
+        Notes
+        -----
+        Must be called from Abaqus
+
+        """
+        try:
+            thetas, zs, field = self.extract_thickness_data()
+            thetas, zs, field = make_uniform_cells(thetas, zs, field)
+            x, y = self.transform_plot_data(thetas, zs, plot_type)
+            self.plot_field_data(x, y, field, **kwargs)
+        except:
+            traceback.print_exc()
+            error('Opened thickness plot could not be generated! :(')
 
 
     def check_completed(self, wait=False, print_found=False):
