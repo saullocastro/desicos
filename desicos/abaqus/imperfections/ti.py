@@ -64,7 +64,7 @@ class TI(object):
             cc_total_t = sum(cc.plyts)
             for layup in part.compositeLayups.values():
                 if not layup.suppressed:
-                    layup_t = sum([p.thickness for p in layup.plies.values()])
+                    layup_t = sum(p.thickness for p in layup.plies.values())
                     max_amp = max(max_amp, abs(layup_t-cc_total_t))
 
             return max_amp

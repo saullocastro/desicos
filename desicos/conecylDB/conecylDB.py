@@ -154,9 +154,9 @@ def update_imps():
                 plyts = cc.get('plyts', [cc.get('plyt')])
                 stack = cc['stack']
                 if len(plyts) <> len(stack):
-                    t_measured[imp] = sum([plyts[0] for i in stack])
+                    t_measured[imp] = sum(plyts[0] for i in stack)
                 else:
-                    t_measured[imp] = sum([i for i in plyts])
+                    t_measured[imp] = sum(i for i in plyts)
 
             if 'R_best_fit' in cc.keys():
                 R_best_fit[imp] = cc['R_best_fit']
