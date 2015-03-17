@@ -163,8 +163,8 @@ class MSI(object):
         #TODO: include z_offset_bottom to calculate ignore_bot_h and
         #      ignore_top_h
         # plotting options
-        self.xaxis = 'amplitude'
-        self.xaxis_label = 'Imperfection amplitude, mm'
+        self.xaxis = 'scaling_factor'
+        self.xaxis_label = 'Scaling factor'
         self.nodal_translations = None
         self.created = False
         self.thetadegs = []
