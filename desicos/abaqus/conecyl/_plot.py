@@ -216,6 +216,7 @@ def plot_stress_analysis(self, disp_force_frame = 'DISP'):
                       yValuesLabel = 'Stress, MPa',
                       legendLabel  = 'Stress ' + key)
 
+
 def extract_field_output(self, ignore):
     from abaqus import mdb
     from abaqusConstants import NODAL
@@ -332,20 +333,9 @@ def extract_field_output(self, ignore):
         out = out.reshape(-1, numIntPts).mean(axis=1)
 
     if 'S8' in self.elem_type and nodal_out:
-        # Add (by interpolation) data for the element centroids as well
-        # to create a regular grid
-
-        # Values of interpolation functions at centroid: -0.25 for corner
-        # nodes, 0.5 for side nodes
-        INTERP = np.array([-0.25, -0.25, -0.25, -0.25, 0.5, 0.5, 0.5, 0.5])
-        el_coords = utils.vec_calc_elem_cg(elements)
+        el_coords, el_out = _nodal_field_S8_add_centroids(elements, labels, out)
         el_thetas = np.arctan2(el_coords[:, 1], el_coords[:, 0])
-        el_out = np.zeros_like(el_thetas)
-        for i, el in enumerate(elements):
-            # el.connectivity can't be used, as it uses node indices, not labels
-            mask = np.in1d(labels, [n.label for n in el.getNodes()])
-            el_out[i] = np.dot(INTERP, out[mask])
-        coords = np.vstack((coords, el_coords[:,:3]))
+        coords = np.vstack((coords, el_coords))
         thetas = np.hstack((thetas, el_thetas))
         out = np.hstack((out, el_out))
         num_thetas = 2*self.numel_r
@@ -411,6 +401,24 @@ def extract_thickness_data(self):
             layup_thickness = sum(p.thickness for p in layup.plies.values())
             thicks[np.in1d(labels, layup_els)] = layup_thickness
     return _sort_field_data(thetas, zs, thicks, self.numel_r)
+
+
+def _nodal_field_S8_add_centroids(elements, node_labels, node_values):
+    # For S8 elements and nodal fields, one may want to add values for the
+    # centroids as well, to create a regular grid. This is done by
+    # interpolation.
+    # Values of interpolation functions at centroid: -0.25 for corner
+    # nodes, 0.5 for side nodes
+    INTERP = np.array([-0.25, -0.25, -0.25, -0.25, 0.5, 0.5, 0.5, 0.5])
+
+    el_coords = utils.vec_calc_elem_cg(elements)
+    el_out = np.zeros((el_coords.shape[0], ))
+    for i, el in enumerate(elements):
+        # el.connectivity can't be used, as it uses node indices, not labels
+        mask = np.in1d(node_labels, [n.label for n in el.getNodes()])
+        el_out[i] = np.dot(INTERP, node_values[mask])
+    # return coords, values for element centroids
+    return el_coords[:,:3], el_out
 
 
 def _sort_field_data(thetas, zs, values, num_thetas):
