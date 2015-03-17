@@ -403,6 +403,37 @@ def extract_thickness_data(self):
     return _sort_field_data(thetas, zs, thicks, self.numel_r)
 
 
+def extract_msi_data(self):
+    from abaqus import mdb
+
+    if self.model_name in mdb.models.keys():
+        part = mdb.models[self.model_name].parts[self.part_name_shell]
+    else:
+        raise RuntimeError("Cannot obtain nodal locations, model for '{0}' is not loaded".format(self.model_name))
+
+    nodes = part.nodes
+    elements = part.elements
+    labels = np.array([n.label for n in nodes])
+    coords = np.array([n.coordinates for n in nodes])
+    xs = coords[:, 0]
+    ys = coords[:, 1]
+    zs = coords[:, 2]
+    rs = np.sqrt(xs**2 + ys**2)
+    thetas = np.arctan2(ys, xs)
+    offsets = (rs - self.rbot)*np.cos(self.alpharad) + zs*np.sin(self.alpharad)
+
+    if 'S8' in self.elem_type:
+        el_coords, el_offsets = _nodal_field_S8_add_centroids(elements, labels, offsets)
+        el_thetas = np.arctan2(el_coords[:, 1], el_coords[:, 0])
+        thetas = np.hstack((thetas, el_thetas))
+        zs = np.hstack((zs, el_coords[:, 2]))
+        offsets = np.hstack((offsets, el_offsets))
+        num_thetas = 2*self.numel_r
+    else:
+        num_thetas = self.numel_r
+    return _sort_field_data(thetas, zs, offsets, num_thetas)
+
+
 def _nodal_field_S8_add_centroids(elements, node_labels, node_values):
     # For S8 elements and nodal fields, one may want to add values for the
     # centroids as well, to create a regular grid. This is done by
