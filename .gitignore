@@ -22,7 +22,7 @@ afp
 # ABAQUS tmp files
 *.rec*
 *.rpy*
-*.guiState
+*.guiState*
 # DESICOS plug-in for Abaqus output files
 *.gaps
 
