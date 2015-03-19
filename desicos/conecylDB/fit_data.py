@@ -404,7 +404,11 @@ def calc_c0(path, m0=50, n0=50, funcnum=2, fem_meridian_bot2top=True,
     else:
         raise ValueError('Valid values for "funcnum" are 1, 2 or 3')
 
-    maxnum = maxmem*1024*1024*1024*8/(64*size*m0*n0)
+    # the least-squares algorithm uses approximately the double the memory
+    # used by the coefficients matrix. This is non-linear though.
+    memfac = 2.2
+
+    maxnum = int(maxmem*1024*1024*1024*8/(64.*size*m0*n0)/memfac)
     num = input_pts.shape[0]
     if num >= maxnum:
         input_pts = input_pts[sample(range(num), int(maxnum))]
