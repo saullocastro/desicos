@@ -99,7 +99,7 @@ html_static_path = ['_static']
 html_last_updated_fmt = '%b %d, %Y'
 
 # See http://sphinx-doc.org/theming.html#builtin-themes.
-html_theme = 'scipy'
+html_theme = 'alabaster'
 
 if html_theme == 'classic':
     latex_logo = '../logo/desicos.png'
@@ -168,7 +168,9 @@ elif html_theme == 'scipy':
         'rootlinks': [],
         'navigation_links': True,
     }
-    html_use_modindex = True
+    html_use_modindex = False
+    html_title = 'DESICOS Improved Software Version {0}'.format(str(version))
+    html_copy_source = False
 
 
 html_show_sourcelink = False
