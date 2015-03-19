@@ -19,9 +19,10 @@ afp
 *.pdf
 *.ps
 *.texshop
-# ABAQUS replay files
+# ABAQUS tmp files
 *.rec*
 *.rpy*
+*.guiState
 # DESICOS plug-in for Abaqus output files
 *.gaps
 
