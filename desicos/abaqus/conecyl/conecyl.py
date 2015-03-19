@@ -102,7 +102,7 @@ class ConeCyl(object):
                            like ``pi``, ``e`` etc can be used. Example::
                                cc.Nxxtop = "cos(Th)+sin(Th)"
 
-                           .. note:: If ``Nxxtop`` is not given the formula:
+                           .. note:: If ``Nxxtop`` is not given, the formula:
 
                                      .. math::
                                            {N_{xx}}_{top} = \frac{F_C}{2 \pi
