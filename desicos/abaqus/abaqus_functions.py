@@ -407,13 +407,19 @@ def set_colors_ti(cc):
     viewport.enableMultipleColors()
     viewport.setColor(initialColor='#BDBDBD')
     keys = part.sets.keys()
-    names = [k for k in keys if k.find('Set_measured_imp_t') > -1]
+    names = [k for k in keys if 'Set_measured_imp_t' in k]
+
     overrides = dict([[names[i],(True,COLORS[i],'Default',COLORS[i])]
                       for i in range(len(names))])
     dummylen = len(keys)-len(overrides)
     new_COLORS = tuple([COLORS[-1]]*dummylen + list(COLORS))
     session.autoColors.setValues(colors=new_COLORS)
     cmap.updateOverrides(overrides=overrides)
+
+    keys_to_hide = set(keys) - set(names)
+    overrides = dict([[k, (False, )] for k in keys_to_hide])
+    cmap.updateOverrides(overrides=overrides)
+
     viewport.partDisplay.setValues(mesh=ON)
     viewport.partDisplay.geometryOptions.setValues(referenceRepresentation=ON)
     viewport.disableMultipleColors()
