@@ -99,7 +99,7 @@ html_static_path = ['_static']
 html_last_updated_fmt = '%b %d, %Y'
 
 # See http://sphinx-doc.org/theming.html#builtin-themes.
-html_theme = 'alabaster'
+html_theme = 'scipy'
 
 if html_theme == 'classic':
     latex_logo = '../logo/desicos.png'
@@ -156,6 +156,19 @@ elif html_theme == 'bizstyle':
     html_theme_options = {
         'rightsidebar': False,
     }
+
+elif html_theme == 'scipy':
+    # clone from https://github.com/scipy/scipy-sphinx-theme
+    html_theme_path = ['../../../scipy-sphinx-theme/_theme']
+    html_logo = '../logo/desicos.png'
+    html_theme_options = {
+        'edit_link': False,
+        'sidebar': 'left',
+        'scipy_org_logo': False,
+        'rootlinks': [],
+        'navigation_links': True,
+    }
+    html_use_modindex = True
 
 
 html_show_sourcelink = False
