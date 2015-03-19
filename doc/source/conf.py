@@ -29,9 +29,6 @@ extensions = ['sphinx.ext.autodoc', 'sphinx.ext.viewcode',
               'numpydoc', 'sphinx.ext.graphviz',
               'matplotlib.sphinxext.plot_directive']
 
-# Use this to use pngmath instead
-#extensions = ['sphinx.ext.autodoc', 'sphinx.ext.viewcode', 'sphinx.ext.pngmath', ]
-
 # MathJax file, which is free to use.
 # See http://www.mathjax.org/docs/2.0/start.html
 mathjax_path = 'https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full'
@@ -101,11 +98,13 @@ html_static_path = ['_static']
 # using the given strftime format.
 html_last_updated_fmt = '%b %d, %Y'
 
-html_logo = '../logo/desicos.png'
-html_favicon = '../logo/desicos.png'
 # See http://sphinx-doc.org/theming.html#builtin-themes.
-html_theme = 'default'
-if html_theme=='default':
+html_theme = 'alabaster'
+
+if html_theme == 'classic':
+    latex_logo = '../logo/desicos.png'
+    html_logo = '../logo/desicos.png'
+    html_favicon = '../logo/desicos.png'
     html_theme_options = {
         'collapsiblesidebar': False,
         'relbarbgcolor': '#2f441e',
@@ -124,10 +123,42 @@ if html_theme=='default':
         'stickysidebar': True,
         'sidebarwidth': 230,
     }
-elif html_theme=='sphinxdoc':
+
+elif html_theme == 'sphinxdoc':
     html_theme_options = {
         'sidebarwidth': 320,
     }
+
+elif html_theme == 'alabaster':
+    html_theme_options = {
+        'logo': 'desicos.png',
+        'logo_name': False,
+        'logo_text_align': None,
+        'github_user': 'desicos',
+        'github_repo': 'desicos',
+        'github_button': False,
+        'github_banner': False,
+    }
+    html_sidebars = {
+        '**': [
+            'about.html',
+            'navigation.html',
+            'searchbox.html',
+            #'donate.html',
+        ]
+    }
+    extensions += ['alabaster']
+
+elif html_theme == 'sphinx_rtd_theme':
+    pass
+
+elif html_theme == 'bizstyle':
+    html_theme_options = {
+        'rightsidebar': False,
+    }
+
+
+html_show_sourcelink = False
 
 # If true, SmartyPants will be used to convert quotes and dashes to
 # typographically correct entities.
@@ -196,10 +227,6 @@ latex_elements = {
 
 
 
-
-# SymPy logo on title page
-html_logo = '../logo/desicos.png'
-latex_logo = '../logo/desicos.png'
 
 # Documents to append as an appendix to all manuals.
 #latex_appendices = []
