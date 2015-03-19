@@ -759,6 +759,7 @@ def change_thickness_ABAQUS(imperfection_file_name,
                                power_parameter = power_parameter)
 
             t_set = set(ans)
+            t_set.discard(0.) #TODO why inv_weighted returns an array with 0.
             elems_t = np.zeros((elements.shape[0], 2), dtype=FLOAT)
             elems_t[:, 0] = elements[:, 3]
             elems_t[:, 1] = ans
