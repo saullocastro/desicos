@@ -126,8 +126,8 @@ class TI(object):
                       t_set = self.t_set,
                       use_theta_z_format = self.use_theta_z_format)
 
-        import desicos.abaqus.utils as utils
-        utils.set_colors_ti(cc)
+        from desicos.abaqus.abaqus_functions import set_colors_ti
+        set_colors_ti(cc)
         self.created = True
         print '%s amplitude = %f' % (self.name, self.calc_amplitude())
 
