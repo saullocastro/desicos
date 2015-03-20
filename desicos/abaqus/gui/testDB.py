@@ -23,9 +23,9 @@ def cc_form2dict(db, form):
     laminate = np.array(ast.literal_eval(tmp))
     cc = {}
     if ''.join(laminate.flatten()):
-        cc['laminapropKeys'] = [i for i in laminate[:, 0] if i<>'']
-        cc['plyts'] = [float(i) for i in laminate[:, 1] if i<>'']
-        cc['stack'] = [float(i) for i in laminate[:, 2] if i<>'']
+        cc['laminapropKeys'] = [i for i in laminate[:, 0] if i != '']
+        cc['plyts'] = [float(i) for i in laminate[:, 1] if i != '']
+        cc['stack'] = [float(i) for i in laminate[:, 2] if i != '']
     others = ['rbot', 'H', 'alphadeg', 'elem_type', 'betadeg', 'omegadeg',
               'numel_r', 'axial_displ']
     for k in others:
@@ -858,14 +858,14 @@ class TestDB(AFXDataDialog):
                 self.allowables_CB.appendItem(k)
         # ccs
         k = form.ccKeyKw.getValue()
-        if k in self.ccs_keys and k <> form.last_loadedKw.getValue():
+        if k in self.ccs_keys and k != form.last_loadedKw.getValue():
            cc = self.ccs[k]
            cc_dict2form(ccname=k, cc=cc, db=self, form=form)
-        if k=='Enter New':
+        if k == 'Enter New':
             self.new_cc_name.enable()
             self.save_cc_button.enable()
             self.del_cc_button.disable()
-        elif k=='deleted!' or k=='conecyl loaded!':
+        elif k == 'deleted!' or k == 'conecyl loaded!':
             self.new_cc_name.disable()
             self.save_cc_button.disable()
             self.del_cc_button.disable()
@@ -879,11 +879,11 @@ class TestDB(AFXDataDialog):
             v = self.laminaprops[k]
             vstr = ','.join([str(i) for i in v])
             form.laminapropKw.setValues(vstr)
-        if k=='Enter New':
+        if k == 'Enter New':
             self.new_laminaprop_name.enable()
             self.save_laminaprop_button.enable()
             self.del_laminaprop_button.disable()
-        elif k=='deleted!':
+        elif k == 'deleted!':
             self.new_laminaprop_name.disable()
             self.save_laminaprop_button.disable()
             self.del_laminaprop_button.disable()
@@ -897,11 +897,11 @@ class TestDB(AFXDataDialog):
             v = self.allowables[k]
             vstr = ','.join([str(i) for i in v])
             form.allowablesKw.setValues(vstr)
-        if k=='Enter New':
+        if k == 'Enter New':
             self.new_allowables_name.enable()
             self.save_allowables_button.enable()
             self.del_allowables_button.disable()
-        elif k=='deleted!':
+        elif k == 'deleted!':
             self.new_allowables_name.disable()
             self.save_allowables_button.disable()
             self.del_allowables_button.disable()
@@ -926,7 +926,7 @@ class TestDB(AFXDataDialog):
     def save_laminaprop(self):
         name = self.form.new_laminaprop_nameKw.getValue()
         value = self.form.laminapropKw.getValues()
-        value = tuple(float(i) for i in value.split(',') if i <> '')
+        value = tuple(float(i) for i in value.split(',') if i != '')
         if len(value) == 2:
             value = (value[0], value[0], value[1])
         message(conecylDB.save('laminaprops', name, value))
@@ -954,7 +954,7 @@ class TestDB(AFXDataDialog):
         keys = mdb.models.keys()
         tmplst = []
         for k in keys:
-            if k[-3:] <> '_lb':
+            if k[-3:] != '_lb':
                 tmplst.append(k.split('_'))
         std_names = set(['_'.join(k[:len(k)-2]) for k in tmplst])
         names = os.listdir(TMP_DIR)
@@ -1100,7 +1100,7 @@ class TestDB(AFXDataDialog):
         if self.apply_imp_t.getState() == STATE_DOWN:
             self.apply_imp_t.setState(STATE_UP)
             std_name = form.std_nameKw.getValue()
-            if form.imp_thickKw.getValue()=='':
+            if form.imp_thickKw.getValue() == '':
                 message('An imperfection must be selected!')
             elif not form.loaded_study:
                 message('The study must be created or loaded first!')
