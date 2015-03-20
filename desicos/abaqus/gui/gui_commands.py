@@ -5,7 +5,7 @@ from itertools import chain
 
 import __main__
 
-import numpy
+import numpy as np
 
 import desicos.abaqus.abaqus_functions as abaqus_functions
 import desicos.conecylDB as conecylDB
@@ -162,17 +162,17 @@ def create_study(**kwargs):
     # Cleaning up input values
     #
     # laminate
-    kwargs['laminate'] = numpy.array(kwargs.get('laminate'))
-    laminate = kwargs['laminate']
-    kwargs['stack'] = [float(i) for i in laminate[:,2] if i!='']
+    laminate = np.atleast_2d([i for i in kwargs.get('laminate') if i])
+    kwargs['laminate'] = laminate
+    kwargs['stack'] = [float(i) for i in laminate[:,2] if i != '']
     stack = kwargs['stack']
-    kwargs['laminapropKeys'] = [i if i!='' else laminate[0,0]
+    kwargs['laminapropKeys'] = [i if i != '' else laminate[0,0]
                                 for i in laminate[:len(stack),0]]
-    kwargs['plyts'] = [float(i) if i!='' else float(laminate[0,1])
+    kwargs['plyts'] = [float(i) if i != '' else float(laminate[0,1])
                        for i in laminate[:len(stack),1]]
     #TODO currently only one allowable is allowed for stress analysis
     kwargs['allowables'] = [kwargs['allowables'] for _ in stack]
-    #allowablesKeys = [float(i) if i!='' else laminate[0,3] \
+    #allowablesKeys = [float(i) if i != '' else laminate[0,3] \
     #         for i in laminate[:len(stack),1]]
     #
     # load asymmetry
@@ -308,9 +308,9 @@ def clean_output_folder(std_name):
     os.chdir(std.output_dir)
     try:
         if os.name == 'nt':
-            print os.system('del /q *.*')
+            print(os.system('del /q *.*'))
         else:
-            print os.system('rm *.*')
+            print(os.system('rm *.*'))
     except:
         pass
     os.chdir(cwd)
@@ -425,7 +425,7 @@ def reconstruct_params_from_gui(std):
     # Construct laminate table
     # import here to avoid circular reference
     from testDB import NUM_PLIES, MAX_MODELS
-    tmp = numpy.empty((NUM_PLIES, 3), dtype='|S50')
+    tmp = np.empty((NUM_PLIES, 3), dtype='|S50')
     tmp.fill('')
     tmp[:len(laminapropKeys),0] = laminapropKeys
     tmp[:len(cc.plyts),1] = cc.plyts
@@ -447,7 +447,7 @@ def reconstruct_params_from_gui(std):
         raise ValueError('Too many different perturbation load parameters')
     if len(nonlinear_ccs) > MAX_MODELS:
         raise ValueError('Too many different models')
-    tmp = numpy.empty((len(nonlinear_ccs) + 3, 32), dtype='|S50')
+    tmp = np.empty((len(nonlinear_ccs) + 3, 32), dtype='|S50')
     tmp.fill('')
     tmp[0,:len(all_ploads)] = [thetadeg for thetadeg, pt in all_ploads]
     tmp[1,:len(all_ploads)] = [pt for thetadeg, pt in all_ploads]
