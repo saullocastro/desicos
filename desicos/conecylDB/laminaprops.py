@@ -66,4 +66,6 @@ laminaprops = {
             'hilburger_2004':\
                  (Msi2MPa(18.5), Msi2MPa(1.64), 0.30, Msi2MPa(0.87), Msi2MPa(0.87), Msi2MPa(0.87)),
             'hilburger_2014_AlLi': (71000, 71000, 0.33),
+            'rtu_desicos_2014_IM78552':
+                (150.2e3  ,   9.4e3,  0.32,   5.1e3,   5.1e3,    5.1e3),
             }
