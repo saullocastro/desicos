@@ -946,7 +946,7 @@ ccs = {
         },
     'rtu_2014_r15_LASER': {
         'msi': 'rtu_2014_r15_LASER',
-        'ti': 'rtu_2014_r15',
+        'ti': 'rtu_2014_r15_LASER',
         'rbot': 250.37,
         'H': 500.,
         'elem_type': 'S8R5',
@@ -961,7 +961,7 @@ ccs = {
         },
     'rtu_2014_r15_EXASCAN': {
         'msi': 'rtu_2014_r15_EXASCAN',
-        'ti': 'rtu_2014_r15',
+        'ti': 'rtu_2014_r15_EXASCAN',
         'rbot': 250.75,
         'H': 500.,
         'elem_type': 'S8R5',
@@ -991,7 +991,7 @@ ccs = {
         },
     'rtu_2014_r16_LASER': {
         'msi': 'rtu_2014_r16_LASER',
-        'ti': 'rtu_2014_r16',
+        'ti': 'rtu_2014_r16_LASER',
         'rbot': 250.4,
         'H': 500.,
         'elem_type': 'S8R5',
@@ -1006,7 +1006,7 @@ ccs = {
         },
     'rtu_2014_r16_EXASCAN': {
         'msi': 'rtu_2014_r16_EXASCAN',
-        'ti': 'rtu_2014_r16',
+        'ti': 'rtu_2014_r16_EXASCAN',
         'rbot': 250.82,
         'H': 500.,
         'elem_type': 'S8R5',
@@ -1020,8 +1020,8 @@ ccs = {
         'database': 'rtu',
         },
     'rtu_2014_r17': {
-        'msi': 'rtu_2014_r17',
-        'ti': 'rtu_2014_r17',
+        #'msi': 'rtu_2014_r17',
+        #'ti': 'rtu_2014_r17',
         'rbot': 150.4,
         'H': 300.,
         'elem_type': 'S8R5',
@@ -1035,8 +1035,8 @@ ccs = {
         'database': 'rtu',
         },
     'rtu_2014_r18': {
-        'msi': 'rtu_2014_r18',
-        'ti': 'rtu_2014_r18',
+        #'msi': 'rtu_2014_r18',
+        #'ti': 'rtu_2014_r18',
         'rbot': 150.4,
         'H': 300.,
         'elem_type': 'S8R5',
@@ -1050,8 +1050,8 @@ ccs = {
         'database': 'rtu',
         },
     'rtu_2014_r19': {
-        'msi': 'rtu_2014_r19',
-        'ti': 'rtu_2014_r19',
+        #'msi': 'rtu_2014_r19',
+        #'ti': 'rtu_2014_r19',
         'rbot': 150.52,
         'H': 300.,
         'elem_type': 'S8R5',
@@ -1065,8 +1065,8 @@ ccs = {
         'database': 'rtu',
         },
     'rtu_2014_r20': {
-        'msi': 'rtu_2014_r20',
-         'ti': 'rtu_2014_r20',
+        #'msi': 'rtu_2014_r20',
+         #'ti': 'rtu_2014_r20',
         'rbot': 150.61,
         'H': 300.,
         'elem_type': 'S8R5',
@@ -1081,7 +1081,7 @@ ccs = {
         },
     'rtu_2014_r21': {
         'msi': 'rtu_2014_r21',
-        'ti': 'rtu_2014_r21',
+        #'ti': 'rtu_2014_r21',
         'rbot': 150.22,
         'H': 300.,
         'elem_type': 'S8R5',
@@ -1095,8 +1095,8 @@ ccs = {
         'database': 'rtu',
         },
     'rtu_2014_r22': {
-        'msi': 'rtu_2014_r22',
-        'ti': 'rtu_2014_r22',
+        #'msi': 'rtu_2014_r22',
+        #'ti': 'rtu_2014_r22',
         'rbot': 150.66,
         'H': 300.,
         'elem_type': 'S8R5',
@@ -1110,8 +1110,8 @@ ccs = {
         'database': 'rtu',
         },
     'rtu_2014_r23': {
-        'msi': 'rtu_2014_r23',
-        'ti': 'rtu_2014_r23',
+        #'msi': 'rtu_2014_r23',
+        #'ti': 'rtu_2014_r23',
         'rbot': 150.76,
         'H': 300.,
         'elem_type': 'S8R5',
@@ -1125,8 +1125,8 @@ ccs = {
         'database': 'rtu',
         },
     'rtu_2014_r24': {
-        'msi': 'rtu_2014_r24',
-        'ti': 'rtu_2014_r24',
+        #'msi': 'rtu_2014_r24',
+        #'ti': 'rtu_2014_r24',
         'rbot': 150.73,
         'H': 300.,
         'elem_type': 'S8R5',
@@ -1141,7 +1141,7 @@ ccs = {
         },
     'rtu_2014_r25': {
         'msi': 'rtu_2014_r25',
-        'ti': 'rtu_2014_r25',
+        #'ti': 'rtu_2014_r25',
         'rbot': 151.32,
         'H': 300.,
         'elem_type': 'S8R5',
@@ -1156,7 +1156,7 @@ ccs = {
         },
     'rtu_2014_r26': {
         'msi': 'rtu_2014_r26',
-        'ti': 'rtu_2014_r26',
+        #'ti': 'rtu_2014_r26',
         'rbot': 150.76,
         'H': 300.,
         'elem_type': 'S8R5',
@@ -1171,7 +1171,7 @@ ccs = {
         },
     'rtu_2014_r27': {
         'msi': 'rtu_2014_r27',
-        'ti': 'rtu_2014_r27',
+        #'ti': 'rtu_2014_r27',
         'rbot': 151.16,
         'H': 300.,
         'elem_type': 'S8R5',
@@ -1185,8 +1185,8 @@ ccs = {
         'database': 'rtu',
         },
     'rtu_2014_r28': {
-        'msi': 'rtu_2014_r28',
-        'ti': 'rtu_2014_r28',
+        #'msi': 'rtu_2014_r28',
+        #'ti': 'rtu_2014_r28',
         'rbot': 151.01,
         'H': 300.,
         'elem_type': 'S8R5',
@@ -1199,8 +1199,8 @@ ccs = {
         'ploads': [0.1,1.,2.,3.,5.,7.,9.,11.,13.,15.],
         'database': 'rtu',
         },
-        'rtu_2014_SST_1_LASER': {
-        'msi': 'rtu_2014_SST_1',
+    'rtu_2014_SST_1_LASER': {
+        'msi': 'rtu_2014_SST_1_LASER',
         'rbot': 250,
         'H': 500,
         'elem_type': 'S8R5',
@@ -1212,20 +1212,7 @@ ccs = {
         'ploads': [0.1,5.,10.,15.,17.,20.,23.,26.,30.,35.,40.],
         'database': 'rtu',
         },
-        'rtu_2014_SST_2_LASER': {
-        'msi': 'rtu_2014_SST_2_LASER',
-        'rbot': 400,
-        'H': 800.,
-        'elem_type': 'S8R5',
-        'numel_r': 200,
-        'plyt':0.5,
-        'laminapropKey': 'aisi_304_from_asm_aerospace',
-        'stack': [0],
-        'axial_displ': 1.,
-        'ploads': [0.1,5.,10.,13.,15.,17.,20.,25.,30.,35.],
-        'database': 'rtu',
-        },
-        'rtu_2014_SST_2_EXASCAN': {
+    'rtu_2014_SST_2_EXASCAN': {
         'msi': 'rtu_2014_SST_2_EXASCAN',
         'rbot': 400,
         'H': 800.,
@@ -1238,7 +1225,20 @@ ccs = {
         'ploads': [0.1,5.,10.,13.,15.,17.,20.,25.,30.,35.],
         'database': 'rtu',
         },
-        }
+    'rtu_2014_SST_2_LASER': {
+        'msi': 'rtu_2014_SST_2_LASER',
+        'rbot': 400,
+        'H': 800.,
+        'elem_type': 'S8R5',
+        'numel_r': 200,
+        'plyt':0.5,
+        'laminapropKey': 'aisi_304_from_asm_aerospace',
+        'stack': [0],
+        'axial_displ': 1.,
+        'ploads': [0.1,5.,10.,13.,15.,17.,20.,25.,30.,35.],
+        'database': 'rtu',
+        },
+    }
 
 ccs['wp2_pfh_des_01'] = ccs['astrium_1_less_3x0_plies']
 ccs['wp2_pfh_des_02'] = ccs['astrium_3_7a_original']
