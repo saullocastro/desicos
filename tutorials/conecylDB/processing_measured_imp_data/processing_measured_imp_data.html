@@ -6,15 +6,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Processing Geometric Imperfection Data &mdash; DESICOS 2.1.3 documentation</title>
+    <title>Processing Geometric Imperfection Data &mdash; DESICOS 2.2.0 documentation</title>
     
-    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.1.3',
+        VERSION:     '2.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,24 +23,27 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <link rel="shortcut icon" href="../../../_static/desicos.png"/>
-    <link rel="top" title="DESICOS 2.1.3 documentation" href="../../../index.html" />
+    <link rel="top" title="DESICOS 2.2.0 documentation" href="../../../index.html" />
     <link rel="up" title="Cone / Cylinder DataBase (desicos.conecylDB)" href="../index.html" />
     <link rel="next" title="Adding New Imperfection Files" href="../add_file.html" />
-    <link rel="prev" title="Dynamic Database" href="../dynamic.html" /> 
+    <link rel="prev" title="Dynamic Database" href="../dynamic.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
           <a href="../../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="../../../py-modindex.html" title="Python Module Index"
+          <a href="../../../np-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="../../../np-modindex.html" title="Python Module Index"
+          <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
           <a href="../add_file.html" title="Adding New Imperfection Files"
@@ -48,21 +51,21 @@
         <li class="right" >
           <a href="../dynamic.html" title="Dynamic Database"
              accesskey="P">previous</a> |</li>
-        <li><a href="../../../index.html">DESICOS 2.1.3 documentation</a> &raquo;</li>
-          <li><a href="../../index.html" >Tutorials</a> &raquo;</li>
-          <li><a href="../index.html" accesskey="U">Cone / Cylinder DataBase (<tt class="docutils literal"><span class="pre">desicos.conecylDB</span></tt>)</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../../../index.html">DESICOS 2.2.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Tutorials</a> &raquo;</li>
+          <li class="nav-item nav-item-2"><a href="../index.html" accesskey="U">Cone / Cylinder DataBase (<code class="docutils literal"><span class="pre">desicos.conecylDB</span></code>)</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="processing-geometric-imperfection-data">
 <span id="process-raw-files"></span><h1>Processing Geometric Imperfection Data<a class="headerlink" href="#processing-geometric-imperfection-data" title="Permalink to this headline">¶</a></h1>
 <p>This part of the turorial will explain in a step-by-step example how one
-can use the <a class="reference internal" href="../../index.html#modules"><em>developed modules</em></a> to post-process measured
+can use the <a class="reference internal" href="../../index.html#modules"><span>developed modules</span></a> to post-process measured
 imperfection data.</p>
 <p>The following steps will be discussed:</p>
 <ul class="simple">
@@ -94,9 +97,9 @@ has been used to illustrate this tutorial (first 10 lines shown below):</p>
 </pre></div>
 </div>
 <p>The following script is used to plot the sample with the imperfection
-exagerated. Note that <a class="reference internal" href="#best-fit-raw-data"><em>best_fit_raw_data.py</em></a> has to
+exagerated. Note that <a class="reference internal" href="#best-fit-raw-data"><span>best_fit_raw_data.py</span></a> has to
 be executed before.</p>
-<p><tt class="docutils literal"><span class="pre">plot_sample_3d.py</span></tt></p>
+<p><code class="docutils literal"><span class="pre">plot_sample_3d.py</span></code></p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">mayavi.mlab</span> <span class="kn">as</span> <span class="nn">mlab</span>
 
@@ -135,14 +138,14 @@ be executed before.</p>
 <div class="figure">
 <img alt="../../../_images/plot_sample_3d.png" src="../../../_images/plot_sample_3d.png" />
 </div>
-<p>In order to transform the raw data to the <a class="reference internal" href="../../../modules/abaqus/index.html#figure-conecyl"><em>finite element coordinate
-system</em></a>, the recommended procedure is the function
-<a class="reference internal" href="../../../modules/conecylDB/index.html#desicos.conecylDB.read_write.xyz2thetazimp" title="desicos.conecylDB.read_write.xyz2thetazimp"><tt class="xref py py-func docutils literal"><span class="pre">xyz2thetazimp()</span></tt></a>, exemplified below. This function converts the &#8220;<img class="math" src="../../../_images/math/fcbaa2ea1c6a047f151a45849927929823fc5d88.png" alt="x"/> <img class="math" src="../../../_images/math/5a1161c9b9bf6a6addc18ade0f7fe8bb5ce0ba95.png" alt="y"/>
+<p>In order to transform the raw data to the <a class="reference internal" href="../../../modules/abaqus/index.html#figure-conecyl"><span>finite element coordinate
+system</span></a>, the recommended procedure is the function
+<a class="reference internal" href="../../../modules/conecylDB/index.html#desicos.conecylDB.read_write.xyz2thetazimp" title="desicos.conecylDB.read_write.xyz2thetazimp"><code class="xref py py-func docutils literal"><span class="pre">xyz2thetazimp()</span></code></a>, exemplified below. This function converts the &#8220;<img class="math" src="../../../_images/math/fcbaa2ea1c6a047f151a45849927929823fc5d88.png" alt="x"/> <img class="math" src="../../../_images/math/5a1161c9b9bf6a6addc18ade0f7fe8bb5ce0ba95.png" alt="y"/>
 <img class="math" src="../../../_images/math/eb4fcf2ea15c365948abb172ed3693fbc10b3b4a.png" alt="z"/>&#8221; data to a to convert them to a &#8220;<img class="math" src="../../../_images/math/4dc4789b8e2f448615b3e2c2bdc22fb9267f7cd8.png" alt="\theta"/> <img class="math" src="../../../_images/math/eb4fcf2ea15c365948abb172ed3693fbc10b3b4a.png" alt="z"/> <img class="math" src="../../../_images/math/a359fcc67d4efbcaef5bda404120efef7de1ada3.png" alt="imp"/>&#8221; format. This function
-is a wrapper that calls funcion <a class="reference internal" href="../../../modules/conecylDB/index.html#desicos.conecylDB.fit_data.best_fit_cylinder" title="desicos.conecylDB.fit_data.best_fit_cylinder"><tt class="xref py py-func docutils literal"><span class="pre">best_fit_cylinder()</span></tt></a> or
-<a class="reference internal" href="../../../modules/conecylDB/index.html#desicos.conecylDB.fit_data.best_fit_cone" title="desicos.conecylDB.fit_data.best_fit_cone"><tt class="xref py py-func docutils literal"><span class="pre">best_fit_cone()</span></tt></a>, where the right coordinate transformation is
+is a wrapper that calls funcion <a class="reference internal" href="../../../modules/conecylDB/index.html#desicos.conecylDB.fit_data.best_fit_cylinder" title="desicos.conecylDB.fit_data.best_fit_cylinder"><code class="xref py py-func docutils literal"><span class="pre">best_fit_cylinder()</span></code></a> or
+<a class="reference internal" href="../../../modules/conecylDB/index.html#desicos.conecylDB.fit_data.best_fit_cone" title="desicos.conecylDB.fit_data.best_fit_cone"><code class="xref py py-func docutils literal"><span class="pre">best_fit_cone()</span></code></a>, where the right coordinate transformation is
 calculated.</p>
-<p id="best-fit-raw-data"><tt class="docutils literal"><span class="pre">best_fit_raw_data.py</span></tt></p>
+<p id="best-fit-raw-data"><code class="docutils literal"><span class="pre">best_fit_raw_data.py</span></code></p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">desicos.conecylDB.read_write</span> <span class="kn">import</span> <span class="n">xyz2thetazimp</span>
@@ -154,7 +157,7 @@ calculated.</p>
 <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="s">&#39;tmp_Tinv.txt&#39;</span><span class="p">,</span> <span class="n">out</span><span class="p">[</span><span class="s">&#39;Tinv&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
-<p>It will create an output file with a prefix <tt class="docutils literal"><span class="pre">&quot;_theta_z_imp.txt&quot;</span></tt> where the
+<p>It will create an output file with a prefix <code class="docutils literal"><span class="pre">&quot;_theta_z_imp.txt&quot;</span></code> where the
 imperfection data is stored in the format:</p>
 <div class="highlight-python"><div class="highlight"><pre>theta1 z1 imp1
 theta2 z2 imp2
@@ -162,8 +165,8 @@ theta2 z2 imp2
 thetan zn impn
 </pre></div>
 </div>
-<p>where <tt class="docutils literal"><span class="pre">thetai</span></tt> and <tt class="docutils literal"><span class="pre">zi</span></tt> are the coordinates <img class="math" src="../../../_images/math/4dc4789b8e2f448615b3e2c2bdc22fb9267f7cd8.png" alt="\theta"/> and <img class="math" src="../../../_images/math/eb4fcf2ea15c365948abb172ed3693fbc10b3b4a.png" alt="z"/>, while
-<tt class="docutils literal"><span class="pre">impi</span></tt> represents the imperfection amplitude at this coordinate. An example
+<p>where <code class="docutils literal"><span class="pre">thetai</span></code> and <code class="docutils literal"><span class="pre">zi</span></code> are the coordinates <img class="math" src="../../../_images/math/4dc4789b8e2f448615b3e2c2bdc22fb9267f7cd8.png" alt="\theta"/> and <img class="math" src="../../../_images/math/eb4fcf2ea15c365948abb172ed3693fbc10b3b4a.png" alt="z"/>, while
+<code class="docutils literal"><span class="pre">impi</span></code> represents the imperfection amplitude at this coordinate. An example
 of the transformed imperfection data is given below (first 10 lines), and
 <a class="reference external" href="https://raw.githubusercontent.com/desicos/desicos/master/doc/source/tutorials/conecylDB/processing_measured_imp_data/sample_theta_z_imp.txt">the full output is given here</a>:</p>
 <div class="highlight-python"><div class="highlight"><pre>0.701704 44.752223 -0.299107
@@ -180,12 +183,12 @@ of the transformed imperfection data is given below (first 10 lines), and
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">It is also possible to use <a class="reference internal" href="../../../modules/conecylDB/index.html#desicos.conecylDB.read_write.xyz2thetazimp" title="desicos.conecylDB.read_write.xyz2thetazimp"><tt class="xref py py-func docutils literal"><span class="pre">xyz2thetazimp()</span></tt></a> in other
+<p class="last">It is also possible to use <a class="reference internal" href="../../../modules/conecylDB/index.html#desicos.conecylDB.read_write.xyz2thetazimp" title="desicos.conecylDB.read_write.xyz2thetazimp"><code class="xref py py-func docutils literal"><span class="pre">xyz2thetazimp()</span></code></a> in other
 ways, as detailed in the function&#8217;s documentation</p>
 </div>
 <p>The transformed data can also be visualized in the 3-D domain, which was
 accomplished using the following script:</p>
-<p><tt class="docutils literal"><span class="pre">plot_sample_3d_tranformed.py</span></tt></p>
+<p><code class="docutils literal"><span class="pre">plot_sample_3d_tranformed.py</span></code></p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">mayavi.mlab</span> <span class="kn">as</span> <span class="nn">mlab</span>
 
@@ -225,16 +228,16 @@ accomplished using the following script:</p>
 </div>
 <p>Note that due to the axisymmetry it may happen that the final result has some
 offset rotation. For this reason the interpolation routines that will be
-discussed in the next sessions of this tutorial include a <tt class="docutils literal"><span class="pre">rotatedeg</span></tt>
+discussed in the next sessions of this tutorial include a <code class="docutils literal"><span class="pre">rotatedeg</span></code>
 parameter that the analyst should use in order to correct this angular offset.</p>
 </div>
 <div class="section" id="inverse-weighted-interpolation">
 <h2>Inverse-Weighted Interpolation<a class="headerlink" href="#inverse-weighted-interpolation" title="Permalink to this headline">¶</a></h2>
-<p>Function <tt class="xref py py-func docutils literal"><span class="pre">iterp_theta_z_imp()</span></tt> is the one used to interpolate the
+<p>Function <code class="xref py py-func docutils literal"><span class="pre">iterp_theta_z_imp()</span></code> is the one used to interpolate the
 measured data into a given mesh. In the example below the mesh creates using
-<tt class="xref py py-func docutils literal"><span class="pre">np.meshgrid()</span></tt> is used for plotting purposes. Note that the an angular
-offset of <tt class="docutils literal"><span class="pre">-88.5</span></tt> degrees was used in order to adjust the imperfection.</p>
-<p><tt class="docutils literal"><span class="pre">interpolate_inv_weighted.py</span></tt></p>
+<code class="xref py py-func docutils literal"><span class="pre">np.meshgrid()</span></code> is used for plotting purposes. Note that the an angular
+offset of <code class="docutils literal"><span class="pre">-88.5</span></code> degrees was used in order to adjust the imperfection.</p>
+<p><code class="docutils literal"><span class="pre">interpolate_inv_weighted.py</span></code></p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">desicos.conecylDB.interpolate</span> <span class="kn">import</span> <span class="n">interp_theta_z_imp</span>
@@ -265,7 +268,7 @@ offset of <tt class="docutils literal"><span class="pre">-88.5</span></tt> degre
 </pre></div>
 </div>
 <p>An the generated data can be plotted using the following code:</p>
-<p><tt class="docutils literal"><span class="pre">plot_inv_weighted.py</span></tt></p>
+<p><code class="docutils literal"><span class="pre">plot_inv_weighted.py</span></code></p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">pi</span>
 <span class="kn">import</span> <span class="nn">matplotlib.cm</span> <span class="kn">as</span> <span class="nn">cm</span>
@@ -340,12 +343,12 @@ offset of <tt class="docutils literal"><span class="pre">-88.5</span></tt> degre
 </div>
 <div class="section" id="half-cosine-function">
 <h2>Half-Cosine Function<a class="headerlink" href="#half-cosine-function" title="Permalink to this headline">¶</a></h2>
-<p>Function <a class="reference internal" href="../../../modules/conecylDB/index.html#desicos.conecylDB.fit_data.calc_c0" title="desicos.conecylDB.fit_data.calc_c0"><tt class="xref py py-func docutils literal"><span class="pre">calc_c0()</span></tt></a> is used to interpolate the measured data using
+<p>Function <a class="reference internal" href="../../../modules/conecylDB/index.html#desicos.conecylDB.fit_data.calc_c0" title="desicos.conecylDB.fit_data.calc_c0"><code class="xref py py-func docutils literal"><span class="pre">calc_c0()</span></code></a> is used to interpolate the measured data using
 Fourier series. The half-cosine function corresponds to the parameter
-<tt class="docutils literal"><span class="pre">funcnum</span> <span class="pre">=</span> <span class="pre">2</span></tt>, as can be seen in the function&#8217;s documentation.</p>
+<code class="docutils literal"><span class="pre">funcnum</span> <span class="pre">=</span> <span class="pre">2</span></code>, as can be seen in the function&#8217;s documentation.</p>
 <p>The following script was used to calculate the coefficients <img class="math" src="../../../_images/math/9d2e821b965da254bfd09bd9fdfc1e644cdabe55.png" alt="\{c_0\}"/>. Note
-how the angular offset is applied using the <tt class="docutils literal"><span class="pre">rotatedeg</span></tt> parameter:</p>
-<p><tt class="docutils literal"><span class="pre">interpolate_half_cosine.py</span></tt></p>
+how the angular offset is applied using the <code class="docutils literal"><span class="pre">rotatedeg</span></code> parameter:</p>
+<p><code class="docutils literal"><span class="pre">interpolate_half_cosine.py</span></code></p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">desicos.conecylDB.fit_data</span> <span class="kn">import</span> <span class="n">calc_c0</span>
@@ -368,7 +371,7 @@ how the angular offset is applied using the <tt class="docutils literal"><span c
 </div>
 <p>and the following routine was used to plot the corresponding imperfection
 field:</p>
-<p><tt class="docutils literal"><span class="pre">plot_half_cosine.py</span></tt></p>
+<p><code class="docutils literal"><span class="pre">plot_half_cosine.py</span></code></p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">pi</span>
 <span class="kn">import</span> <span class="nn">matplotlib.cm</span> <span class="kn">as</span> <span class="nn">cm</span>
@@ -475,7 +478,7 @@ closer, as shown in the additional examples below.</p>
 <h2>Additional Examples using the Half-Cosine Function<a class="headerlink" href="#additional-examples-using-the-half-cosine-function" title="Permalink to this headline">¶</a></h2>
 <p>The example below shows how to use this function and then plot the
 displacement patterns using different approximation levels:</p>
-<p><tt class="docutils literal"><span class="pre">half_cosine_additional_example.py</span></tt></p>
+<p><code class="docutils literal"><span class="pre">half_cosine_additional_example.py</span></code></p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="kn">from</span> <span class="nn">desicos.conecylDB.fit_data</span> <span class="kn">import</span> <span class="n">fw0</span>
@@ -523,7 +526,7 @@ displacement patterns using different approximation levels:</p>
                       <span class="n">pad_inches</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>which will result in the following figures for <tt class="docutils literal"><span class="pre">funcnum=1</span></tt>:</p>
+<p>which will result in the following figures for <code class="docutils literal"><span class="pre">funcnum=1</span></code>:</p>
 <p><img class="math" src="../../../_images/math/624c3265a78ed2cc633978f63bba190f6097fab7.png" alt="m_0=20"/>, <img class="math" src="../../../_images/math/9ed957cd12caab821285dd028035ca3b9fd8b8c3.png" alt="n_0=30"/>:</p>
 <div class="figure">
 <img alt="../../../_images/fw0_f1_z25_m_020_n_030.png" src="../../../_images/fw0_f1_z25_m_020_n_030.png" />
@@ -540,7 +543,7 @@ displacement patterns using different approximation levels:</p>
 <div class="figure">
 <img alt="../../../_images/fw0_f1_z25_m_050_n_075.png" src="../../../_images/fw0_f1_z25_m_050_n_075.png" />
 </div>
-<p>and for <tt class="docutils literal"><span class="pre">funcnum=2</span></tt>:</p>
+<p>and for <code class="docutils literal"><span class="pre">funcnum=2</span></code>:</p>
 <p><img class="math" src="../../../_images/math/624c3265a78ed2cc633978f63bba190f6097fab7.png" alt="m_0=20"/>, <img class="math" src="../../../_images/math/9ed957cd12caab821285dd028035ca3b9fd8b8c3.png" alt="n_0=30"/>:</p>
 <div class="figure">
 <img alt="../../../_images/fw0_f2_z25_m_020_n_030.png" src="../../../_images/fw0_f2_z25_m_020_n_030.png" />
@@ -564,7 +567,7 @@ inverse-weighted interpolation already described.</p>
 <div class="figure">
 <img alt="../../../_images/measured_z25.png" src="../../../_images/measured_z25.png" />
 </div>
-<p>Comparing the results using <tt class="docutils literal"><span class="pre">funcnum=1</span></tt> and <tt class="docutils literal"><span class="pre">funcnum=2</span></tt>, one see that
+<p>Comparing the results using <code class="docutils literal"><span class="pre">funcnum=1</span></code> and <code class="docutils literal"><span class="pre">funcnum=2</span></code>, one see that
 the latter approaches closer the real measurements, since it relaxes the
 condition <img class="math" src="../../../_images/math/be5f7fe5aa721daffb1552ebb7ef3f8e73e6c583.png" alt="w_0 = 0"/> at the edges.</p>
 </div>
@@ -581,10 +584,10 @@ x2 y2 z2 thick2
 xn yn zn thickn
 </pre></div>
 </div>
-<p>The recommended procedure to transform the raw data to the <a class="reference internal" href="../../../modules/abaqus/index.html#figure-conecyl"><em>finite
-element coordinate system</em></a> is the function
-<a class="reference internal" href="../../../modules/conecylDB/index.html#desicos.conecylDB.read_write.xyzthick2thetazthick" title="desicos.conecylDB.read_write.xyzthick2thetazthick"><tt class="xref py py-func docutils literal"><span class="pre">xyzthick2thetazthick()</span></tt></a>, that also calls internally the
-<a class="reference internal" href="../../../modules/conecylDB/index.html#desicos.conecylDB.fit_data.best_fit_cylinder" title="desicos.conecylDB.fit_data.best_fit_cylinder"><tt class="xref py py-func docutils literal"><span class="pre">best_fit_cylinder()</span></tt></a> or the <a class="reference internal" href="../../../modules/conecylDB/index.html#desicos.conecylDB.fit_data.best_fit_cone" title="desicos.conecylDB.fit_data.best_fit_cone"><tt class="xref py py-func docutils literal"><span class="pre">best_fit_cone()</span></tt></a> routines:</p>
+<p>The recommended procedure to transform the raw data to the <a class="reference internal" href="../../../modules/abaqus/index.html#figure-conecyl"><span>finite
+element coordinate system</span></a> is the function
+<a class="reference internal" href="../../../modules/conecylDB/index.html#desicos.conecylDB.read_write.xyzthick2thetazthick" title="desicos.conecylDB.read_write.xyzthick2thetazthick"><code class="xref py py-func docutils literal"><span class="pre">xyzthick2thetazthick()</span></code></a>, that also calls internally the
+<a class="reference internal" href="../../../modules/conecylDB/index.html#desicos.conecylDB.fit_data.best_fit_cylinder" title="desicos.conecylDB.fit_data.best_fit_cylinder"><code class="xref py py-func docutils literal"><span class="pre">best_fit_cylinder()</span></code></a> or the <a class="reference internal" href="../../../modules/conecylDB/index.html#desicos.conecylDB.fit_data.best_fit_cone" title="desicos.conecylDB.fit_data.best_fit_cone"><code class="xref py py-func docutils literal"><span class="pre">best_fit_cone()</span></code></a> routines:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">desicos.conecylDB.read_write</span> <span class="kn">import</span> <span class="n">xyzthick2thetazthick</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">xyzthick2thetazthick</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">alphadeg_measured</span><span class="p">,</span> <span class="n">R_measured</span><span class="p">,</span> <span class="n">H_measured</span><span class="p">,</span>
@@ -593,7 +596,7 @@ element coordinate system</em></a> is the function
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">It is possible to use function <tt class="xref py py-func docutils literal"><span class="pre">xyzthick2thetazthick`()</span></tt>
+<p class="last">It is possible to use function <code class="xref py py-func docutils literal"><span class="pre">xyzthick2thetazthick`()</span></code>
 in other ways, as detailed in the corresponding documentation</p>
 </div>
 </div>
@@ -602,35 +605,29 @@ in other ways, as detailed in the corresponding documentation</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-            <p class="logo"><a href="../../../index.html">
-              <img class="logo" src="../../../_static/desicos.png" alt="Logo"/>
-            </a></p>
-  <h3><a href="../../../index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Processing Geometric Imperfection Data</a><ul>
-<li><a class="reference internal" href="#raw-data-from-mesurement-systems">Raw Data from Mesurement Systems</a></li>
-<li><a class="reference internal" href="#inverse-weighted-interpolation">Inverse-Weighted Interpolation</a></li>
-<li><a class="reference internal" href="#half-cosine-function">Half-Cosine Function</a></li>
-<li><a class="reference internal" href="#additional-examples-using-the-half-cosine-function">Additional Examples using the Half-Cosine Function</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#processing-measured-thickness-imperfection-data">Processing Measured Thickness Imperfection Data</a></li>
+<p class="logo">
+  <a href="../../../index.html">
+    <img class="logo" src="../../../_static/desicos.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/index.html">Modules</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Tutorials</a></li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="../dynamic.html"
-                        title="previous chapter">Dynamic Database</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="../add_file.html"
-                        title="next chapter">Adding New Imperfection Files</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../../../_sources/tutorials/conecylDB/processing_measured_imp_data/processing_measured_imp_data.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../../search.html" method="get">
       <input type="text" name="q" />
@@ -647,33 +644,17 @@ in other ways, as detailed in the corresponding documentation</p>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="../../../np-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="../add_file.html" title="Adding New Imperfection Files"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="../dynamic.html" title="Dynamic Database"
-             >previous</a> |</li>
-        <li><a href="../../../index.html">DESICOS 2.1.3 documentation</a> &raquo;</li>
-          <li><a href="../../index.html" >Tutorials</a> &raquo;</li>
-          <li><a href="../index.html" >Cone / Cylinder DataBase (<tt class="docutils literal"><span class="pre">desicos.conecylDB</span></tt>)</a> &raquo;</li> 
-      </ul>
-    </div>
     <div class="footer">
-        &copy; Copyright 2012-2015 Desicos Improved Software Team.
-      Last updated on Jan 14, 2015.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      &copy;2012-2015 Desicos Improved Software Team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.2</a>
+      
     </div>
+
+    
+
+    
   </body>
 </html>

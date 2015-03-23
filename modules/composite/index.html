@@ -6,15 +6,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Composite Module (desicos.composite) &mdash; DESICOS 2.1.3 documentation</title>
+    <title>Composite Module (desicos.composite) &mdash; DESICOS 2.2.0 documentation</title>
     
-    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.1.3',
+        VERSION:     '2.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,40 +23,43 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <link rel="shortcut icon" href="../../_static/desicos.png"/>
-    <link rel="top" title="DESICOS 2.1.3 documentation" href="../../index.html" />
-    <link rel="up" title="Modules" href="../index.html" /> 
+    <link rel="top" title="DESICOS 2.2.0 documentation" href="../../index.html" />
+    <link rel="up" title="Modules" href="../index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
           <a href="../../np-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../index.html">DESICOS 2.1.3 documentation</a> &raquo;</li>
-          <li><a href="../index.html" accesskey="U">Modules</a> &raquo;</li> 
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">DESICOS 2.2.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Modules</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <span class="target" id="module-desicos.composite"><span id="module-composite"></span></span><div class="section" id="composite-module-desicos-composite">
-<h1>Composite Module (<a class="reference internal" href="#module-desicos.composite" title="desicos.composite"><tt class="xref py py-mod docutils literal"><span class="pre">desicos.composite</span></tt></a>)<a class="headerlink" href="#composite-module-desicos-composite" title="Permalink to this headline">¶</a></h1>
-<p>The <tt class="docutils literal"><span class="pre">desicos.composite</span></tt> module includes functions used to calculate
+<h1>Composite Module (<a class="reference internal" href="#module-desicos.composite" title="desicos.composite"><code class="xref py py-mod docutils literal"><span class="pre">desicos.composite</span></code></a>)<a class="headerlink" href="#composite-module-desicos-composite" title="Permalink to this headline">¶</a></h1>
+<p>The <code class="docutils literal"><span class="pre">desicos.composite</span></code> module includes functions used to calculate
 laminate properties based on input data of stacking sequence and lamina
 properties.</p>
 <p>The most convenient usage is probably using the
-<a class="reference internal" href="#desicos.composite.laminate.read_stack" title="desicos.composite.laminate.read_stack"><tt class="xref py py-func docutils literal"><span class="pre">desicos.composite.laminate.read_stack()</span></tt></a> function:</p>
+<a class="reference internal" href="#desicos.composite.laminate.read_stack" title="desicos.composite.laminate.read_stack"><code class="xref py py-func docutils literal"><span class="pre">desicos.composite.laminate.read_stack()</span></code></a> function:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">desicos.composite.laminate</span> <span class="kn">import</span> <span class="n">read_stack</span>
 
 <span class="n">laminaprop</span> <span class="o">=</span> <span class="p">(</span><span class="n">E11</span><span class="p">,</span> <span class="n">E22</span><span class="p">,</span> <span class="n">nu12</span><span class="p">,</span> <span class="n">G12</span><span class="p">,</span> <span class="n">G13</span><span class="p">,</span> <span class="n">G23</span><span class="p">)</span>
@@ -65,21 +68,21 @@ properties.</p>
 <span class="n">lam</span> <span class="o">=</span> <span class="n">read_stack</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">plyt</span><span class="o">=</span><span class="n">plyt</span><span class="p">,</span> <span class="n">laminaprop</span><span class="o">=</span><span class="n">laminaprop</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Where the laminate stiffness matrix, the often called <tt class="docutils literal"><span class="pre">ABD</span></tt> matrix, with
-<tt class="docutils literal"><span class="pre">shape=(6,</span> <span class="pre">6)</span></tt>, can be accessed using:</p>
+<p>Where the laminate stiffness matrix, the often called <code class="docutils literal"><span class="pre">ABD</span></code> matrix, with
+<code class="docutils literal"><span class="pre">shape=(6,</span> <span class="pre">6)</span></code>, can be accessed using:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">lam</span><span class="o">.</span><span class="n">ABD</span>
 </pre></div>
 </div>
-<p>and when shear stiffnesses are required, the <tt class="docutils literal"><span class="pre">ABDE</span></tt> matrix, with
-<tt class="docutils literal"><span class="pre">shape=(8,</span> <span class="pre">8)</span></tt>:</p>
+<p>and when shear stiffnesses are required, the <code class="docutils literal"><span class="pre">ABDE</span></code> matrix, with
+<code class="docutils literal"><span class="pre">shape=(8,</span> <span class="pre">8)</span></code>:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">lam</span><span class="o">.</span><span class="n">ABDE</span>
 </pre></div>
 </div>
 <span class="target" id="module-desicos.composite.laminate"></span><div class="section" id="composite-laminate-module-desicos-composite-laminate">
-<h2>Composite Laminate Module (<a class="reference internal" href="#module-desicos.composite.laminate" title="desicos.composite.laminate"><tt class="xref py py-mod docutils literal"><span class="pre">desicos.composite.laminate</span></tt></a>)<a class="headerlink" href="#composite-laminate-module-desicos-composite-laminate" title="Permalink to this headline">¶</a></h2>
+<h2>Composite Laminate Module (<a class="reference internal" href="#module-desicos.composite.laminate" title="desicos.composite.laminate"><code class="xref py py-mod docutils literal"><span class="pre">desicos.composite.laminate</span></code></a>)<a class="headerlink" href="#composite-laminate-module-desicos-composite-laminate" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="desicos.composite.laminate.Laminate">
-<em class="property">class </em><tt class="descclassname">desicos.composite.laminate.</tt><tt class="descname">Laminate</tt><a class="reference internal" href="../../_modules/desicos/composite/laminate.html#Laminate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.composite.laminate.Laminate" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">desicos.composite.laminate.</code><code class="descname">Laminate</code><a class="reference internal" href="../../_modules/desicos/composite/laminate.html#Laminate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.composite.laminate.Laminate" title="Permalink to this definition">¶</a></dt>
 <dd><table border="1" class="docutils">
 <colgroup>
 <col width="13%" />
@@ -148,56 +151,56 @@ properties.</p>
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#desicos.composite.laminate.Laminate.calc_ABDE_from_lamination_parameters" title="desicos.composite.laminate.Laminate.calc_ABDE_from_lamination_parameters"><tt class="xref py py-obj docutils literal"><span class="pre">calc_ABDE_from_lamination_parameters</span></tt></a>()</td>
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.composite.laminate.Laminate.calc_ABDE_from_lamination_parameters" title="desicos.composite.laminate.Laminate.calc_ABDE_from_lamination_parameters"><code class="xref py py-obj docutils literal"><span class="pre">calc_ABDE_from_lamination_parameters</span></code></a>()</td>
 <td>Use the ABDE matrix based on lamination parameters.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#desicos.composite.laminate.Laminate.calc_constitutive_matrix" title="desicos.composite.laminate.Laminate.calc_constitutive_matrix"><tt class="xref py py-obj docutils literal"><span class="pre">calc_constitutive_matrix</span></tt></a>()</td>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.composite.laminate.Laminate.calc_constitutive_matrix" title="desicos.composite.laminate.Laminate.calc_constitutive_matrix"><code class="xref py py-obj docutils literal"><span class="pre">calc_constitutive_matrix</span></code></a>()</td>
 <td>Calculates the laminate constitutive matrix</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#desicos.composite.laminate.Laminate.calc_equivalent_modulus" title="desicos.composite.laminate.Laminate.calc_equivalent_modulus"><tt class="xref py py-obj docutils literal"><span class="pre">calc_equivalent_modulus</span></tt></a>()</td>
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.composite.laminate.Laminate.calc_equivalent_modulus" title="desicos.composite.laminate.Laminate.calc_equivalent_modulus"><code class="xref py py-obj docutils literal"><span class="pre">calc_equivalent_modulus</span></code></a>()</td>
 <td>Calculates the equivalent laminate properties.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#desicos.composite.laminate.Laminate.calc_lamination_parameters" title="desicos.composite.laminate.Laminate.calc_lamination_parameters"><tt class="xref py py-obj docutils literal"><span class="pre">calc_lamination_parameters</span></tt></a>()</td>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.composite.laminate.Laminate.calc_lamination_parameters" title="desicos.composite.laminate.Laminate.calc_lamination_parameters"><code class="xref py py-obj docutils literal"><span class="pre">calc_lamination_parameters</span></code></a>()</td>
 <td>Calculate the lamination parameters.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#desicos.composite.laminate.Laminate.force_balanced_LP" title="desicos.composite.laminate.Laminate.force_balanced_LP"><tt class="xref py py-obj docutils literal"><span class="pre">force_balanced_LP</span></tt></a>()</td>
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.composite.laminate.Laminate.force_balanced_LP" title="desicos.composite.laminate.Laminate.force_balanced_LP"><code class="xref py py-obj docutils literal"><span class="pre">force_balanced_LP</span></code></a>()</td>
 <td>Force balanced lamination parameters</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#desicos.composite.laminate.Laminate.force_orthotropic" title="desicos.composite.laminate.Laminate.force_orthotropic"><tt class="xref py py-obj docutils literal"><span class="pre">force_orthotropic</span></tt></a>()</td>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.composite.laminate.Laminate.force_orthotropic" title="desicos.composite.laminate.Laminate.force_orthotropic"><code class="xref py py-obj docutils literal"><span class="pre">force_orthotropic</span></code></a>()</td>
 <td>Force an orthotropic laminate</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#desicos.composite.laminate.Laminate.force_symmetric" title="desicos.composite.laminate.Laminate.force_symmetric"><tt class="xref py py-obj docutils literal"><span class="pre">force_symmetric</span></tt></a>()</td>
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.composite.laminate.Laminate.force_symmetric" title="desicos.composite.laminate.Laminate.force_symmetric"><code class="xref py py-obj docutils literal"><span class="pre">force_symmetric</span></code></a>()</td>
 <td>Force a symmetric laminate</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#desicos.composite.laminate.Laminate.force_symmetric_LP" title="desicos.composite.laminate.Laminate.force_symmetric_LP"><tt class="xref py py-obj docutils literal"><span class="pre">force_symmetric_LP</span></tt></a>()</td>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.composite.laminate.Laminate.force_symmetric_LP" title="desicos.composite.laminate.Laminate.force_symmetric_LP"><code class="xref py py-obj docutils literal"><span class="pre">force_symmetric_LP</span></code></a>()</td>
 <td>Force symmetric lamination parameters</td>
 </tr>
-<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">rebuild</span></tt>()</td>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">rebuild</span></code>()</td>
 <td></td>
 </tr>
 </tbody>
 </table>
 <dl class="method">
 <dt id="desicos.composite.laminate.Laminate.calc_ABDE_from_lamination_parameters">
-<tt class="descname">calc_ABDE_from_lamination_parameters</tt><big>(</big><big>)</big><a class="reference internal" href="../../_modules/desicos/composite/laminate.html#Laminate.calc_ABDE_from_lamination_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.composite.laminate.Laminate.calc_ABDE_from_lamination_parameters" title="Permalink to this definition">¶</a></dt>
+<code class="descname">calc_ABDE_from_lamination_parameters</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/composite/laminate.html#Laminate.calc_ABDE_from_lamination_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.composite.laminate.Laminate.calc_ABDE_from_lamination_parameters" title="Permalink to this definition">¶</a></dt>
 <dd><p>Use the ABDE matrix based on lamination parameters.</p>
-<p>Given the lamination parameters <tt class="docutils literal"><span class="pre">xiA</span></tt>, <tt class="docutils literal"><span class="pre">xiB</span></tt>, <tt class="docutils literal"><span class="pre">xiC</span></tt> and <tt class="docutils literal"><span class="pre">xiD</span></tt>,
+<p>Given the lamination parameters <code class="docutils literal"><span class="pre">xiA</span></code>, <code class="docutils literal"><span class="pre">xiB</span></code>, <code class="docutils literal"><span class="pre">xiC</span></code> and <code class="docutils literal"><span class="pre">xiD</span></code>,
 the ABD matrix is calculated.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="desicos.composite.laminate.Laminate.calc_constitutive_matrix">
-<tt class="descname">calc_constitutive_matrix</tt><big>(</big><big>)</big><a class="reference internal" href="../../_modules/desicos/composite/laminate.html#Laminate.calc_constitutive_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.composite.laminate.Laminate.calc_constitutive_matrix" title="Permalink to this definition">¶</a></dt>
+<code class="descname">calc_constitutive_matrix</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/composite/laminate.html#Laminate.calc_constitutive_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.composite.laminate.Laminate.calc_constitutive_matrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates the laminate constitutive matrix</p>
-<p>This is the commonly called <tt class="docutils literal"><span class="pre">ABD</span></tt> matrix with <tt class="docutils literal"><span class="pre">shape=(6,</span> <span class="pre">6)</span></tt> when
-the classical laminated plate theory is used, or the <tt class="docutils literal"><span class="pre">ABDE</span></tt> matrix
+<p>This is the commonly called <code class="docutils literal"><span class="pre">ABD</span></code> matrix with <code class="docutils literal"><span class="pre">shape=(6,</span> <span class="pre">6)</span></code> when
+the classical laminated plate theory is used, or the <code class="docutils literal"><span class="pre">ABDE</span></code> matrix
 when the first-order shear deformation theory is used, containing the
 transverse shear terms.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="desicos.composite.laminate.Laminate.calc_equivalent_modulus">
-<tt class="descname">calc_equivalent_modulus</tt><big>(</big><big>)</big><a class="reference internal" href="../../_modules/desicos/composite/laminate.html#Laminate.calc_equivalent_modulus"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.composite.laminate.Laminate.calc_equivalent_modulus" title="Permalink to this definition">¶</a></dt>
+<code class="descname">calc_equivalent_modulus</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/composite/laminate.html#Laminate.calc_equivalent_modulus"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.composite.laminate.Laminate.calc_equivalent_modulus" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates the equivalent laminate properties.</p>
 <dl class="docutils">
 <dt>The following attributes are calculated:</dt>
@@ -207,7 +210,7 @@ transverse shear terms.</p>
 
 <dl class="method">
 <dt id="desicos.composite.laminate.Laminate.calc_lamination_parameters">
-<tt class="descname">calc_lamination_parameters</tt><big>(</big><big>)</big><a class="reference internal" href="../../_modules/desicos/composite/laminate.html#Laminate.calc_lamination_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.composite.laminate.Laminate.calc_lamination_parameters" title="Permalink to this definition">¶</a></dt>
+<code class="descname">calc_lamination_parameters</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/composite/laminate.html#Laminate.calc_lamination_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.composite.laminate.Laminate.calc_lamination_parameters" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the lamination parameters.</p>
 <dl class="docutils">
 <dt>The following attributes are calculated:</dt>
@@ -217,7 +220,7 @@ transverse shear terms.</p>
 
 <dl class="method">
 <dt id="desicos.composite.laminate.Laminate.force_balanced_LP">
-<tt class="descname">force_balanced_LP</tt><big>(</big><big>)</big><a class="reference internal" href="../../_modules/desicos/composite/laminate.html#Laminate.force_balanced_LP"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.composite.laminate.Laminate.force_balanced_LP" title="Permalink to this definition">¶</a></dt>
+<code class="descname">force_balanced_LP</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/composite/laminate.html#Laminate.force_balanced_LP"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.composite.laminate.Laminate.force_balanced_LP" title="Permalink to this definition">¶</a></dt>
 <dd><p>Force balanced lamination parameters</p>
 <p>The lamination parameters <img class="math" src="../../_images/math/e24cd6bf67eda43fc2f74722e09cd5178912e401.png" alt="\xi_{A2}"/> and <img class="math" src="../../_images/math/c9723a59d3ac0d65786aecdc8ca48c80cc89201a.png" alt="\xi_{A4}"/> are set to null
 to force a balanced laminate.</p>
@@ -225,7 +228,7 @@ to force a balanced laminate.</p>
 
 <dl class="method">
 <dt id="desicos.composite.laminate.Laminate.force_orthotropic">
-<tt class="descname">force_orthotropic</tt><big>(</big><big>)</big><a class="reference internal" href="../../_modules/desicos/composite/laminate.html#Laminate.force_orthotropic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.composite.laminate.Laminate.force_orthotropic" title="Permalink to this definition">¶</a></dt>
+<code class="descname">force_orthotropic</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/composite/laminate.html#Laminate.force_orthotropic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.composite.laminate.Laminate.force_orthotropic" title="Permalink to this definition">¶</a></dt>
 <dd><p>Force an orthotropic laminate</p>
 <p>The terms
 <img class="math" src="../../_images/math/0276f0905a387fc3fcbc16c439b5279dcc7852ee.png" alt="A_{13}"/>, <img class="math" src="../../_images/math/e78f92287241f17105b5ffca1aa4767d92f121c6.png" alt="A_{23}"/>, <img class="math" src="../../_images/math/3e90f5c80dc43b8444d9dd9553174dc1a33b18f6.png" alt="A_{31}"/>, <img class="math" src="../../_images/math/21ac8dcd0f832a842d180c05648bdfa7a7fa2808.png" alt="A_{32}"/>,
@@ -236,14 +239,14 @@ orthotropic laminate.</p>
 
 <dl class="method">
 <dt id="desicos.composite.laminate.Laminate.force_symmetric">
-<tt class="descname">force_symmetric</tt><big>(</big><big>)</big><a class="reference internal" href="../../_modules/desicos/composite/laminate.html#Laminate.force_symmetric"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.composite.laminate.Laminate.force_symmetric" title="Permalink to this definition">¶</a></dt>
+<code class="descname">force_symmetric</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/composite/laminate.html#Laminate.force_symmetric"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.composite.laminate.Laminate.force_symmetric" title="Permalink to this definition">¶</a></dt>
 <dd><p>Force a symmetric laminate</p>
 <p>The <img class="math" src="../../_images/math/6ca90f2dcedbe7eba390a1d20219a78c9aad37b0.png" alt="B"/> terms of the constitutive matrix are set to zero.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="desicos.composite.laminate.Laminate.force_symmetric_LP">
-<tt class="descname">force_symmetric_LP</tt><big>(</big><big>)</big><a class="reference internal" href="../../_modules/desicos/composite/laminate.html#Laminate.force_symmetric_LP"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.composite.laminate.Laminate.force_symmetric_LP" title="Permalink to this definition">¶</a></dt>
+<code class="descname">force_symmetric_LP</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/composite/laminate.html#Laminate.force_symmetric_LP"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.composite.laminate.Laminate.force_symmetric_LP" title="Permalink to this definition">¶</a></dt>
 <dd><p>Force symmetric lamination parameters</p>
 <p>The lamination parameters <img class="math" src="../../_images/math/0de5779e2e54fc0171f6f4c5a229528e5b8cb941.png" alt="\xi_{Bi}"/> are set to null
 to force a symmetric laminate.</p>
@@ -253,7 +256,7 @@ to force a symmetric laminate.</p>
 
 <dl class="function">
 <dt id="desicos.composite.laminate.read_lamination_parameters">
-<tt class="descclassname">desicos.composite.laminate.</tt><tt class="descname">read_lamination_parameters</tt><big>(</big><em>thickness</em>, <em>laminaprop</em>, <em>xiA1</em>, <em>xiA2</em>, <em>xiA3</em>, <em>xiA4</em>, <em>xiB1</em>, <em>xiB2</em>, <em>xiB3</em>, <em>xiB4</em>, <em>xiD1</em>, <em>xiD2</em>, <em>xiD3</em>, <em>xiD4</em>, <em>xiE1</em>, <em>xiE2</em>, <em>xiE3</em>, <em>xiE4</em><big>)</big><a class="reference internal" href="../../_modules/desicos/composite/laminate.html#read_lamination_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.composite.laminate.read_lamination_parameters" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">desicos.composite.laminate.</code><code class="descname">read_lamination_parameters</code><span class="sig-paren">(</span><em>thickness</em>, <em>laminaprop</em>, <em>xiA1</em>, <em>xiA2</em>, <em>xiA3</em>, <em>xiA4</em>, <em>xiB1</em>, <em>xiB2</em>, <em>xiB3</em>, <em>xiB4</em>, <em>xiD1</em>, <em>xiD2</em>, <em>xiD3</em>, <em>xiD4</em>, <em>xiE1</em>, <em>xiE2</em>, <em>xiE3</em>, <em>xiE4</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/composite/laminate.html#read_lamination_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.composite.laminate.read_lamination_parameters" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates a laminate based on the lamination parameters.</p>
 <p>The lamination parameters:
 <img class="math" src="../../_images/math/c4dd0dddbee59b3507eea99c1261e4d040e5a0b7.png" alt="\xi_{A1} \cdots \xi_{A4}"/>, <img class="math" src="../../_images/math/862fa2fe0c7f37832df96b7c389dfd441b42608d.png" alt="\xi_{B1} \cdots \xi_{B4}"/>
@@ -289,9 +292,9 @@ to force a symmetric laminate.</p>
 
 <dl class="function">
 <dt id="desicos.composite.laminate.read_stack">
-<tt class="descclassname">desicos.composite.laminate.</tt><tt class="descname">read_stack</tt><big>(</big><em>stack</em>, <em>plyt=None</em>, <em>laminaprop=None</em>, <em>plyts=</em>, <span class="optional">[</span><span class="optional">]</span><em>laminaprops=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="reference internal" href="../../_modules/desicos/composite/laminate.html#read_stack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.composite.laminate.read_stack" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">desicos.composite.laminate.</code><code class="descname">read_stack</code><span class="sig-paren">(</span><em>stack</em>, <em>plyt=None</em>, <em>laminaprop=None</em>, <em>plyts=[]</em>, <em>laminaprops=[]</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/composite/laminate.html#read_stack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.composite.laminate.read_stack" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read a laminate stacking sequence data.</p>
-<p>An <tt class="docutils literal"><span class="pre">Laminate</span></tt> object is returned based on the inputs given.</p>
+<p>An <code class="docutils literal"><span class="pre">Laminate</span></code> object is returned based on the inputs given.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -302,11 +305,11 @@ to force a symmetric laminate.</p>
 </div></blockquote>
 <p><strong>plyt</strong> : float, optional</p>
 <blockquote>
-<div><p>When all plies have the same thickness, <tt class="docutils literal"><span class="pre">plyt</span></tt> can be supplied.</p>
+<div><p>When all plies have the same thickness, <code class="docutils literal"><span class="pre">plyt</span></code> can be supplied.</p>
 </div></blockquote>
 <p><strong>laminaprop</strong> : tuple, optional</p>
 <blockquote>
-<div><p>When all plies have the same material properties, <tt class="docutils literal"><span class="pre">laminaprop</span></tt>
+<div><p>When all plies have the same material properties, <code class="docutils literal"><span class="pre">laminaprop</span></code>
 can be supplied.</p>
 </div></blockquote>
 <p><strong>plyts</strong> : list, optional</p>
@@ -322,13 +325,13 @@ can be supplied.</p>
 </tbody>
 </table>
 <p class="rubric">Notes</p>
-<p><tt class="docutils literal"><span class="pre">plyt</span></tt> or <tt class="docutils literal"><span class="pre">plyts</span></tt> must be supplied
-<tt class="docutils literal"><span class="pre">laminaprop</span></tt> or <tt class="docutils literal"><span class="pre">laminaprops</span></tt> must be supplied</p>
-<p>For orthotropic plies, the <tt class="docutils literal"><span class="pre">laminaprop</span></tt> should be:</p>
+<p><code class="docutils literal"><span class="pre">plyt</span></code> or <code class="docutils literal"><span class="pre">plyts</span></code> must be supplied
+<code class="docutils literal"><span class="pre">laminaprop</span></code> or <code class="docutils literal"><span class="pre">laminaprops</span></code> must be supplied</p>
+<p>For orthotropic plies, the <code class="docutils literal"><span class="pre">laminaprop</span></code> should be:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">laminaprop</span> <span class="o">=</span> <span class="p">(</span><span class="n">E11</span><span class="p">,</span> <span class="n">E22</span><span class="p">,</span> <span class="n">nu12</span><span class="p">,</span> <span class="n">G12</span><span class="p">,</span> <span class="n">G13</span><span class="p">,</span> <span class="n">G23</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>For isotropic pliey, the <tt class="docutils literal"><span class="pre">laminaprop</span></tt> should be:</p>
+<p>For isotropic pliey, the <code class="docutils literal"><span class="pre">laminaprop</span></code> should be:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">laminaprop</span> <span class="o">=</span> <span class="p">(</span><span class="n">E</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">nu</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -336,10 +339,10 @@ can be supplied.</p>
 
 </div>
 <span class="target" id="module-desicos.composite.lamina"></span><div class="section" id="composite-lamina-module-desicos-composite-lamina">
-<h2>Composite Lamina Module (<a class="reference internal" href="#module-desicos.composite.lamina" title="desicos.composite.lamina"><tt class="xref py py-mod docutils literal"><span class="pre">desicos.composite.lamina</span></tt></a>)<a class="headerlink" href="#composite-lamina-module-desicos-composite-lamina" title="Permalink to this headline">¶</a></h2>
+<h2>Composite Lamina Module (<a class="reference internal" href="#module-desicos.composite.lamina" title="desicos.composite.lamina"><code class="xref py py-mod docutils literal"><span class="pre">desicos.composite.lamina</span></code></a>)<a class="headerlink" href="#composite-lamina-module-desicos-composite-lamina" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="desicos.composite.lamina.Lamina">
-<em class="property">class </em><tt class="descclassname">desicos.composite.lamina.</tt><tt class="descname">Lamina</tt><a class="reference internal" href="../../_modules/desicos/composite/lamina.html#Lamina"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.composite.lamina.Lamina" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">desicos.composite.lamina.</code><code class="descname">Lamina</code><a class="reference internal" href="../../_modules/desicos/composite/lamina.html#Lamina"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.composite.lamina.Lamina" title="Permalink to this definition">¶</a></dt>
 <dd><table border="1" class="docutils">
 <colgroup>
 <col width="13%" />
@@ -387,7 +390,7 @@ can be supplied.</p>
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">rebuild</span></tt>()</td>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">rebuild</span></code>()</td>
 <td></td>
 </tr>
 </tbody>
@@ -396,10 +399,10 @@ can be supplied.</p>
 
 </div>
 <span class="target" id="module-desicos.composite.matlamina"></span><div class="section" id="composite-matlamina-module-desicos-composite-matlamina">
-<h2>Composite Matlamina Module (<a class="reference internal" href="#module-desicos.composite.matlamina" title="desicos.composite.matlamina"><tt class="xref py py-mod docutils literal"><span class="pre">desicos.composite.matlamina</span></tt></a>)<a class="headerlink" href="#composite-matlamina-module-desicos-composite-matlamina" title="Permalink to this headline">¶</a></h2>
+<h2>Composite Matlamina Module (<a class="reference internal" href="#module-desicos.composite.matlamina" title="desicos.composite.matlamina"><code class="xref py py-mod docutils literal"><span class="pre">desicos.composite.matlamina</span></code></a>)<a class="headerlink" href="#composite-matlamina-module-desicos-composite-matlamina" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="desicos.composite.matlamina.MatLamina">
-<em class="property">class </em><tt class="descclassname">desicos.composite.matlamina.</tt><tt class="descname">MatLamina</tt><a class="reference internal" href="../../_modules/desicos/composite/matlamina.html#MatLamina"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.composite.matlamina.MatLamina" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">desicos.composite.matlamina.</code><code class="descname">MatLamina</code><a class="reference internal" href="../../_modules/desicos/composite/matlamina.html#MatLamina"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.composite.matlamina.MatLamina" title="Permalink to this definition">¶</a></dt>
 <dd><p>Orthotropic material lamina</p>
 <table border="1" class="docutils">
 <colgroup>
@@ -528,10 +531,10 @@ on equation: <img class="math" src="../../_images/math/14df131ea25a1e70bb42df25b
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">read_inputs</span></tt>([inputs])</td>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">read_inputs</span></code>([inputs])</td>
 <td></td>
 </tr>
-<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">rebuild</span></tt>()</td>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">rebuild</span></code>()</td>
 <td></td>
 </tr>
 </tbody>
@@ -540,8 +543,8 @@ on equation: <img class="math" src="../../_images/math/14df131ea25a1e70bb42df25b
 
 <dl class="function">
 <dt id="desicos.composite.matlamina.read_laminaprop">
-<tt class="descclassname">desicos.composite.matlamina.</tt><tt class="descname">read_laminaprop</tt><big>(</big><em>laminaprop=None</em><big>)</big><a class="reference internal" href="../../_modules/desicos/composite/matlamina.html#read_laminaprop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.composite.matlamina.read_laminaprop" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a <tt class="docutils literal"><span class="pre">MatLamina</span></tt> object based on an input <tt class="docutils literal"><span class="pre">laminaprop</span></tt> tuple.</p>
+<code class="descclassname">desicos.composite.matlamina.</code><code class="descname">read_laminaprop</code><span class="sig-paren">(</span><em>laminaprop=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/composite/matlamina.html#read_laminaprop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.composite.matlamina.read_laminaprop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a <code class="docutils literal"><span class="pre">MatLamina</span></code> object based on an input <code class="docutils literal"><span class="pre">laminaprop</span></code> tuple.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -605,7 +608,7 @@ on equation: <img class="math" src="../../_images/math/14df131ea25a1e70bb42df25b
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>matlam</strong> : MatLamina</p>
 <blockquote class="last">
-<div><p>A <a class="reference internal" href="#desicos.composite.matlamina.MatLamina" title="desicos.composite.matlamina.MatLamina"><tt class="xref py py-class docutils literal"><span class="pre">MatLamina</span></tt></a> object.</p>
+<div><p>A <a class="reference internal" href="#desicos.composite.matlamina.MatLamina" title="desicos.composite.matlamina.MatLamina"><code class="xref py py-class docutils literal"><span class="pre">MatLamina</span></code></a> object.</p>
 </div></blockquote>
 </td>
 </tr>
@@ -620,27 +623,29 @@ on equation: <img class="math" src="../../_images/math/14df131ea25a1e70bb42df25b
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-            <p class="logo"><a href="../../index.html">
-              <img class="logo" src="../../_static/desicos.png" alt="Logo"/>
-            </a></p>
-  <h3><a href="../../index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Composite Module (<tt class="docutils literal"><span class="pre">desicos.composite</span></tt>)</a><ul>
-<li><a class="reference internal" href="#composite-laminate-module-desicos-composite-laminate">Composite Laminate Module (<tt class="docutils literal"><span class="pre">desicos.composite.laminate</span></tt>)</a></li>
-<li><a class="reference internal" href="#composite-lamina-module-desicos-composite-lamina">Composite Lamina Module (<tt class="docutils literal"><span class="pre">desicos.composite.lamina</span></tt>)</a></li>
-<li><a class="reference internal" href="#composite-matlamina-module-desicos-composite-matlamina">Composite Matlamina Module (<tt class="docutils literal"><span class="pre">desicos.composite.matlamina</span></tt>)</a></li>
-</ul>
-</li>
+<p class="logo">
+  <a href="../../index.html">
+    <img class="logo" src="../../_static/desicos.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
 </ul>
 
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../../_sources/modules/composite/index.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../search.html" method="get">
       <input type="text" name="q" />
@@ -657,26 +662,17 @@ on equation: <img class="math" src="../../_images/math/14df131ea25a1e70bb42df25b
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="../../np-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li><a href="../../index.html">DESICOS 2.1.3 documentation</a> &raquo;</li>
-          <li><a href="../index.html" >Modules</a> &raquo;</li> 
-      </ul>
-    </div>
     <div class="footer">
-        &copy; Copyright 2012-2015 Desicos Improved Software Team.
-      Last updated on Jan 14, 2015.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      &copy;2012-2015 Desicos Improved Software Team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.2</a>
+      
     </div>
+
+    
+
+    
   </body>
 </html>

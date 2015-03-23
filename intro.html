@@ -6,15 +6,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Introduction &mdash; DESICOS 2.1.3 documentation</title>
+    <title>Introduction &mdash; DESICOS 2.2.0 documentation</title>
     
-    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '2.1.3',
+        VERSION:     '2.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,23 +23,26 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="shortcut icon" href="_static/desicos.png"/>
-    <link rel="top" title="DESICOS 2.1.3 documentation" href="index.html" />
+    <link rel="top" title="DESICOS 2.2.0 documentation" href="index.html" />
     <link rel="next" title="Modules" href="modules/index.html" />
-    <link rel="prev" title="DESICOS Improved Sofware Documentation" href="index.html" /> 
+    <link rel="prev" title="DESICOS Improved Sofware Documentation" href="index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
+          <a href="np-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="np-modindex.html" title="Python Module Index"
+          <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
           <a href="modules/index.html" title="Modules"
@@ -47,14 +50,14 @@
         <li class="right" >
           <a href="index.html" title="DESICOS Improved Sofware Documentation"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">DESICOS 2.1.3 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">DESICOS 2.2.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="introduction">
 <h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
@@ -63,8 +66,8 @@
 <p>With the aim to provide fast tools for pre- and post-processing tasks
 using the finite element software Abaqus, one can
 use the user-friendly version of the plug-in with a graphic interface (GUI)
-by executing the file <tt class="docutils literal"><span class="pre">START_GUI.bat</span></tt>.</p>
-<p>You need Abaqus to be executable by the command line <tt class="docutils literal"><span class="pre">abaqus</span> <span class="pre">cae</span></tt></p>
+by executing the file <code class="docutils literal"><span class="pre">START_GUI.bat</span></code>.</p>
+<p>You need Abaqus to be executable by the command line <code class="docutils literal"><span class="pre">abaqus</span> <span class="pre">cae</span></code></p>
 <p>All (and more) fuctionalities from the GUI can be accessed from the Python IDE
 in Abaqus, one short example to create a model would be:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">desicos.abaqus.conecyl</span> <span class="kn">import</span> <span class="n">ConeCyl</span>
@@ -73,7 +76,7 @@ in Abaqus, one short example to create a model would be:</p>
 <span class="n">cc</span><span class="o">.</span><span class="n">create_model</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>See the <a class="reference internal" href="modules/abaqus/index.html#module-abaqus"><em>desicos.abaqus</em></a> documentation for more details.</p>
+<p>See the <a class="reference internal" href="modules/abaqus/index.html#module-abaqus"><span>desicos.abaqus</span></a> documentation for more details.</p>
 </div>
 <div class="section" id="composite-module">
 <h2>Composite Module<a class="headerlink" href="#composite-module" title="Permalink to this headline">¶</a></h2>
@@ -87,9 +90,9 @@ sequence and lamina properties.</p>
 <span class="n">lam</span> <span class="o">=</span> <span class="n">read_stack</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">45</span><span class="p">,</span> <span class="o">-</span><span class="mi">45</span><span class="p">],</span> <span class="n">plyt</span><span class="o">=</span><span class="mf">0.125</span><span class="p">,</span> <span class="n">laminaprop</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Where <tt class="docutils literal"><span class="pre">lam</span></tt> is a <tt class="xref py py-class docutils literal"><span class="pre">desicos.composite.Laminate</span></tt> object and the
-constitutive matrices can be accessed doing <tt class="docutils literal"><span class="pre">lam.ABD</span></tt> (CLPT) or <tt class="docutils literal"><span class="pre">lam.ABDE</span></tt>
-(FSDT). See the <a class="reference internal" href="modules/composite/index.html#module-composite"><em>desicos.composite</em></a> documentation
+<p>Where <code class="docutils literal"><span class="pre">lam</span></code> is a <code class="xref py py-class docutils literal"><span class="pre">desicos.composite.Laminate</span></code> object and the
+constitutive matrices can be accessed doing <code class="docutils literal"><span class="pre">lam.ABD</span></code> (CLPT) or <code class="docutils literal"><span class="pre">lam.ABDE</span></code>
+(FSDT). See the <a class="reference internal" href="modules/composite/index.html#module-composite"><span>desicos.composite</span></a> documentation
 for more details.</p>
 </div>
 <div class="section" id="cone-cylinder-database-imperfection-database">
@@ -97,7 +100,7 @@ for more details.</p>
 <p>A database containing data from structures studied in previous publications
 and the imperfection database for some samples that had their geometric
 imperfection and/or thickness imperfections measured. See the
-<a class="reference internal" href="modules/conecylDB/index.html#module-conecyldb"><em>desicos.conecylDB</em></a> documentation for more details.</p>
+<a class="reference internal" href="modules/conecylDB/index.html#module-conecyldb"><span>desicos.conecylDB</span></a> documentation for more details.</p>
 </div>
 <div class="section" id="semi-analytical-tools">
 <h2>Semi-Analytical Tools<a class="headerlink" href="#semi-analytical-tools" title="Permalink to this headline">¶</a></h2>
@@ -139,36 +142,29 @@ the manufacture process.</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-            <p class="logo"><a href="index.html">
-              <img class="logo" src="_static/desicos.png" alt="Logo"/>
-            </a></p>
-  <h3><a href="index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Introduction</a><ul>
-<li><a class="reference internal" href="#plug-in-for-abaqus">Plug-in for Abaqus</a></li>
-<li><a class="reference internal" href="#composite-module">Composite Module</a></li>
-<li><a class="reference internal" href="#cone-cylinder-database-imperfection-database">Cone / Cylinder Database (Imperfection Database)</a></li>
-<li><a class="reference internal" href="#semi-analytical-tools">Semi-Analytical Tools</a></li>
-<li><a class="reference internal" href="#stochastic-tools">Stochastic Tools</a></li>
-<li><a class="reference internal" href="#cone-ply-piece-optimization-tool-cppot">Cone Ply Piece Optimization Tool (cppot)</a></li>
-</ul>
-</li>
+<p class="logo">
+  <a href="index.html">
+    <img class="logo" src="_static/desicos.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/index.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/index.html">Tutorials</a></li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="index.html"
-                        title="previous chapter">DESICOS Improved Sofware Documentation</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="modules/index.html"
-                        title="next chapter">Modules</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="_sources/intro.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
@@ -185,31 +181,17 @@ the manufacture process.</p>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="np-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="modules/index.html" title="Modules"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="index.html" title="DESICOS Improved Sofware Documentation"
-             >previous</a> |</li>
-        <li><a href="index.html">DESICOS 2.1.3 documentation</a> &raquo;</li> 
-      </ul>
-    </div>
     <div class="footer">
-        &copy; Copyright 2012-2015 Desicos Improved Software Team.
-      Last updated on Jan 14, 2015.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      &copy;2012-2015 Desicos Improved Software Team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.2</a>
+      
     </div>
+
+    
+
+    
   </body>
 </html>

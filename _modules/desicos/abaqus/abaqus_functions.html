@@ -6,15 +6,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>desicos.abaqus.abaqus_functions &mdash; DESICOS 2.1.3 documentation</title>
+    <title>desicos.abaqus.abaqus_functions &mdash; DESICOS 2.2.0 documentation</title>
     
-    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.1.3',
+        VERSION:     '2.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,32 +23,35 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <link rel="shortcut icon" href="../../../_static/desicos.png"/>
-    <link rel="top" title="DESICOS 2.1.3 documentation" href="../../../index.html" />
-    <link rel="up" title="Module code" href="../../index.html" /> 
+    <link rel="top" title="DESICOS 2.2.0 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
           <a href="../../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
           <a href="../../../np-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">DESICOS 2.1.3 documentation</a> &raquo;</li>
-          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">DESICOS 2.2.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <h1>Source code for desicos.abaqus.abaqus_functions</h1><div class="highlight"><pre>
 <span class="sd">r&quot;&quot;&quot;</span>
@@ -148,8 +151,9 @@
                                   <span class="n">maxAutoCompute</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
                                   <span class="n">maxValue</span><span class="o">=</span><span class="mi">185</span><span class="p">)</span>
         <span class="c">#</span>
-        <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;FI_HSNFCCRT&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;FI_HSNFTCRT&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span>\
-        <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;FI_HSNMCCRT&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;FI_HSNMTCRT&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;FI_HSNFCCRT&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;FI_HSNFTCRT&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span>
+         <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;FI_HSNMCCRT&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;FI_HSNMTCRT&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span>
+         <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;FI_TSAIW&#39;</span><span class="p">)</span>    <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
             <span class="n">ay</span><span class="o">.</span><span class="n">axisData</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">labelNumDigits</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                                   <span class="n">minAutoCompute</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
                                   <span class="n">minValue</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
@@ -163,6 +167,7 @@
         <span class="c">#</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;MS_HSNFCCRT&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;MS_HSNFTCRT&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span>
          <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;MS_HSNMCCRT&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;MS_HSNMTCRT&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span>
+         <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;MS_TSAIW&#39;</span><span class="p">)</span>    <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span>
          <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;MS_MAX&#39;</span><span class="p">)</span>      <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;MS_MIN&#39;</span><span class="p">)</span>      <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
             <span class="n">ay</span><span class="o">.</span><span class="n">axisData</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">labelNumDigits</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                                   <span class="n">minAutoCompute</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
@@ -269,7 +274,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">mod</span><span class="o">.</span><span class="n">keywordBlock</span><span class="o">.</span><span class="n">synchVersions</span><span class="p">(</span><span class="n">storeNodesAndElements</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
     <span class="n">sieBlocks</span><span class="o">=</span><span class="n">mod</span><span class="o">.</span><span class="n">keywordBlock</span><span class="o">.</span><span class="n">sieBlocks</span>
-    <span class="k">if</span> <span class="n">before_pattern</span><span class="o">==</span><span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">before_pattern</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
         <span class="n">index</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">sieBlocks</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">index</span><span class="o">=</span><span class="bp">None</span>
@@ -278,7 +283,7 @@
             <span class="k">if</span> <span class="n">sieBlock</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">before_pattern</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
                 <span class="n">index</span><span class="o">=</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span>
                 <span class="k">break</span>
-        <span class="k">if</span> <span class="n">index</span><span class="o">==</span><span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">index</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="k">print</span> <span class="s">&#39;WARNING - *edit_keywords failed !&#39;</span>
             <span class="k">print</span> <span class="s">&#39;          </span><span class="si">%s</span><span class="s"> pattern not found !&#39;</span> <span class="o">%</span> <span class="n">before_pattern</span>
             <span class="c">#TODO better error handling here...</span>
@@ -289,7 +294,8 @@
 
 </div>
 <div class="viewcode-block" id="create_composite_layup"><a class="viewcode-back" href="../../../modules/abaqus/index.html#desicos.abaqus.abaqus_functions.create_composite_layup">[docs]</a><span class="k">def</span> <span class="nf">create_composite_layup</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">stack</span><span class="p">,</span> <span class="n">plyts</span><span class="p">,</span> <span class="n">mat_names</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="n">part</span><span class="p">,</span>
-                           <span class="n">part_csys</span><span class="p">,</span> <span class="n">symmetric</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">scaling_factor</span><span class="o">=</span><span class="mf">1.</span><span class="p">):</span>
+                           <span class="n">part_csys</span><span class="p">,</span> <span class="n">symmetric</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">scaling_factor</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span>
+                           <span class="n">axis_normal</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
     <span class="sd">r&quot;&quot;&quot;Creates a composite layup</span>
 
 <span class="sd">    Parameters</span>
@@ -318,6 +324,8 @@
 <span class="sd">    scaling_factor : float, optional</span>
 <span class="sd">        A scaling factor to be applied to each ply thickness. Used to apply</span>
 <span class="sd">        thickness imperfection in some cases.</span>
+<span class="sd">    axis_normal : int, optional</span>
+<span class="sd">        Reference</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">from</span> <span class="nn">abaqusConstants</span> <span class="kn">import</span> <span class="p">(</span><span class="n">MIDDLE_SURFACE</span><span class="p">,</span> <span class="n">FROM_SECTION</span><span class="p">,</span> <span class="n">SHELL</span><span class="p">,</span> <span class="n">ON</span><span class="p">,</span> <span class="n">OFF</span><span class="p">,</span>
@@ -335,13 +343,21 @@
                     <span class="n">poissonDefinition</span><span class="o">=</span><span class="n">DEFAULT</span><span class="p">,</span>
                     <span class="n">temperature</span><span class="o">=</span><span class="n">GRADIENT</span><span class="p">,</span>
                     <span class="n">useDensity</span><span class="o">=</span><span class="n">OFF</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">axis_normal</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">axis</span> <span class="o">=</span> <span class="n">AXIS_1</span>
+    <span class="k">elif</span> <span class="n">axis_normal</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">axis</span> <span class="o">=</span> <span class="n">AXIS_2</span>
+    <span class="k">elif</span> <span class="n">axis_normal</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">axis</span> <span class="o">=</span> <span class="n">AXIS_3</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;Invalid value for `axis_normal`&#39;</span><span class="p">)</span>
     <span class="n">myLayup</span><span class="o">.</span><span class="n">ReferenceOrientation</span><span class="p">(</span><span class="n">orientationType</span><span class="o">=</span><span class="n">SYSTEM</span><span class="p">,</span>
                                  <span class="n">localCsys</span><span class="o">=</span><span class="n">part_csys</span><span class="p">,</span>
                                  <span class="n">fieldName</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span>
                                  <span class="n">additionalRotationType</span><span class="o">=</span><span class="n">ROTATION_NONE</span><span class="p">,</span>
                                  <span class="n">angle</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span>
                                  <span class="n">additionalRotationField</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span>
-                                 <span class="n">axis</span><span class="o">=</span><span class="n">AXIS_2</span><span class="p">)</span>
+                                 <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
     <span class="c">#CREATING ALL PLIES</span>
     <span class="n">numIntPoints</span><span class="o">=</span><span class="mi">3</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">stack</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
@@ -447,13 +463,19 @@
     <span class="n">viewport</span><span class="o">.</span><span class="n">enableMultipleColors</span><span class="p">()</span>
     <span class="n">viewport</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="n">initialColor</span><span class="o">=</span><span class="s">&#39;#BDBDBD&#39;</span><span class="p">)</span>
     <span class="n">keys</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">sets</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-    <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">keys</span> <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;Set_measured_imp_t&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">keys</span> <span class="k">if</span> <span class="s">&#39;Set_measured_imp_t&#39;</span> <span class="ow">in</span> <span class="n">k</span><span class="p">]</span>
+
     <span class="n">overrides</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">([[</span><span class="n">names</span><span class="p">[</span><span class="n">i</span><span class="p">],(</span><span class="bp">True</span><span class="p">,</span><span class="n">COLORS</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="s">&#39;Default&#39;</span><span class="p">,</span><span class="n">COLORS</span><span class="p">[</span><span class="n">i</span><span class="p">])]</span>
                       <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">))])</span>
     <span class="n">dummylen</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">overrides</span><span class="p">)</span>
     <span class="n">new_COLORS</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="n">COLORS</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span><span class="o">*</span><span class="n">dummylen</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">COLORS</span><span class="p">))</span>
     <span class="n">session</span><span class="o">.</span><span class="n">autoColors</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">colors</span><span class="o">=</span><span class="n">new_COLORS</span><span class="p">)</span>
     <span class="n">cmap</span><span class="o">.</span><span class="n">updateOverrides</span><span class="p">(</span><span class="n">overrides</span><span class="o">=</span><span class="n">overrides</span><span class="p">)</span>
+
+    <span class="n">keys_to_hide</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">names</span><span class="p">)</span>
+    <span class="n">overrides</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">([[</span><span class="n">k</span><span class="p">,</span> <span class="p">(</span><span class="bp">False</span><span class="p">,</span> <span class="p">)]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">keys_to_hide</span><span class="p">])</span>
+    <span class="n">cmap</span><span class="o">.</span><span class="n">updateOverrides</span><span class="p">(</span><span class="n">overrides</span><span class="o">=</span><span class="n">overrides</span><span class="p">)</span>
+
     <span class="n">viewport</span><span class="o">.</span><span class="n">partDisplay</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">mesh</span><span class="o">=</span><span class="n">ON</span><span class="p">)</span>
     <span class="n">viewport</span><span class="o">.</span><span class="n">partDisplay</span><span class="o">.</span><span class="n">geometryOptions</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">referenceRepresentation</span><span class="o">=</span><span class="n">ON</span><span class="p">)</span>
     <span class="n">viewport</span><span class="o">.</span><span class="n">disableMultipleColors</span><span class="p">()</span>
@@ -521,12 +543,29 @@
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-            <p class="logo"><a href="../../../index.html">
-              <img class="logo" src="../../../_static/desicos.png" alt="Logo"/>
-            </a></p>
-<div id="searchbox" style="display: none">
+<p class="logo">
+  <a href="../../../index.html">
+    <img class="logo" src="../../../_static/desicos.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/index.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/index.html">Tutorials</a></li>
+</ul>
+
+
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../../search.html" method="get">
       <input type="text" name="q" />
@@ -543,26 +582,17 @@
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="../../../np-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li><a href="../../../index.html">DESICOS 2.1.3 documentation</a> &raquo;</li>
-          <li><a href="../../index.html" >Module code</a> &raquo;</li> 
-      </ul>
-    </div>
     <div class="footer">
-        &copy; Copyright 2012-2015 Desicos Improved Software Team.
-      Last updated on Jan 14, 2015.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      &copy;2012-2015 Desicos Improved Software Team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.2</a>
+      
     </div>
+
+    
+
+    
   </body>
 </html>

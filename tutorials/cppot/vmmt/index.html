@@ -6,15 +6,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Virtual Material Model Tool (VMMT) &mdash; DESICOS 2.1.3 documentation</title>
+    <title>Virtual Material Model Tool (VMMT) &mdash; DESICOS 2.2.0 documentation</title>
     
-    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.1.3',
+        VERSION:     '2.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,24 +23,27 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <link rel="shortcut icon" href="../../../_static/desicos.png"/>
-    <link rel="top" title="DESICOS 2.1.3 documentation" href="../../../index.html" />
+    <link rel="top" title="DESICOS 2.2.0 documentation" href="../../../index.html" />
     <link rel="up" title="Cone Ply Piece Optimization Tool (CPPOT)" href="../index.html" />
     <link rel="next" title="References" href="../ref.html" />
-    <link rel="prev" title="GUI for the Cone Ply Piece Optimization Tool" href="../gui/index.html" /> 
+    <link rel="prev" title="GUI for the Cone Ply Piece Optimization Tool" href="../gui/index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
           <a href="../../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="../../../py-modindex.html" title="Python Module Index"
+          <a href="../../../np-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="../../../np-modindex.html" title="Python Module Index"
+          <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
           <a href="../ref.html" title="References"
@@ -48,16 +51,16 @@
         <li class="right" >
           <a href="../gui/index.html" title="GUI for the Cone Ply Piece Optimization Tool"
              accesskey="P">previous</a> |</li>
-        <li><a href="../../../index.html">DESICOS 2.1.3 documentation</a> &raquo;</li>
-          <li><a href="../../index.html" >Tutorials</a> &raquo;</li>
-          <li><a href="../index.html" accesskey="U">Cone Ply Piece Optimization Tool (CPPOT)</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../../../index.html">DESICOS 2.2.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Tutorials</a> &raquo;</li>
+          <li class="nav-item nav-item-2"><a href="../index.html" accesskey="U">Cone Ply Piece Optimization Tool (CPPOT)</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="virtual-material-model-tool-vmmt">
 <h1>Virtual Material Model Tool (VMMT)<a class="headerlink" href="#virtual-material-model-tool-vmmt" title="Permalink to this headline">¶</a></h1>
@@ -78,9 +81,9 @@ point of interest and the angle of the starting point of the ply part:</p>
 <p><img src="../../../_images/math/f5e17469200e2ee6b61e6e38addd5d0b363a7403.png" alt="\Theta(\phi)= \Theta_1-(\phi-\phi_1)"/></p>
 </div><p>This approach can be used for ply parts with a finite width and is the key
 formula for this program.</p>
-<div class="figure">
+<div class="figure" id="id2">
 <a class="reference internal image-reference" href="../../../_images/fig_012.png"><img alt="../../../_images/fig_012.png" src="../../../_images/fig_012.png" style="width: 700px;" /></a>
-<p class="caption">Figure 1: Path of Fiber on Cone</p>
+<p class="caption"><span class="caption-text">Figure 1: Path of Fiber on Cone</span></p>
 </div>
 <p>The objective of this tool is to calculate the local fiber angle and thickness
 of any given point on a laminated cone. To do this the laminate will be
@@ -107,13 +110,13 @@ of Lines, Calculation of crossings,...)</p>
 points, Calculation of angles).</p>
 <div class="math">
 <p><img src="../../../_images/math/ce94015167668842cf05aafb1be725ad05b9daa1.png" alt="\phi \in [0^{\circ}, 360^{\circ}],r \in [0,+\infty]"/></p>
-</div><div class="figure">
+</div><div class="figure" id="id3">
 <a class="reference internal image-reference" href="../../../_images/fig_022.png"><img alt="../../../_images/fig_022.png" src="../../../_images/fig_022.png" style="width: 350px;" /></a>
-<p class="caption">Figure 2: 2D-Polar and Cartesian CSYS</p>
+<p class="caption"><span class="caption-text">Figure 2: 2D-Polar and Cartesian CSYS</span></p>
 </div>
-<div class="figure">
+<div class="figure" id="id4">
 <a class="reference internal image-reference" href="../../../_images/fig_032.png"><img alt="../../../_images/fig_032.png" src="../../../_images/fig_032.png" style="width: 700px;" /></a>
-<p class="caption">Figure 3: Relationship between cone and unwound projection</p>
+<p class="caption"><span class="caption-text">Figure 3: Relationship between cone and unwound projection</span></p>
 </div>
 </div>
 <div class="section" id="building-the-vmm">
@@ -186,9 +189,9 @@ alpha  half cone angle
 </pre></div>
 </div>
 <p>For further explanation of <img class="math" src="../../../_images/math/ddd6a14871c24955f1cf93413790c3abd7a03a0f.png" alt="s_0"/>, <img class="math" src="../../../_images/math/b7442399db5dac0d97e2692e250a298d334c76d3.png" alt="s_1"/> and <img class="math" src="../../../_images/math/3473c14d011d9f1aede5914054e51b46686d5045.png" alt="s_2"/> see Figure 4.</p>
-<div class="figure">
+<div class="figure" id="id5">
 <a class="reference internal image-reference" href="../../../_images/fig_042.png"><img alt="../../../_images/fig_042.png" src="../../../_images/fig_042.png" style="width: 700px;" /></a>
-<p class="caption">Figure 4: Definition <img class="math" src="../../../_images/math/ddd6a14871c24955f1cf93413790c3abd7a03a0f.png" alt="s_0"/>, <img class="math" src="../../../_images/math/b7442399db5dac0d97e2692e250a298d334c76d3.png" alt="s_1"/> and <img class="math" src="../../../_images/math/3473c14d011d9f1aede5914054e51b46686d5045.png" alt="s_2"/></p>
+<p class="caption"><span class="caption-text">Figure 4: Definition <img class="math" src="../../../_images/math/ddd6a14871c24955f1cf93413790c3abd7a03a0f.png" alt="s_0"/>, <img class="math" src="../../../_images/math/b7442399db5dac0d97e2692e250a298d334c76d3.png" alt="s_1"/> and <img class="math" src="../../../_images/math/3473c14d011d9f1aede5914054e51b46686d5045.png" alt="s_2"/></span></p>
 </div>
 <p>Basically the function creates four lines (L1, L2, L3, L4) in the two
 dimensional plane of the unwound cone. Each line is defined by their
@@ -208,9 +211,9 @@ the L1 is calculated by the nominal fiber angle of the ply <img class="math" src
 \\
 b_1=0-tan(\Theta) \cdot s_1"/></p>
 </div><p>The function L1 is shown in Figure 5.</p>
-<div class="figure">
+<div class="figure" id="id6">
 <a class="reference internal image-reference" href="../../../_images/fig_052.png"><img alt="../../../_images/fig_052.png" src="../../../_images/fig_052.png" style="width: 350px;" /></a>
-<p class="caption">Figure 5: Definition of L1</p>
+<p class="caption"><span class="caption-text">Figure 5: Definition of L1</span></p>
 </div>
 <p>In the next step the crossing between L1 and the circles with radius of <img class="math" src="../../../_images/math/ddd6a14871c24955f1cf93413790c3abd7a03a0f.png" alt="s_0"/>
 and <img class="math" src="../../../_images/math/3473c14d011d9f1aede5914054e51b46686d5045.png" alt="s_2"/> are calculated. A circle can be defined by:</p>
@@ -249,12 +252,12 @@ cuts the circle at two different points</li>
 because <img class="math" src="../../../_images/math/b7442399db5dac0d97e2692e250a298d334c76d3.png" alt="s_1"/> is smaller than <img class="math" src="../../../_images/math/3473c14d011d9f1aede5914054e51b46686d5045.png" alt="s_2"/>. For some combinations of <img class="math" src="../../../_images/math/b7442399db5dac0d97e2692e250a298d334c76d3.png" alt="s_1"/>, <img class="math" src="../../../_images/math/ddd6a14871c24955f1cf93413790c3abd7a03a0f.png" alt="s_0"/> and
 <img class="math" src="../../../_images/math/f6479197a297e86fd8493f26228dc4bc10ac492d.png" alt="\Theta"/> it is possible that the L1 is not cutting the inner circle of <img class="math" src="../../../_images/math/ddd6a14871c24955f1cf93413790c3abd7a03a0f.png" alt="s_0"/>.
 The Prototype-function uses for the construction of the first Line and Points
-only the positive Solution of <em class="xref std std-ref">Equation 2</em>.</p>
+only the positive Solution of <span class="xref std std-ref">Equation 2</span>.</p>
 <p>P1 and P2 are the crossing point of L1 and the circle <img class="math" src="../../../_images/math/ddd6a14871c24955f1cf93413790c3abd7a03a0f.png" alt="s_0"/> respectively s_2,
 see Figure 6.</p>
-<div class="figure">
+<div class="figure" id="id7">
 <a class="reference internal image-reference" href="../../../_images/fig_062.png"><img alt="../../../_images/fig_062.png" src="../../../_images/fig_062.png" style="width: 350px;" /></a>
-<p class="caption">Figure 6: Definition of P0, P1 and P2</p>
+<p class="caption"><span class="caption-text">Figure 6: Definition of P0, P1 and P2</span></p>
 </div>
 <p>The next step is to calculate the point P3. Therefore the angle of a single
 ply part is calculated by:</p>
@@ -270,9 +273,9 @@ angle.  Then the coordinates of P2 are transformed to a polar form:</p>
 also Figure 7.</p>
 <div class="math">
 <p><img src="../../../_images/math/7b51f400d6339b783a51c00d118addcf3c3acb61.png" alt="P3 : (r_2, \phi_2 + \phi_{ply-part}) \ rightarrow (x_3, y_3)"/></p>
-</div><div class="figure">
+</div><div class="figure" id="id8">
 <a class="reference internal image-reference" href="../../../_images/fig_072.png"><img alt="../../../_images/fig_072.png" src="../../../_images/fig_072.png" style="width: 350px;" /></a>
-<p class="caption">Figure 7: Creation of P3</p>
+<p class="caption"><span class="caption-text">Figure 7: Creation of P3</span></p>
 </div>
 <p>The gradient of L3 and also the position of P4 depends on the chosen shape of
 the ply part. For a rectangular the gradient m_3 is equal to m_1 and so L3 is
@@ -289,19 +292,19 @@ be moved. This is done by defining that L2 must be orthogonally to L1:</p>
 <p><img src="../../../_images/math/e99f374f42c312e352a331c0fdea14c49a9b5546.png" alt="m_2 = tan(\Theta+90^{\circ})"/></p>
 </div><p>The intercept <img class="math" src="../../../_images/math/01beed91ed2d5223b228646c84e7ce372e34dc36.png" alt="b_2"/> is then changed until L2 does not cut or touch the circle
 <img class="math" src="../../../_images/math/3473c14d011d9f1aede5914054e51b46686d5045.png" alt="s_2"/>. The procedure for P1, P4 and L4 is equivalent, see Figure 8.</p>
-<div class="figure">
+<div class="figure" id="id9">
 <a class="reference internal image-reference" href="../../../_images/fig_082.png"><img alt="../../../_images/fig_082.png" src="../../../_images/fig_082.png" style="width: 350px;" /></a>
-<p class="caption">Figure 8: Definition of L2 and L4</p>
+<p class="caption"><span class="caption-text">Figure 8: Definition of L2 and L4</span></p>
 </div>
 <p>In the end the prototype is defined by the points P1, P2, P3, P4 and the
-function <tt class="docutils literal"><span class="pre">Bpart.PPr()</span></tt> returns these points in the following shape:</p>
+function <code class="docutils literal"><span class="pre">Bpart.PPr()</span></code> returns these points in the following shape:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">PPr</span> <span class="o">=</span> <span class="p">[</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">x3</span><span class="p">,</span> <span class="n">y3</span><span class="p">,</span> <span class="n">x4</span><span class="p">,</span> <span class="n">y4</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>In Figure 9 one can see the finished prototype part.</p>
-<div class="figure">
+<div class="figure" id="id10">
 <a class="reference internal image-reference" href="../../../_images/fig_092.png"><img alt="../../../_images/fig_092.png" src="../../../_images/fig_092.png" style="width: 350px;" /></a>
-<p class="caption">Figure 9: Prototype-part</p>
+<p class="caption"><span class="caption-text">Figure 9: Prototype-part</span></p>
 </div>
 </div>
 </div>
@@ -309,7 +312,7 @@ function <tt class="docutils literal"><span class="pre">Bpart.PPr()</span></tt> 
 <h2>Copy and rotate the prototype-part<a class="headerlink" href="#copy-and-rotate-the-prototype-part" title="Permalink to this headline">¶</a></h2>
 <p>After the prototype-part is finished the vertices P1 to P4 are rotated around
 the origin of the CSYS to achieve a full coverage of the area of the unwound
-cone. This is achieved by the function <tt class="docutils literal"><span class="pre">Bpart.Pro()</span></tt>:</p>
+cone. This is achieved by the function <code class="docutils literal"><span class="pre">Bpart.Pro()</span></code>:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">Bpart</span><span class="o">.</span><span class="n">PRo</span><span class="p">(</span><span class="n">PPr</span><span class="p">,</span> <span class="n">phi_off</span><span class="p">,</span> <span class="n">Theta</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -346,16 +349,16 @@ K is the running number of the ply parts.</p>
 \\
 \phi_{k+1,4}=\phi_{1,4}+k \cdot \phi_{ply-part}"/></p>
 </div><p>In Figure 10 this shown by the blue trapez.</p>
-<div class="figure">
+<div class="figure" id="id11">
 <a class="reference internal image-reference" href="../../../_images/fig_102.png"><img alt="../../../_images/fig_102.png" src="../../../_images/fig_102.png" style="width: 700px;" /></a>
-<p class="caption">Figure 10: Definition of <img class="math" src="../../../_images/math/03dd618f2bcb1be17fc4d1b7874fe340099235ff.png" alt="\phi_{off}"/> and <img class="math" src="../../../_images/math/c958cf9c5831af3645d330619755bfdce5855218.png" alt="\phi_{ply-part}"/></p>
+<p class="caption"><span class="caption-text">Figure 10: Definition of <img class="math" src="../../../_images/math/03dd618f2bcb1be17fc4d1b7874fe340099235ff.png" alt="\phi_{off}"/> and <img class="math" src="../../../_images/math/c958cf9c5831af3645d330619755bfdce5855218.png" alt="\phi_{ply-part}"/></span></p>
 </div>
 <p>This procedure will go on until the whole area of the unwound cone is covered. This is checked by two simple if-statements:
 - if: <img class="math" src="../../../_images/math/401bf5125ca7fe1dfb788d7d1b5d1ade83111271.png" alt="\phi_{k,n} &gt; \phi_{cone}"/>,for all <img class="math" src="../../../_images/math/1a7140a269f8c40875342668404b39b743e27766.png" alt="n \in [0,4],k \in [0,N]"/>
 - if: <img class="math" src="../../../_images/math/f3e0ad63300c991421430954d35a7d2874489364.png" alt="\phi_{k,n} &lt; 0^{\circ}"/>,for all <img class="math" src="../../../_images/math/1a7140a269f8c40875342668404b39b743e27766.png" alt="n \in [0,4],k \in [0,N]"/></p>
-<div class="figure">
+<div class="figure" id="id12">
 <a class="reference internal image-reference" href="../../../_images/fig_112.png"><img alt="../../../_images/fig_112.png" src="../../../_images/fig_112.png" style="width: 700px;" /></a>
-<p class="caption">Figure 11: Complete ply</p>
+<p class="caption"><span class="caption-text">Figure 11: Complete ply</span></p>
 </div>
 <p>In Figure 11 is the complete ply shown.</p>
 <p>For the other plies the steps (2.) and (3.) are repeated.</p>
@@ -388,39 +391,29 @@ correctly summed up and are using the same direction.</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-            <p class="logo"><a href="../../../index.html">
-              <img class="logo" src="../../../_static/desicos.png" alt="Logo"/>
-            </a></p>
-  <h3><a href="../../../index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Virtual Material Model Tool (VMMT)</a><ul>
-<li><a class="reference internal" href="#introduction">Introduction</a></li>
-<li><a class="reference internal" href="#coordinate-systems">Coordinate systems</a></li>
-<li><a class="reference internal" href="#building-the-vmm">Building the VMM</a><ul>
-<li><a class="reference internal" href="#get-lay-up-information">1. Get Lay-up Information</a></li>
-<li><a class="reference internal" href="#build-the-prototype-part">2. Build the prototype-part</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#copy-and-rotate-the-prototype-part">Copy and rotate the prototype-part</a></li>
-<li><a class="reference internal" href="#finding-the-local-fiber-angle-and-thickness">Finding the local fiber angle and thickness</a></li>
-</ul>
-</li>
+<p class="logo">
+  <a href="../../../index.html">
+    <img class="logo" src="../../../_static/desicos.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/index.html">Modules</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Tutorials</a></li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="../gui/index.html"
-                        title="previous chapter">GUI for the Cone Ply Piece Optimization Tool</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="../ref.html"
-                        title="next chapter">References</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../../../_sources/tutorials/cppot/vmmt/index.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../../search.html" method="get">
       <input type="text" name="q" />
@@ -437,33 +430,17 @@ correctly summed up and are using the same direction.</p>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="../../../np-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="../ref.html" title="References"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="../gui/index.html" title="GUI for the Cone Ply Piece Optimization Tool"
-             >previous</a> |</li>
-        <li><a href="../../../index.html">DESICOS 2.1.3 documentation</a> &raquo;</li>
-          <li><a href="../../index.html" >Tutorials</a> &raquo;</li>
-          <li><a href="../index.html" >Cone Ply Piece Optimization Tool (CPPOT)</a> &raquo;</li> 
-      </ul>
-    </div>
     <div class="footer">
-        &copy; Copyright 2012-2015 Desicos Improved Software Team.
-      Last updated on Jan 14, 2015.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      &copy;2012-2015 Desicos Improved Software Team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.2</a>
+      
     </div>
+
+    
+
+    
   </body>
 </html>
