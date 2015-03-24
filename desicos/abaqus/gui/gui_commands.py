@@ -308,9 +308,13 @@ def clean_output_folder(std_name):
     os.chdir(std.output_dir)
     try:
         if os.name == 'nt':
-            print(os.system('del /q *.*'))
+            os.system('move *.gaps ..')
+            os.system('del /q *.*')
+            os.system('move ..\*.gaps .')
         else:
-            print(os.system('rm *.*'))
+            os.system('mv *.gaps ..')
+            os.system('rm *.*')
+            os.system('mv ..\*.gaps .')
     except:
         pass
     os.chdir(cwd)

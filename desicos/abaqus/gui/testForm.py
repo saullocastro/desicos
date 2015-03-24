@@ -362,7 +362,8 @@ class TestForm(AFXForm):
                            std_name))
             sendCommand(command)
             path = os.path.join(TMP_DIR, std_name, 'outputs')
-            if len(os.listdir(path)) == 0:
+            ldir = [s for s in os.listdir(path) if not s.endswith('.gaps')]
+            if len(ldir) == 0:
                 text = 'Folder {0} has been cleaned!'.format(path)
             else:
                 text = 'Some files in {0} cannot be removed!'.format(path)
