@@ -272,7 +272,7 @@ def best_fit_cone(path, H, alphadeg, R_expected=10., save=True,
 
 
 def calc_c0(path, m0=50, n0=50, funcnum=2, fem_meridian_bot2top=True,
-        rotatedeg=0., filter_m0=None, filter_n0=None, sample_size=None,
+        rotatedeg=None, filter_m0=None, filter_n0=None, sample_size=None,
         maxmem=8):
     r"""Find the coefficients that best fit the `w_0` imperfection
 
@@ -342,7 +342,7 @@ def calc_c0(path, m0=50, n0=50, funcnum=2, fem_meridian_bot2top=True,
     fem_meridian_bot2top : bool, optional
         A boolean indicating if the finite element has the `x` axis starting
         at the bottom or at the top.
-    rotatedeg : float, optional
+    rotatedeg : float or None, optional
         Rotation angle in degrees telling how much the imperfection pattern
         should be rotated about the `X_3` (or `Z`) axis.
     filter_m0 : list, optional
@@ -416,7 +416,7 @@ def calc_c0(path, m0=50, n0=50, funcnum=2, fem_meridian_bot2top=True,
                 format(maxnum), level=1)
 
     ts = input_pts[:, 0].copy()
-    if rotatedeg:
+    if rotatedeg is not None:
         ts += deg2rad(rotatedeg)
     zs = input_pts[:, 1]
     w0pts = input_pts[:, 2]
