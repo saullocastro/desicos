@@ -241,7 +241,8 @@ def xyz2thetazimp(path,
                   clip_bottom=None,
                   clip_top=None,
                   save=True,
-                  fmt='%1.6f'):
+                  fmt='%1.6f',
+                  rotatedeg=None):
     r"""Transforms an imperfection file from the format "`x` `y` `z`"
     to the format "`\theta` `z` `imp`".
 
@@ -309,6 +310,9 @@ def xyz2thetazimp(path,
         If the returned array ``mps`` should also be saved to a ``.txt`` file.
     fmt : str or sequence of strs, optional
         See ``np.savetxt()`` documentation for more details.
+    rotatedeg : float or None, optional
+        Rotation angle in degrees telling how much the imperfection pattern
+        should be rotated about the `X_3` (or `Z`) axis.
 
     Returns
     -------
@@ -370,6 +374,9 @@ def xyz2thetazimp(path,
     log('Minimum imperfection: {0}'.format(imp.min()))
     log('Maximum imperfection: {0}'.format(imp.max()))
 
+    if rotatedeg is not None:
+        theta += np.deg2rad(rotatedeg)
+
     mps = np.vstack((theta, z, imp)).T
     if save:
         outpath = ('.'.join(os.path.basename(path).split('.')[:-1]) +
@@ -390,7 +397,8 @@ def xyzthick2thetazthick(path,
                          z_offset_bot=None,
                          r_TOL=1.,
                          save=True,
-                         fmt='%1.6f'):
+                         fmt='%1.6f',
+                         rotatedeg=None):
     r"""Transforms an imperfection file from the format: "`x` `y` `z` `thick`"
     to the format "`\theta` `z` `thick`".
 
@@ -442,6 +450,9 @@ def xyzthick2thetazthick(path,
         If the returned array ``mps`` should also be saved to a ``.txt`` file.
     fmt : str or sequence of strs, optional
         See ``np.savetxt()`` documentation for more details.
+    rotatedeg : float or None, optional
+        Rotation angle in degrees telling how much the imperfection pattern
+        should be rotated about the `X_3` (or `Z`) axis.
 
     Returns
     -------
@@ -482,6 +493,9 @@ def xyzthick2thetazthick(path,
     theta = np.arctan2(y, x)
     log('Minimum thickness: {0}'.format(thick.min()))
     log('Maximum thickness: {0}'.format(thick.max()))
+
+    if rotatedeg is not None:
+        theta += np.deg2rad(rotatedeg)
 
     mps = np.vstack((theta, z, thick)).T
     if save:
