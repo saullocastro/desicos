@@ -3,10 +3,8 @@ import mayavi.mlab as mlab
 
 from desicos.conecylDB.read_write import xyz2thetazimp
 
-sample_size = 100000
 R = 406.4
 R_best_fit = 407.168
-H = 1219.2
 
 data = np.genfromtxt('sample_theta_z_imp.txt')
 thetas, zfit, dR = data.T

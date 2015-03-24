@@ -6,9 +6,6 @@ import matplotlib.pyplot as plt
 plt.rcParams['axes.labelsize'] = 9.
 plt.rcParams['font.size'] = 9.
 
-method = 'inv_weighted'
-
-name = 'tmp'
 path = 'tmp_inv_weighted.txt'
 
 nz = 180
