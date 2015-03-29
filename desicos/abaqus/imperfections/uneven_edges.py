@@ -37,6 +37,8 @@ class UnevenBottomEdge(object):
     ============== =========================================================
     Attributes     Description
     ============== =========================================================
+    uneven_plate   ``bool``: If the unevenness should be applied to the
+                   testing plate or to the test specimen
     betadeg        Misalignment of the bottom edge in degrees
     omegadeg       Azimuth angle of the bottom edge misalignment in degrees.
     shims          ``list`` of shims included to this edge
@@ -53,6 +55,7 @@ class UnevenBottomEdge(object):
         self.shims = []
         self.measured_u3s = None
         self.scaling_factor = 1.
+        self.uneven_plate = True
         # plotting options
         self.xaxis = 'scaling_factor'
         self.xaxis_label = 'Scaling factor'
@@ -160,61 +163,110 @@ class UnevenBottomEdge(object):
         cc = self.impconf.conecyl
         mod = mdb.models[cc.model_name]
         ra = mod.rootAssembly
-        nodes = np.array(ra.sets['shell_bottom_edges'].nodes)
+
+        def calc_gaps(nodes, yx=True):
+            # calculating gaps
+
+            # theta according to the assembly coordinate system
+            coords = np.array([n.coordinates for n in nodes])
+            if yx:
+                theta_nodes = np.arctan2(coords[:,1], coords[:,0])
+            else:
+                theta_nodes = np.arctan2(-coords[:,2], coords[:,0])
+
+            # contributions from measured edge imperfection
+            if self.measured_u3s is not None:
+                measured_u3s = np.asarray(self.measured_u3s)
+            else:
+                measured_u3s = np.zeros((2, 100))
+                measured_u3s[0, :] = np.linspace(0, 360, 100)
+
+            # calculating u3 for each node
+            u3_nodes = interp(rad2deg(theta_nodes), measured_u3s[0, :],
+                              measured_u3s[1, :], period=360)
+
+            # contributions from shims
+            hs = np.zeros_like(theta_nodes)
+            for s in self.shims:
+                trad1 = deg2rad(s.thetadeg)
+                trad2 = deg2rad(s.thetadeg + 360*s.width/(2*pi*cc.rbot))
+                thetarads = [trad1-0.001, trad1, trad2, trad2+0.001]
+                u3s = [0, s.thick, s.thick, 0]
+                tmp = interp(theta_nodes, thetarads, u3s, period=2*pi)
+                hs += tmp
+            u3_nodes += hs
+
+            # applying scaling_factor
+            u3_nodes *= self.scaling_factor
+
+            # calculating gap values
+            gaps = u3_nodes.max() - u3_nodes
+
+            return gaps
+
+        if not self.uneven_plate:
+            # shell
+            part = mod.parts[cc.part_name_shell]
+            wdw = 2*cc.rbot
+            zmin = -0.001
+            zmax = cc.resin_bot_h*1.001
+            nodes = part.nodes.getByBoundingBox(-wdw, -wdw, zmin,
+                                                +wdw, +wdw, zmax)
+            coords = np.array([n.coordinates for n in nodes])
+            coords[:, 2] += calc_gaps(nodes)
+            labels = [n.label for n in nodes]
+            meshNodeArray = nodes.sequenceFromLabels(labels)
+            part.editNode(nodes=meshNodeArray, coordinates=coords)
+
+            # bottom inner ring
+            if cc.resin_add_TIR:
+                mesh_arrays = []
+                coords_list = []
+                part = mod.parts['Bottom_IR']
+                coords = np.array([n.coordinates for n in part.nodes])
+                gaps = calc_gaps(part.nodes, yx=False)
+                coords[:, 1] += gaps
+                part.editNode(nodes=part.nodes, coordinates=coords)
+
+            # bottom outer ring
+            if cc.resin_add_TOR:
+                mesh_arrays = []
+                coords_list = []
+                part = mod.parts['Bottom_OR']
+                coords = np.array([n.coordinates for n in part.nodes])
+                gaps = calc_gaps(part.nodes, yx=False)
+                coords[:, 1] += gaps
+                part.editNode(nodes=part.nodes, coordinates=coords)
+
+        nodes_shell = np.array(ra.sets['shell_bottom_edges'].nodes)
+        nodes_all = nodes_shell
         tshell = sum(cc.plyts)
         cosa = np.cos(cc.alpharad)
+
         if cc.resin_add_BIR:
             tmp = np.array(ra.sets['Bottom_IR_faces'].nodes)
             coords = np.array([n.coordinates for n in tmp])
             r_nodes = np.sqrt(coords[:,0]**2 + coords[:,1]**2)
             # taking nodes that are not pinned to the shell
             check = (r_nodes < (cc.rbot - cosa*0.51*tshell))
-            nodes = np.hstack((nodes, tmp[check]))
+            nodes_all = np.hstack((nodes_all, tmp[check]))
         if cc.resin_add_BOR:
             tmp = np.array(ra.sets['Bottom_OR_faces'].nodes)
             coords = np.array([n.coordinates for n in tmp])
             r_nodes = np.sqrt(coords[:,0]**2 + coords[:,1]**2)
             # taking nodes that are not pinned to the shell
             check = (r_nodes > (cc.rbot + cosa*0.51*tshell))
-            nodes = np.hstack((nodes, tmp[check]))
-        coords = np.array([n.coordinates for n in nodes])
-        r_nodes = np.sqrt(coords[:,0]**2 + coords[:,1]**2)
-        theta_nodes = np.arctan2(coords[:,1], coords[:,0])
-        #
-        # calculating gaps
-        #
-        # contributions from measured edge imperfection
-        if self.measured_u3s is not None:
-            measured_u3s = np.asarray(self.measured_u3s)
-        else:
-            measured_u3s = np.zeros((2, 100))
-            measured_u3s[0, :] = np.linspace(0, 360, 100)
-        #   calculating u3 for each node
-        u3_nodes = interp(rad2deg(theta_nodes), measured_u3s[0, :],
-                          measured_u3s[1, :], period=360)
+            nodes_all = np.hstack((nodes_all, tmp[check]))
 
-        # contributions from shims
-        hs = np.zeros_like(theta_nodes)
-        for s in self.shims:
-            trad1 = deg2rad(s.thetadeg)
-            trad2 = deg2rad(s.thetadeg + 360*s.width/(2*pi*cc.rbot))
-            thetarads = [trad1-0.001, trad1, trad2, trad2+0.001]
-            u3s = [0, s.thick, s.thick, 0]
-            tmp = interp(theta_nodes, thetarads, u3s, period=2*pi)
-            hs += tmp
-        u3_nodes += hs
-
-        # applying scaling_factor
-        u3_nodes *= self.scaling_factor
-
-        # calculating gap values
-        gaps = u3_nodes.max() - u3_nodes
         # creating GAP elements
         rps_gap = []
         text = ''
-        for node, gap in zip(nodes, gaps):
+        gaps = calc_gaps(nodes_all)
+        for node, gap in zip(nodes_all, gaps):
             coord = list(node.coordinates)
+
             coord[2] -= gap
+
             rp = ra.ReferencePoint(point=coord)
             inst_name = node.instanceName
             #TODO really bad approach, but couldn' find any other way to
@@ -419,9 +471,11 @@ class UnevenTopEdge(object):
             else:
                 measured_u3s = np.zeros((2, 100))
                 measured_u3s[0, :] = np.linspace(0, 360, 100)
+
             # calculating u3 for each node
             u3_nodes = interp(rad2deg(theta_nodes), measured_u3s[0, :],
                               measured_u3s[1, :], period=360)
+
             # applying load asymmetry according to cc.betarad and omega
             betarad = deg2rad(cc.betadeg)
             omegarad = deg2rad(cc.omegadeg)
