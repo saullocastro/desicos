@@ -225,9 +225,9 @@ def rec2cyl(x, y, z):
     return r, theta, z
 
 
-def cyl2rec(r, theta, z):
-    x = r * np.cos(np.deg2rad(theta))
-    y = r * np.sin(np.deg2rad(theta))
+def cyl2rec(r, thetadeg, z):
+    x = r * np.cos(np.deg2rad(thetadeg))
+    y = r * np.sin(np.deg2rad(thetadeg))
     z = z
 
     return x, y, z

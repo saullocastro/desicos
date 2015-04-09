@@ -10,6 +10,7 @@ from pload import PLoad
 from lbmi import LBMI
 from msi import MSI
 from ti import TI
+from cutout import Cutout
 
 
 class ImpConf(object):
@@ -46,6 +47,7 @@ class ImpConf(object):
                        objects
     msis               ``list`` of :class:`.MSI` (Mid-Surface Imperfection)
                        objects
+    cutouts            ``list`` of :class:`.Cutout` objects
     ================== ======================================================
 
     """
@@ -61,6 +63,7 @@ class ImpConf(object):
         self.lbmis = []
         self.msis = []
         self.tis = []
+        self.cutouts = []
         self.rename = True
         self.name = ''
         self.conecyl = None
@@ -75,7 +78,7 @@ class ImpConf(object):
 
 
     def add_axisymmetric(self, pt, b, wb):
-        """Adds an Axisymmetric Imperfection (AI)
+        """Add an Axisymmetric Imperfection (AI)
 
         Parameters
         ----------
@@ -98,7 +101,7 @@ class ImpConf(object):
 
 
     def add_dimple(self, thetadeg, pt, a, b, wb):
-        """Adds a Dimple Imperfection (DI)
+        """Add a Dimple Imperfection (DI)
 
         Parameters
         ----------
@@ -123,7 +126,7 @@ class ImpConf(object):
 
 
     def add_lbmi(self, mode, scaling_factor):
-        """Adds a Linear Buckling Mode-shaped Imperfection (LBMI)
+        """Add a Linear Buckling Mode-shaped Imperfection (LBMI)
 
         Parameters
         ----------
@@ -144,7 +147,7 @@ class ImpConf(object):
 
 
     def add_measured_u3s_bottom_edge(self, thetadegs, u3s):
-        r"""Adds a measured uneven bottom edge
+        r"""Add a measured uneven bottom edge
 
         Straightforward method to include measured data about the bottom edge
         imperfection.
@@ -169,7 +172,7 @@ class ImpConf(object):
 
 
     def add_measured_u3s_top_edge(self, thetadegs, u3s):
-        r"""Adds a measured uneven top edge
+        r"""Add a measured uneven top edge
 
         Straightforward method to include measured data about the top edge
         imperfection.
@@ -198,7 +201,7 @@ class ImpConf(object):
                 rotatedeg=0., ignore_bot_h=True, ignore_top_h=True,
                 stretch_H=False, c0=None,
                 m0=None, n0=None, funcnum=None):
-        r"""Adds a Mid-Surface Imperfection (MSI)
+        r"""Add a Mid-Surface Imperfection (MSI)
 
         Also called geometric imperfection.
 
@@ -308,7 +311,7 @@ class ImpConf(object):
 
 
     def add_pload(self, thetadeg, pt, pltotal, step=1):
-        """Adds a Perturbation Load
+        """Add a Perturbation Load
 
         Parameters
         ----------
@@ -336,7 +339,7 @@ class ImpConf(object):
 
 
     def add_shim_bottom_edge(self, thetadeg, thick, width):
-        """Adds a Shim to the bottom edge
+        """Add a Shim to the bottom edge
 
         Parameters
         ----------
@@ -357,7 +360,7 @@ class ImpConf(object):
 
 
     def add_shim_top_edge(self, thetadeg, thick, width):
-        """Adds a Shim to the top edge
+        """Add a Shim to the top edge
 
         Parameters
         ----------
@@ -378,7 +381,7 @@ class ImpConf(object):
 
 
     def add_ti(self, imp_thick, scaling_factor):
-        """Adds Thickness Imperfection (TI)
+        """Add Thickness Imperfection (TI)
 
         The imperfection must be already included in the database (:ref:`check
         this tutorial <tutorials_conecylDB>`).
@@ -394,6 +397,7 @@ class ImpConf(object):
         Returns
         -------
         ti : :class:`.TI` object.
+
         """
         ti = TI()
         ti.impconf = self
@@ -401,6 +405,33 @@ class ImpConf(object):
         ti.scaling_factor = scaling_factor
         self.tis.append(ti)
         return ti
+
+
+    def add_cutout(self, thetadeg, pt, d, drill_offset_deg=0.):
+        r"""Add a cutout
+
+        Parameters
+        ----------
+        thetadeg : float
+            Circumferential position of the dimple.
+        pt : float
+            Normalized meridional position.
+        d : float
+            Diameter of the drilling machine.
+        drill_offset_deg : float
+            Angular offset when the drilling is not normal to the shell
+            surface. A positive offset means a positive rotation about the
+            `\theta` axis, along the meridional plane.
+
+        Returns
+        -------
+        cutout : :class:`.Cutout` object.
+
+        """
+        cutout = Cutout(thetadeg, pt, d, drill_offset_deg)
+        cutout.impconf = self
+        self.cutouts.append(cutout)
+        return cutout
 
 
     def rebuild(self):
@@ -454,6 +485,12 @@ class ImpConf(object):
             ti.index = i
             ti.rebuild()
             self.imperfections.append(ti)
+        # cutout
+        for cutout in self.cutouts:
+            i += 1
+            cutout.index = i
+            cutout.rebuild()
+            self.imperfections.append(cutout)
         # name
         if self.rename:
             self.name = ('PLs_%02d_dimples_%02d_axisym_%02d' +\
