@@ -28,8 +28,8 @@ class TI(object):
         self.index  = None
         self.use_theta_z_format = False
         # plotting options
-        self.xaxis = 'amplitude'
-        self.xaxis_label = 'Imperfection amplitude, mm'
+        self.xaxis = 'scaling_factor'
+        self.xaxis_label = 'Scaling factor'
         self.elems_t = None
         self.t_set = None
         self.created = False
@@ -64,7 +64,7 @@ class TI(object):
             cc_total_t = sum(cc.plyts)
             for layup in part.compositeLayups.values():
                 if not layup.suppressed:
-                    layup_t = sum([p.thickness for p in layup.plies.values()])
+                    layup_t = sum(p.thickness for p in layup.plies.values())
                     max_amp = max(max_amp, abs(layup_t-cc_total_t))
 
             return max_amp

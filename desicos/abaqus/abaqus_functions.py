@@ -8,6 +8,8 @@ Utilities Abaqus (:mod:`desicos.abaqus.abaqus_functions`)
 Includes all utilities functions that must be executed from Abaqus.
 
 """
+import math
+
 import numpy as np
 
 from constants import (TOL, FLOAT, COLORS, COLOR_WHINE, COLOR_DARK_BLUE,
@@ -409,8 +411,11 @@ def set_colors_ti(cc):
     keys = part.sets.keys()
     names = [k for k in keys if 'Set_measured_imp_t' in k]
 
-    overrides = dict([[names[i],(True,COLORS[i],'Default',COLORS[i])]
-                      for i in range(len(names))])
+    # If there are not enough colors for all thicknesses,
+    # repeat the same color for multiple subsequent thickness sets
+    repeat = int(math.ceil(max(len(names), 1.0) / float(len(COLORS))))
+    overrides = dict((name, (True, COLORS[i//repeat], 'Default',
+        COLORS[i//repeat])) for i, name in enumerate(names))
     dummylen = len(keys)-len(overrides)
     new_COLORS = tuple([COLORS[-1]]*dummylen + list(COLORS))
     session.autoColors.setValues(colors=new_COLORS)

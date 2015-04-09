@@ -148,10 +148,13 @@ def vec_calc_elem_cg(elements):
     nodes = []
     for elem in elements:
         nodes += elem.getNodes()
+    if len(nodes) == 0:
+        return np.empty((0, 4), dtype=FLOAT)
+    nodes_per_el = len(elem.getNodes())
     coords = np.array([node.coordinates for node in nodes])
-    cgs = coords.reshape(-1, 8, 3).mean(axis=1)
+    cgs = coords.reshape(-1, nodes_per_el, 3).mean(axis=1)
     labels = np.array([elem.label for elem in elements])
-    return  np.hstack((cgs, labels[:, None]))
+    return np.hstack((cgs, labels[:, None]))
 
 
 def func_sin_cos(n_terms=10):

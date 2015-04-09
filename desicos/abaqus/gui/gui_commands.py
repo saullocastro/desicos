@@ -46,6 +46,19 @@ def find_std_name(std_name):
     return std_name
 
 
+def command_wrapper(cmd):
+    # Decorator function to provide error tracebacks from commands
+    def new_cmd(*args, **kwargs):
+        try:
+            cmd(*args, **kwargs)
+        except Exception, e:
+            import traceback
+            traceback.print_exc()
+            raise
+    return new_cmd
+
+
+@command_wrapper
 def apply_imp_ms(
              std_name,
              imp_ms,
@@ -85,6 +98,7 @@ def apply_imp_ms(
             nodal_translations = msi.create()
 
 
+@command_wrapper
 def apply_imp_t(
              std_name,
              imp_thick,

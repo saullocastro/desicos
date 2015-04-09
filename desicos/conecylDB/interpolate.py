@@ -32,10 +32,10 @@ def inv_weighted(data, mesh, num_sub, col, ncp=5, power_parameter=2):
         {w_0}_{node} = \frac{\sum_{i}^{n_{CP}}{{w_0}_i\frac{1}{w_i}}}
                             {\sum_{i}^{n_{CP}}{\frac{1}{w_i}}}
 
-    where `w_i` is the imperfection at each measured point, calculated as:
+    where `w_i` is the inverse weight of each measured point, calculated as:
 
     .. math::
-        w_i = \left[(x_{node}-x_i)^2+(y_{node}-y_i)^2+(z_{node}-y_i)^2
+        w_i = \left[(x_{node}-x_i)^2+(y_{node}-y_i)^2+(z_{node}-z_i)^2
               \right]^p
 
     with `p` being a power parameter that when increased will increase the
