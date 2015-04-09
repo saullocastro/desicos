@@ -581,7 +581,7 @@ class TestDB(AFXDataDialog):
         plot_type = AFXComboBox(plotVA, 2, 10,
                                 "Plot type:",
                                 form.plot_imp_typeKw)
-        for i in range(1, 6):
+        for i in range(1, 7):
             plot_type.appendItem('Plot type {0}'.format(i))
         plot_type.setCurrentItem(0)
         form.plot_imp_typeKw.setValue(plot_type.getItemText(0))
@@ -673,7 +673,7 @@ class TestDB(AFXDataDialog):
         plot_type = AFXComboBox(plotVA, 2, 10,
                                 "Plot type:",
                                 form.plot_imp_typeKw)
-        for i in range(1, 6):
+        for i in range(1, 7):
             plot_type.appendItem('Plot type {0}'.format(i))
         plot_type.setCurrentItem(0)
         AFXNote(impVF, 'See Post-processing -> Opened contour plots' +
@@ -737,7 +737,7 @@ class TestDB(AFXDataDialog):
         plot_type = AFXComboBox(plotVA, 2, 10,
                                 "Plot type:",
                                 form.plot_imp_typeKw)
-        for i in range(1, 6):
+        for i in range(1, 7):
             plot_type.appendItem('Plot type {0}'.format(i))
         plot_type.setCurrentItem(0)
         AFXNote(impVF, 'See Post-processing -> Opened contour plots' +
@@ -867,6 +867,7 @@ class TestDB(AFXDataDialog):
         postHF = FXHorizontalFrame(postVF)
         postVF1 = FXVerticalFrame(postHF, opts=LAYOUT_LEFT|LAYOUT_CENTER_Y)
         postVF2 = FXVerticalFrame(postHF, opts=LAYOUT_LEFT|LAYOUT_CENTER_Y)
+        postVF3 = FXVerticalFrame(postHF, opts=LAYOUT_LEFT|LAYOUT_CENTER_Y)
 
         self.plot_type_buttons = []
 
@@ -898,6 +899,12 @@ class TestDB(AFXDataDialog):
         pngpath = os.path.join(DAHOME, 'gui', 'icons', 'plot_type_5.png')
         icon = afxCreatePNGIcon(pngpath)
         FXLabel(postVF2, '', icon, opts=ICON_AFTER_TEXT)
+        self.plot_type_buttons.append(button)
+
+        button = FXButton(postVF3, 'Plot type 6')
+        pngpath = os.path.join(DAHOME, 'gui', 'icons', 'plot_type_6.png')
+        icon = afxCreatePNGIcon(pngpath)
+        FXLabel(postVF3, '', icon, opts=ICON_AFTER_TEXT)
         self.plot_type_buttons.append(button)
 
         #

@@ -471,11 +471,11 @@ def _sort_field_data(thetas, zs, values, num_thetas):
     return thetas, zs, values
 
 
-def transform_plot_data(self, thetas, zs, plot_type):
+def transform_plot_data(self, thetas, zs, values, plot_type, wrap):
     sina = np.sin(self.alpharad)
     cosa = np.cos(self.alpharad)
 
-    valid_plot_types = (1, 2, 3, 4, 5)
+    valid_plot_types = (1, 2, 3, 4, 5, 6)
     if not plot_type in valid_plot_types:
         raise ValueError('Valid values for plot_type are:\n\t\t' +
                          ' or '.join(map(str, valid_plot_types)))
@@ -484,6 +484,18 @@ def transform_plot_data(self, thetas, zs, plot_type):
     rtop = self.rtop
     rbot = self.rbot
     L = H/cosa
+
+    if wrap:
+        if plot_type == 6:
+            thetas = thetas % (2*np.pi)
+        else:
+            thetas = (thetas + np.pi) % (2*np.pi) - np.pi
+        # Sort again by theta
+        asort = thetas.argsort(axis=1)
+        for i, asorti in enumerate(asort):
+            zs[i,:] = zs[i,:][asorti]
+            thetas[i,:] = thetas[i,:][asorti]
+            values[i,:] = values[i,:][asorti]
 
     def fr(z):
         return rbot - z*sina/cosa
@@ -513,7 +525,12 @@ def transform_plot_data(self, thetas, zs, plot_type):
     elif plot_type == 5:
         x = fr(0)*thetas
         y = zs
-    return x, y
+    elif plot_type == 6:
+        r_plot = fr(zs)
+        x = r_plot*np.cos(thetas*sina)
+        y = r_plot*np.sin(thetas*sina)
+
+    return x, y, values
 
 
 def plot_field_data(self, x, y, field, create_npz_only, ax, figsize, save_png,
