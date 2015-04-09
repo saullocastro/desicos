@@ -39,7 +39,7 @@ def calc_msi_amplitude(cc, force=False):
     node_rs = (xs**2 + ys**2)**0.5
     pts = zs/cc.H
     rs, zs = cc.r_z_from_pt(pts)
-    amps = (node_rs - rs)/np.cos(cc.alpharad)
+    amps = (node_rs - rs) * np.cos(cc.alpharad)
     max_amp = max(np.absolute(amps))
 
     return max_amp
