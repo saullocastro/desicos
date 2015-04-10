@@ -1011,36 +1011,6 @@ class ConeCyl(object):
         return ans
 
 
-    def create_cutout(self, theta, pt, d, numel=None):
-        """Create a cutout in the shell surface.
-
-        This function is buggy, intended to easily create cutouts on the shell
-        surface. Doesn't work for all cases and the mesh quality must be
-        improved.
-
-        Parameters
-        ----------
-        theta : float
-            Cylindrical coordinate theta in degrees.
-        pt : float
-            Coordinate z/cylinder height (or cone height).
-        d : float
-            Cutout diameter.
-
-        """
-        from desicos.abaqus.cutout import Cutout
-        cutobj = Cutout()
-        cutobj.theta = theta
-        cutobj.pt = pt
-        cutobj.d = d
-        if numel is not None:
-            cutobj.numel = numel
-        cutobj.index = len(self.cutouts)
-        cutobj.conecyl = self
-        self.cutouts.append(cutobj)
-        return cutobj
-
-
     def calc_ABD_matrix(self):
         """Calculates the laminate stiffness matrix (ABD matrix)
 

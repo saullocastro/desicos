@@ -86,6 +86,11 @@ Uneven Edges (:mod:`desicos.abaqus.imperfections.uneven_edges`)
 .. automodule:: desicos.abaqus.imperfections.uneven_edges
     :members:
 
+Cutout (:mod:`desicos.abaqus.imperfections.cutout`)
+---------------------------------------------------
+.. automodule:: desicos.abaqus.imperfections.cutout
+    :members:
+
 """
 from impconf import ImpConf
 from imperfection import Imperfection
@@ -96,3 +101,4 @@ import lbmi
 import msi
 import ti
 import uneven_edges
+import cutout
