@@ -20,14 +20,20 @@ class Cutout(object):
         Angular offset when the drilling is not normal to the shell
         surface. A positive offset means a positive rotation about the
         `\theta` axis, along the meridional plane.
+    clearance_factor : float
+        Fraction of the diameter to apply as clearance around the cutout.
+        This clearance is partitoned and meshed separately from the rest of
+        the cone / cylinder.
 
     """
-    def __init__(self, thetadeg, pt, d, drill_offset_deg=0.):
+    def __init__(self, thetadeg, pt, d, drill_offset_deg=0.,
+                 clearance_factor=0.75):
         self.thetadeg = thetadeg
         self.pt = pt
         self.d = d
         self.index = None
         self.drill_offset_deg = drill_offset_deg
+        self.clearance_factor = clearance_factor
         self.impconf = None
         self.name = ''
         self.thetadeg1 = None
@@ -48,12 +54,14 @@ class Cutout(object):
 
         self.x, self.y, self.z = cyl2rec(r, self.thetadeg, z)
 
-        clearance = 0.75*self.d
-        self.offsetdeg = np.rad2deg((self.d/2. + clearance)/r)
+        clearance = self.clearance_factor*self.d
+        self.offsetdeg = np.rad2deg((clearance + self.d/2.)/r)
         self.thetadeg1 = self.thetadeg - self.offsetdeg
         self.thetadeg2 = self.thetadeg + self.offsetdeg
-        self.ptlow = (z-self.d)/H
-        self.ptup = (z+self.d)/H
+        zoffs = clearance + self.d/2. / cos(np.deg2rad(self.drill_offset_deg))
+        zoffs *= cos(cc.alpharad)
+        self.ptlow = (z - zoffs)/H
+        self.ptup = (z + zoffs)/H
 
         self.name = 'cutout'
         self.thetadegs = [self.thetadeg1, self.thetadeg, self.thetadeg2]
@@ -89,7 +97,7 @@ class Cutout(object):
         # line defining the cutting axis
         p1coord = np.array((x, y, z))
         dx = d*cos(alpharad - drill_offset_rad)*cos(thetarad)
-        dy = d*sin(thetarad)
+        dy = d*cos(alpharad - drill_offset_rad)*sin(thetarad)
         dz = d*sin(alpharad - drill_offset_rad)
         p2coord = np.array((x+dx, y+dy, z+dz))
         p1 = p.DatumPointByCoordinate(coords=p1coord)

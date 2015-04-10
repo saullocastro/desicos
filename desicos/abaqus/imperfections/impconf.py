@@ -407,7 +407,8 @@ class ImpConf(object):
         return ti
 
 
-    def add_cutout(self, thetadeg, pt, d, drill_offset_deg=0.):
+    def add_cutout(self, thetadeg, pt, d, drill_offset_deg=0.,
+                   clearance_factor=0.75):
         r"""Add a cutout
 
         Parameters
@@ -422,13 +423,17 @@ class ImpConf(object):
             Angular offset when the drilling is not normal to the shell
             surface. A positive offset means a positive rotation about the
             `\theta` axis, along the meridional plane.
+        clearance_factor : float
+            Fraction of the diameter to apply as clearance around the cutout.
+            This clearance is partitoned and meshed separately from the rest of
+            the cone / cylinder.
 
         Returns
         -------
         cutout : :class:`.Cutout` object.
 
         """
-        cutout = Cutout(thetadeg, pt, d, drill_offset_deg)
+        cutout = Cutout(thetadeg, pt, d, drill_offset_deg, clearance_factor)
         cutout.impconf = self
         self.cutouts.append(cutout)
         return cutout
