@@ -1467,7 +1467,7 @@ def _create_loads_bcs(cc):
     if not distr_load_top and not cc.bc_gaps_top_edge:
         mod.MultipointConstraint(name='MPC_RP_top_shell',
                                  controlPoint=set_RP_top,
-                                 surface=Region(edges=shell_top_edges),
+                                 surface=ra.sets['shell_top_edges'],
                                  mpcType=PIN_MPC,
                                  userMode=DOF_MODE_MPC,
                                  userType=0, csys=ra_cyl_csys)

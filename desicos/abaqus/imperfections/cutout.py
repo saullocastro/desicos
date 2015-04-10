@@ -2,6 +2,7 @@ import numpy as np
 from numpy import sin, cos
 
 from desicos.abaqus.utils import cyl2rec
+from desicos.logger import warn
 
 
 class Cutout(object):
@@ -192,7 +193,7 @@ class Cutout(object):
 
         while True:
             faceList = [f[0] for f in p.faces.getClosest(coordinates=((x, y,
-                z),), searchTolerance=1.).values()]
+                z),), searchTolerance=(d/2. - 0.5)).values()]
             if not faceList:
                 break
             #TODO try / except blocks needed due to an Abaqus bug
@@ -201,7 +202,10 @@ class Cutout(object):
             except:
                 pass
 
-        p.setMeshControls(regions=p.faces, technique=SWEEP)
+        try:
+            p.setMeshControls(regions=p.faces, technique=SWEEP)
+        except:
+            warn("Unable to set mesh control to 'SWEEP', please check the mesh around your cutout(s)")
         p.generateMesh()
 
 if __name__ == '__main__':
