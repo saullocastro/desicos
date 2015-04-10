@@ -71,7 +71,7 @@ class Cutout(object):
     def create(self):
         from abaqus import mdb
         from abaqusConstants import (SIDE1, SUPERIMPOSE, COPLANAR_EDGES,
-                MIDDLE, XZPLANE, SWEEP)
+                MIDDLE, XZPLANE, SWEEP, FIXED)
 
         cc = self.impconf.conecyl
         mod = mdb.models[cc.model_name]
@@ -209,6 +209,23 @@ class Cutout(object):
                 p.RemoveFaces(faceList=faceList, deleteCells=False)
             except:
                 pass
+
+        # Seed edges around cutout area
+        numel_per_edge = int(np.ceil(self.offsetdeg / 360.0 * cc.numel_r))
+        edge_coords = [
+            (rup, 0.5*(thetadeg1 + thetadeg), zup),
+            (rup, 0.5*(thetadeg2 + thetadeg), zup),
+            (rlow, 0.5*(thetadeg1 + thetadeg), zlow),
+            (rlow, 0.5*(thetadeg2 + thetadeg), zlow),
+            (0.5*(rlow + r), thetadeg1, 0.5*(zlow + z)),
+            (0.5*(rup + r), thetadeg1, 0.5*(zup + z)),
+            (0.5*(rlow + r), thetadeg2, 0.5*(zlow + z)),
+            (0.5*(rup + r), thetadeg2, 0.5*(zup + z)),
+        ]
+        edge_coords = [cyl2rec(*c) for c in edge_coords]
+        edgeList = [e[0] for e in p.edges.getClosest(coordinates=edge_coords,
+            searchTolerance=1.).values()]
+        p.seedEdgeByNumber(edges=edgeList, number=numel_per_edge, constraint=FIXED)
 
         try:
             p.setMeshControls(regions=p.faces, technique=SWEEP)
