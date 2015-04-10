@@ -72,6 +72,7 @@ class Cutout(object):
         from abaqus import mdb
         from abaqusConstants import (SIDE1, SUPERIMPOSE, COPLANAR_EDGES,
                 MIDDLE, XZPLANE, SWEEP, FIXED)
+        from regionToolset import Region
 
         cc = self.impconf.conecyl
         mod = mdb.models[cc.model_name]
@@ -232,6 +233,19 @@ class Cutout(object):
         except:
             warn("Unable to set mesh control to 'SWEEP', please check the mesh around your cutout(s)")
         p.generateMesh()
+        for pload in cc.impconf.ploads:
+            if (pload.pt == self.pt and pload.thetadeg == self.thetadeg and
+                    pload.name in mod.loads.keys()):
+                warn("Cutout is in the same location as perturbation load, moving PL to cutout edge")
+                inst_shell = ra.instances['INST_SHELL']
+                coords = cyl2rec(r, thetadeg + np.rad2deg(self.d/2./r), z)
+                new_vertex = inst_shell.vertices.getClosest(
+                    coordinates=[coords], searchTolerance=1.).values()[0][0]
+                # Unfortunately you cannot simply pass a vertex or list of vertices
+                # It has to be some internal abaqus sequence type... work around that:
+                index = inst_shell.vertices.index(new_vertex)
+                region = Region(vertices=inst_shell.vertices[index:index+1])
+                mod.loads[pload.name].setValues(region=region)
 
 if __name__ == '__main__':
     from desicos.abaqus.conecyl import ConeCyl
