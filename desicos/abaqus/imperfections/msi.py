@@ -39,7 +39,7 @@ def calc_msi_amplitude(cc, force=False):
     node_rs = (xs**2 + ys**2)**0.5
     pts = zs/cc.H
     rs, zs = cc.r_z_from_pt(pts)
-    amps = (node_rs - rs)/np.cos(cc.alpharad)
+    amps = (node_rs - rs) * np.cos(cc.alpharad)
     max_amp = max(np.absolute(amps))
 
     return max_amp
@@ -163,8 +163,8 @@ class MSI(object):
         #TODO: include z_offset_bottom to calculate ignore_bot_h and
         #      ignore_top_h
         # plotting options
-        self.xaxis = 'amplitude'
-        self.xaxis_label = 'Imperfection amplitude, mm'
+        self.xaxis = 'scaling_factor'
+        self.xaxis_label = 'Scaling factor'
         self.nodal_translations = None
         self.created = False
         self.thetadegs = []
