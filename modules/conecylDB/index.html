@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Cone / Cylinder DataBase (desicos.conecylDB) &mdash; DESICOS 2.2.0 documentation</title>
+    <title>Cone / Cylinder DataBase (desicos.conecylDB) &mdash; DESICOS 2.3.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.2.0',
+        VERSION:     '2.3.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <link rel="top" title="DESICOS 2.2.0 documentation" href="../../index.html" />
+    <link rel="top" title="DESICOS 2.3.0 documentation" href="../../index.html" />
     <link rel="up" title="Modules" href="../index.html" />
     <link rel="next" title="Tutorials" href="../../tutorials/index.html" />
    
@@ -47,7 +47,7 @@
         <li class="right" >
           <a href="../../tutorials/index.html" title="Tutorials"
              accesskey="N">next</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">DESICOS 2.2.0 documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">DESICOS 2.3.0 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Modules</a> &raquo;</li> 
       </ul>
     </div>  
@@ -385,7 +385,7 @@ This matrix does the transformation: output_pts &#8211;&gt; input_pts.</p>
 
 <dl class="function">
 <dt id="desicos.conecylDB.fit_data.calc_c0">
-<code class="descclassname">desicos.conecylDB.fit_data.</code><code class="descname">calc_c0</code><span class="sig-paren">(</span><em>path</em>, <em>m0=50</em>, <em>n0=50</em>, <em>funcnum=2</em>, <em>fem_meridian_bot2top=True</em>, <em>rotatedeg=0.0</em>, <em>filter_m0=None</em>, <em>filter_n0=None</em>, <em>sample_size=None</em>, <em>maxmem=8</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/conecylDB/fit_data.html#calc_c0"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.conecylDB.fit_data.calc_c0" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">desicos.conecylDB.fit_data.</code><code class="descname">calc_c0</code><span class="sig-paren">(</span><em>path</em>, <em>m0=50</em>, <em>n0=50</em>, <em>funcnum=2</em>, <em>fem_meridian_bot2top=True</em>, <em>rotatedeg=None</em>, <em>filter_m0=None</em>, <em>filter_n0=None</em>, <em>sample_size=None</em>, <em>maxmem=8</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/conecylDB/fit_data.html#calc_c0"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.conecylDB.fit_data.calc_c0" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find the coefficients that best fit the <img class="math" src="../../_images/math/05342505402760ddea398cf4ac14bf08993c760f.png" alt="w_0"/> imperfection</p>
 <p>The measured data will be fit using one of the following functions,
 selected using the <code class="docutils literal"><span class="pre">funcnum</span></code> parameter:</p>
@@ -457,7 +457,7 @@ the approximation.</p>
 <div><p>A boolean indicating if the finite element has the <img class="math" src="../../_images/math/fcbaa2ea1c6a047f151a45849927929823fc5d88.png" alt="x"/> axis starting
 at the bottom or at the top.</p>
 </div></blockquote>
-<p><strong>rotatedeg</strong> : float, optional</p>
+<p><strong>rotatedeg</strong> : float or None, optional</p>
 <blockquote>
 <div><p>Rotation angle in degrees telling how much the imperfection pattern
 should be rotated about the <img class="math" src="../../_images/math/8375795458398ca154038d40c458aede9ed2266f.png" alt="X_3"/> (or <img class="math" src="../../_images/math/208075146bab6f4a5cfa358d4c857f07dcc2004f.png" alt="Z"/>) axis.</p>
@@ -924,11 +924,39 @@ calculated as follows:</p>
 <div class="math">
 <p><img src="../../_images/math/7bc601087ecb5136853c44bdc9b29b36961f3168.png" alt="{w_0}_{node} = \frac{\sum_{i}^{n_{CP}}{{w_0}_i\frac{1}{w_i}}}
                     {\sum_{i}^{n_{CP}}{\frac{1}{w_i}}}"/></p>
-</div><p>where <img class="math" src="../../_images/math/5df9759a75683abeb124c0ed31d59208089a5a78.png" alt="w_i"/> is the imperfection at each measured point, calculated as:</p>
-<div class="math">
-<p><img src="../../_images/math/3c90d1147d3cb423440b32ece858ab2d28cf319a.png" alt="w_i = \left[(x_{node}-x_i)^2+(y_{node}-y_i)^2+(z_{node}-y_i)^2
-      \right]^p"/></p>
-</div><p>with <img class="math" src="../../_images/math/26b5461109d4bfe4c6dd43f103a74993eedd863b.png" alt="p"/> being a power parameter that when increased will increase the
+</div><p>where <img class="math" src="../../_images/math/5df9759a75683abeb124c0ed31d59208089a5a78.png" alt="w_i"/> is the inverse weight of each measured point, calculated as:</p>
+<div class="system-message">
+<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">w_i = \left[(x_{node}-x_i)^2+(y_{node}-y_i)^2+(z_{node}-z_i)^2
+      \right]^p
+
+</tt>)</p>
+latex exited with error
+[stdout]
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9 64-bit)
+entering extended mode
+(c:\users\saullo\appdata\local\temp\tmpnhz1bg\math.tex
+LaTeX2e &lt;2014/05/01&gt;
+Babel &lt;3.9l&gt; and hyphenation patterns for 68 languages loaded.
+(&#8220;C:\Program Files\MiKTeX 2.9\tex\latex\base\article.cls&#8221;
+Document Class: article 2014/09/29 v1.4h Standard LaTeX document class
+(&#8220;C:\Program Files\MiKTeX 2.9\tex\latex\base\size12.clo&#8221;))
+(&#8220;C:\Program Files\MiKTeX 2.9\tex\latex\base\inputenc.sty&#8221;
+
+! LaTeX Error: File `utf8x.def&#8217; not found.
+
+Type X to quit or &lt;RETURN&gt; to proceed,
+or enter new name. (Default extension: def)
+
+Enter file name: 
+! Emergency stop.
+&lt;read *&gt; 
+         
+l.165 \endinput
+               
+No pages of output.
+Transcript written on math.log.
+</div>
+<p>with <img class="math" src="../../_images/math/26b5461109d4bfe4c6dd43f103a74993eedd863b.png" alt="p"/> being a power parameter that when increased will increase the
 relative influence of a closest point.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1120,7 +1148,7 @@ and in <img class="math" src="../../_images/math/fcbaa2ea1c6a047f151a45849927929
 
 <dl class="function">
 <dt id="desicos.conecylDB.read_write.xyz2thetazimp">
-<code class="descclassname">desicos.conecylDB.read_write.</code><code class="descname">xyz2thetazimp</code><span class="sig-paren">(</span><em>path</em>, <em>alphadeg_measured</em>, <em>H_measured</em>, <em>R_expected=10.0</em>, <em>use_best_fit=True</em>, <em>sample_size=None</em>, <em>best_fit_output=False</em>, <em>errorRtol=1e-09</em>, <em>stretch_H=False</em>, <em>z_offset_bot=None</em>, <em>r_TOL=1.0</em>, <em>clip_bottom=None</em>, <em>clip_top=None</em>, <em>save=True</em>, <em>fmt='%1.6f'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/conecylDB/read_write.html#xyz2thetazimp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.conecylDB.read_write.xyz2thetazimp" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">desicos.conecylDB.read_write.</code><code class="descname">xyz2thetazimp</code><span class="sig-paren">(</span><em>path</em>, <em>alphadeg_measured</em>, <em>H_measured</em>, <em>R_expected=10.0</em>, <em>use_best_fit=True</em>, <em>sample_size=None</em>, <em>best_fit_output=False</em>, <em>errorRtol=1e-09</em>, <em>stretch_H=False</em>, <em>z_offset_bot=None</em>, <em>r_TOL=1.0</em>, <em>clip_bottom=None</em>, <em>clip_top=None</em>, <em>save=True</em>, <em>fmt='%1.6f'</em>, <em>rotatedeg=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/conecylDB/read_write.html#xyz2thetazimp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.conecylDB.read_write.xyz2thetazimp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Transforms an imperfection file from the format &#8220;<img class="math" src="../../_images/math/fcbaa2ea1c6a047f151a45849927929823fc5d88.png" alt="x"/> <img class="math" src="../../_images/math/5a1161c9b9bf6a6addc18ade0f7fe8bb5ce0ba95.png" alt="y"/> <img class="math" src="../../_images/math/eb4fcf2ea15c365948abb172ed3693fbc10b3b4a.png" alt="z"/>&#8221;
 to the format &#8220;<img class="math" src="../../_images/math/4dc4789b8e2f448615b3e2c2bdc22fb9267f7cd8.png" alt="\theta"/> <img class="math" src="../../_images/math/eb4fcf2ea15c365948abb172ed3693fbc10b3b4a.png" alt="z"/> <img class="math" src="../../_images/math/a359fcc67d4efbcaef5bda404120efef7de1ada3.png" alt="imp"/>&#8221;.</p>
 <p>The input file:</p>
@@ -1217,6 +1245,11 @@ top edge.</p>
 <blockquote>
 <div><p>See <code class="docutils literal"><span class="pre">np.savetxt()</span></code> documentation for more details.</p>
 </div></blockquote>
+<p><strong>rotatedeg</strong> : float or None, optional</p>
+<blockquote>
+<div><p>Rotation angle in degrees telling how much the imperfection pattern
+should be rotated about the <img class="math" src="../../_images/math/8375795458398ca154038d40c458aede9ed2266f.png" alt="X_3"/> (or <img class="math" src="../../_images/math/208075146bab6f4a5cfa358d4c857f07dcc2004f.png" alt="Z"/>) axis.</p>
+</div></blockquote>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>mps</strong> : np.ndarray</p>
@@ -1237,7 +1270,7 @@ above.</p>
 
 <dl class="function">
 <dt id="desicos.conecylDB.read_write.xyzthick2thetazthick">
-<code class="descclassname">desicos.conecylDB.read_write.</code><code class="descname">xyzthick2thetazthick</code><span class="sig-paren">(</span><em>path</em>, <em>alphadeg_measured</em>, <em>H_measured</em>, <em>R_expected=10.0</em>, <em>use_best_fit=True</em>, <em>sample_size=None</em>, <em>stretch_H=False</em>, <em>z_offset_bot=None</em>, <em>r_TOL=1.0</em>, <em>save=True</em>, <em>fmt='%1.6f'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/conecylDB/read_write.html#xyzthick2thetazthick"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.conecylDB.read_write.xyzthick2thetazthick" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">desicos.conecylDB.read_write.</code><code class="descname">xyzthick2thetazthick</code><span class="sig-paren">(</span><em>path</em>, <em>alphadeg_measured</em>, <em>H_measured</em>, <em>R_expected=10.0</em>, <em>use_best_fit=True</em>, <em>sample_size=None</em>, <em>stretch_H=False</em>, <em>z_offset_bot=None</em>, <em>r_TOL=1.0</em>, <em>save=True</em>, <em>fmt='%1.6f'</em>, <em>rotatedeg=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/conecylDB/read_write.html#xyzthick2thetazthick"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.conecylDB.read_write.xyzthick2thetazthick" title="Permalink to this definition">¶</a></dt>
 <dd><p>Transforms an imperfection file from the format: &#8220;<img class="math" src="../../_images/math/fcbaa2ea1c6a047f151a45849927929823fc5d88.png" alt="x"/> <img class="math" src="../../_images/math/5a1161c9b9bf6a6addc18ade0f7fe8bb5ce0ba95.png" alt="y"/> <img class="math" src="../../_images/math/eb4fcf2ea15c365948abb172ed3693fbc10b3b4a.png" alt="z"/> <img class="math" src="../../_images/math/f7dbbc702e08b27d1f1cb3c9b97304d213e9552a.png" alt="thick"/>&#8221;
 to the format &#8220;<img class="math" src="../../_images/math/4dc4789b8e2f448615b3e2c2bdc22fb9267f7cd8.png" alt="\theta"/> <img class="math" src="../../_images/math/eb4fcf2ea15c365948abb172ed3693fbc10b3b4a.png" alt="z"/> <img class="math" src="../../_images/math/f7dbbc702e08b27d1f1cb3c9b97304d213e9552a.png" alt="thick"/>&#8221;.</p>
 <p>The input file:</p>
@@ -1309,6 +1342,11 @@ given in percent.</p>
 <p><strong>fmt</strong> : str or sequence of strs, optional</p>
 <blockquote>
 <div><p>See <code class="docutils literal"><span class="pre">np.savetxt()</span></code> documentation for more details.</p>
+</div></blockquote>
+<p><strong>rotatedeg</strong> : float or None, optional</p>
+<blockquote>
+<div><p>Rotation angle in degrees telling how much the imperfection pattern
+should be rotated about the <img class="math" src="../../_images/math/8375795458398ca154038d40c458aede9ed2266f.png" alt="X_3"/> (or <img class="math" src="../../_images/math/208075146bab6f4a5cfa358d4c857f07dcc2004f.png" alt="Z"/>) axis.</p>
 </div></blockquote>
 </td>
 </tr>

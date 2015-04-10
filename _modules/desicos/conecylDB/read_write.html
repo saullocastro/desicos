@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>desicos.conecylDB.read_write &mdash; DESICOS 2.2.0 documentation</title>
+    <title>desicos.conecylDB.read_write &mdash; DESICOS 2.3.0 documentation</title>
     
     <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.2.0',
+        VERSION:     '2.3.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <link rel="top" title="DESICOS 2.2.0 documentation" href="../../../index.html" />
+    <link rel="top" title="DESICOS 2.3.0 documentation" href="../../../index.html" />
     <link rel="up" title="Module code" href="../../index.html" />
    
   
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">DESICOS 2.2.0 documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">DESICOS 2.3.0 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
@@ -297,7 +297,8 @@
                   <span class="n">clip_bottom</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
                   <span class="n">clip_top</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
                   <span class="n">save</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
-                  <span class="n">fmt</span><span class="o">=</span><span class="s">&#39;</span><span class="si">%1.6f</span><span class="s">&#39;</span><span class="p">):</span>
+                  <span class="n">fmt</span><span class="o">=</span><span class="s">&#39;</span><span class="si">%1.6f</span><span class="s">&#39;</span><span class="p">,</span>
+                  <span class="n">rotatedeg</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">r&quot;&quot;&quot;Transforms an imperfection file from the format &quot;`x` `y` `z`&quot;</span>
 <span class="sd">    to the format &quot;`\theta` `z` `imp`&quot;.</span>
 
@@ -365,6 +366,9 @@
 <span class="sd">        If the returned array ``mps`` should also be saved to a ``.txt`` file.</span>
 <span class="sd">    fmt : str or sequence of strs, optional</span>
 <span class="sd">        See ``np.savetxt()`` documentation for more details.</span>
+<span class="sd">    rotatedeg : float or None, optional</span>
+<span class="sd">        Rotation angle in degrees telling how much the imperfection pattern</span>
+<span class="sd">        should be rotated about the `X_3` (or `Z`) axis.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -426,6 +430,9 @@
     <span class="n">log</span><span class="p">(</span><span class="s">&#39;Minimum imperfection: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">imp</span><span class="o">.</span><span class="n">min</span><span class="p">()))</span>
     <span class="n">log</span><span class="p">(</span><span class="s">&#39;Maximum imperfection: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">imp</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span>
 
+    <span class="k">if</span> <span class="n">rotatedeg</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">theta</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">rotatedeg</span><span class="p">)</span>
+
     <span class="n">mps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">theta</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">imp</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>
     <span class="k">if</span> <span class="n">save</span><span class="p">:</span>
         <span class="n">outpath</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;.&#39;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span>
@@ -446,7 +453,8 @@
                          <span class="n">z_offset_bot</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
                          <span class="n">r_TOL</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span>
                          <span class="n">save</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
-                         <span class="n">fmt</span><span class="o">=</span><span class="s">&#39;</span><span class="si">%1.6f</span><span class="s">&#39;</span><span class="p">):</span>
+                         <span class="n">fmt</span><span class="o">=</span><span class="s">&#39;</span><span class="si">%1.6f</span><span class="s">&#39;</span><span class="p">,</span>
+                         <span class="n">rotatedeg</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">r&quot;&quot;&quot;Transforms an imperfection file from the format: &quot;`x` `y` `z` `thick`&quot;</span>
 <span class="sd">    to the format &quot;`\theta` `z` `thick`&quot;.</span>
 
@@ -498,6 +506,9 @@
 <span class="sd">        If the returned array ``mps`` should also be saved to a ``.txt`` file.</span>
 <span class="sd">    fmt : str or sequence of strs, optional</span>
 <span class="sd">        See ``np.savetxt()`` documentation for more details.</span>
+<span class="sd">    rotatedeg : float or None, optional</span>
+<span class="sd">        Rotation angle in degrees telling how much the imperfection pattern</span>
+<span class="sd">        should be rotated about the `X_3` (or `Z`) axis.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -538,6 +549,9 @@
     <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
     <span class="n">log</span><span class="p">(</span><span class="s">&#39;Minimum thickness: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">thick</span><span class="o">.</span><span class="n">min</span><span class="p">()))</span>
     <span class="n">log</span><span class="p">(</span><span class="s">&#39;Maximum thickness: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">thick</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span>
+
+    <span class="k">if</span> <span class="n">rotatedeg</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">theta</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">rotatedeg</span><span class="p">)</span>
 
     <span class="n">mps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">theta</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">thick</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>
     <span class="k">if</span> <span class="n">save</span><span class="p">:</span>

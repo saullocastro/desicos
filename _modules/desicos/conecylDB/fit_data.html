@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>desicos.conecylDB.fit_data &mdash; DESICOS 2.2.0 documentation</title>
+    <title>desicos.conecylDB.fit_data &mdash; DESICOS 2.3.0 documentation</title>
     
     <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.2.0',
+        VERSION:     '2.3.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <link rel="top" title="DESICOS 2.2.0 documentation" href="../../../index.html" />
+    <link rel="top" title="DESICOS 2.3.0 documentation" href="../../../index.html" />
     <link rel="up" title="Module code" href="../../index.html" />
    
   
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">DESICOS 2.2.0 documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">DESICOS 2.3.0 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
@@ -328,7 +328,7 @@
 
 </div>
 <div class="viewcode-block" id="calc_c0"><a class="viewcode-back" href="../../../modules/conecylDB/index.html#desicos.conecylDB.fit_data.calc_c0">[docs]</a><span class="k">def</span> <span class="nf">calc_c0</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">m0</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">n0</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">funcnum</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">fem_meridian_bot2top</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
-        <span class="n">rotatedeg</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">filter_m0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">filter_n0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">sample_size</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+        <span class="n">rotatedeg</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">filter_m0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">filter_n0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">sample_size</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
         <span class="n">maxmem</span><span class="o">=</span><span class="mi">8</span><span class="p">):</span>
     <span class="sd">r&quot;&quot;&quot;Find the coefficients that best fit the `w_0` imperfection</span>
 
@@ -398,7 +398,7 @@
 <span class="sd">    fem_meridian_bot2top : bool, optional</span>
 <span class="sd">        A boolean indicating if the finite element has the `x` axis starting</span>
 <span class="sd">        at the bottom or at the top.</span>
-<span class="sd">    rotatedeg : float, optional</span>
+<span class="sd">    rotatedeg : float or None, optional</span>
 <span class="sd">        Rotation angle in degrees telling how much the imperfection pattern</span>
 <span class="sd">        should be rotated about the `X_3` (or `Z`) axis.</span>
 <span class="sd">    filter_m0 : list, optional</span>
@@ -472,7 +472,7 @@
                 <span class="n">format</span><span class="p">(</span><span class="n">maxnum</span><span class="p">),</span> <span class="n">level</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
     <span class="n">ts</span> <span class="o">=</span> <span class="n">input_pts</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">rotatedeg</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">rotatedeg</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
         <span class="n">ts</span> <span class="o">+=</span> <span class="n">deg2rad</span><span class="p">(</span><span class="n">rotatedeg</span><span class="p">)</span>
     <span class="n">zs</span> <span class="o">=</span> <span class="n">input_pts</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
     <span class="n">w0pts</span> <span class="o">=</span> <span class="n">input_pts</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span>

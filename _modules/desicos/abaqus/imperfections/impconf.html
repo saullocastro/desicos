@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>desicos.abaqus.imperfections.impconf &mdash; DESICOS 2.2.0 documentation</title>
+    <title>desicos.abaqus.imperfections.impconf &mdash; DESICOS 2.3.0 documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     '2.2.0',
+        VERSION:     '2.3.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../../_static/doctools.js"></script>
-    <link rel="top" title="DESICOS 2.2.0 documentation" href="../../../../index.html" />
+    <link rel="top" title="DESICOS 2.3.0 documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
    
   
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="../../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../index.html">DESICOS 2.2.0 documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">DESICOS 2.3.0 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../../../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
@@ -66,6 +66,7 @@
 <span class="kn">from</span> <span class="nn">lbmi</span> <span class="kn">import</span> <span class="n">LBMI</span>
 <span class="kn">from</span> <span class="nn">msi</span> <span class="kn">import</span> <span class="n">MSI</span>
 <span class="kn">from</span> <span class="nn">ti</span> <span class="kn">import</span> <span class="n">TI</span>
+<span class="kn">from</span> <span class="nn">cutout</span> <span class="kn">import</span> <span class="n">Cutout</span>
 
 
 <div class="viewcode-block" id="ImpConf"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.impconf.ImpConf">[docs]</a><span class="k">class</span> <span class="nc">ImpConf</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -102,6 +103,7 @@
 <span class="sd">                       objects</span>
 <span class="sd">    msis               ``list`` of :class:`.MSI` (Mid-Surface Imperfection)</span>
 <span class="sd">                       objects</span>
+<span class="sd">    cutouts            ``list`` of :class:`.Cutout` objects</span>
 <span class="sd">    ================== ======================================================</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -117,6 +119,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">lbmis</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">msis</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tis</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cutouts</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rename</span> <span class="o">=</span> <span class="bp">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">conecyl</span> <span class="o">=</span> <span class="bp">None</span>
@@ -131,7 +134,7 @@
 
 
 <div class="viewcode-block" id="ImpConf.add_axisymmetric"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.impconf.ImpConf.add_axisymmetric">[docs]</a>    <span class="k">def</span> <span class="nf">add_axisymmetric</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">wb</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Adds an Axisymmetric Imperfection (AI)</span>
+        <span class="sd">&quot;&quot;&quot;Add an Axisymmetric Imperfection (AI)</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -154,7 +157,7 @@
 
 </div>
 <div class="viewcode-block" id="ImpConf.add_dimple"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.impconf.ImpConf.add_dimple">[docs]</a>    <span class="k">def</span> <span class="nf">add_dimple</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thetadeg</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">wb</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Adds a Dimple Imperfection (DI)</span>
+        <span class="sd">&quot;&quot;&quot;Add a Dimple Imperfection (DI)</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -179,7 +182,7 @@
 
 </div>
 <div class="viewcode-block" id="ImpConf.add_lbmi"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.impconf.ImpConf.add_lbmi">[docs]</a>    <span class="k">def</span> <span class="nf">add_lbmi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">scaling_factor</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Adds a Linear Buckling Mode-shaped Imperfection (LBMI)</span>
+        <span class="sd">&quot;&quot;&quot;Add a Linear Buckling Mode-shaped Imperfection (LBMI)</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -200,7 +203,7 @@
 
 </div>
 <div class="viewcode-block" id="ImpConf.add_measured_u3s_bottom_edge"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.impconf.ImpConf.add_measured_u3s_bottom_edge">[docs]</a>    <span class="k">def</span> <span class="nf">add_measured_u3s_bottom_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thetadegs</span><span class="p">,</span> <span class="n">u3s</span><span class="p">):</span>
-        <span class="sd">r&quot;&quot;&quot;Adds a measured uneven bottom edge</span>
+        <span class="sd">r&quot;&quot;&quot;Add a measured uneven bottom edge</span>
 
 <span class="sd">        Straightforward method to include measured data about the bottom edge</span>
 <span class="sd">        imperfection.</span>
@@ -225,7 +228,7 @@
 
 </div>
 <div class="viewcode-block" id="ImpConf.add_measured_u3s_top_edge"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.impconf.ImpConf.add_measured_u3s_top_edge">[docs]</a>    <span class="k">def</span> <span class="nf">add_measured_u3s_top_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thetadegs</span><span class="p">,</span> <span class="n">u3s</span><span class="p">):</span>
-        <span class="sd">r&quot;&quot;&quot;Adds a measured uneven top edge</span>
+        <span class="sd">r&quot;&quot;&quot;Add a measured uneven top edge</span>
 
 <span class="sd">        Straightforward method to include measured data about the top edge</span>
 <span class="sd">        imperfection.</span>
@@ -254,7 +257,7 @@
                 <span class="n">rotatedeg</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">ignore_bot_h</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">ignore_top_h</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
                 <span class="n">stretch_H</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">c0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
                 <span class="n">m0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">n0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">funcnum</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-        <span class="sd">r&quot;&quot;&quot;Adds a Mid-Surface Imperfection (MSI)</span>
+        <span class="sd">r&quot;&quot;&quot;Add a Mid-Surface Imperfection (MSI)</span>
 
 <span class="sd">        Also called geometric imperfection.</span>
 
@@ -364,7 +367,7 @@
 
 </div>
 <div class="viewcode-block" id="ImpConf.add_pload"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.impconf.ImpConf.add_pload">[docs]</a>    <span class="k">def</span> <span class="nf">add_pload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thetadeg</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="n">pltotal</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Adds a Perturbation Load</span>
+        <span class="sd">&quot;&quot;&quot;Add a Perturbation Load</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -392,7 +395,7 @@
 
 </div>
 <div class="viewcode-block" id="ImpConf.add_shim_bottom_edge"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.impconf.ImpConf.add_shim_bottom_edge">[docs]</a>    <span class="k">def</span> <span class="nf">add_shim_bottom_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thetadeg</span><span class="p">,</span> <span class="n">thick</span><span class="p">,</span> <span class="n">width</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Adds a Shim to the bottom edge</span>
+        <span class="sd">&quot;&quot;&quot;Add a Shim to the bottom edge</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -413,7 +416,7 @@
 
 </div>
 <div class="viewcode-block" id="ImpConf.add_shim_top_edge"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.impconf.ImpConf.add_shim_top_edge">[docs]</a>    <span class="k">def</span> <span class="nf">add_shim_top_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thetadeg</span><span class="p">,</span> <span class="n">thick</span><span class="p">,</span> <span class="n">width</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Adds a Shim to the top edge</span>
+        <span class="sd">&quot;&quot;&quot;Add a Shim to the top edge</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -434,7 +437,7 @@
 
 </div>
 <div class="viewcode-block" id="ImpConf.add_ti"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.impconf.ImpConf.add_ti">[docs]</a>    <span class="k">def</span> <span class="nf">add_ti</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">imp_thick</span><span class="p">,</span> <span class="n">scaling_factor</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Adds Thickness Imperfection (TI)</span>
+        <span class="sd">&quot;&quot;&quot;Add Thickness Imperfection (TI)</span>
 
 <span class="sd">        The imperfection must be already included in the database (:ref:`check</span>
 <span class="sd">        this tutorial &lt;tutorials_conecylDB&gt;`).</span>
@@ -450,6 +453,7 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        ti : :class:`.TI` object.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ti</span> <span class="o">=</span> <span class="n">TI</span><span class="p">()</span>
         <span class="n">ti</span><span class="o">.</span><span class="n">impconf</span> <span class="o">=</span> <span class="bp">self</span>
@@ -457,6 +461,33 @@
         <span class="n">ti</span><span class="o">.</span><span class="n">scaling_factor</span> <span class="o">=</span> <span class="n">scaling_factor</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tis</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ti</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ti</span>
+
+</div>
+<div class="viewcode-block" id="ImpConf.add_cutout"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.impconf.ImpConf.add_cutout">[docs]</a>    <span class="k">def</span> <span class="nf">add_cutout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thetadeg</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">drill_offset_deg</span><span class="o">=</span><span class="mf">0.</span><span class="p">):</span>
+        <span class="sd">r&quot;&quot;&quot;Add a cutout</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        thetadeg : float</span>
+<span class="sd">            Circumferential position of the dimple.</span>
+<span class="sd">        pt : float</span>
+<span class="sd">            Normalized meridional position.</span>
+<span class="sd">        d : float</span>
+<span class="sd">            Diameter of the drilling machine.</span>
+<span class="sd">        drill_offset_deg : float</span>
+<span class="sd">            Angular offset when the drilling is not normal to the shell</span>
+<span class="sd">            surface. A positive offset means a positive rotation about the</span>
+<span class="sd">            `\theta` axis, along the meridional plane.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        cutout : :class:`.Cutout` object.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cutout</span> <span class="o">=</span> <span class="n">Cutout</span><span class="p">(</span><span class="n">thetadeg</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">drill_offset_deg</span><span class="p">)</span>
+        <span class="n">cutout</span><span class="o">.</span><span class="n">impconf</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cutouts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cutout</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">cutout</span>
 
 </div>
     <span class="k">def</span> <span class="nf">rebuild</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -510,6 +541,12 @@
             <span class="n">ti</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">i</span>
             <span class="n">ti</span><span class="o">.</span><span class="n">rebuild</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">imperfections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ti</span><span class="p">)</span>
+        <span class="c"># cutout</span>
+        <span class="k">for</span> <span class="n">cutout</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cutouts</span><span class="p">:</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">cutout</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">i</span>
+            <span class="n">cutout</span><span class="o">.</span><span class="n">rebuild</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">imperfections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cutout</span><span class="p">)</span>
         <span class="c"># name</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rename</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;PLs_</span><span class="si">%02d</span><span class="s">_dimples_</span><span class="si">%02d</span><span class="s">_axisym_</span><span class="si">%02d</span><span class="s">&#39;</span> <span class="o">+</span>\

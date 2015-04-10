@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Processing Geometric Imperfection Data &mdash; DESICOS 2.2.0 documentation</title>
+    <title>Processing Geometric Imperfection Data &mdash; DESICOS 2.3.0 documentation</title>
     
     <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.2.0',
+        VERSION:     '2.3.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <link rel="top" title="DESICOS 2.2.0 documentation" href="../../../index.html" />
+    <link rel="top" title="DESICOS 2.3.0 documentation" href="../../../index.html" />
     <link rel="up" title="Cone / Cylinder DataBase (desicos.conecylDB)" href="../index.html" />
     <link rel="next" title="Adding New Imperfection Files" href="../add_file.html" />
     <link rel="prev" title="Dynamic Database" href="../dynamic.html" />
@@ -51,7 +51,7 @@
         <li class="right" >
           <a href="../dynamic.html" title="Dynamic Database"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">DESICOS 2.2.0 documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">DESICOS 2.3.0 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Tutorials</a> &raquo;</li>
           <li class="nav-item nav-item-2"><a href="../index.html" accesskey="U">Cone / Cylinder DataBase (<code class="docutils literal"><span class="pre">desicos.conecylDB</span></code>)</a> &raquo;</li> 
       </ul>
@@ -152,7 +152,7 @@ calculated.</p>
 
 <span class="n">mps</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="n">xyz2thetazimp</span><span class="p">(</span><span class="s">&#39;sample.txt&#39;</span><span class="p">,</span> <span class="n">alphadeg_measured</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">R_expected</span><span class="o">=</span><span class="mf">406.4</span><span class="p">,</span>
         <span class="n">H_measured</span><span class="o">=</span><span class="mf">1219.2</span><span class="p">,</span> <span class="n">clip_bottom</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">clip_top</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">use_best_fit</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
-        <span class="n">best_fit_output</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">best_fit_output</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">rotatedeg</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span>
 
 <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="s">&#39;tmp_Tinv.txt&#39;</span><span class="p">,</span> <span class="n">out</span><span class="p">[</span><span class="s">&#39;Tinv&#39;</span><span class="p">])</span>
 </pre></div>
@@ -194,10 +194,8 @@ accomplished using the following script:</p>
 
 <span class="kn">from</span> <span class="nn">desicos.conecylDB.read_write</span> <span class="kn">import</span> <span class="n">xyz2thetazimp</span>
 
-<span class="n">sample_size</span> <span class="o">=</span> <span class="mi">100000</span>
 <span class="n">R</span> <span class="o">=</span> <span class="mf">406.4</span>
 <span class="n">R_best_fit</span> <span class="o">=</span> <span class="mf">407.168</span>
-<span class="n">H</span> <span class="o">=</span> <span class="mf">1219.2</span>
 
 <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="s">&#39;sample_theta_z_imp.txt&#39;</span><span class="p">)</span>
 <span class="n">thetas</span><span class="p">,</span> <span class="n">zfit</span><span class="p">,</span> <span class="n">dR</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">T</span>
@@ -277,9 +275,6 @@ offset of <code class="docutils literal"><span class="pre">-88.5</span></code> d
 <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s">&#39;axes.labelsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">9.</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s">&#39;font.size&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">9.</span>
 
-<span class="n">method</span> <span class="o">=</span> <span class="s">&#39;inv_weighted&#39;</span>
-
-<span class="n">name</span> <span class="o">=</span> <span class="s">&#39;tmp&#39;</span>
 <span class="n">path</span> <span class="o">=</span> <span class="s">&#39;tmp_inv_weighted.txt&#39;</span>
 
 <span class="n">nz</span> <span class="o">=</span> <span class="mi">180</span>

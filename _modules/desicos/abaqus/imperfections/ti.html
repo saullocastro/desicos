@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>desicos.abaqus.imperfections.ti &mdash; DESICOS 2.2.0 documentation</title>
+    <title>desicos.abaqus.imperfections.ti &mdash; DESICOS 2.3.0 documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     '2.2.0',
+        VERSION:     '2.3.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../../_static/doctools.js"></script>
-    <link rel="top" title="DESICOS 2.2.0 documentation" href="../../../../index.html" />
+    <link rel="top" title="DESICOS 2.3.0 documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
    
   
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="../../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../index.html">DESICOS 2.2.0 documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">DESICOS 2.3.0 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../../../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
@@ -84,8 +84,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">index</span>  <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">use_theta_z_format</span> <span class="o">=</span> <span class="bp">False</span>
         <span class="c"># plotting options</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">xaxis</span> <span class="o">=</span> <span class="s">&#39;amplitude&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">xaxis_label</span> <span class="o">=</span> <span class="s">&#39;Imperfection amplitude, mm&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xaxis</span> <span class="o">=</span> <span class="s">&#39;scaling_factor&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xaxis_label</span> <span class="o">=</span> <span class="s">&#39;Scaling factor&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">elems_t</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">t_set</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">created</span> <span class="o">=</span> <span class="bp">False</span>
@@ -120,7 +120,7 @@
             <span class="n">cc_total_t</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">cc</span><span class="o">.</span><span class="n">plyts</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">layup</span> <span class="ow">in</span> <span class="n">part</span><span class="o">.</span><span class="n">compositeLayups</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">layup</span><span class="o">.</span><span class="n">suppressed</span><span class="p">:</span>
-                    <span class="n">layup_t</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">p</span><span class="o">.</span><span class="n">thickness</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">layup</span><span class="o">.</span><span class="n">plies</span><span class="o">.</span><span class="n">values</span><span class="p">()])</span>
+                    <span class="n">layup_t</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">thickness</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">layup</span><span class="o">.</span><span class="n">plies</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
                     <span class="n">max_amp</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">max_amp</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">layup_t</span><span class="o">-</span><span class="n">cc_total_t</span><span class="p">))</span>
 
             <span class="k">return</span> <span class="n">max_amp</span>

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Abaqus Plug-In (desicos.abaqus) &mdash; DESICOS 2.2.0 documentation</title>
+    <title>Abaqus Plug-In (desicos.abaqus) &mdash; DESICOS 2.3.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.2.0',
+        VERSION:     '2.3.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <link rel="top" title="DESICOS 2.2.0 documentation" href="../../index.html" />
+    <link rel="top" title="DESICOS 2.3.0 documentation" href="../../index.html" />
     <link rel="up" title="Modules" href="../index.html" />
     <link rel="prev" title="Modules" href="../index.html" />
    
@@ -47,7 +47,7 @@
         <li class="right" >
           <a href="../index.html" title="Modules"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">DESICOS 2.2.0 documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">DESICOS 2.3.0 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Modules</a> &raquo;</li> 
       </ul>
     </div>  
@@ -575,67 +575,64 @@ will be printed in the output</td>
 <tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">check_completed</span></code>([wait,&nbsp;print_found])</td>
 <td></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.create_cutout" title="desicos.abaqus.conecyl.conecyl.ConeCyl.create_cutout"><code class="xref py py-obj docutils literal"><span class="pre">create_cutout</span></code></a>(theta,&nbsp;pt,&nbsp;d[,&nbsp;numel])</td>
-<td>Create a cutout in the shell surface.</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.create_model" title="desicos.abaqus.conecyl.conecyl.ConeCyl.create_model"><code class="xref py py-obj docutils literal"><span class="pre">create_model</span></code></a>([force])</td>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.create_model" title="desicos.abaqus.conecyl.conecyl.ConeCyl.create_model"><code class="xref py py-obj docutils literal"><span class="pre">create_model</span></code></a>([force])</td>
 <td>Triggers the routines to create the model in Abaqus</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.detach_results" title="desicos.abaqus.conecyl.conecyl.ConeCyl.detach_results"><code class="xref py py-obj docutils literal"><span class="pre">detach_results</span></code></a>(odb)</td>
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.detach_results" title="desicos.abaqus.conecyl.conecyl.ConeCyl.detach_results"><code class="xref py py-obj docutils literal"><span class="pre">detach_results</span></code></a>(odb)</td>
 <td>Detach an odb file from Abaqus</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.extract_field_output" title="desicos.abaqus.conecyl.conecyl.ConeCyl.extract_field_output"><code class="xref py py-obj docutils literal"><span class="pre">extract_field_output</span></code></a>([ignore])</td>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.extract_field_output" title="desicos.abaqus.conecyl.conecyl.ConeCyl.extract_field_output"><code class="xref py py-obj docutils literal"><span class="pre">extract_field_output</span></code></a>([ignore])</td>
 <td>Extract the current field output for a cylinder/cone from Abaqus</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.fr" title="desicos.abaqus.conecyl.conecyl.ConeCyl.fr"><code class="xref py py-obj docutils literal"><span class="pre">fr</span></code></a>(z)</td>
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.fr" title="desicos.abaqus.conecyl.conecyl.ConeCyl.fr"><code class="xref py py-obj docutils literal"><span class="pre">fr</span></code></a>(z)</td>
 <td>Calculates the radius at a given <code class="docutils literal"><span class="pre">z</span></code> position</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.from_DB" title="desicos.abaqus.conecyl.conecyl.ConeCyl.from_DB"><code class="xref py py-obj docutils literal"><span class="pre">from_DB</span></code></a>([name_DB])</td>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.from_DB" title="desicos.abaqus.conecyl.conecyl.ConeCyl.from_DB"><code class="xref py py-obj docutils literal"><span class="pre">from_DB</span></code></a>([name_DB])</td>
 <td>Fetch all the cone/cylinder data from the database</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.get_step_name" title="desicos.abaqus.conecyl.conecyl.ConeCyl.get_step_name"><code class="xref py py-obj docutils literal"><span class="pre">get_step_name</span></code></a>(step)</td>
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.get_step_name" title="desicos.abaqus.conecyl.conecyl.ConeCyl.get_step_name"><code class="xref py py-obj docutils literal"><span class="pre">get_step_name</span></code></a>(step)</td>
 <td>Get the step name corresponding to an integer number</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.plot_current_field_opened" title="desicos.abaqus.conecyl.conecyl.ConeCyl.plot_current_field_opened"><code class="xref py py-obj docutils literal"><span class="pre">plot_current_field_opened</span></code></a>([ignore,&nbsp;plot_type])</td>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.plot_current_field_opened" title="desicos.abaqus.conecyl.conecyl.ConeCyl.plot_current_field_opened"><code class="xref py py-obj docutils literal"><span class="pre">plot_current_field_opened</span></code></a>([ignore,&nbsp;plot_type])</td>
 <td>Print the current field output for a cylinder/cone model from Abaqus</td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">plot_displacements</span></code>(**kwargs)</td>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">plot_displacements</span></code>(**kwargs)</td>
 <td></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.plot_field_data" title="desicos.abaqus.conecyl.conecyl.ConeCyl.plot_field_data"><code class="xref py py-obj docutils literal"><span class="pre">plot_field_data</span></code></a>(x,&nbsp;y,&nbsp;field[,&nbsp;...])</td>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.plot_field_data" title="desicos.abaqus.conecyl.conecyl.ConeCyl.plot_field_data"><code class="xref py py-obj docutils literal"><span class="pre">plot_field_data</span></code></a>(x,&nbsp;y,&nbsp;field[,&nbsp;...])</td>
 <td>Print data field output to a file</td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">plot_forces</span></code>(**kwargs)</td>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">plot_forces</span></code>(**kwargs)</td>
 <td></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">plot_stress_analysis</span></code>(**kwargs)</td>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">plot_stress_analysis</span></code>(**kwargs)</td>
 <td></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">plot_xy</span></code>(xs,&nbsp;ys,&nbsp;**kwargs)</td>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">plot_xy</span></code>(xs,&nbsp;ys,&nbsp;**kwargs)</td>
 <td></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.prepare_to_save" title="desicos.abaqus.conecyl.conecyl.ConeCyl.prepare_to_save"><code class="xref py py-obj docutils literal"><span class="pre">prepare_to_save</span></code></a>()</td>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.prepare_to_save" title="desicos.abaqus.conecyl.conecyl.ConeCyl.prepare_to_save"><code class="xref py py-obj docutils literal"><span class="pre">prepare_to_save</span></code></a>()</td>
 <td>Prepare the <a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl" title="desicos.abaqus.conecyl.conecyl.ConeCyl"><code class="xref py py-class docutils literal"><span class="pre">ConeCyl</span></code></a> to be saved</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.r_z_from_pt" title="desicos.abaqus.conecyl.conecyl.ConeCyl.r_z_from_pt"><code class="xref py py-obj docutils literal"><span class="pre">r_z_from_pt</span></code></a>([pt])</td>
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.r_z_from_pt" title="desicos.abaqus.conecyl.conecyl.ConeCyl.r_z_from_pt"><code class="xref py py-obj docutils literal"><span class="pre">r_z_from_pt</span></code></a>([pt])</td>
 <td>Radius and the axial position from a given normalized position</td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">read_outputs</span></code>(**kwargs)</td>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">read_outputs</span></code>(**kwargs)</td>
 <td></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">read_walltime</span></code>()</td>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">read_walltime</span></code>()</td>
 <td></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.rebuild" title="desicos.abaqus.conecyl.conecyl.ConeCyl.rebuild"><code class="xref py py-obj docutils literal"><span class="pre">rebuild</span></code></a>([force,&nbsp;save_rebuild])</td>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.rebuild" title="desicos.abaqus.conecyl.conecyl.ConeCyl.rebuild"><code class="xref py py-obj docutils literal"><span class="pre">rebuild</span></code></a>([force,&nbsp;save_rebuild])</td>
 <td>Updates the properties of the current <a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl" title="desicos.abaqus.conecyl.conecyl.ConeCyl"><code class="xref py py-class docutils literal"><span class="pre">ConeCyl</span></code></a> object</td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">stress_analysis</span></code>(**kwargs)</td>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">stress_analysis</span></code>(**kwargs)</td>
 <td></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.transform_plot_data" title="desicos.abaqus.conecyl.conecyl.ConeCyl.transform_plot_data"><code class="xref py py-obj docutils literal"><span class="pre">transform_plot_data</span></code></a>(thetas,&nbsp;zs,&nbsp;plot_type)</td>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.transform_plot_data" title="desicos.abaqus.conecyl.conecyl.ConeCyl.transform_plot_data"><code class="xref py py-obj docutils literal"><span class="pre">transform_plot_data</span></code></a>(thetas,&nbsp;zs,&nbsp;plot_type)</td>
 <td>Transform coordinates of plot data, to prepare for plotting</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.write_job" title="desicos.abaqus.conecyl.conecyl.ConeCyl.write_job"><code class="xref py py-obj docutils literal"><span class="pre">write_job</span></code></a>([submit,&nbsp;wait,&nbsp;multiple_cores])</td>
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.write_job" title="desicos.abaqus.conecyl.conecyl.ConeCyl.write_job"><code class="xref py py-obj docutils literal"><span class="pre">write_job</span></code></a>([submit,&nbsp;wait,&nbsp;multiple_cores])</td>
 <td>Writes the job of the corresponding Abaqus model</td>
 </tr>
 </tbody>
@@ -693,35 +690,6 @@ Abaqus.</p>
 circumferential positions <code class="docutils literal"><span class="pre">thetadegs</span></code> and the normalized meridional
 positions <code class="docutils literal"><span class="pre">pts</span></code> where partitions should be created. These two lists
 will be used in the routines to create an Abaqus model.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="desicos.abaqus.conecyl.conecyl.ConeCyl.create_cutout">
-<code class="descname">create_cutout</code><span class="sig-paren">(</span><em>theta</em>, <em>pt</em>, <em>d</em>, <em>numel=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/abaqus/conecyl/conecyl.html#ConeCyl.create_cutout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.create_cutout" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a cutout in the shell surface.</p>
-<p>This function is buggy, intended to easily create cutouts on the shell
-surface. Doesn&#8217;t work for all cases and the mesh quality must be
-improved.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>theta</strong> : float</p>
-<blockquote>
-<div><p>Cylindrical coordinate theta in degrees.</p>
-</div></blockquote>
-<p><strong>pt</strong> : float</p>
-<blockquote>
-<div><p>Coordinate z/cylinder height (or cone height).</p>
-</div></blockquote>
-<p><strong>d</strong> : float</p>
-<blockquote class="last">
-<div><p>Cutout diameter.</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="method">
@@ -1240,6 +1208,9 @@ objects</td>
 <td><code class="docutils literal"><span class="pre">list</span></code> of <a class="reference internal" href="#desicos.abaqus.imperfections.msi.MSI" title="desicos.abaqus.imperfections.msi.MSI"><code class="xref py py-class docutils literal"><span class="pre">MSI</span></code></a> (Mid-Surface Imperfection)
 objects</td>
 </tr>
+<tr class="row-even"><td>cutouts</td>
+<td><code class="docutils literal"><span class="pre">list</span></code> of <a class="reference internal" href="#desicos.abaqus.imperfections.cutout.Cutout" title="desicos.abaqus.imperfections.cutout.Cutout"><code class="xref py py-class docutils literal"><span class="pre">Cutout</span></code></a> objects</td>
+</tr>
 </tbody>
 </table>
 <p class="rubric">Methods</p>
@@ -1250,39 +1221,42 @@ objects</td>
 </colgroup>
 <tbody valign="top">
 <tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_axisymmetric" title="desicos.abaqus.imperfections.impconf.ImpConf.add_axisymmetric"><code class="xref py py-obj docutils literal"><span class="pre">add_axisymmetric</span></code></a>(pt,&nbsp;b,&nbsp;wb)</td>
-<td>Adds an Axisymmetric Imperfection (AI)</td>
+<td>Add an Axisymmetric Imperfection (AI)</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_dimple" title="desicos.abaqus.imperfections.impconf.ImpConf.add_dimple"><code class="xref py py-obj docutils literal"><span class="pre">add_dimple</span></code></a>(thetadeg,&nbsp;pt,&nbsp;a,&nbsp;b,&nbsp;wb)</td>
-<td>Adds a Dimple Imperfection (DI)</td>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_cutout" title="desicos.abaqus.imperfections.impconf.ImpConf.add_cutout"><code class="xref py py-obj docutils literal"><span class="pre">add_cutout</span></code></a>(thetadeg,&nbsp;pt,&nbsp;d[,&nbsp;drill_offset_deg])</td>
+<td>Add a cutout</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_lbmi" title="desicos.abaqus.imperfections.impconf.ImpConf.add_lbmi"><code class="xref py py-obj docutils literal"><span class="pre">add_lbmi</span></code></a>(mode,&nbsp;scaling_factor)</td>
-<td>Adds a Linear Buckling Mode-shaped Imperfection (LBMI)</td>
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_dimple" title="desicos.abaqus.imperfections.impconf.ImpConf.add_dimple"><code class="xref py py-obj docutils literal"><span class="pre">add_dimple</span></code></a>(thetadeg,&nbsp;pt,&nbsp;a,&nbsp;b,&nbsp;wb)</td>
+<td>Add a Dimple Imperfection (DI)</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_measured_u3s_bottom_edge" title="desicos.abaqus.imperfections.impconf.ImpConf.add_measured_u3s_bottom_edge"><code class="xref py py-obj docutils literal"><span class="pre">add_measured_u3s_bottom_edge</span></code></a>(thetadegs,&nbsp;u3s)</td>
-<td>Adds a measured uneven bottom edge</td>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_lbmi" title="desicos.abaqus.imperfections.impconf.ImpConf.add_lbmi"><code class="xref py py-obj docutils literal"><span class="pre">add_lbmi</span></code></a>(mode,&nbsp;scaling_factor)</td>
+<td>Add a Linear Buckling Mode-shaped Imperfection (LBMI)</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_measured_u3s_top_edge" title="desicos.abaqus.imperfections.impconf.ImpConf.add_measured_u3s_top_edge"><code class="xref py py-obj docutils literal"><span class="pre">add_measured_u3s_top_edge</span></code></a>(thetadegs,&nbsp;u3s)</td>
-<td>Adds a measured uneven top edge</td>
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_measured_u3s_bottom_edge" title="desicos.abaqus.imperfections.impconf.ImpConf.add_measured_u3s_bottom_edge"><code class="xref py py-obj docutils literal"><span class="pre">add_measured_u3s_bottom_edge</span></code></a>(thetadegs,&nbsp;u3s)</td>
+<td>Add a measured uneven bottom edge</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_msi" title="desicos.abaqus.imperfections.impconf.ImpConf.add_msi"><code class="xref py py-obj docutils literal"><span class="pre">add_msi</span></code></a>([imp_ms,&nbsp;scaling_factor,&nbsp;...])</td>
-<td>Adds a Mid-Surface Imperfection (MSI)</td>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_measured_u3s_top_edge" title="desicos.abaqus.imperfections.impconf.ImpConf.add_measured_u3s_top_edge"><code class="xref py py-obj docutils literal"><span class="pre">add_measured_u3s_top_edge</span></code></a>(thetadegs,&nbsp;u3s)</td>
+<td>Add a measured uneven top edge</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_pload" title="desicos.abaqus.imperfections.impconf.ImpConf.add_pload"><code class="xref py py-obj docutils literal"><span class="pre">add_pload</span></code></a>(thetadeg,&nbsp;pt,&nbsp;pltotal[,&nbsp;step])</td>
-<td>Adds a Perturbation Load</td>
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_msi" title="desicos.abaqus.imperfections.impconf.ImpConf.add_msi"><code class="xref py py-obj docutils literal"><span class="pre">add_msi</span></code></a>([imp_ms,&nbsp;scaling_factor,&nbsp;...])</td>
+<td>Add a Mid-Surface Imperfection (MSI)</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_shim_bottom_edge" title="desicos.abaqus.imperfections.impconf.ImpConf.add_shim_bottom_edge"><code class="xref py py-obj docutils literal"><span class="pre">add_shim_bottom_edge</span></code></a>(thetadeg,&nbsp;thick,&nbsp;width)</td>
-<td>Adds a Shim to the bottom edge</td>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_pload" title="desicos.abaqus.imperfections.impconf.ImpConf.add_pload"><code class="xref py py-obj docutils literal"><span class="pre">add_pload</span></code></a>(thetadeg,&nbsp;pt,&nbsp;pltotal[,&nbsp;step])</td>
+<td>Add a Perturbation Load</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_shim_top_edge" title="desicos.abaqus.imperfections.impconf.ImpConf.add_shim_top_edge"><code class="xref py py-obj docutils literal"><span class="pre">add_shim_top_edge</span></code></a>(thetadeg,&nbsp;thick,&nbsp;width)</td>
-<td>Adds a Shim to the top edge</td>
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_shim_bottom_edge" title="desicos.abaqus.imperfections.impconf.ImpConf.add_shim_bottom_edge"><code class="xref py py-obj docutils literal"><span class="pre">add_shim_bottom_edge</span></code></a>(thetadeg,&nbsp;thick,&nbsp;width)</td>
+<td>Add a Shim to the bottom edge</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_ti" title="desicos.abaqus.imperfections.impconf.ImpConf.add_ti"><code class="xref py py-obj docutils literal"><span class="pre">add_ti</span></code></a>(imp_thick,&nbsp;scaling_factor)</td>
-<td>Adds Thickness Imperfection (TI)</td>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_shim_top_edge" title="desicos.abaqus.imperfections.impconf.ImpConf.add_shim_top_edge"><code class="xref py py-obj docutils literal"><span class="pre">add_shim_top_edge</span></code></a>(thetadeg,&nbsp;thick,&nbsp;width)</td>
+<td>Add a Shim to the top edge</td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">create</span></code>()</td>
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_ti" title="desicos.abaqus.imperfections.impconf.ImpConf.add_ti"><code class="xref py py-obj docutils literal"><span class="pre">add_ti</span></code></a>(imp_thick,&nbsp;scaling_factor)</td>
+<td>Add Thickness Imperfection (TI)</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">create</span></code>()</td>
 <td></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">rebuild</span></code>()</td>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">rebuild</span></code>()</td>
 <td></td>
 </tr>
 </tbody>
@@ -1290,7 +1264,7 @@ objects</td>
 <dl class="method">
 <dt id="desicos.abaqus.imperfections.impconf.ImpConf.add_axisymmetric">
 <code class="descname">add_axisymmetric</code><span class="sig-paren">(</span><em>pt</em>, <em>b</em>, <em>wb</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/abaqus/imperfections/impconf.html#ImpConf.add_axisymmetric"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_axisymmetric" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds an Axisymmetric Imperfection (AI)</p>
+<dd><p>Add an Axisymmetric Imperfection (AI)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1317,9 +1291,44 @@ objects</td>
 </dd></dl>
 
 <dl class="method">
+<dt id="desicos.abaqus.imperfections.impconf.ImpConf.add_cutout">
+<code class="descname">add_cutout</code><span class="sig-paren">(</span><em>thetadeg</em>, <em>pt</em>, <em>d</em>, <em>drill_offset_deg=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/abaqus/imperfections/impconf.html#ImpConf.add_cutout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_cutout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a cutout</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>thetadeg</strong> : float</p>
+<blockquote>
+<div><p>Circumferential position of the dimple.</p>
+</div></blockquote>
+<p><strong>pt</strong> : float</p>
+<blockquote>
+<div><p>Normalized meridional position.</p>
+</div></blockquote>
+<p><strong>d</strong> : float</p>
+<blockquote>
+<div><p>Diameter of the drilling machine.</p>
+</div></blockquote>
+<p><strong>drill_offset_deg</strong> : float</p>
+<blockquote>
+<div><p>Angular offset when the drilling is not normal to the shell
+surface. A positive offset means a positive rotation about the
+<img class="math" src="../../_images/math/4dc4789b8e2f448615b3e2c2bdc22fb9267f7cd8.png" alt="\theta"/> axis, along the meridional plane.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>cutout</strong> : <a class="reference internal" href="#desicos.abaqus.imperfections.cutout.Cutout" title="desicos.abaqus.imperfections.cutout.Cutout"><code class="xref py py-class docutils literal"><span class="pre">Cutout</span></code></a> object.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="desicos.abaqus.imperfections.impconf.ImpConf.add_dimple">
 <code class="descname">add_dimple</code><span class="sig-paren">(</span><em>thetadeg</em>, <em>pt</em>, <em>a</em>, <em>b</em>, <em>wb</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/abaqus/imperfections/impconf.html#ImpConf.add_dimple"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_dimple" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds a Dimple Imperfection (DI)</p>
+<dd><p>Add a Dimple Imperfection (DI)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1352,7 +1361,7 @@ objects</td>
 <dl class="method">
 <dt id="desicos.abaqus.imperfections.impconf.ImpConf.add_lbmi">
 <code class="descname">add_lbmi</code><span class="sig-paren">(</span><em>mode</em>, <em>scaling_factor</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/abaqus/imperfections/impconf.html#ImpConf.add_lbmi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_lbmi" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds a Linear Buckling Mode-shaped Imperfection (LBMI)</p>
+<dd><p>Add a Linear Buckling Mode-shaped Imperfection (LBMI)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1377,7 +1386,7 @@ objects</td>
 <dl class="method">
 <dt id="desicos.abaqus.imperfections.impconf.ImpConf.add_measured_u3s_bottom_edge">
 <code class="descname">add_measured_u3s_bottom_edge</code><span class="sig-paren">(</span><em>thetadegs</em>, <em>u3s</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/abaqus/imperfections/impconf.html#ImpConf.add_measured_u3s_bottom_edge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_measured_u3s_bottom_edge" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds a measured uneven bottom edge</p>
+<dd><p>Add a measured uneven bottom edge</p>
 <p>Straightforward method to include measured data about the bottom edge
 imperfection.</p>
 <p>Adopts the coordinate system of <a class="reference internal" href="#figure-conecyl"><span>this figure</span></a>
@@ -1407,7 +1416,7 @@ measured, in degrees.</p>
 <dl class="method">
 <dt id="desicos.abaqus.imperfections.impconf.ImpConf.add_measured_u3s_top_edge">
 <code class="descname">add_measured_u3s_top_edge</code><span class="sig-paren">(</span><em>thetadegs</em>, <em>u3s</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/abaqus/imperfections/impconf.html#ImpConf.add_measured_u3s_top_edge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_measured_u3s_top_edge" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds a measured uneven top edge</p>
+<dd><p>Add a measured uneven top edge</p>
 <p>Straightforward method to include measured data about the top edge
 imperfection.</p>
 <p>Adopts the coordinate system of <a class="reference internal" href="#figure-conecyl"><span>this figure</span></a>
@@ -1437,7 +1446,7 @@ measured, in degrees.</p>
 <dl class="method">
 <dt id="desicos.abaqus.imperfections.impconf.ImpConf.add_msi">
 <code class="descname">add_msi</code><span class="sig-paren">(</span><em>imp_ms=''</em>, <em>scaling_factor=1.0</em>, <em>R_best_fit=None</em>, <em>H_measured=None</em>, <em>path=None</em>, <em>use_theta_z_format=True</em>, <em>rotatedeg=0.0</em>, <em>ignore_bot_h=True</em>, <em>ignore_top_h=True</em>, <em>stretch_H=False</em>, <em>c0=None</em>, <em>m0=None</em>, <em>n0=None</em>, <em>funcnum=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/abaqus/imperfections/impconf.html#ImpConf.add_msi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_msi" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds a Mid-Surface Imperfection (MSI)</p>
+<dd><p>Add a Mid-Surface Imperfection (MSI)</p>
 <p>Also called geometric imperfection.</p>
 <p>If the imperfection is <a class="reference internal" href="../../tutorials/conecylDB/index.html#tutorials-conecyldb"><span>already included in the database</span></a> only the corresponding entry <code class="docutils literal"><span class="pre">imp_ms</span></code> and
 the scaling factor need to be specified.</p>
@@ -1534,7 +1543,7 @@ see <a class="reference internal" href="../conecylDB/index.html#desicos.conecylD
 <dl class="method">
 <dt id="desicos.abaqus.imperfections.impconf.ImpConf.add_pload">
 <code class="descname">add_pload</code><span class="sig-paren">(</span><em>thetadeg</em>, <em>pt</em>, <em>pltotal</em>, <em>step=1</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/abaqus/imperfections/impconf.html#ImpConf.add_pload"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_pload" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds a Perturbation Load</p>
+<dd><p>Add a Perturbation Load</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1570,7 +1579,7 @@ normally to the shell surface).</p>
 <dl class="method">
 <dt id="desicos.abaqus.imperfections.impconf.ImpConf.add_shim_bottom_edge">
 <code class="descname">add_shim_bottom_edge</code><span class="sig-paren">(</span><em>thetadeg</em>, <em>thick</em>, <em>width</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/abaqus/imperfections/impconf.html#ImpConf.add_shim_bottom_edge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_shim_bottom_edge" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds a Shim to the bottom edge</p>
+<dd><p>Add a Shim to the bottom edge</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1599,7 +1608,7 @@ normally to the shell surface).</p>
 <dl class="method">
 <dt id="desicos.abaqus.imperfections.impconf.ImpConf.add_shim_top_edge">
 <code class="descname">add_shim_top_edge</code><span class="sig-paren">(</span><em>thetadeg</em>, <em>thick</em>, <em>width</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/abaqus/imperfections/impconf.html#ImpConf.add_shim_top_edge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_shim_top_edge" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds a Shim to the top edge</p>
+<dd><p>Add a Shim to the top edge</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1628,7 +1637,7 @@ normally to the shell surface).</p>
 <dl class="method">
 <dt id="desicos.abaqus.imperfections.impconf.ImpConf.add_ti">
 <code class="descname">add_ti</code><span class="sig-paren">(</span><em>imp_thick</em>, <em>scaling_factor</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/abaqus/imperfections/impconf.html#ImpConf.add_ti"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_ti" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds Thickness Imperfection (TI)</p>
+<dd><p>Add Thickness Imperfection (TI)</p>
 <p>The imperfection must be already included in the database (<a class="reference internal" href="../../tutorials/conecylDB/index.html#tutorials-conecyldb"><span>check
 this tutorial</span></a>).</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -2237,16 +2246,20 @@ is already created.</p>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td>betadeg</td>
+<tr class="row-even"><td>uneven_plate</td>
+<td><code class="docutils literal"><span class="pre">bool</span></code>: If the unevenness should be applied to the
+testing plate or to the test specimen</td>
+</tr>
+<tr class="row-odd"><td>betadeg</td>
 <td>Misalignment of the bottom edge in degrees</td>
 </tr>
-<tr class="row-odd"><td>omegadeg</td>
+<tr class="row-even"><td>omegadeg</td>
 <td>Azimuth angle of the bottom edge misalignment in degrees.</td>
 </tr>
-<tr class="row-even"><td>shims</td>
+<tr class="row-odd"><td>shims</td>
 <td><code class="docutils literal"><span class="pre">list</span></code> of shims included to this edge</td>
 </tr>
-<tr class="row-odd"><td>measured_u3s</td>
+<tr class="row-even"><td>measured_u3s</td>
 <td>Measured points describing the edge imperfection</td>
 </tr>
 </tbody>
@@ -2371,8 +2384,8 @@ for all the shell and resin ring nodes</li>
 - measured uneven edge points</p>
 <table border="1" class="docutils">
 <colgroup>
-<col width="20%" />
-<col width="80%" />
+<col width="19%" />
+<col width="81%" />
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">Attributes</th>
@@ -2380,16 +2393,21 @@ for all the shell and resin ring nodes</li>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td>betadeg</td>
-<td>Misalignment of the top edge in degrees</td>
+<tr class="row-even"><td>uneven_plate</td>
+<td><code class="docutils literal"><span class="pre">bool</span></code>: If the unevenness should be applied to the
+testing plate or to the test specimen</td>
 </tr>
-<tr class="row-odd"><td>omegadeg</td>
-<td>Azimuth angle of the top edge misalignment in degrees.</td>
+<tr class="row-odd"><td>betadeg</td>
+<td><code class="docutils literal"><span class="pre">float</span></code>: Misalignment of the top edge in degrees</td>
 </tr>
-<tr class="row-even"><td>shims</td>
+<tr class="row-even"><td>omegadeg</td>
+<td><code class="docutils literal"><span class="pre">float</span></code>: Azimuth angle of the top edge misalignment in
+degrees</td>
+</tr>
+<tr class="row-odd"><td>shims</td>
 <td><code class="docutils literal"><span class="pre">list</span></code> of shims included to this edge</td>
 </tr>
-<tr class="row-odd"><td>measured_u3s</td>
+<tr class="row-even"><td>measured_u3s</td>
 <td>Measured points describing the edge imperfection</td>
 </tr>
 </tbody>
@@ -2508,6 +2526,55 @@ for all the shell and resin ring nodes, but the load asymmetry angle
 </div>
 </dd></dl>
 
+</dd></dl>
+
+</div>
+<div class="section" id="module-desicos.abaqus.imperfections.cutout">
+<span id="cutout-desicos-abaqus-imperfections-cutout"></span><h3>Cutout (<a class="reference internal" href="#module-desicos.abaqus.imperfections.cutout" title="desicos.abaqus.imperfections.cutout"><code class="xref py py-mod docutils literal"><span class="pre">desicos.abaqus.imperfections.cutout</span></code></a>)<a class="headerlink" href="#module-desicos.abaqus.imperfections.cutout" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="desicos.abaqus.imperfections.cutout.Cutout">
+<em class="property">class </em><code class="descclassname">desicos.abaqus.imperfections.cutout.</code><code class="descname">Cutout</code><span class="sig-paren">(</span><em>thetadeg</em>, <em>pt</em>, <em>d</em>, <em>drill_offset_deg=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/abaqus/imperfections/cutout.html#Cutout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.imperfections.cutout.Cutout" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>thetadeg</strong> : float</p>
+<blockquote>
+<div><p>Circumferential position of the dimple.</p>
+</div></blockquote>
+<p><strong>pt</strong> : float</p>
+<blockquote>
+<div><p>Normalized meridional position.</p>
+</div></blockquote>
+<p><strong>d</strong> : float</p>
+<blockquote>
+<div><p>Diameter of the drilling machine.</p>
+</div></blockquote>
+<p><strong>drill_offset_deg</strong> : float</p>
+<blockquote class="last">
+<div><p>Angular offset when the drilling is not normal to the shell
+surface. A positive offset means a positive rotation about the
+<img class="math" src="../../_images/math/4dc4789b8e2f448615b3e2c2bdc22fb9267f7cd8.png" alt="\theta"/> axis, along the meridional plane.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">create</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">rebuild</span></code>()</td>
+<td></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>

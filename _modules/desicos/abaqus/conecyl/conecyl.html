@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>desicos.abaqus.conecyl.conecyl &mdash; DESICOS 2.2.0 documentation</title>
+    <title>desicos.abaqus.conecyl.conecyl &mdash; DESICOS 2.3.0 documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     '2.2.0',
+        VERSION:     '2.3.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../../_static/doctools.js"></script>
-    <link rel="top" title="DESICOS 2.2.0 documentation" href="../../../../index.html" />
+    <link rel="top" title="DESICOS 2.3.0 documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
    
   
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="../../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../index.html">DESICOS 2.2.0 documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">DESICOS 2.3.0 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../../../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
@@ -1067,36 +1067,6 @@
         <span class="k">return</span> <span class="n">ans</span>
 
 
-<div class="viewcode-block" id="ConeCyl.create_cutout"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl.create_cutout">[docs]</a>    <span class="k">def</span> <span class="nf">create_cutout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">numel</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Create a cutout in the shell surface.</span>
-
-<span class="sd">        This function is buggy, intended to easily create cutouts on the shell</span>
-<span class="sd">        surface. Doesn&#39;t work for all cases and the mesh quality must be</span>
-<span class="sd">        improved.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        theta : float</span>
-<span class="sd">            Cylindrical coordinate theta in degrees.</span>
-<span class="sd">        pt : float</span>
-<span class="sd">            Coordinate z/cylinder height (or cone height).</span>
-<span class="sd">        d : float</span>
-<span class="sd">            Cutout diameter.</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">desicos.abaqus.cutout</span> <span class="kn">import</span> <span class="n">Cutout</span>
-        <span class="n">cutobj</span> <span class="o">=</span> <span class="n">Cutout</span><span class="p">()</span>
-        <span class="n">cutobj</span><span class="o">.</span><span class="n">theta</span> <span class="o">=</span> <span class="n">theta</span>
-        <span class="n">cutobj</span><span class="o">.</span><span class="n">pt</span> <span class="o">=</span> <span class="n">pt</span>
-        <span class="n">cutobj</span><span class="o">.</span><span class="n">d</span> <span class="o">=</span> <span class="n">d</span>
-        <span class="k">if</span> <span class="n">numel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="n">cutobj</span><span class="o">.</span><span class="n">numel</span> <span class="o">=</span> <span class="n">numel</span>
-        <span class="n">cutobj</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cutouts</span><span class="p">)</span>
-        <span class="n">cutobj</span><span class="o">.</span><span class="n">conecyl</span> <span class="o">=</span> <span class="bp">self</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">cutouts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cutobj</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">cutobj</span>
-
-</div>
 <div class="viewcode-block" id="ConeCyl.calc_ABD_matrix"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl.calc_ABD_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">calc_ABD_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Calculates the laminate stiffness matrix (ABD matrix)</span>
 

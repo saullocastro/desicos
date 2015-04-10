@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>desicos.abaqus.apply_imperfections &mdash; DESICOS 2.2.0 documentation</title>
+    <title>desicos.abaqus.apply_imperfections &mdash; DESICOS 2.3.0 documentation</title>
     
     <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.2.0',
+        VERSION:     '2.3.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <link rel="top" title="DESICOS 2.2.0 documentation" href="../../../index.html" />
+    <link rel="top" title="DESICOS 2.3.0 documentation" href="../../../index.html" />
     <link rel="up" title="Module code" href="../../index.html" />
    
   
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">DESICOS 2.2.0 documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">DESICOS 2.3.0 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
@@ -850,7 +850,7 @@
     <span class="c"># creating sets</span>
     <span class="n">t_list</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">max_len_t_set</span> <span class="o">=</span> <span class="mi">100</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">t_set</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">max_len_t_set</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">t_set</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">max_len_t_set</span> <span class="ow">and</span> <span class="n">number_of_sets</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span>
         <span class="n">number_of_sets</span> <span class="o">=</span> <span class="mi">10</span>
         <span class="n">log</span><span class="p">(</span><span class="s">&#39;More than {0:d} different thicknesses measured!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="n">max_len_t_set</span><span class="p">))</span>
