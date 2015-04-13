@@ -404,6 +404,8 @@ def set_colors_ti(cc):
 
     part = mdb.models[cc.model_name].parts[cc.part_name_shell]
     viewport = session.viewports[session.currentViewportName]
+    if viewport.displayedObject is None:
+        viewport.setValues(displayedObject=part)
     cmap = viewport.colorMappings['Set']
     viewport.setColor(colorMapping=cmap)
     viewport.enableMultipleColors()
