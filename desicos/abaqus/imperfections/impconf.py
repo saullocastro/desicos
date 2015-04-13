@@ -484,18 +484,18 @@ class ImpConf(object):
             cutout.index = i
             cutout.rebuild()
             self.imperfections.append(cutout)
-        # mid-surface imperfection (MSI)
-        for msi in self.msis:
-            i += 1
-            msi.index = i
-            msi.rebuild()
-            self.imperfections.append(msi)
         # thickness imperfection (TI)
         for ti in self.tis:
             i += 1
             ti.index = i
             ti.rebuild()
             self.imperfections.append(ti)
+        # mid-surface imperfection (MSI)
+        for msi in self.msis:
+            i += 1
+            msi.index = i
+            msi.rebuild()
+            self.imperfections.append(msi)
         # name
         if self.rename:
             self.name = ('PLs_%02d_dimples_%02d_axisym_%02d' +\
