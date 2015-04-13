@@ -407,7 +407,8 @@ class ImpConf(object):
         return ti
 
 
-    def add_cutout(self, thetadeg, pt, d, drill_offset_deg=0.):
+    def add_cutout(self, thetadeg, pt, d, drill_offset_deg=0.,
+                   clearance_factor=0.75):
         r"""Add a cutout
 
         Parameters
@@ -422,13 +423,17 @@ class ImpConf(object):
             Angular offset when the drilling is not normal to the shell
             surface. A positive offset means a positive rotation about the
             `\theta` axis, along the meridional plane.
+        clearance_factor : float
+            Fraction of the diameter to apply as clearance around the cutout.
+            This clearance is partitoned and meshed separately from the rest of
+            the cone / cylinder.
 
         Returns
         -------
         cutout : :class:`.Cutout` object.
 
         """
-        cutout = Cutout(thetadeg, pt, d, drill_offset_deg)
+        cutout = Cutout(thetadeg, pt, d, drill_offset_deg, clearance_factor)
         cutout.impconf = self
         self.cutouts.append(cutout)
         return cutout
@@ -473,24 +478,24 @@ class ImpConf(object):
             lbmi.index = i
             lbmi.rebuild()
             self.imperfections.append(lbmi)
-        # mid-surface imperfection (MSI)
-        for msi in self.msis:
-            i += 1
-            msi.index = i
-            msi.rebuild()
-            self.imperfections.append(msi)
-        # thickness imperfection (TI)
-        for ti in self.tis:
-            i += 1
-            ti.index = i
-            ti.rebuild()
-            self.imperfections.append(ti)
         # cutout
         for cutout in self.cutouts:
             i += 1
             cutout.index = i
             cutout.rebuild()
             self.imperfections.append(cutout)
+        # thickness imperfection (TI)
+        for ti in self.tis:
+            i += 1
+            ti.index = i
+            ti.rebuild()
+            self.imperfections.append(ti)
+        # mid-surface imperfection (MSI)
+        for msi in self.msis:
+            i += 1
+            msi.index = i
+            msi.rebuild()
+            self.imperfections.append(msi)
         # name
         if self.rename:
             self.name = ('PLs_%02d_dimples_%02d_axisym_%02d' +\
@@ -501,12 +506,6 @@ class ImpConf(object):
 
 
     def create(self):
-        for imp in self.tis:
-            if imp:
-                imp.create()
-        for imp in self.msis:
-            if imp:
-                imp.create()
         for imp in self.imperfections:
             valid = True
             for pt in imp.pts:
