@@ -95,12 +95,12 @@ class Study(object):
         self.rebuild()
         return self.load()
 
-    def add_cc_fromDB(self, name):
+    def add_cc_from_DB(self, name):
         cc = ConeCyl()
-        cc.fromDB(name)
+        cc.from_DB(name)
         cc.index = len(self.ccs)
         self.ccs.append(cc)
-        self.rebuild(save_rebuild=False)
+        cc.rebuild(save_rebuild=False)
         return cc
 
     def add_cc(self, cc):
