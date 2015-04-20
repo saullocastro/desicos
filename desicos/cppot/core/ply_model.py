@@ -256,6 +256,69 @@ class PlyPieceModel(object):
         return 2*np.pi*self.cg.sin_alpha / delta_phi
 
 
+class TrapezPlyPieceModel(PlyPieceModel):
+    """Sub-class of ``PlyPieceModel``, for shape A (trapezium)
+
+    """
+    def construct_single_ply_piece(self, fraction=1.0):
+        """Construct a ply piece for shape A (trapezium)"""
+        th_nom = np.radians(self.fiber_angle)
+        # Step 1: Define origin line L0
+        origin_point = Point2D(self.starting_position, 0.0)
+        L0 = Line2D.from_point_angle(origin_point, th_nom)
+        # Step 2: Define line L2, perpendicular to L0, tangent to circle s4
+        tangent_point = Point2D.from_polar(self.cg.s4, th_nom)
+        L2 = Line2D.from_point_angle(tangent_point, th_nom + np.pi/2)
+        P0 = L0.intersection_line(L2)
+
+        # Step 3: Position P2 and P3 based on max_width and eccentricity
+        P2_dist = self.max_width * self.eccentricity
+        P3_dist = self.max_width * (1 - self.eccentricity)
+        P2 = P0 + Point2D.from_polar(P2_dist, L2.angle())
+        P3 = P0 + Point2D.from_polar(P3_dist, L2.angle() + np.pi)
+
+        # Step 4: Calculate the spanned angle (both deltas should be >= 0)
+        T2 = L0.intersection_circle_near(P2.norm(), P0)
+        T3 = L0.intersection_circle_near(P3.norm(), P0)
+        delta_phi_1 = fraction*(P2.angle() - T2.angle())
+        delta_phi_2 = fraction*(T3.angle() - P3.angle())
+
+        # Step 5: Calculate the side lines L1 and L3
+        L1 = L0.rotate(delta_phi_1)
+        L3 = L0.rotate(-delta_phi_2)
+        near_pt = Point2D(self.cg.s1, 0)
+        P1a = L1.intersection_circle_near(self.cg.s1, near_pt)
+        P4a = L3.intersection_circle_near(self.cg.s1, near_pt)
+        # Redefine P2 and P3 if needed (for rest pieces)
+        if fraction != 1.0:
+            P2 = L2.intersection_line(L1)
+            P3 = L2.intersection_line(L3)
+
+        # Step 6: Construct L4, parallel to L2, through either P1a or P4a,
+        # whichever is furthest from L2
+        if L2.distance_point(P1a) > L2.distance_point(P4a):
+            L4_through_point = P1a
+        else:
+            L4_through_point = P4a
+        L4 = Line2D.from_point_angle(L4_through_point, L2.angle())
+        # now redefine P1 and P4 as the intersection points:
+        P1b = L4.intersection_line(L1)
+        P4b = L4.intersection_line(L3)
+
+        ip_L1_L3 = L1.intersection_line(L3)
+        if L2.distance_point(ip_L1_L3) < L2.distance_point(P4b):
+            # Line segments L1 and L3 intersect within the polygon, so we have
+            # a 'hourglass' shape. Move P1 and P4 to the intersection point,
+            # effectively forming a triangle. We could just drop P4, if not
+            # for some other code expeccting 4-point polygons.
+            P1, P4 = ip_L1_L3, ip_L1_L3
+        else:
+            P1, P4 = P1b, P4b
+
+        # Step 7: Return the final ply piece
+        return PlyPiece(Polygon2D((P1, P2, P3, P4)), 0.0, -delta_phi_2, delta_phi_1)
+
+
 class PlyPiece(object):
     r"""PlyPiece object
 
