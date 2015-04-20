@@ -591,3 +591,103 @@ class Polygon2D(tuple):
         c = np.cos(rotate_angle)
         s = np.sin(rotate_angle)
         return self.__class__(Point2D(c*p[0] - s*p[1], s*p[0] + c*p[1]) for p in self)
+
+
+class ConeGeometry(object):
+    r"""ConeGeometry object
+
+    Carries all the information about the geometry of a cone, plus some
+    read-only accessors to calculate often-needed cone properties. These are
+    all calculated on-the-fly, so no rebuild()-ing is necessary.
+
+    ================  ==================================================
+    Attribute         Description
+    ================  ==================================================
+    ``H``             ``float``, height of the free area of the cone.
+    ``rbot``          ``float``, bottom radius of the cone
+    ``alpharad``      ``float``, semi-vertex angle of the cone, in
+                      radians. Must be between 0 and pi/2.
+    ``extra_height``  ``float``, extra (support) height. A section with
+                      this height is added along both the top and bottom
+                      edge of the free cone. This represents the extra
+                      material that is present during manufacturing.
+    ================  ==================================================
+
+    """
+    def __init__(self, H, rbot, alpharad, extra_height):
+        self.H = H
+        self.rbot = rbot
+        if not (0 < alpharad < np.pi/2):
+            raise ValueError('Not a cone; required is 0 < alpha < 90 (degrees)')
+        self.alpharad = alpharad
+        self.extra_height = extra_height
+
+    @classmethod
+    def from_conecyl(cls, cc, extra_height):
+        """Construct a ConeGeometry object based on an existing ConeCyl
+
+        Parameters
+        ----------
+        cc : :class:`.ConeCyl`
+            Existing cone to use. Must be a cone, i.e. alpha > 0.
+        extra_height : float
+            Extra support height for this model.
+
+        Returns
+        -------
+        cg : :class:`.ConeGeometry`
+            The constructed ConeGeometry object
+
+        """
+        return cls(cc.H, cc.rbot, cc.alpharad, extra_height)
+
+    @property
+    def sin_alpha(self):
+        """Read-only property: Sine of the semi-vertex angle."""
+        return np.sin(self.alpharad)
+
+    @property
+    def cos_alpha(self):
+        """Read-only property: Cosine of the semi-vertex angle."""
+        return np.cos(self.alpharad)
+
+    @property
+    def tan_alpha(self):
+        """Read-only property: Tangent of the semi-vertex angle."""
+        return np.tan(self.alpharad)
+
+    @property
+    def rtop(self):
+        """Read-only property: Top radius of the cone."""
+        return self.rbot - self.H * self.tan_alpha
+
+    @property
+    def L(self):
+        """Read-only property: Meridional length."""
+        return self.H / self.cos_alpha
+
+    @property
+    def s1(self):
+        """Read-only property: Radius of top (support) edge in unfolded coordinates."""
+        return self.rbot / self.sin_alpha - \
+            (self.H + self.extra_height) / self.cos_alpha
+
+    @property
+    def s2(self):
+        """Read-only property: Radius of top edge of the free cone in unfolded coordinates."""
+        return self.rbot / self.sin_alpha - self.H / self.cos_alpha
+
+    @property
+    def s3(self):
+        """Read-only property: Radius of bottom edge of the free cone in unfolded coordinates."""
+        return self.rbot / self.sin_alpha
+
+    @property
+    def s4(self):
+        """Read-only property: Radius of bottom (support) edge in unfolded coordinates."""
+        return self.rbot / self.sin_alpha + self.extra_height / self.cos_alpha
+
+    @property
+    def cone_area(self):
+        """Read-only property: Surface area of the free cone (supports excluded)."""
+        return np.pi * (self.s3**2 - self.s2**2) * self.sin_alpha
