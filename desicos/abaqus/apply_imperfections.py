@@ -148,6 +148,13 @@ def calc_translations_ABAQUS(imperfection_file_name,
                 log('Using sample_size={0}'.format(sample_size), level=1)
                 data = data[sample(range(num), int(sample_size)), :]
 
+        if r_TOL:
+            max_imp = R_model * r_TOL / 100.
+            imp = data[:, 2]
+            cond = np.any(np.array((imp > max_imp, imp < (-max_imp))), axis=0)
+            log('Skipping {0} points'.format(len(imp[cond])))
+            data = data[np.logical_not(cond), :]
+
         data3D = np.zeros((data.shape[0], 4), dtype=FLOAT)
         if rotatedeg:
             data[:, 0] += deg2rad(rotatedeg)
