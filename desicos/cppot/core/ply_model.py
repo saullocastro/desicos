@@ -153,7 +153,9 @@ class PlyPieceModel(object):
 
     def local_orientation(self, eta, zeta):
         """Determine the local fiber orientation at a given point. If the
-        given point is not inside any ply piece, NaN is returned
+        given point is not inside any ply piece, NaN is returned. If there are
+        multiple overlapping ply pieces, the orientation belonging to one of
+        them (the first in the ply piece list) is returned.
 
         Parameters
         ----------
@@ -176,6 +178,51 @@ class PlyPieceModel(object):
             if pp.contains_point(point, phi):
                 return self.fiber_angle + pp.angle_deviation(point)
         return np.nan
+
+    def all_local_orientations(self, eta, zeta):
+        """Determine the local fiber orientations of all plies at a point.
+
+        Parameters
+        ----------
+        eta : float
+            Horizontal coordinate of point, in the coordinate system of the
+            unfolded cone.
+        zeta : float
+            Vertical coordinate of point, in the coordinate system of the
+            unfolded cone.
+
+        Returns
+        -------
+        local_angles : list
+            Lists of floats representing the local fiber angle of each
+            (possibly overlapping) ply piece at this point, in degrees.
+
+        """
+
+        point = Point2D(eta, zeta)
+        phi = point.angle()
+        return len([self.fiber_angle + pp.angle_deviation(point)
+                for pp in self.ply_pieces if pp.contains_point(point, phi)])
+
+    def local_num_pieces(self, eta, zeta):
+        """Determine the local number of overlapping pieces at a given point.
+
+        Parameters
+        ----------
+        eta : float
+            Horizontal coordinate of point, in the coordinate system of the
+            unfolded cone.
+        zeta : float
+            Vertical coordinate of point, in the coordinate system of the
+            unfolded cone.
+
+        Returns
+        -------
+        num_pieces : int
+            Number of overlapping pieces at the given point in the ply
+
+        """
+        return len(self.all_local_orientations(eta, zeta))
 
     def _useful_polygon(self, ply_piece=None):
         # Internal function to get a polygon representing the section of a
@@ -254,6 +301,122 @@ class PlyPieceModel(object):
         """
         delta_phi = self.base_piece.phi_nom_max - self.base_piece.phi_nom_min
         return 2*np.pi*self.cg.sin_alpha / delta_phi
+
+    def edge_lengths(self):
+        """Get the lengths of the edges of the (base) ply piece.
+
+        Returns
+        -------
+        edge_lengths : list
+            List of edge lengths (L1 to L4)
+
+        """
+        points = list(self.base_piece.polygon.points())
+        NUM = 4
+        assert len(points) == NUM
+        return [(points[i] - points[(i+1) % NUM]).norm() for i in range(NUM)]
+
+    def ratio_continuous_fibers(self):
+        """Get the ratio of continuous fibers, i.e. the fraction of the fibers
+        at the bottom edge (radius s3) that reach the top edge (radius s2).
+
+        Returns
+        -------
+        ratio : float
+            The ratio of continuous fibers
+
+        """
+        _, pts_on_s2, pts_on_s3 = self._useful_polygon()
+        th_nom = np.radians(self.fiber_angle)
+        cont_length_1 = Line2D.from_point_angle(pts_on_s2[0], th_nom).distance_point(pts_on_s2[1])
+        cont_length_2 = Line2D.from_point_angle(pts_on_s3[0], th_nom).distance_point(pts_on_s3[1])
+        return cont_length_1 / cont_length_2
+
+    def ply_piece_area(self):
+        """Get the area of a single ply piece that is on the free cone area,
+        i.e. between radii s2 and s3.
+
+        Returns
+        -------
+        area : float
+            The aforementioned area
+
+        """
+        poly, pts_on_s2, pts_on_s3 = self._useful_polygon()
+        # Correct the area of the _useful_polygon to account for the arcs
+        s2_angle = abs(pts_on_s2[0].angle() - pts_on_s2[1].angle())
+        s3_angle = abs(pts_on_s3[0].angle() - pts_on_s3[1].angle())
+        area_s2 = circle_segment_area(self.cg.s2, s2_angle)
+        area_s3 = circle_segment_area(self.cg.s3, s3_angle)
+        return poly.area() - area_s2 + area_s3
+
+    def effective_area(self, ply_piece=None, max_angle_dev=2.0):
+        """Get the effective area of a single ply piece. This is the area on
+        useful section of the cone, where the deviation of the fiber angle
+        is less than a given maximum.
+
+        Parameters
+        ----------
+        ply_piece : :class:`PlyPiece`, optional
+            Ply piece to get the effective area for. If not set, the base
+            piece is used.
+        max_angle_dev : float, optional
+            Maximum deviation from the nominal fiber angle to consider
+            the material 'effective'. In degrees.
+
+        Returns
+        -------
+        out : tuple
+            2-tuple, where ``out[0]`` is the effective surface area and
+            ``out[1]`` is the corresponding polygon.
+
+        Notes
+        -----
+        Note that the polygon has straight edges, while the calculation of
+        the effective area takes into account that some edges of the effective
+        area may be arc sections.
+
+        """
+        if ply_piece is None:
+            ply_piece = self.base_piece
+        poly, pts_on_s2, pts_on_s3 = self._useful_polygon(ply_piece)
+        # Construct lines through those corner points of the polygon,
+        # that are on s2/s3. They will be useful later
+        line_s2 = Line2D.from_points(*pts_on_s2)
+        line_s3 = Line2D.from_points(*pts_on_s3)
+
+        # Lines to cut away the non-effective area
+        cut_line_1 = Line2D.from_point_angle(Point2D(0., 0.),
+            ply_piece.phi_nom - np.radians(max_angle_dev))
+        cut_line_2 = Line2D.from_point_angle(Point2D(0., 0.),
+            ply_piece.phi_nom + np.pi + np.radians(max_angle_dev))
+        # Slice the polygon, with some corrections
+        for cut_line in (cut_line_1, cut_line_2):
+            outp = []
+            for p in poly.slice_line(cut_line).points():
+                # Polygon intersection can result in points that are not
+                # exactly on circles s2/s3, while they should be. Correct that.
+                if cut_line.distance_point(p) < TOL:
+                    if line_s2.distance_point(p) < TOL:
+                        p = cut_line.intersection_circle_near(self.cg.s2, p)
+                    elif line_s3.distance_point(p) < TOL:
+                        p = cut_line.intersection_circle_near(self.cg.s3, p)
+                outp.append(p)
+            poly = Polygon2D(outp)
+
+        # Calculate area
+        area = poly.area()
+        # Correct polygon area for arc sections s2/s3, if needed
+        pts_on_s2 = [p for p in poly.points() if abs(p.norm() - self.cg.s2) < TOL]
+        if len(pts_on_s2) >= 2:
+            angles = [p.angle() for p in pts_on_s2]
+            area -= circle_segment_area(self.cg.s2, max(angles) - min(angles))
+        pts_on_s3 = [p for p in poly.points() if abs(p.norm() - self.cg.s3) < TOL]
+        if len(pts_on_s3) >= 2:
+            angles = [p.angle() for p in pts_on_s3]
+            area += circle_segment_area(self.cg.s3, max(angles) - min(angles))
+
+        return area, poly
 
 
 class TrapezPlyPieceModel(PlyPieceModel):
