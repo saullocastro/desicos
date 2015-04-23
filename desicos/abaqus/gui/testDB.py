@@ -593,6 +593,10 @@ class TestDB(AFXDataDialog):
         pngpath = os.path.join(DAHOME, 'gui', 'icons', 'ply_pieces.png')
         icon = afxCreatePNGIcon(pngpath)
         FXLabel(impVF, '', icon)
+        AFXNote(impVF, 'The number of editable table rows matches the stack ' +
+            'length set in the Model -> Laminate tab.\n' +
+            'The table is locked entirely if the imperfection is not enabled. ' +
+            '(top left checkbox)')
         ppiTable = AFXTable(impVF, 10, 6, NUM_PLIES+1, 6,
             form.ppi_tableKw, 0,
             opts=AFXTABLE_EDITABLE|AFXTABLE_TYPE_FLOAT|AFXTABLE_STYLE_DEFAULT)
@@ -614,8 +618,6 @@ class TestDB(AFXDataDialog):
         FXLabel(impVF, "(**) Default value for 'Eccentricity' is 1.0 if " +
             'orientation > 0, 0.0 if orientation < 0 and ' +
             '0.5 if orientation = 0')
-        AFXNote(impVF, 'The number of editable table rows matches the stack ' +
-            'length set in the Model -> Laminate tab.')
         #
         # Tabs / Geometric Imperfections / Fiber fraction Imperfections
         #
