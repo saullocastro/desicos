@@ -482,6 +482,127 @@ class TrapezPlyPieceModel(PlyPieceModel):
         return PlyPiece(Polygon2D((P1, P2, P3, P4)), 0.0, -delta_phi_2, delta_phi_1)
 
 
+class Trapez2PlyPieceModel(PlyPieceModel):
+    """Sub-class of ``PlyPieceModel``, for shape B (trapezium with one overlap)
+
+    """
+    def construct_single_ply_piece(self, fraction=1.0):
+        """Construct a ply piece for shape A (trapezium)"""
+        th_nom = np.radians(self.fiber_angle)
+        # Step 1: Define origin line L0
+        origin_point = Point2D(self.starting_position, 0.0)
+        L0 = Line2D.from_point_angle(origin_point, th_nom )
+        # Step 2: Define line L2, perpendicular to L0, tangent to circle s4
+        tangent_point = Point2D.from_polar(self.cg.s4, th_nom)
+        L2 = Line2D.from_point_angle(tangent_point, th_nom + np.pi/2)
+        P0 = L0.intersection_line(L2)
+
+        # Step 3: Position P2 and P3 based on max_width and eccentricity
+        P2_dist = self.max_width * self.eccentricity
+        P3_dist = self.max_width * (1 - self.eccentricity)
+        P2 = P0 + Point2D.from_polar(P2_dist, L2.angle())
+        P3 = P0 + Point2D.from_polar(P3_dist, L2.angle() + np.pi)
+
+        # Step 4: Calculate a rough estimate of the spanned angle
+        delta_phi_1 = (P2.angle() - P0.angle())
+        delta_phi_2 = (P0.angle() - P3.angle())
+        ip_L0_s2 = L0.intersection_circle_near(self.cg.s2, origin_point)
+        ip_L0_s4 = L0.intersection_circle_near(self.cg.s4, origin_point)
+
+        ratio = 0.0
+        REQ_RATIO = 2.0
+        # Step 5: Iterate until the ratio of spanned angles on s4 and s2 is (nearly) correct
+        while abs(ratio - REQ_RATIO) > TOL:
+            delta_phi_on_s2 = REQ_RATIO * (delta_phi_1 + delta_phi_2)
+            ip_L1_s2 = ip_L0_s2.rotate(REQ_RATIO * delta_phi_1)
+            ip_L3_s2 = ip_L0_s2.rotate(-REQ_RATIO * delta_phi_2)
+            L1 = Line2D.from_points(ip_L1_s2, P2)
+            L3 = Line2D.from_points(ip_L3_s2, P3)
+            ip_L1_s4 = L1.intersection_circle_near(self.cg.s4, P0)
+            ip_L3_s4 = L3.intersection_circle_near(self.cg.s4, P0)
+            delta_phi_1 = ip_L1_s4.angle() - ip_L0_s4.angle()
+            delta_phi_2 = ip_L0_s4.angle() - ip_L3_s4.angle()
+            delta_phi_on_s4 = delta_phi_1 + delta_phi_2
+            ratio = delta_phi_on_s2 / delta_phi_on_s4
+
+        # Redefine P2 and P3 if needed (for rest pieces)
+        if fraction != 1.0:
+            ip_L1_s2 = ip_L1_s2.rotate((fraction - 1.0) * delta_phi_1)
+            ip_L3_s2 = ip_L3_s2.rotate((1.0 - fraction) * delta_phi_2)
+            # Apply an additional rotation to avoid having more than one overlap
+            ip_L3_s2 = ip_L3_s2.rotate(delta_phi_1 + delta_phi_2)
+            ip_L1_s4 = ip_L1_s4.rotate((fraction - 1.0) * delta_phi_1)
+            ip_L3_s4 = ip_L3_s4.rotate((1.0 - fraction) * delta_phi_2)
+            L1 = Line2D.from_points(ip_L1_s2, ip_L1_s4)
+            L3 = Line2D.from_points(ip_L3_s2, ip_L3_s4)
+            delta_phi_1 *= fraction
+            delta_phi_2 *= fraction
+
+        # Step 6: redefine P1 to P4 as the intersection points
+        L4 = Line2D.from_point_angle(Point2D(0.0, 0.0), L2.angle())
+        P1 = L1.intersection_line(L4)
+        P2 = L2.intersection_line(L1)
+        P3 = L3.intersection_line(L2)
+        P4 = L4.intersection_line(L3)
+
+        # Step 7: Return the final ply piece
+        return PlyPiece(Polygon2D((P1, P2, P3, P4)), 0.0, -delta_phi_2, delta_phi_1)
+
+
+class RectPlyPieceModel(PlyPieceModel):
+    """Sub-class of ``PlyPieceModel``, for shape C (rectangle)
+
+    """
+    def construct_single_ply_piece(self, fraction=1.0):
+        """Construct a ply piece for shape C (rectangle)"""
+        th_nom = np.radians(self.fiber_angle)
+        # Define origin line L0
+        origin_point = Point2D(self.starting_position, 0.0)
+        L0 = Line2D.from_point_angle(origin_point, th_nom)
+        # Define line L4
+        L4 = Line2D.from_point_angle(Point2D(0.0, 0.0), th_nom + np.pi/2)
+        ip_L0_L4 = L0.intersection_line(L4)
+
+        # Construct P1 and P4
+        P1_dist = self.max_width * self.eccentricity
+        P4_dist = self.max_width * (1 - self.eccentricity)
+        P1 = ip_L0_L4 + Point2D.from_polar(P1_dist, L4.angle())
+        P4 = ip_L0_L4 + Point2D.from_polar(P4_dist, L4.angle() + np.pi)
+
+        # Construct side lines L1, L3, parallel to L0
+        L1 = Line2D.from_point_angle(P1, L0.angle())
+        L3 = Line2D.from_point_angle(P4, L0.angle())
+        # Intersection points L0, L1, L3 with circle
+        P0 = L0.intersection_circle_near(self.cg.s4, origin_point)
+        P2 = L1.intersection_circle_near(self.cg.s4, P0)
+        P3 = L3.intersection_circle_near(self.cg.s4, P0)
+
+        # Handle creation of rest pieces, with fraction < 1.0
+        delta_phi_1 = (P2.angle() - P0.angle())
+        delta_phi_2 = (P0.angle() - P3.angle())
+        if fraction != 1.0:
+            P2 = P2.rotate((fraction - 1.0) * delta_phi_1)
+            P3 = P3.rotate((1.0 - fraction) * delta_phi_2)
+            L1 = Line2D.from_point_angle(P2, L1.angle())
+            L3 = Line2D.from_point_angle(P3, L3.angle())
+            P1 = L4.intersection_line(L1)
+            P4 = L4.intersection_line(L3)
+            delta_phi_1 *= fraction
+            delta_phi_2 *= fraction
+
+        # Construct L2 through P2 or P3, whichever is furthest from L4
+        # Adjust the other point
+        if L4.distance_point(P2) > L4.distance_point(P3):
+            L2 = Line2D.from_point_angle(P2, L4.angle())
+            P3 = L2.intersection_line(L3)
+        else:
+            L2 = Line2D.from_point_angle(P3, L4.angle())
+            P2 = L2.intersection_line(L1)
+
+        # Return the final ply piece
+        return PlyPiece(Polygon2D((P1, P2, P3, P4)), 0.0, -delta_phi_2, delta_phi_1)
+
+
 class PlyPiece(object):
     r"""PlyPiece object
 
