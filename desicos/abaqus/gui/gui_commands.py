@@ -143,6 +143,9 @@ def create_study(**kwargs):
     ax_table = kwargs.get('ax_table')
     lbmi_table = kwargs.get('lbmi_table')
     cut_table = kwargs.get('cut_table')
+    ppi_enabled = kwargs.get('ppi_enabled')
+    ppi_extra_height = kwargs.get('ppi_extra_height')
+    ppi_table = kwargs.get('ppi_table')
     betadeg = kwargs.get('betadeg', 0.)
     omegadeg = kwargs.get('omegadeg', 0.)
     betadegs = kwargs.get('betadegs')
@@ -291,6 +294,18 @@ def create_study(**kwargs):
                 numel = cut_table[2][j]
                 d     = cut_table[i_model][j]
                 cc.create_cutout(theta, pt, d, numel)
+        ## adding ply piece imperfection
+        if ppi_enabled:
+            info = []
+            for row in ppi_table:
+                if row is False:
+                    continue # False may be appended if there is only one row
+                keys = ['starting_position', 'rel_ang_offset', 'max_width', 'eccentricity']
+                try:
+                    info.append(dict((key, float(row[i])) for i, key in enumerate(keys) if row[i] != ''))
+                except ValueError, e:
+                    raise ValueError('Invalid non-numeric value in Ply Piece Imperfection table:' + e.message.split(':')[-1])
+            cc.impconf.add_ppi(info, ppi_extra_height)
         std.add_cc(cc)
     std.create_models(write_input_files=False)
     #for i in range(pload_num):
@@ -452,13 +467,13 @@ def reconstruct_params_from_gui(std):
 
     # Apply perturbation loads
     # TODO: other imperfections
-    all_ploads = list(chain.from_iterable(cc.impconf.ploads for cc in std.ccs))
+    all_ploads = list(chain.from_iterable(cci.impconf.ploads for cci in std.ccs))
     all_ploads = map(lambda pl: (pl.thetadeg, pl.pt), all_ploads)
     # Filter duplicates, to obtain a list of unique pload parameter combinations
     seen = set()
     all_ploads = [x for x in all_ploads if not (x in seen or seen.add(x))]
     params['pl_num'] = len(all_ploads)
-    nonlinear_ccs = filter(lambda cc: not cc.linear_buckling, std.ccs)
+    nonlinear_ccs = filter(lambda cci: not cci.linear_buckling, std.ccs)
     # TODO: unduplicate magic numbers (here, in create_study and in testDB)
     # It'll only get worse when adding other imperfections as well
     if params['pl_num'] > 32:
@@ -469,11 +484,22 @@ def reconstruct_params_from_gui(std):
     tmp.fill('')
     tmp[0,:len(all_ploads)] = [thetadeg for thetadeg, pt in all_ploads]
     tmp[1,:len(all_ploads)] = [pt for thetadeg, pt in all_ploads]
-    for row, cc in enumerate(nonlinear_ccs, start=3):
-         for pl in cc.impconf.ploads:
+    for row, cci in enumerate(nonlinear_ccs, start=3):
+        for pl in cci.impconf.ploads:
             assert (pl.thetadeg, pl.pt) in all_ploads
             tmp[row,all_ploads.index((pl.thetadeg, pl.pt))] = pl.pltotal
     params['pl_table'] = ','.join(['('+','.join(i)+')' for i in tmp])
+
+    # Apply PPI
+    ppi = cc.impconf.ppi
+    if ppi is not None:
+        params['ppi_enabled'] = True
+        params['ppi_extra_height'] = ppi.extra_height
+        tmp = numpy.empty((len(ppi.info), 4), dtype='|S50')
+        keys = ['starting_position', 'rel_ang_offset', 'max_width', 'eccentricity']
+        for i, info_dict in enumerate(ppi.info):
+            tmp[i,:] = [str(info_dict.get(key, '')) for key in keys]
+        params['ppi_table'] = ','.join(['('+','.join(i)+')' for i in tmp])
 
     params['std_name'] = std.name
     std.params_from_gui = params
@@ -487,6 +513,7 @@ def load_study_gui(std_name, form):
     saved_from_gui = len(std.params_from_gui) != 0
     if not saved_from_gui:
         reconstruct_params_from_gui(std)
+        form.setDefault()
     form.read_params_from_gui(std.params_from_gui)
     return saved_from_gui
 

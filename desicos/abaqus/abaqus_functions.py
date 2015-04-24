@@ -322,6 +322,50 @@ def create_composite_layup(name, stack, plyts, mat_names, region, part,
                              numIntPoints=numIntPoints)
 
 
+def modify_composite_layup(part, layup_name, modify_func):
+    """Modify plies within a composite layup
+
+    Directly modififying plies within a CompositeLayup is not possible, as
+    the plies are read-only after creation. This function emulates modifying,
+    by deleting and then re-creating plies, with modifications.
+
+    Parameters
+    ----------
+    part : an Abaqus part object
+        The part that the to-be-modified layup is attached to.
+    layup_name : str
+        Name of the layup that is to be modified.
+    modify_func : function
+        Function that will be called for each ply. It should take as arguments
+        the ply index and a dictionary of keyword arguments. This dictionary
+        contains all keyword arguments that would re-create the original ply,
+        if passed to the ``CompositePly``-constructor. This function should
+        should make the necessary changes this dictionary and then return it.
+        The returned dictionary will then be used to create the new ply.
+
+    """
+    from abaqusConstants import SPECIFY_ORIENT, CSYS
+    layup = part.compositeLayups[layup_name]
+
+    ply_data = []
+    STORE_PLY_ATTRS = ['additionalRotationField', 'additionalRotationType',
+        'angle', 'axis', 'material', 'numIntPoints', 'orientation',
+        'orientationType', 'orientationValue', 'plyName', 'region',
+        'suppressed', 'thickness', 'thicknessType']
+    for ply in layup.plies.values():
+        ply_data.append(dict((attr, getattr(ply, attr)) for attr in STORE_PLY_ATTRS))
+    layup.deletePlies()
+
+    for i, kwargs in enumerate(ply_data):
+        kwargs['region'] = part.sets[kwargs['region'][0]]
+        if kwargs['orientationType'] != SPECIFY_ORIENT:
+            kwargs.pop('orientationValue')
+        if kwargs['orientationType'] != CSYS:
+            kwargs.pop('orientation')
+        kwargs = modify_func(i, kwargs)
+        layup.CompositePly(**kwargs)
+
+
 def createDiscreteField(mod, odb, step_name, frame_num):
     from abaqusConstants import (NODES, PRESCRIBEDCONDITION_DOF)
     u=odb.steps[step_name].frames[frame_num].fieldOutputs['U']
@@ -404,6 +448,8 @@ def set_colors_ti(cc):
 
     part = mdb.models[cc.model_name].parts[cc.part_name_shell]
     viewport = session.viewports[session.currentViewportName]
+    if viewport.displayedObject is None:
+        viewport.setValues(displayedObject=part)
     cmap = viewport.colorMappings['Set']
     viewport.setColor(colorMapping=cmap)
     viewport.enableMultipleColors()

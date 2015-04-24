@@ -444,8 +444,8 @@ class TestDB(AFXDataDialog):
         imp_numKw = {}
         self.imp_tableKw = {}
         #
-        # Tabs / Geometric Imperfections / Perturbation Loads / Dimples / Cutouts /
-        # Mid-Surface Imperfections / Thickness Imperfections
+        # Tabs / Geometric Imperfections /
+        # Perturbation Loads / Dimples / Cutouts / Axisymmetrics / LMBIs
         #
         labelTabs['pl'] = 'Perturbation Loads'
         labelTabs['d'] = 'Dimples'
@@ -548,6 +548,50 @@ class TestDB(AFXDataDialog):
             pngpath = os.path.join(DAHOME, 'gui', 'icons', pngs[k])
             icon = afxCreatePNGIcon(pngpath)
             FXLabel(impHF, '', icon)
+        #
+        # Tabs / Geometric Imperfections / Ply Piece imperfections
+        #
+        self.current_num_plies = NUM_PLIES
+        FXTabItem(impBook, 'Ply Piece Imperfection', None, TAB_LEFT)
+        impVF = FXVerticalFrame(impBook, LAYOUT_FILL_Y|FRAME_RAISED|FRAME_SUNKEN)
+        impHF = FXHorizontalFrame(impVF, opts=LAYOUT_CENTER_Y)
+        impVF = FXVerticalFrame(impHF)
+        FXCheckButton(impVF, 'Enable Ply Piece Imperfection', form.ppi_enabledKw)
+        FXLabel(impVF, '')
+        FXHorizontalSeparator(impVF)
+        FXLabel(impVF, '')
+        pngpath = os.path.join(DAHOME, 'gui', 'icons', 'extra_height.png')
+        icon = afxCreatePNGIcon(pngpath)
+        FXLabel(impVF, '', icon)
+        AFXTextField(impVF, 8, 'Extra height along top / bottom edge:', form.ppi_extra_heightKw, opts=AFXTEXTFIELD_FLOAT)
+        FXVerticalSeparator(impHF)
+        impVF = FXVerticalFrame(impHF)
+        pngpath = os.path.join(DAHOME, 'gui', 'icons', 'ply_pieces.png')
+        icon = afxCreatePNGIcon(pngpath)
+        FXLabel(impVF, '', icon)
+        ppiTable = AFXTable(impVF, 10, 6, NUM_PLIES+1, 6,
+            form.ppi_tableKw, 0,
+            opts=AFXTABLE_EDITABLE|AFXTABLE_TYPE_FLOAT|AFXTABLE_STYLE_DEFAULT)
+        ppiTable.setLeadingRows(1)
+        ppiTable.setLeadingColumns(1)
+        ppiTable.setLeadingColumnLabels(
+                '\t'.join(['ply {0:02d}'.format(i) for i in range(1, NUM_PLIES+1)]))
+        ppiTable.setColumnWidth(-1, 120)
+        ppiTable.setColumnType(-1, AFXTable.FLOAT)
+        ppiTable.setColumnEditable(5, False)
+        ppiTable.shadeReadOnlyItems(True)
+        row_headings = ['Nominal radius\n(Required)',
+                        'Angular offset (0..1)\n(Optional, default 0)',
+                        'Maximum width\n(Required)',
+                        'Eccentricity (0..1)\n(Optional, see **)',
+                        "Orientation (\xb0)\n(from 'Laminate')"]
+        ppiTable.setLeadingRowLabels('\t'.join(row_headings))
+        self.ppiTable = ppiTable
+        FXLabel(impVF, "(**) Default value for 'Eccentricity' is 1.0 if " +
+            'orientation > 0, 0.0 if orientation < 0 and ' +
+            '0.5 if orientation = 0')
+        AFXNote(impVF, 'The number of editable table rows matches the stack ' +
+            'length set in the Model -> Laminate tab.')
         #
         # Tabs / Geometric Imperfections / Mid-Surface Imperfections
         #
@@ -1033,6 +1077,27 @@ class TestDB(AFXDataDialog):
             # when the perturbation loads are deleted for example
             # sometimes they are not really deleted, specially when the user
             # does it faster
+
+        # ppiTable
+        old_num_plies = self.current_num_plies
+        new_num_plies = NUM_PLIES - self.laminateTable.getNumEmptyRowsAtBottom()
+        if old_num_plies != new_num_plies:
+            self.current_num_plies = new_num_plies
+            if new_num_plies < old_num_plies:
+                for row in range(new_num_plies+1, old_num_plies+1):
+                    for col in range(1, 5):
+                        self.ppiTable.setItemEditable(row, col, False)
+            else:
+                for row in range(old_num_plies+1, new_num_plies+1):
+                    for col in range(1, 5):
+                        self.ppiTable.setItemEditable(row, col, True)
+        for row in range(1, max(old_num_plies, new_num_plies)+1):
+            val = self.laminateTable.getItemValue(row, 3)
+            self.ppiTable.setItemValue(row, 5, val)
+        if form.ppi_enabledKw.getValue():
+            self.ppiTable.enable()
+        else:
+            self.ppiTable.disable()
 
         # linking variables
         std_name = form.std_to_postKw.getValue()
