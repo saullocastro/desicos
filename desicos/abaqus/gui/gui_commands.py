@@ -495,11 +495,13 @@ def reconstruct_params_from_gui(std):
     if ppi is not None:
         params['ppi_enabled'] = True
         params['ppi_extra_height'] = ppi.extra_height
-        tmp = numpy.empty((len(ppi.info), 4), dtype='|S50')
+        tmp = np.empty((len(ppi.info), 4), dtype='|S50')
         keys = ['starting_position', 'rel_ang_offset', 'max_width', 'eccentricity']
         for i, info_dict in enumerate(ppi.info):
             tmp[i,:] = [str(info_dict.get(key, '')) for key in keys]
         params['ppi_table'] = ','.join(['('+','.join(i)+')' for i in tmp])
+    else:
+        params['ppi_table'] = ''
 
     params['std_name'] = std.name
     std.params_from_gui = params

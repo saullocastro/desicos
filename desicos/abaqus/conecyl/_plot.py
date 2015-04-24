@@ -216,6 +216,7 @@ def plot_stress_analysis(self, disp_force_frame = 'DISP'):
                       yValuesLabel = 'Stress, MPa',
                       legendLabel  = 'Stress ' + key)
 
+
 def extract_field_output(self, ignore):
     from abaqus import mdb
     from abaqusConstants import NODAL
@@ -332,20 +333,9 @@ def extract_field_output(self, ignore):
         out = out.reshape(-1, numIntPts).mean(axis=1)
 
     if 'S8' in self.elem_type and nodal_out:
-        # Add (by interpolation) data for the element centroids as well
-        # to create a regular grid
-
-        # Values of interpolation functions at centroid: -0.25 for corner
-        # nodes, 0.5 for side nodes
-        INTERP = np.array([-0.25, -0.25, -0.25, -0.25, 0.5, 0.5, 0.5, 0.5])
-        el_coords = utils.vec_calc_elem_cg(elements)
+        el_coords, el_out = _nodal_field_S8_add_centroids(elements, labels, out)
         el_thetas = np.arctan2(el_coords[:, 1], el_coords[:, 0])
-        el_out = np.zeros_like(el_thetas)
-        for i, el in enumerate(elements):
-            # el.connectivity can't be used, as it uses node indices, not labels
-            mask = np.in1d(labels, [n.label for n in el.getNodes()])
-            el_out[i] = np.dot(INTERP, out[mask])
-        coords = np.vstack((coords, el_coords[:,:3]))
+        coords = np.vstack((coords, el_coords))
         thetas = np.hstack((thetas, el_thetas))
         out = np.hstack((out, el_out))
         num_thetas = 2*self.numel_r
@@ -354,6 +344,112 @@ def extract_field_output(self, ignore):
 
     zs = coords[:, 2]
     return _sort_field_data(thetas, zs, out, num_thetas)
+
+
+def extract_fiber_orientation(self, ply_index, use_elements):
+    if use_elements:
+        from abaqus import mdb
+
+        if self.model_name in mdb.models.keys():
+            part = mdb.models[self.model_name].parts[self.part_name_shell]
+        else:
+            raise RuntimeError("Cannot obtain element locations, model for '{0}' is not loaded".format(self.model_name))
+
+        elements = part.elements
+        coords = utils.vec_calc_elem_cg(elements)
+        thetas = np.arctan2(coords[:, 1], coords[:, 0])
+        zs = coords[:, 2]
+    else:
+        thetas = np.linspace(-np.pi, np.pi, self.numel_r + 1)
+        thetas = (thetas[:-1] + thetas[1:]) / 2
+        mean_circumf = np.pi*(self.rtop + self.rbot)
+        # Estimate num elements in vertical direction
+        numel_z = int(np.ceil(float(self.L) / mean_circumf * self.numel_r))
+        zs = np.linspace(0, self.H, numel_z + 1)
+        zs = (zs[:-1] + zs[1:]) / 2
+        thetas, zs = np.meshgrid(thetas, zs)
+        thetas = thetas.flatten()
+        zs = zs.flatten()
+        # Determine coords
+        rs = self.fr(zs)
+        xs = rs*np.cos(thetas)
+        ys = rs*np.sin(thetas)
+        coords = np.column_stack([xs, ys, zs])
+    out = np.array(self.impconf.ppi.fiber_orientation(ply_index, coords))
+
+    return _sort_field_data(thetas, zs, out, self.numel_r)
+
+
+def extract_thickness_data(self):
+    from abaqus import mdb
+
+    if self.model_name in mdb.models.keys():
+        part = mdb.models[self.model_name].parts[self.part_name_shell]
+    else:
+        raise RuntimeError("Cannot obtain element locations, model for '{0}' is not loaded".format(self.model_name))
+
+    elements = part.elements
+    coords = utils.vec_calc_elem_cg(elements)
+    thetas = np.arctan2(coords[:, 1], coords[:, 0])
+    zs = coords[:, 2]
+    labels = coords[:, 3]
+    thicks = np.zeros_like(zs)
+    for layup in part.compositeLayups.values():
+        if not layup.suppressed:
+            el_set = part.sets[layup.plies[0].region[0]]
+            layup_els = np.array([e. label for e in el_set.elements])
+            layup_thickness = sum(p.thickness for p in layup.plies.values())
+            thicks[np.in1d(labels, layup_els)] = layup_thickness
+    return _sort_field_data(thetas, zs, thicks, self.numel_r)
+
+
+def extract_msi_data(self):
+    from abaqus import mdb
+
+    if self.model_name in mdb.models.keys():
+        part = mdb.models[self.model_name].parts[self.part_name_shell]
+    else:
+        raise RuntimeError("Cannot obtain nodal locations, model for '{0}' is not loaded".format(self.model_name))
+
+    nodes = part.nodes
+    elements = part.elements
+    labels = np.array([n.label for n in nodes])
+    coords = np.array([n.coordinates for n in nodes])
+    xs = coords[:, 0]
+    ys = coords[:, 1]
+    zs = coords[:, 2]
+    rs = np.sqrt(xs**2 + ys**2)
+    thetas = np.arctan2(ys, xs)
+    offsets = (rs - self.rbot)*np.cos(self.alpharad) + zs*np.sin(self.alpharad)
+
+    if 'S8' in self.elem_type:
+        el_coords, el_offsets = _nodal_field_S8_add_centroids(elements, labels, offsets)
+        el_thetas = np.arctan2(el_coords[:, 1], el_coords[:, 0])
+        thetas = np.hstack((thetas, el_thetas))
+        zs = np.hstack((zs, el_coords[:, 2]))
+        offsets = np.hstack((offsets, el_offsets))
+        num_thetas = 2*self.numel_r
+    else:
+        num_thetas = self.numel_r
+    return _sort_field_data(thetas, zs, offsets, num_thetas)
+
+
+def _nodal_field_S8_add_centroids(elements, node_labels, node_values):
+    # For S8 elements and nodal fields, one may want to add values for the
+    # centroids as well, to create a regular grid. This is done by
+    # interpolation.
+    # Values of interpolation functions at centroid: -0.25 for corner
+    # nodes, 0.5 for side nodes
+    INTERP = np.array([-0.25, -0.25, -0.25, -0.25, 0.5, 0.5, 0.5, 0.5])
+
+    el_coords = utils.vec_calc_elem_cg(elements)
+    el_out = np.zeros((el_coords.shape[0], ))
+    for i, el in enumerate(elements):
+        # el.connectivity can't be used, as it uses node indices, not labels
+        mask = np.in1d(node_labels, [n.label for n in el.getNodes()])
+        el_out[i] = np.dot(INTERP, node_values[mask])
+    # return coords, values for element centroids
+    return el_coords[:,:3], el_out
 
 
 def _sort_field_data(thetas, zs, values, num_thetas):
@@ -375,11 +471,11 @@ def _sort_field_data(thetas, zs, values, num_thetas):
     return thetas, zs, values
 
 
-def transform_plot_data(self, thetas, zs, plot_type):
+def transform_plot_data(self, thetas, zs, values, plot_type, wrap):
     sina = np.sin(self.alpharad)
     cosa = np.cos(self.alpharad)
 
-    valid_plot_types = (1, 2, 3, 4, 5)
+    valid_plot_types = (1, 2, 3, 4, 5, 6)
     if not plot_type in valid_plot_types:
         raise ValueError('Valid values for plot_type are:\n\t\t' +
                          ' or '.join(map(str, valid_plot_types)))
@@ -388,6 +484,18 @@ def transform_plot_data(self, thetas, zs, plot_type):
     rtop = self.rtop
     rbot = self.rbot
     L = H/cosa
+
+    if wrap:
+        if plot_type == 6:
+            thetas = thetas % (2*np.pi)
+        else:
+            thetas = (thetas + np.pi) % (2*np.pi) - np.pi
+        # Sort again by theta
+        asort = thetas.argsort(axis=1)
+        for i, asorti in enumerate(asort):
+            zs[i,:] = zs[i,:][asorti]
+            thetas[i,:] = thetas[i,:][asorti]
+            values[i,:] = values[i,:][asorti]
 
     def fr(z):
         return rbot - z*sina/cosa
@@ -417,12 +525,17 @@ def transform_plot_data(self, thetas, zs, plot_type):
     elif plot_type == 5:
         x = fr(0)*thetas
         y = zs
-    return x, y
+    elif plot_type == 6:
+        r_plot = fr(zs)
+        x = r_plot*np.cos(thetas*sina)
+        y = r_plot*np.sin(thetas*sina)
+
+    return x, y, values
 
 
 def plot_field_data(self, x, y, field, create_npz_only, ax, figsize, save_png,
         aspect, clean, outpath, pngname, npzname, pyname, num_levels,
-        show_colorbar):
+        show_colorbar, lines):
     npzname = npzname.split('.npz')[0] + '.npz'
     pyname = pyname.split('.py')[0] + '.py'
     pngname = pngname.split('.png')[0] + '.png'
@@ -430,6 +543,15 @@ def plot_field_data(self, x, y, field, create_npz_only, ax, figsize, save_png,
     npzname = os.path.join(outpath, npzname)
     pyname = os.path.join(outpath, pyname)
     pngname = os.path.join(outpath, pngname)
+
+    if lines: # not empty or None
+        # Concatenate all lines into a single matrix, separated by 'sep'
+        sep = np.array([[float('NaN')], [float('NaN')]])
+        all_lines = (2*len(lines) - 1)*[sep]
+        all_lines[::2] = [np.array(l, copy=False) for l in lines]
+        line = np.hstack(all_lines)
+    else:
+        line = np.empty((2, 0))
 
     if not create_npz_only:
         try:
@@ -453,6 +575,7 @@ def plot_field_data(self, x, y, field, create_npz_only, ax, figsize, save_png,
         contours = ax.contourf(x, y, field, levels=levels)
         if show_colorbar:
             plt.colorbar(contours, ax=ax, shrink=0.5, format='%.4g', use_gridspec=True)
+        ax.plot(line[0,:], line[1,:], 'k-', linewidth=0.5)
         ax.grid(False)
         ax.set_aspect(aspect)
         #ax.set_title(
@@ -478,7 +601,7 @@ def plot_field_data(self, x, y, field, create_npz_only, ax, figsize, save_png,
 
     else:
         log('Matplotlib cannot be imported from Abaqus')
-    np.savez(npzname, x=x, y=y, field=field)
+    np.savez(npzname, x=x, y=y, field=field, line=line)
     with open(pyname, 'w') as f:
         f.write("import os\n")
         f.write("\n")
@@ -492,6 +615,7 @@ def plot_field_data(self, x, y, field, create_npz_only, ax, figsize, save_png,
         f.write("x = tmp['x']\n")
         f.write("y = tmp['y']\n")
         f.write("field = tmp['field']\n")
+        f.write("line = tmp['line']\n")
         f.write("clean = {0}\n".format(clean))
         f.write("show_colorbar = {0}\n".format(show_colorbar))
         f.write("plt.figure(figsize={0})\n".format(figsize))
@@ -506,6 +630,7 @@ def plot_field_data(self, x, y, field, create_npz_only, ax, figsize, save_png,
         f.write("                        ticks=[field.min(), field.max()])\n")
         f.write("    cbar.outline.remove()\n")
         f.write("    cbar.ax.tick_params(labelsize=14, pad=0., tick2On=False)\n")
+        f.write("ax.plot(line[0,:], line[1,:], 'k-', linewidth=0.5)\n")
         f.write("ax.grid(False)\n")
         f.write("ax.set_aspect('{0}')\n".format(aspect))
         f.write("if add_title:\n")

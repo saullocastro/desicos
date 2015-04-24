@@ -36,6 +36,39 @@ def plot_stress_analysis(std_name, cc_name):
     return True
 
 
+def plot_ppi(std_name, cc_name, ply_index, plot_type):
+    cmdstr  = 'import __main__\n'
+    cmdstr += 'std = __main__.stds[ "{0}" ]\n'.format(std_name)
+    cmdstr += 'for cc in std.ccs:\n'
+    cmdstr += '    if cc.model_name == "{0}":\n'.format(cc_name)
+    cmdstr += '        cc.plot_orientation_opened(use_elements=True, ply_index={0}, plot_type={1}, outpath=std.study_dir)\n'.format(ply_index, plot_type)
+    cmdstr += '        break\n'
+    sendCommand(cmdstr)
+    return True
+
+
+def plot_msi(std_name, cc_name, plot_type):
+    cmdstr  = 'import __main__\n'
+    cmdstr += 'std = __main__.stds[ "{0}" ]\n'.format(std_name)
+    cmdstr += 'for cc in std.ccs:\n'
+    cmdstr += '    if cc.model_name == "{0}":\n'.format(cc_name)
+    cmdstr += '        cc.plot_msi_opened(plot_type={0}, outpath=std.study_dir)\n'.format(plot_type)
+    cmdstr += '        break\n'
+    sendCommand(cmdstr)
+    return True
+
+
+def plot_ti(std_name, cc_name, plot_type):
+    cmdstr  = 'import __main__\n'
+    cmdstr += 'std = __main__.stds[ "{0}" ]\n'.format(std_name)
+    cmdstr += 'for cc in std.ccs:\n'
+    cmdstr += '    if cc.model_name == "{0}":\n'.format(cc_name)
+    cmdstr += '        cc.plot_thickness_opened(plot_type={0}, outpath=std.study_dir)\n'.format(plot_type)
+    cmdstr += '        break\n'
+    sendCommand(cmdstr)
+    return True
+
+
 def plot_opened_conecyl(plot_type):
     cmdstr  = 'import __main__\n'
     cmdstr += 'import desicos.abaqus.abaqus_functions as abaqus_functions\n'

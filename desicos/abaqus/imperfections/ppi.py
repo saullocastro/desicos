@@ -247,3 +247,33 @@ class PPI(Imperfection):
             return r, theta, z
         else:
             return r*cos(theta), r*sin(theta), z
+
+    def get_ply_lines(self, ply_index, center_theta_zero=True):
+        """Obtain a series of lines that can be used to draw all ply pieces.
+
+        Parameters
+        ----------
+        ply_index : int
+            Index of ply to construct lines for.
+        center_theta_zero : bool
+            Plot the ply pieces in the -pi...pi range, instead of 0..2pi
+
+        Returns
+        -------
+        lines : list
+            List of lines. Each line is a 2-tuple (thetas, zs), containing
+            a list of circumferential coordinates and a list of vertical
+            coordinates of the points along the line.
+
+        """
+        lines = []
+        for pp in self.models[ply_index].ply_pieces:
+            # Skip duplicate ply pieces for plotting
+            if not (-TOL <= pp.phi_nom < 2*np.pi*self.cone_geometry.sin_alpha - TOL):
+                continue
+            r, theta, z = self.unfolded_to_gcs(
+                *pp.polygon.get_closed_line(100), approx_phi=pp.phi_nom, cylindrical=True)
+            if center_theta_zero and pp.phi_nom > np.pi*self.cone_geometry.sin_alpha:
+                theta -= 2*np.pi
+            lines.append((theta, z))
+        return lines
