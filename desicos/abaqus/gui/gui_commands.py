@@ -146,6 +146,9 @@ def create_study(**kwargs):
     ppi_enabled = kwargs.get('ppi_enabled')
     ppi_extra_height = kwargs.get('ppi_extra_height')
     ppi_table = kwargs.get('ppi_table')
+    ffi_scalings = kwargs.get('ffi_scalings')
+    while len(ffi_scalings) > 0 and ffi_scalings[-1] in [(0, False), False]:
+        ffi_scalings = ffi_scalings[:-1]
     betadeg = kwargs.get('betadeg', 0.)
     omegadeg = kwargs.get('omegadeg', 0.)
     betadegs = kwargs.get('betadegs')
@@ -175,6 +178,7 @@ def create_study(**kwargs):
             continue
         imp_table = imp_tables[k]
         num_models = max(num_models, len(imp_table)-(num_params[k]+1))
+    num_models = max(num_models, len(ffi_scalings))
     #
     # Cleaning up input values
     #
@@ -306,6 +310,18 @@ def create_study(**kwargs):
                 except ValueError, e:
                     raise ValueError('Invalid non-numeric value in Ply Piece Imperfection table:' + e.message.split(':')[-1])
             cc.impconf.add_ppi(info, ppi_extra_height)
+        # adding fiber fraction imperfection
+        i_model = i-1
+        if i_model < len(ffi_scalings):
+            global_sf, use_ti = ffi_scalings[i_model]
+            if global_sf == 0:
+                global_sf = None
+            if use_ti or (global_sf is not None):
+                cc.impconf.add_ffi(nominal_vf=kwargs['ffi_nominal_vf'],
+                                   E_matrix=kwargs['ffi_E_matrix'],
+                                   nu_matrix=kwargs['ffi_nu_matrix'],
+                                   use_ti=use_ti,
+                                   global_sf=global_sf)
         std.add_cc(cc)
     std.create_models(write_input_files=False)
     #for i in range(pload_num):
@@ -502,6 +518,55 @@ def reconstruct_params_from_gui(std):
         params['ppi_table'] = ','.join(['('+','.join(i)+')' for i in tmp])
     else:
         params['ppi_table'] = ''
+
+    # Apply FFI
+    ffi = cc.impconf.ffi
+    if ffi is not None:
+        params['ffi_nominal_vf'] = ffi.nominal_vf
+        params['ffi_E_matrix'] = ffi.E_matrix
+        params['ffi_nu_matrix'] = ffi.nu_matrix
+        ffi_scalings = []
+        for cci in nonlinear_ccs:
+            ffi = cci.impconf.ffi
+            if ffi is None:
+                ffi_scalings.append((0, False))
+            else:
+                sf = ffi.global_sf if ffi.global_sf is not None else 0
+                ffi_scalings.append((sf, ffi.use_ti))
+        params['ffi_scalings'] = ','.join(str(s) for s in ffi_scalings)
+    else:
+        params['ffi_scalings'] = ''
+
+    # MSI, TI
+    for imp_type in ('ms', 't'):
+        imps = getattr(cc.impconf, imp_type + 'is')
+        if len(imps) == 0:
+            params['imp_{0}_scalings'.format(imp_type)] = ''
+            continue
+        imp = imps[0]
+        params['imp_{0}_theta_z_format'.format(imp_type)] = imp.use_theta_z_format
+        params['imp_{0}_stretch_H'.format(imp_type)] = imp.stretch_H
+        params['imp_{0}_ncp'.format(imp_type)] = imp.ncp
+        params['imp_{0}_power_parameter'.format(imp_type)] = imp.power_parameter
+        params['imp_{0}_num_sec_z'.format(imp_type)] = imp.num_sec_z
+        # rotatedeg seems not yet implemented in GUI ?!
+        # params['imp_{0}_rotatedeg'.format(imp_type)] = imp.rotatedeg
+        name_attr = 'imp_ms' if imp_type == 'ms' else 'imp_thick'
+        params[name_attr] = getattr(imp, name_attr)
+        if imp_type == 'ms':
+            params['imp_r_TOL'] = imp.r_TOL
+        else:
+            params['imp_num_sets'] = imp.number_of_sets
+        # If there are multiple TIs / MSIs, we are out of luck
+        scalings = []
+        for cci in nonlinear_ccs:
+            cci_imps = getattr(cci.impconf, imp_type + 'is')
+            def filter_imps(impi):
+                return getattr(impi, name_attr) == getattr(imp, name_attr)
+            cci_imps = filter(filter_imps, cci_imps)
+            scalings.append(0 if len(cci_imps) == 0 else cci_imps[0].scaling_factor)
+        scalings = ','.join(str(s) for s in scalings)
+        params['imp_{0}_scalings'.format(imp_type)] = scalings
 
     params['std_name'] = std.name
     std.params_from_gui = params

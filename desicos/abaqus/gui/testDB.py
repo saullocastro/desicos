@@ -593,6 +593,10 @@ class TestDB(AFXDataDialog):
         pngpath = os.path.join(DAHOME, 'gui', 'icons', 'ply_pieces.png')
         icon = afxCreatePNGIcon(pngpath)
         FXLabel(impVF, '', icon)
+        AFXNote(impVF, 'The number of editable table rows matches the stack ' +
+            'length set in the Model -> Laminate tab.\n' +
+            'The table is locked entirely if the imperfection is not enabled. ' +
+            '(top left checkbox)')
         ppiTable = AFXTable(impVF, 10, 6, NUM_PLIES+1, 6,
             form.ppi_tableKw, 0,
             opts=AFXTABLE_EDITABLE|AFXTABLE_TYPE_FLOAT|AFXTABLE_STYLE_DEFAULT)
@@ -614,8 +618,43 @@ class TestDB(AFXDataDialog):
         FXLabel(impVF, "(**) Default value for 'Eccentricity' is 1.0 if " +
             'orientation > 0, 0.0 if orientation < 0 and ' +
             '0.5 if orientation = 0')
-        AFXNote(impVF, 'The number of editable table rows matches the stack ' +
-            'length set in the Model -> Laminate tab.')
+        #
+        # Tabs / Geometric Imperfections / Fiber fraction Imperfections
+        #
+        FXTabItem(impBook, 'Fiber Fraction Imperfection', None, TAB_LEFT)
+        impVF = FXVerticalFrame(impBook, LAYOUT_FILL_Y|FRAME_RAISED|FRAME_SUNKEN)
+        impHF = FXHorizontalFrame(impVF, opts=LAYOUT_CENTER_Y)
+        impVF = FXVerticalFrame(impHF)
+        FXLabel(impVF, '')
+        FXLabel(impVF, 'The default values (0, Off) will not apply the imperfection',
+                opts=LAYOUT_CENTER_X)
+        self.imp_ffi_sf = AFXTable(impVF, 21, 3,(MAX_MODELS+1), 3, form.ffi_scalingsKw, 0,
+            opts=AFXTABLE_EDITABLE|AFXTABLE_TYPE_FLOAT|AFXTABLE_STYLE_DEFAULT)
+        self.imp_ffi_sf.setLeadingRows(1)
+        self.imp_ffi_sf.setLeadingColumns(1)
+        self.imp_ffi_sf.setLeadingRowLabels('global thickness\nscaling factor\tuse thickness\nimperfection data')
+        colLabel = '\t'.join(['model {0:02d}'.format(i) for i in range(1, MAX_MODELS+1)])
+        self.imp_ffi_sf.setLeadingColumnLabels(colLabel)
+        self.imp_ffi_sf.setColumnWidth(-1, 120)
+        self.imp_ffi_sf.setColumnType(2, AFXTable.BOOL)
+        FXVerticalSeparator(impHF)
+        impVF2 = FXVerticalFrame(impHF)
+        FXLabel(impVF2, '')
+        FXLabel(impVF2, 'Parameters:')
+        FXLabel(impVF2, '')
+        impVA = AFXVerticalAligner(impVF2)
+        AFXTextField(impVA, 8, 'Nominal fiber volume fraction:',
+                form.ffi_nominal_vfKw, opts=AFXTEXTFIELD_FLOAT)
+        AFXTextField(impVA, 8, 'Matrix Elastic Modulus:',
+                form.ffi_E_matrixKw, opts=AFXTEXTFIELD_FLOAT)
+        AFXTextField(impVA, 8, "Matrix Poisson's ratio:",
+                form.ffi_nu_matrixKw, opts=AFXTEXTFIELD_FLOAT)
+        FXLabel(impVF2, '')
+        FXHorizontalSeparator(impVF2)
+        FXLabel(impVF2, '')
+        pngpath = os.path.join(DAHOME, 'gui', 'icons', 'fiber_fraction.png')
+        icon = afxCreatePNGIcon(pngpath)
+        FXLabel(impVF2, '', icon)
         #
         # Tabs / Geometric Imperfections / Mid-Surface Imperfections
         #
