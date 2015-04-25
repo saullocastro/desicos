@@ -105,6 +105,7 @@ class TestDB(AFXDataDialog):
         #
         self.logcount = 10000
         self.lamMatrix = {'A':None, 'B':None, 'D':None}
+        self.model_cbs = []
         #
         #
         #
@@ -444,8 +445,8 @@ class TestDB(AFXDataDialog):
         imp_numKw = {}
         self.imp_tableKw = {}
         #
-        # Tabs / Geometric Imperfections / Perturbation Loads / Dimples / Cutouts /
-        # Mid-Surface Imperfections / Thickness Imperfections
+        # Tabs / Geometric Imperfections /
+        # Perturbation Loads / Dimples / Cutouts / Axisymmetrics / LMBIs
         #
         labelTabs['pl'] = 'Perturbation Loads'
         labelTabs['d'] = 'Dimples'
@@ -549,6 +550,112 @@ class TestDB(AFXDataDialog):
             icon = afxCreatePNGIcon(pngpath)
             FXLabel(impHF, '', icon)
         #
+        # Tabs / Geometric Imperfections / Ply Piece imperfections
+        #
+        self.current_num_plies = NUM_PLIES
+        FXTabItem(impBook, 'Ply Piece Imperfection', None, TAB_LEFT)
+        impVF = FXVerticalFrame(impBook, LAYOUT_FILL_Y|FRAME_RAISED|FRAME_SUNKEN)
+        impHF = FXHorizontalFrame(impVF, opts=LAYOUT_CENTER_Y)
+        impVF = FXVerticalFrame(impHF)
+        FXCheckButton(impVF, 'Enable Ply Piece Imperfection', form.ppi_enabledKw)
+        FXLabel(impVF, '')
+        FXHorizontalSeparator(impVF)
+        FXLabel(impVF, '')
+        pngpath = os.path.join(DAHOME, 'gui', 'icons', 'extra_height.png')
+        icon = afxCreatePNGIcon(pngpath)
+        FXLabel(impVF, '', icon)
+        AFXTextField(impVF, 8, 'Extra height along top / bottom edge:', form.ppi_extra_heightKw, opts=AFXTEXTFIELD_FLOAT)
+        FXLabel(impVF, '')
+        FXHorizontalSeparator(impVF)
+        FXLabel(impVF, '')
+        FXLabel(impVF, 'Visualization of ply pieces and fiber orientation')
+        AFXNote(impVF, 'The plot is made for an existing cone model,\n' +
+                       'that may have been created using parameters\n' +
+                       'that differ from those shown in this window.')
+        plotVA = AFXVerticalAligner(impVF)
+        self.model_cbs.append(AFXComboBox(plotVA, 2, 10, 'Select model:',
+                              form.plot_imp_modelKw))
+        self.plot_ply_index = AFXSpinner(plotVA, 2, 'Ply index:',
+                                         form.plot_ply_indexKw)
+        form.plot_ply_indexKw.setValue(1)
+        plot_type = AFXComboBox(plotVA, 2, 10,
+                                "Plot type:",
+                                form.plot_imp_typeKw)
+        for i in range(1, 7):
+            plot_type.appendItem('Plot type {0}'.format(i))
+        plot_type.setCurrentItem(0)
+        form.plot_imp_typeKw.setValue(plot_type.getItemText(0))
+        AFXNote(impVF, 'See Post-processing -> Opened contour plots\n' +
+            'for examples of plot types.')
+        self.plot_ppi_button = FXButton(impVF, 'Create plot')
+        FXVerticalSeparator(impHF)
+        impVF = FXVerticalFrame(impHF)
+        pngpath = os.path.join(DAHOME, 'gui', 'icons', 'ply_pieces.png')
+        icon = afxCreatePNGIcon(pngpath)
+        FXLabel(impVF, '', icon)
+        AFXNote(impVF, 'The number of editable table rows matches the stack ' +
+            'length set in the Model -> Laminate tab.\n' +
+            'The table is locked entirely if the imperfection is not enabled. ' +
+            '(top left checkbox)')
+        ppiTable = AFXTable(impVF, 10, 6, NUM_PLIES+1, 6,
+            form.ppi_tableKw, 0,
+            opts=AFXTABLE_EDITABLE|AFXTABLE_TYPE_FLOAT|AFXTABLE_STYLE_DEFAULT)
+        ppiTable.setLeadingRows(1)
+        ppiTable.setLeadingColumns(1)
+        ppiTable.setLeadingColumnLabels(
+                '\t'.join(['ply {0:02d}'.format(i) for i in range(1, NUM_PLIES+1)]))
+        ppiTable.setColumnWidth(-1, 120)
+        ppiTable.setColumnType(-1, AFXTable.FLOAT)
+        ppiTable.setColumnEditable(5, False)
+        ppiTable.shadeReadOnlyItems(True)
+        row_headings = ['Nominal radius\n(Required)',
+                        'Angular offset (0..1)\n(Optional, default 0)',
+                        'Maximum width\n(Required)',
+                        'Eccentricity (0..1)\n(Optional, see **)',
+                        "Orientation (\xb0)\n(from 'Laminate')"]
+        ppiTable.setLeadingRowLabels('\t'.join(row_headings))
+        self.ppiTable = ppiTable
+        FXLabel(impVF, "(**) Default value for 'Eccentricity' is 1.0 if " +
+            'orientation > 0, 0.0 if orientation < 0 and ' +
+            '0.5 if orientation = 0')
+        #
+        # Tabs / Geometric Imperfections / Fiber fraction Imperfections
+        #
+        FXTabItem(impBook, 'Fiber Fraction Imperfection', None, TAB_LEFT)
+        impVF = FXVerticalFrame(impBook, LAYOUT_FILL_Y|FRAME_RAISED|FRAME_SUNKEN)
+        impHF = FXHorizontalFrame(impVF, opts=LAYOUT_CENTER_Y)
+        impVF = FXVerticalFrame(impHF)
+        FXLabel(impVF, '')
+        FXLabel(impVF, 'The default values (0, Off) will not apply the imperfection',
+                opts=LAYOUT_CENTER_X)
+        self.imp_ffi_sf = AFXTable(impVF, 21, 3,(MAX_MODELS+1), 3, form.ffi_scalingsKw, 0,
+            opts=AFXTABLE_EDITABLE|AFXTABLE_TYPE_FLOAT|AFXTABLE_STYLE_DEFAULT)
+        self.imp_ffi_sf.setLeadingRows(1)
+        self.imp_ffi_sf.setLeadingColumns(1)
+        self.imp_ffi_sf.setLeadingRowLabels('global thickness\nscaling factor\tuse thickness\nimperfection data')
+        colLabel = '\t'.join(['model {0:02d}'.format(i) for i in range(1, MAX_MODELS+1)])
+        self.imp_ffi_sf.setLeadingColumnLabels(colLabel)
+        self.imp_ffi_sf.setColumnWidth(-1, 120)
+        self.imp_ffi_sf.setColumnType(2, AFXTable.BOOL)
+        FXVerticalSeparator(impHF)
+        impVF2 = FXVerticalFrame(impHF)
+        FXLabel(impVF2, '')
+        FXLabel(impVF2, 'Parameters:')
+        FXLabel(impVF2, '')
+        impVA = AFXVerticalAligner(impVF2)
+        AFXTextField(impVA, 8, 'Nominal fiber volume fraction:',
+                form.ffi_nominal_vfKw, opts=AFXTEXTFIELD_FLOAT)
+        AFXTextField(impVA, 8, 'Matrix Elastic Modulus:',
+                form.ffi_E_matrixKw, opts=AFXTEXTFIELD_FLOAT)
+        AFXTextField(impVA, 8, "Matrix Poisson's ratio:",
+                form.ffi_nu_matrixKw, opts=AFXTEXTFIELD_FLOAT)
+        FXLabel(impVF2, '')
+        FXHorizontalSeparator(impVF2)
+        FXLabel(impVF2, '')
+        pngpath = os.path.join(DAHOME, 'gui', 'icons', 'fiber_fraction.png')
+        icon = afxCreatePNGIcon(pngpath)
+        FXLabel(impVF2, '', icon)
+        #
         # Tabs / Geometric Imperfections / Mid-Surface Imperfections
         #
         FXTabItem(impBook, 'Mid-Surface Imperfections', None, TAB_LEFT)
@@ -592,6 +699,25 @@ class TestDB(AFXDataDialog):
         FXLabel(impVF, '')
         FXLabel(impVF, '')
         self.apply_imp_ms = FXButton(impVF, 'Apply Mid-Surface Imperfections')
+        FXLabel(impVF, '')
+        FXHorizontalSeparator(impVF)
+        FXLabel(impVF, '')
+        FXLabel(impVF, 'Visualization of mid-surface imperfection')
+        AFXNote(impVF, 'The plot is made for an existing cone model,' +
+                       ' that may have been created\nusing parameters' +
+                       ' that differ from those shown in this window.')
+        plotVA = AFXVerticalAligner(impVF)
+        self.model_cbs.append(AFXComboBox(plotVA, 2, 10, 'Select model:',
+                              form.plot_imp_modelKw))
+        plot_type = AFXComboBox(plotVA, 2, 10,
+                                "Plot type:",
+                                form.plot_imp_typeKw)
+        for i in range(1, 7):
+            plot_type.appendItem('Plot type {0}'.format(i))
+        plot_type.setCurrentItem(0)
+        AFXNote(impVF, 'See Post-processing -> Opened contour plots' +
+            ' for examples of plot types.')
+        self.plot_msi_button = FXButton(impVF, 'Create plot')
         #
         # Tabs / Geometric Imperfections / Thickness imperfections
         #
@@ -637,6 +763,25 @@ class TestDB(AFXDataDialog):
         FXLabel(impVF, '')
         FXLabel(impVF, '')
         self.apply_imp_t = FXButton(impVF, 'Apply Thickness Imperfections')
+        FXLabel(impVF, '')
+        FXHorizontalSeparator(impVF)
+        FXLabel(impVF, '')
+        FXLabel(impVF, 'Visualization of thickness imperfection')
+        AFXNote(impVF, 'The plot is made for an existing cone model,' +
+                       ' that may have been created\nusing parameters' +
+                       ' that differ from those shown in this window.')
+        plotVA = AFXVerticalAligner(impVF)
+        self.model_cbs.append(AFXComboBox(plotVA, 2, 10, 'Select model:',
+                              form.plot_imp_modelKw))
+        plot_type = AFXComboBox(plotVA, 2, 10,
+                                "Plot type:",
+                                form.plot_imp_typeKw)
+        for i in range(1, 7):
+            plot_type.appendItem('Plot type {0}'.format(i))
+        plot_type.setCurrentItem(0)
+        AFXNote(impVF, 'See Post-processing -> Opened contour plots' +
+            ' for examples of plot types.')
+        self.plot_ti_button = FXButton(impVF, 'Create plot')
         #
         # Tabs / Load Imperfection
         #
@@ -742,8 +887,8 @@ class TestDB(AFXDataDialog):
         FXTabItem(postBook, 'Stress analysis', None, TAB_LEFT)
         postVF = FXVerticalFrame(postBook, FRAME_RAISED|FRAME_SUNKEN)
         postVF2 = FXVerticalFrame(postVF, opts=LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
-        self.model_to_post = AFXComboBox(postVF2, 0, 10, 'Select model:',
-                             form.model_to_postKw)
+        self.model_cbs.append(AFXComboBox(postVF2, 0, 10, 'Select model:',
+                              form.model_to_postKw))
         FXLabel(postVF2, 'Stress analysis using the Hashin and Tsai-Wu criteria (implemented for composite/monolitic only)')
         FXLabel(postVF2, 'This macro performs an envolope among all elements, ' +\
                         'among all the plies, considering for each ply: the ' +\
@@ -761,6 +906,7 @@ class TestDB(AFXDataDialog):
         postHF = FXHorizontalFrame(postVF)
         postVF1 = FXVerticalFrame(postHF, opts=LAYOUT_LEFT|LAYOUT_CENTER_Y)
         postVF2 = FXVerticalFrame(postHF, opts=LAYOUT_LEFT|LAYOUT_CENTER_Y)
+        postVF3 = FXVerticalFrame(postHF, opts=LAYOUT_LEFT|LAYOUT_CENTER_Y)
 
         self.plot_type_buttons = []
 
@@ -792,6 +938,12 @@ class TestDB(AFXDataDialog):
         pngpath = os.path.join(DAHOME, 'gui', 'icons', 'plot_type_5.png')
         icon = afxCreatePNGIcon(pngpath)
         FXLabel(postVF2, '', icon, opts=ICON_AFTER_TEXT)
+        self.plot_type_buttons.append(button)
+
+        button = FXButton(postVF3, 'Plot type 6')
+        pngpath = os.path.join(DAHOME, 'gui', 'icons', 'plot_type_6.png')
+        icon = afxCreatePNGIcon(pngpath)
+        FXLabel(postVF3, '', icon, opts=ICON_AFTER_TEXT)
         self.plot_type_buttons.append(button)
 
         #
@@ -971,11 +1123,16 @@ class TestDB(AFXDataDialog):
             self.std_to_post.appendItem(std_name)
             self.std_to_load.appendItem(std_name)
             self.std_to_run.appendItem(std_name)
-        self.model_to_post.clearItems()
-        std_name = self.form.std_to_postKw.getValue()
-        for k in keys:
-            if k.find(std_name) > -1 and k.find(std_name + '_lb') == -1:
-                self.model_to_post.appendItem(k)
+        for cb in self.model_cbs:
+            cb.clearItems()
+        keys = [k for k in keys if not k.endswith('_lb')]
+        for cb in self.model_cbs:
+            for k in keys:
+                cb.appendItem(k)
+        if self.form.model_to_postKw.getValue() not in keys and len(keys) > 0:
+            self.form.model_to_postKw.setValue(keys[0])
+        if self.form.plot_imp_modelKw.getValue() not in keys and len(keys) > 0:
+            self.form.plot_imp_modelKw.setValue(keys[0])
         self.update_database(update_all=True)
 
 
@@ -1033,6 +1190,28 @@ class TestDB(AFXDataDialog):
             # when the perturbation loads are deleted for example
             # sometimes they are not really deleted, specially when the user
             # does it faster
+
+        # ppiTable
+        old_num_plies = self.current_num_plies
+        new_num_plies = NUM_PLIES - self.laminateTable.getNumEmptyRowsAtBottom()
+        if old_num_plies != new_num_plies:
+            self.current_num_plies = new_num_plies
+            self.plot_ply_index.setRange(1, max(new_num_plies, 1))
+            if new_num_plies < old_num_plies:
+                for row in range(new_num_plies+1, old_num_plies+1):
+                    for col in range(1, 5):
+                        self.ppiTable.setItemEditable(row, col, False)
+            else:
+                for row in range(old_num_plies+1, new_num_plies+1):
+                    for col in range(1, 5):
+                        self.ppiTable.setItemEditable(row, col, True)
+        for row in range(1, max(old_num_plies, new_num_plies)+1):
+            val = self.laminateTable.getItemValue(row, 3)
+            self.ppiTable.setItemValue(row, 5, val)
+        if form.ppi_enabledKw.getValue():
+            self.ppiTable.enable()
+        else:
+            self.ppiTable.disable()
 
         # linking variables
         std_name = form.std_to_postKw.getValue()
@@ -1234,6 +1413,32 @@ class TestDB(AFXDataDialog):
             reload(gui_plot)
             cc_name = form.model_to_postKw.getValue()
             gui_plot.plot_stress_analysis(std_name, cc_name)
+
+        # plot PPI button
+        if self.plot_ppi_button.getState() == STATE_DOWN:
+            self.plot_ppi_button.setState(STATE_UP)
+            reload(gui_plot)
+            cc_name = form.plot_imp_modelKw.getValue()
+            # ply_index is 1-based in GUI, 0-based in code
+            ply_index = form.plot_ply_indexKw.getValue() - 1
+            plot_type = int(form.plot_imp_typeKw.getValue()[-1])
+            gui_plot.plot_ppi(std_name, cc_name, ply_index, plot_type)
+
+        # plot MSI button
+        if self.plot_msi_button.getState() == STATE_DOWN:
+            self.plot_msi_button.setState(STATE_UP)
+            reload(gui_plot)
+            cc_name = form.plot_imp_modelKw.getValue()
+            plot_type = int(form.plot_imp_typeKw.getValue()[-1])
+            gui_plot.plot_msi(std_name, cc_name, plot_type)
+
+        # plot TI button
+        if self.plot_ti_button.getState() == STATE_DOWN:
+            self.plot_ti_button.setState(STATE_UP)
+            reload(gui_plot)
+            cc_name = form.plot_imp_modelKw.getValue()
+            plot_type = int(form.plot_imp_typeKw.getValue()[-1])
+            gui_plot.plot_ti(std_name, cc_name, plot_type)
 
         # run models
         if self.exec_std.getState() == STATE_DOWN:

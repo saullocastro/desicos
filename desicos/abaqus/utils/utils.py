@@ -240,3 +240,54 @@ def cyl2rec_profi(array):
     return np.concatenate((array[0] * np.cos(np.deg2rad(array[1])),
                            array[0] * np.sin(np.deg2rad(array[1])),
                            array[2]))
+
+
+def make_uniform_cells(x1, x2, values):
+    """Transform a grid to have uniform cells when plotted.
+
+    This is done by replacing each data point in the grid (assumed to be the
+    element centroid) by four points, having the same value. These points are
+    placed such that they would be near the element corners, so the element
+    interior will have a uniform color in a contour plot.
+
+    Parameters
+    ----------
+    x1 : numpy.array
+        2D array containing the first coordinate (in whatever csys).
+    x2 : numpy.array
+        2D array containing the second coordinate (in whatever csys).
+    values : numpy.array
+        2D array containing the data values.
+
+    Notes
+    -----
+    Input coordinates ``x1`` and ``x2`` are assumed to be regularly spaced.
+    The type of coordinates (Cartesian, cylindrical, ...) does not matter.
+
+    """
+    HALF_CELL = 0.99 / 2 # Half cell size (relative) in the created grid
+    coords = [x1, x2]
+    values = np.repeat(np.repeat(values, 2, axis=0), 2, axis=1)
+
+    # Repeat rows
+    for i, xold in enumerate(coords[:]):
+        xnew = np.zeros((2*xold.shape[0], xold.shape[1]))
+        xnew[1:-1:2,] = (1-HALF_CELL)*xold[:-1,] + HALF_CELL*xold[1:,]
+        xnew[2::2,] =  HALF_CELL*xold[:-1,] + (1-HALF_CELL)*xold[1:,]
+        # Handle first and last rows by extrapolation
+        xnew[0,] = xold[0,] - HALF_CELL*(xold[1,] - xold[0,])
+        xnew[-1,] = xold[-1,] - HALF_CELL*(xold[-2,] - xold[-1,])
+        coords[i] = xnew
+
+    # Repeat columns. Unfortunately, there seems no easy way without
+    # code duplication as the slicing is necessary
+    for i, xold in enumerate(coords[:]):
+        xnew = np.zeros((xold.shape[0], 2*xold.shape[1]))
+        xnew[:,1:-1:2] = (1-HALF_CELL)*xold[:,:-1] + HALF_CELL*xold[:,1:]
+        xnew[:,2::2] =  HALF_CELL*xold[:,:-1] + (1-HALF_CELL)*xold[:,1:]
+        # Handle first and last columns by extrapolation
+        xnew[:,0] = xold[:,0] - HALF_CELL*(xold[:,1] - xold[:,0])
+        xnew[:,-1] = xold[:,-1] - HALF_CELL*(xold[:,-2] - xold[:,-1])
+        coords[i] = xnew
+
+    return coords[0], coords[1], values

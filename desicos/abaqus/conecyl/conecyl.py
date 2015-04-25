@@ -9,7 +9,7 @@ from desicos.logger import log, warn, error
 from desicos.abaqus.constants import *
 from desicos.composite.laminate import read_stack
 from desicos.conecylDB import fetch
-from desicos.abaqus.utils import vec_calc_elem_cg
+from desicos.abaqus.utils import make_uniform_cells
 
 
 class ConeCyl(object):
@@ -824,15 +824,83 @@ class ConeCyl(object):
         return _plot.extract_field_output(self, ignore)
 
 
-    def transform_plot_data(self, thetas, zs, plot_type):
+    def extract_fiber_orientation(self, ply_index, use_elements):
+        r"""Get the fiber orientation at the centroid of each element
+
+        Parameters
+        ----------
+        ply_index : int
+            Index of the ply of interest
+        use_elements : bool
+            If ``True``, use the actual element centroids (from Abaqus)
+            If ``False``, estimate their locations instead.
+
+        Returns
+        -------
+        out : tuple
+            Where ``out[0]`` and ``out[1]`` contain the circumferential (theta)
+            and vertical (z) coordinates and ``out[2]`` the corresponding
+            values.
+
+        Notes
+        -----
+        Must be called from Abaqus if ``use_elements == True``
+
+        """
+        import _plot
+        return _plot.extract_fiber_orientation(self, ply_index, use_elements)
+
+
+    def extract_thickness_data(self):
+        r"""Get the thickness at the centroid of each element
+
+        Returns
+        -------
+        out : tuple
+            Where ``out[0]`` and ``out[1]`` contain the circumferential (theta)
+            and vertical (z) coordinates and ``out[2]`` the corresponding
+            thicknesses.
+
+        Notes
+        -----
+        Must be called from Abaqus
+
+        """
+        import _plot
+        return _plot.extract_thickness_data(self)
+
+
+    def extract_msi_data(self):
+        r"""Get a data grid representing the nodal offsets w.r.t. the
+        reference surface, caused by mid-surface imperfection(s).
+
+        Returns
+        -------
+        out : tuple
+            Where ``out[0]`` and ``out[1]`` contain the circumferential (theta)
+            and vertical (z) coordinates and ``out[2]`` the corresponding
+            imperfection offsets.
+
+        Notes
+        -----
+        Must be called from Abaqus
+
+        """
+        import _plot
+        return _plot.extract_msi_data(self)
+
+
+    def transform_plot_data(self, thetas, zs, values, plot_type, wrap=True):
         r"""Transform coordinates of plot data, to prepare for plotting
 
         Parameters
         ----------
-        theta : numpy.array
+        thetas : numpy.array
             Array of circumferential coordinates
-        z : numpy.array
+        zs : numpy.array
             Array of vertical coordinates
+        values : numpy.array
+            Array of values
         plot_type : int, optional
             For cylinders only ``4`` and ``5`` are valid.
             For cones all the following types can be used:
@@ -842,23 +910,27 @@ class ConeCyl(object):
             - ``3``: stretched closed
             - ``4``: stretched opened (`r(z) \times \theta` vs. `H`)
             - ``5``: stretched opened (`r_{bottom}` vs. `H`)
+            - ``6``: concave, starting at `\theta = 0`
+        wrap : bool, optional
+            If ``True``, wrap `\theta`-coordinates to within the correct
+            range (either `0..2\pi` or `-\pi..\pi`).
 
         Returns
         -------
         out : tuple
             Where ``out[0]`` and ``out[1]`` contain the horizontal and
-            vertical grids of coordinates.
+            vertical grids of coordinates and ``out[2]`` the values.
 
         """
         import _plot
-        return _plot.transform_plot_data(self, thetas, zs, plot_type)
+        return _plot.transform_plot_data(self, thetas, zs, values, plot_type, wrap)
 
 
     def plot_field_data(self, x, y, field, create_npz_only=False, ax=None,
             figsize=(3.3, 3.3), save_png=True, aspect='equal', clean=True,
             outpath='', pngname='plot_from_abaqus.png',
             npzname='plot_from_abaqus.npz', pyname='plot_from_abaqus.py',
-            num_levels=400, show_colorbar=True):
+            num_levels=400, show_colorbar=True, lines=None):
         r"""Print data field output to a file
 
         Parameters
@@ -896,6 +968,10 @@ class ConeCyl(object):
             Number of contour levels (higher values make the contour smoother).
         show_colorbar : bool, optional
             Include a color bar in the figure.
+        lines : list, optional
+            List of lines to draw on top of the contour plot. Each line is
+            either a 2-tuple (list of x-coords, list of y-coords), or a 2xN
+            numpy array.
 
         Notes
         -----
@@ -930,6 +1006,7 @@ class ConeCyl(object):
             - ``3``: stretched closed
             - ``4``: stretched opened (`r(z) \times \theta` vs. `H`)
             - ``5``: stretched opened (`r_{bottom}` vs. `H`)
+            - ``6``: concave, starting at `\theta = 0`
         kwargs : dict
             Other keyword args will be directly passed to ``plot_field_data``
             See the documentation of that method for more details.
@@ -945,12 +1022,124 @@ class ConeCyl(object):
 
         try:
             thetas, zs, field = self.extract_field_output(ignore)
-            x, y = self.transform_plot_data(thetas, zs, plot_type)
+            x, y, field = self.transform_plot_data(thetas, zs, field, plot_type)
             self.plot_field_data(x, y, field, **kwargs)
             return x, y, field
         except:
             traceback.print_exc()
             error('Opened field plot could not be generated! :(')
+
+
+    def plot_orientation_opened(self, ply_index, use_elements, plot_type=1, **kwargs):
+        r"""Make a fiber orientation plot from the current cone model
+
+        Only valid for cones that have a ply piece imperfection.
+
+        Parameters
+        ----------
+        ply_index : int
+            Index of the ply of interest
+        use_elements : bool
+            If ``True``, use the actual element centroids (from Abaqus)
+            If ``False``, estimate their locations instead.
+        plot_type : int, optional
+            For cones all the following types can be used:
+
+            - ``1``: concave up (default for cones)
+            - ``2``: concave down
+            - ``3``: stretched closed
+            - ``4``: stretched opened (`r(z) \times \theta` vs. `H`)
+            - ``5``: stretched opened (`r_{bottom}` vs. `H`)
+            - ``6``: concave, starting at `\theta = 0`
+        kwargs : dict
+            Other keyword args will be passed to ``plot_field_data``
+            See the documentation of that method for more details.
+
+        Notes
+        -----
+        Must be called from Abaqus if ``use_elements == True``
+
+        """
+        if self.impconf.ppi is None:
+            error('Cannot plot orientations: ConeCyl object has no ply piece imperfection!')
+            return
+        try:
+            thetas, zs, field = self.extract_fiber_orientation(ply_index, use_elements)
+            thetas, zs, field = make_uniform_cells(thetas, zs, field)
+            x, y, field = self.transform_plot_data(thetas, zs, field, plot_type)
+            lines = self.impconf.ppi.get_ply_lines(ply_index, center_theta_zero=(plot_type != 6))
+            lines = [self.transform_plot_data(thetas, zs, zs, plot_type, wrap=False)[0:2] for thetas, zs in lines]
+            self.plot_field_data(x, y, field, lines=lines, **kwargs)
+        except:
+            traceback.print_exc()
+            error('Opened orientation plot could not be generated! :(')
+
+
+    def plot_thickness_opened(self, plot_type=1, **kwargs):
+        r"""Make an opened thickness plot from the current conecyl model
+
+        Parameters
+        ----------
+        plot_type : int, optional
+            For cylinders only ``4`` and ``5`` are valid.
+            For cones all the following types can be used:
+
+            - ``1``: concave up (default for cones)
+            - ``2``: concave down
+            - ``3``: stretched closed
+            - ``4``: stretched opened (`r(z) \times \theta` vs. `H`)
+            - ``5``: stretched opened (`r_{bottom}` vs. `H`)
+            - ``6``: concave, starting at `\theta = 0`
+        kwargs : dict
+            Other keyword args will be passed to ``plot_field_data``
+            See the documentation of that method for more details.
+
+        Notes
+        -----
+        Must be called from Abaqus
+
+        """
+        try:
+            thetas, zs, field = self.extract_thickness_data()
+            thetas, zs, field = make_uniform_cells(thetas, zs, field)
+            x, y, field = self.transform_plot_data(thetas, zs, field, plot_type)
+            self.plot_field_data(x, y, field, **kwargs)
+        except:
+            traceback.print_exc()
+            error('Opened thickness plot could not be generated! :(')
+
+
+    def plot_msi_opened(self, plot_type=1, **kwargs):
+        r"""Make an opened MSI (mid-surface imperfection) plot from the current conecyl model
+
+        Parameters
+        ----------
+        plot_type : int, optional
+            For cylinders only ``4`` and ``5`` are valid.
+            For cones all the following types can be used:
+
+            - ``1``: concave up (default for cones)
+            - ``2``: concave down
+            - ``3``: stretched closed
+            - ``4``: stretched opened (`r(z) \times \theta` vs. `H`)
+            - ``5``: stretched opened (`r_{bottom}` vs. `H`)
+            - ``6``: concave, starting at `\theta = 0`
+        kwargs : dict
+            Other keyword args will be passed to ``plot_field_data``
+            See the documentation of that method for more details.
+
+        Notes
+        -----
+        Must be called from Abaqus
+
+        """
+        try:
+            thetas, zs, field = self.extract_msi_data()
+            x, y, field = self.transform_plot_data(thetas, zs, field, plot_type)
+            self.plot_field_data(x, y, field, **kwargs)
+        except:
+            traceback.print_exc()
+            error('Opened MSI plot could not be generated! :(')
 
 
     def check_completed(self, wait=False, print_found=False):

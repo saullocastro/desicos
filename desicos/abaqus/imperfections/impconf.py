@@ -11,6 +11,8 @@ from lbmi import LBMI
 from msi import MSI
 from ti import TI
 from cutout import Cutout
+from ppi import PPI
+from ffi import FFI
 
 
 class ImpConf(object):
@@ -48,6 +50,10 @@ class ImpConf(object):
     msis               ``list`` of :class:`.MSI` (Mid-Surface Imperfection)
                        objects
     cutouts            ``list`` of :class:`.Cutout` objects
+    ppi                :class:`.PPI` (Ply Piece Imperfection) object or
+                       ``None`` if not set
+    ffi                :class:`.FFI` (Fiber Fraction Imperfection) object or
+                       ``None`` if not set
     ================== ======================================================
 
     """
@@ -64,6 +70,8 @@ class ImpConf(object):
         self.msis = []
         self.tis = []
         self.cutouts = []
+        self.ppi = None
+        self.ffi = None
         self.rename = True
         self.name = ''
         self.conecyl = None
@@ -407,7 +415,8 @@ class ImpConf(object):
         return ti
 
 
-    def add_cutout(self, thetadeg, pt, d, drill_offset_deg=0.):
+    def add_cutout(self, thetadeg, pt, d, drill_offset_deg=0.,
+                   clearance_factor=0.75):
         r"""Add a cutout
 
         Parameters
@@ -422,19 +431,84 @@ class ImpConf(object):
             Angular offset when the drilling is not normal to the shell
             surface. A positive offset means a positive rotation about the
             `\theta` axis, along the meridional plane.
+        clearance_factor : float
+            Fraction of the diameter to apply as clearance around the cutout.
+            This clearance is partitoned and meshed separately from the rest of
+            the cone / cylinder.
 
         Returns
         -------
         cutout : :class:`.Cutout` object.
 
         """
-        cutout = Cutout(thetadeg, pt, d, drill_offset_deg)
+        cutout = Cutout(thetadeg, pt, d, drill_offset_deg, clearance_factor)
         cutout.impconf = self
         self.cutouts.append(cutout)
         return cutout
 
 
+    def add_ppi(self, info, extra_height):
+        """Adds Ply Piece Imperfection (PPI)
+
+        There can be only one of these, so calling this function overrides the
+        previous imperfection, if any.
+        Note: Applicable for cones only!
+
+        Parameters
+        ----------
+        info : list
+            `List of dictionaries with info about the layup of this cone.
+            See :class:`.PPI` for more details
+        extra_height : float
+            Extra height above and below the cone height (`cc.H`) to consider
+            in the ply placement model.
+        Returns
+        -------
+        ppi : :class:`.PPI` object.
+        """
+        if self.ppi is not None:
+            warn('PPI object already set, overriding...')
+        self.ppi = PPI(info, extra_height)
+        self.ppi.impconf = self
+        return self.ppi
+
+
+    def add_ffi(self, nominal_vf, E_matrix, nu_matrix, use_ti, global_sf=None):
+        """Adds Fiber Fraction Imperfection (FFI)
+
+        There can be only one of these, so calling this function overrides the
+        previous imperfection, if any.
+
+        Parameters
+        ----------
+        nominal_vf : float
+            Nominal fiber volume fraction of the material
+        E_matrix : float
+            Young's modulus of the matrix material
+        nu_matrix : float
+            Poisson's ratio of the matrix material
+        use_ti : bool
+            If ``True``, create varying material properties according to the
+            thickness imperfection data (if present).
+        global_sf : float or ``None``
+            Global scaling factor to apply to the material thickness.
+            Set to ``None`` to disable. The global scaling may be overridden
+            by a thickness imperfection, if ``use_ti`` (see above) is ``True``.
+
+        Returns
+        -------
+        ffi : :class:`.FFI` object.
+
+        """
+        if self.ffi is not None:
+            warn('FFI object already set, overriding...')
+        self.ffi = FFI(nominal_vf, E_matrix, nu_matrix, use_ti, global_sf)
+        self.ffi.impconf = self
+        return self.ffi
+
+
     def rebuild(self):
+        # TODO: Reduce the amount of code duplication?
         self.imperfections = []
         i = -1
         # uneven bottom edge
@@ -473,24 +547,36 @@ class ImpConf(object):
             lbmi.index = i
             lbmi.rebuild()
             self.imperfections.append(lbmi)
-        # mid-surface imperfection (MSI)
-        for msi in self.msis:
-            i += 1
-            msi.index = i
-            msi.rebuild()
-            self.imperfections.append(msi)
-        # thickness imperfection (TI)
-        for ti in self.tis:
-            i += 1
-            ti.index = i
-            ti.rebuild()
-            self.imperfections.append(ti)
         # cutout
         for cutout in self.cutouts:
             i += 1
             cutout.index = i
             cutout.rebuild()
             self.imperfections.append(cutout)
+        # ply piece imperfection
+        if self.ppi is not None:
+            i += 1
+            self.ppi.index = i
+            self.ppi.rebuild()
+            self.imperfections.append(self.ppi)
+        # fiber fraction imperfection
+        if self.ffi is not None:
+            i += 1
+            self.ffi.index = i
+            self.ffi.rebuild()
+            self.imperfections.append(self.ffi)
+        # thickness imperfection (TI)
+        for ti in self.tis:
+            i += 1
+            ti.index = i
+            ti.rebuild()
+            self.imperfections.append(ti)
+        # mid-surface imperfection (MSI)
+        for msi in self.msis:
+            i += 1
+            msi.index = i
+            msi.rebuild()
+            self.imperfections.append(msi)
         # name
         if self.rename:
             self.name = ('PLs_%02d_dimples_%02d_axisym_%02d' +\
@@ -501,12 +587,6 @@ class ImpConf(object):
 
 
     def create(self):
-        for imp in self.tis:
-            if imp:
-                imp.create()
-        for imp in self.msis:
-            if imp:
-                imp.create()
         for imp in self.imperfections:
             valid = True
             for pt in imp.pts:

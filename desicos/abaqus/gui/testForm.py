@@ -49,6 +49,8 @@ params = ['rbot', 'H', 'alphadeg','betadeg','omegadeg',
 'allowables', 'timeInterval', 'stress_output',
 'pl_num', 'd_num', 'ax_num', 'lbmi_num', 'cut_num',
 'pl_table', 'd_table', 'ax_table', 'lbmi_table', 'cut_table',
+'ppi_enabled', 'ppi_extra_height', 'ppi_table',
+'ffi_nominal_vf', 'ffi_E_matrix', 'ffi_nu_matrix', 'ffi_scalings',
 'std_name',
 'allowablesKey','laminapropKey','ccKey',
 'last_loaded',
@@ -173,6 +175,17 @@ class TestForm(AFXForm):
         self.ax_tableKw = AFXTableKeyword(self.cmd, 'ax_table', TRUE, 0, -1, AFXTABLE_TYPE_FLOAT)
         self.lbmi_tableKw = AFXTableKeyword(self.cmd, 'lbmi_table', TRUE, 0, -1, AFXTABLE_TYPE_FLOAT)
         self.cut_tableKw = AFXTableKeyword(self.cmd, 'cut_table', TRUE, 0, -1, AFXTABLE_TYPE_FLOAT)
+        self.ppi_enabledKw = AFXBoolKeyword(self.cmd, 'ppi_enabled', TRUE_FALSE, TRUE)
+        self.ppi_extra_heightKw = AFXFloatKeyword(self.cmd, 'ppi_extra_height', TRUE)
+        # Use AFXTABLE_TYPE_STRING to avoid default=0
+        self.ppi_tableKw = AFXTableKeyword(self.cmd, 'ppi_table', TRUE, 0, -1, AFXTABLE_TYPE_STRING)
+        self.ffi_nominal_vfKw = AFXFloatKeyword(self.cmd, 'ffi_nominal_vf', TRUE)
+        self.ffi_E_matrixKw = AFXFloatKeyword(self.cmd, 'ffi_E_matrix', TRUE)
+        self.ffi_nu_matrixKw = AFXFloatKeyword(self.cmd, 'ffi_nu_matrix', TRUE)
+        self.ffi_scalingsKw = AFXTableKeyword(self.cmd, 'ffi_scalings',  TRUE, 0, -1, AFXTABLE_TYPE_FLOAT)
+        self.plot_imp_modelKw = AFXStringKeyword(self.dummy, 'plot_imp_model', FALSE)
+        self.plot_ply_indexKw = AFXIntKeyword(self.dummy, 'plot_ply_index', FALSE)
+        self.plot_imp_typeKw = AFXStringKeyword(self.dummy, 'plot_imp_type', FALSE)
         #
         #
         self.laminapropKeyKw = AFXStringKeyword(self.dummy, 'laminapropKey', FALSE)

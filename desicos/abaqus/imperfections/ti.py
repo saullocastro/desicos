@@ -130,6 +130,10 @@ class TI(object):
         set_colors_ti(cc)
         self.created = True
         print '%s amplitude = %f' % (self.name, self.calc_amplitude())
+        ffi = self.impconf.ffi
+        if ffi is not None and ffi.created:
+            # There is already a FFI, let it know about us
+            ffi.update_after_tis()
 
         return self.elems_t, self.t_set
 
