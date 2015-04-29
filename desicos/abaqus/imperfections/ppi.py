@@ -91,9 +91,11 @@ class PPI(Imperfection):
 
         for i, ply_info in enumerate(self.info):
             if 'starting_position' not in ply_info:
-                raise ValueError("PlyPieceImperfection: Missing parameter 'starting_position' for ply {0}".format(i))
+                raise ValueError("PlyPieceImperfection: Missing parameter " +
+                    "'starting_position' for ply {0:02d}".format(i+1))
             if 'max_width' not in ply_info:
-                raise ValueError("PlyPieceImperfection: Missing parameter 'max_width' for ply {0}".format(i))
+                raise ValueError("PlyPieceImperfection: Missing parameter " +
+                    "'max_width' for ply {0:02d}".format(i+1))
             model = TrapezPlyPieceModel(self.cone_geometry, cc.stack[i], **ply_info)
             self.models.append(model)
             model.rebuild()
