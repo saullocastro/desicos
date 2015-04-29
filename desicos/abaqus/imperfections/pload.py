@@ -58,13 +58,25 @@ class PLoad(Imperfection):
         cc = self.impconf.conecyl
         mod = mdb.models[cc.model_name]
         nodes = mod.parts[cc.part_name_shell].nodes
-        xmin = self.x-1.e-3
-        xmax = self.x+1.e-3
-        ymin = self.y-1.e-3
-        ymax = self.y+1.e-3
-        zmin = self.z-1.e-3
-        zmax = self.z+1.e-3
-        node = nodes.getByBoundingBox(xmin, ymin, zmin, xmax, ymax, zmax)[0]
+
+        # calculate unit normal vector w.r.t. the surface
+        ux = cos(cc.alpharad)*cos(np.deg2rad(self.thetadeg))
+        uy = cos(cc.alpharad)*sin(np.deg2rad(self.thetadeg))
+        uz = sin(cc.alpharad)
+         # It would be nicer to calculate this based on e.g. MSI amplitude
+        max_imp = 10
+        r_TOL = 0.1 # Radius of cylinder to search
+        pt1 = (self.x + max_imp*ux, self.y + max_imp*uy, self.z + max_imp*uz)
+        pt2 = (self.x - max_imp*ux, self.y - max_imp*uy, self.z - max_imp*uz)
+        # Search for our node in a cylinder normal to the surface, because
+        # 'our' node may be moved by a MSI
+        nodes = nodes.getByBoundingCylinder(pt1, pt2, r_TOL)
+        if len(nodes) != 1:
+            warn("Unable to locate node where perturbation load" +
+                 "'{0}' is applied. ".format(self.name) +
+                 "Cannot calculate imperfection amplitude.")
+            self.amplitude = 0.
+            return 0.
 
         odb = cc.attach_results()
         fo = odb.steps[cc.step1Name].frames[-1].fieldOutputs
@@ -72,7 +84,7 @@ class PLoad(Imperfection):
             raise RuntimeError(
                     'Field output 'U' not available to calculate amplitude')
         #TODO not sure if this is robust: node.label-1
-        u, v, w = fo['U'].values[node.label-1].data
+        u, v, w = fo['U'].values[nodes[0].label-1].data
         cc.detach_results(odb)
 
         alpha = cc.alpharad
