@@ -6,6 +6,12 @@ Geometries (:mod:`desicos.abaqus.utils.geom`)
 .. currentmodule:: desicos.abaqus.utils.geom
 
 """
+# These classes were located here in some development versions of the
+# PPI imperfection and CPPOT tool. Import them here to maintain save/load
+# compatibility with then-created studies
+from desicos.cppot.core.geom import Point2D, Line2D
+
+
 class Plane(object):
     """Plane object
 

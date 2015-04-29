@@ -5,6 +5,10 @@ from desicos.constants import TOL
 from desicos.abaqus.utils import vec_calc_elem_cg
 from desicos.cppot.core.geom import ConeGeometry
 from desicos.cppot.core.ply_model import TrapezPlyPieceModel
+# The PlyPiece class was located here in some development versions of the
+# PPI imperfection and CPPOT tool. Import it here (though it is not needed
+# per se) to maintain save/load compatibility with then-created studies
+from desicos.cppot.core.ply_model import PlyPiece
 
 
 class PPI(Imperfection):
@@ -63,6 +67,17 @@ class PPI(Imperfection):
 
     def calc_amplitude(self):
         return self.max_deviation
+
+    def __setstate__(self, attrs):
+        # In some old (development) versions of the PPI, entries in 'info'
+        # had different names. Fix that during loading, to keep compatibility
+        ATTR_MAP = {'s_theta_nom': 'starting_position', 'max_w': 'max_width'}
+        for info in attrs['info']:
+            for old, new in ATTR_MAP.iteritems():
+                if old in info and new not in info:
+                    info[new] = info[old]
+                    del info[old]
+        self.__dict__.update(attrs)
 
     def rebuild(self):
         cc = self.impconf.conecyl
