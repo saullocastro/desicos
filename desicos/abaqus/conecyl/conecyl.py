@@ -1219,6 +1219,55 @@ class ConeCyl(object):
         return self.lam
 
 
+    def calc_SPL_prediction(self):
+        """Calculates the predicted values for P1 and N1
+        based on empirically obtained formulae
+
+        Here P1 is the perturbation load (in N) at which a local snap-through
+        (LST) appears at an axial load level equal to the global buckling load.
+        N1 is the global buckling load that is obtained with P1 applied.
+
+        Returns
+        -------
+        out : tuple
+            2-tuple, containing the calculated values for P1 and N1
+
+        Notes
+        -----
+        The empirical formulae (for now) do not take the full set of laminate
+        properties (A, B, D) into account. Instead, the equivalent orthotropic
+        material is calculated (based on the A-matrix only) and used in the
+        formulae.
+
+        """
+        # Calculate properties of equivalent orthotropic material
+        lam = self.calc_ABD_matrix()
+        lam.calc_equivalent_modulus()
+
+        # Calculate a single 'Equivalent modulus'
+        E_x = lam.e1
+        E_y = lam.e2
+        G_xy = lam.g12
+        nu_norm = lam.nu12 / (E_x/E_y)**0.5
+        E_eq_P1 = E_x**0.05 * E_y**0.59 * G_xy**0.36
+        E_eq_N1 = E_x**0.45 * E_y**0.37 * G_xy**0.18
+
+        # Extract some cone properties that will be needed
+        R = float(self.rbot)
+        r = float(self.rtop)
+        H = float(self.H)
+        cos_alpha = np.cos(self.alpharad)
+        t = float(sum(self.plyts))
+
+        # The actual emperical formulae
+        self.P1 = 2.98/12 * (E_eq_P1 * (t**3) * ((1 + nu_norm)**0.08) *
+                ((R/r)**(1.0/3)) * cos_alpha) / (R*(1 - nu_norm**2))
+        # Divide N1 by 1000 to obtain kN instead of N
+        self.N1 = 2.3/1000 * (E_eq_N1 * (t**2) * ((1 + nu_norm)**0.75) *
+                ((R/H)**0.06) * (cos_alpha**2)) / (1 - nu_norm**7)
+        return self.P1, self.N1
+
+
     def calc_nasaKDF(self):
         """Calculates the KDF using the NASA SP-8007 guideline
 
