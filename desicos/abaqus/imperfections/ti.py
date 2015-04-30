@@ -40,6 +40,14 @@ class TI(object):
         self.thetadegs = [self.thetadeg]
         self.pts = []
 
+    def __setstate__(self, attrs):
+        # Old versions had a bug where self.xaxis was set to 'amplitude'
+        # Fix that during loading
+        if attrs['xaxis'] == 'amplitude':
+            attrs['xaxis'] = 'scaling_factor'
+            attrs['xaxis_label'] = 'Scaling factor'
+        self.__dict__.update(attrs)
+
     def calc_amplitude(self):
         """Calculates the thickness imperfection amplitude
 
