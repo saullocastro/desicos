@@ -568,7 +568,8 @@ class TestDB(AFXDataDialog):
         FXLabel(impVF, '')
         FXHorizontalSeparator(impVF)
         FXLabel(impVF, '')
-        FXLabel(impVF, 'Visualization of ply pieces and fiber orientation')
+        lbl = FXLabel(impVF, 'Visualization of ply pieces and fiber orientation')
+        lbl.setFont(getAFXFont(FONT_BOLD))
         AFXNote(impVF, 'The plot is made for an existing cone model,\n' +
                        'that may have been created using parameters\n' +
                        'that differ from those shown in this window.')
@@ -608,7 +609,7 @@ class TestDB(AFXDataDialog):
         ppiTable.setColumnType(-1, AFXTable.FLOAT)
         ppiTable.setColumnEditable(5, False)
         ppiTable.shadeReadOnlyItems(True)
-        row_headings = ['Nominal radius\n(Required)',
+        row_headings = ['Starting position\n(Required)',
                         'Angular offset (0..1)\n(Optional, default 0)',
                         'Maximum width\n(Required)',
                         'Eccentricity (0..1)\n(Optional, see **)',
@@ -702,7 +703,8 @@ class TestDB(AFXDataDialog):
         FXLabel(impVF, '')
         FXHorizontalSeparator(impVF)
         FXLabel(impVF, '')
-        FXLabel(impVF, 'Visualization of mid-surface imperfection')
+        lbl = FXLabel(impVF, 'Visualization of mid-surface imperfection')
+        lbl.setFont(getAFXFont(FONT_BOLD))
         AFXNote(impVF, 'The plot is made for an existing cone model,' +
                        ' that may have been created\nusing parameters' +
                        ' that differ from those shown in this window.')
@@ -766,7 +768,8 @@ class TestDB(AFXDataDialog):
         FXLabel(impVF, '')
         FXHorizontalSeparator(impVF)
         FXLabel(impVF, '')
-        FXLabel(impVF, 'Visualization of thickness imperfection')
+        lbl = FXLabel(impVF, 'Visualization of thickness imperfection')
+        lbl.setFont(getAFXFont(FONT_BOLD))
         AFXNote(impVF, 'The plot is made for an existing cone model,' +
                        ' that may have been created\nusing parameters' +
                        ' that differ from those shown in this window.')
