@@ -23,6 +23,7 @@ afp
 *.rec*
 *.rpy*
 *.guiState*
+*.exe.dmp
 # DESICOS plug-in for Abaqus output files
 *.gaps
 
