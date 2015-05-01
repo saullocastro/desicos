@@ -68,6 +68,12 @@ class Cutout(object):
         self.pts = [self.ptlow, self.pt, self.ptup]
 
 
+    def calc_amplitude(self):
+        # Label the cutout diameter as 'amplitude', at least for now.
+        self.amplitude = self.d
+        return self.amplitude
+
+
     def create(self):
         from abaqus import mdb
         from abaqusConstants import (SIDE1, SUPERIMPOSE, COPLANAR_EDGES,

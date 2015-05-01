@@ -170,6 +170,14 @@ class MSI(object):
         self.thetadegs = []
         self.pts = []
 
+    def __setstate__(self, attrs):
+        # Old versions had a bug where self.xaxis was set to 'amplitude'
+        # Fix that during loading
+        if attrs['xaxis'] == 'amplitude':
+            attrs['xaxis'] = 'scaling_factor'
+            attrs['xaxis_label'] = 'Scaling factor'
+        self.__dict__.update(attrs)
+
     def rebuild(self):
         cc = self.impconf.conecyl
         self.name = 'MSI_{0:02d}_SF_{1:05d}'.format(self.index,
