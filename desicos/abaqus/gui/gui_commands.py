@@ -297,7 +297,8 @@ def create_study(**kwargs):
                 pt    = cut_table[1][j]
                 numel = cut_table[2][j]
                 d     = cut_table[i_model][j]
-                cc.create_cutout(theta, pt, d, numel)
+                cutout = cc.impconf.add_cutout(theta, pt, d,
+                        numel_radial_edge=numel)
         ## adding ply piece imperfection
         if ppi_enabled:
             info = []

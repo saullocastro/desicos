@@ -281,11 +281,11 @@ class TestDB(AFXDataDialog):
         meshVA = AFXVerticalAligner(meshFrame)
         AFXTextField(meshVA, 5, 'Number of elements around the circumference:',
                      form.numel_rKw, opts=AFXTEXTFIELD_INTEGER)
-        #text = 'Define in Geometric Imperfections/Cutouts'
-        #numel_cutout = AFXTextField(meshVA, len(text),
-                         #'Number of elements around cutouts:')
-        #numel_cutout.setText(text)
-        #numel_cutout.setEditable(False)
+        text = 'Define in Geometric Imperfections/Cutouts'
+        numel_cutout = AFXTextField(meshVA, len(text),
+                         'Number of elements around cutouts:')
+        numel_cutout.setText(text)
+        numel_cutout.setEditable(False)
         #
         # Tabs / Model / Boundary Conditions
         #
@@ -452,67 +452,66 @@ class TestDB(AFXDataDialog):
         labelTabs['d'] = 'Dimples'
         labelTabs['ax'] = 'Axisymmetric'
         labelTabs['lbmi'] = 'Linear Buckling Modes'
-        #labelTabs['cut'] = 'Cutouts'
+        labelTabs['cut'] = 'Cutouts'
         colWidths['pl'] = 45
         colWidths['d'] = 40
         colWidths['ax'] = 50
         colWidths['lbmi'] = 65
-        #colWidths['cut'] = 60
+        colWidths['cut'] = 60
         visibleCols['pl'] = 5
         visibleCols['d'] = 6
         visibleCols['ax'] = 5
         visibleCols['lbmi'] = 4
-        #visibleCols['cut'] = 5
+        visibleCols['cut'] = 5
         labelSpinners['pl'] = 'Number of perturbation loads:'
         labelSpinners['d'] = 'Number of single buckles'
         labelSpinners['ax'] = 'Number of axisymmetrics'
         labelSpinners['lbmi'] = 'Number of buckling modes to combine:'
-        #labelSpinners['cut'] = 'Number of cutouts'
+        labelSpinners['cut'] = 'Number of cutouts'
         self.imp_current_num['pl'] = 32
         self.imp_current_num['d'] = 16
         self.imp_current_num['ax'] = 16
         self.imp_current_num['lbmi'] = 16
-        #self.imp_current_num['cut'] = 16
+        self.imp_current_num['cut'] = 16
         self.imp_maxModels['pl'] = MAX_MODELS
         self.imp_maxModels['d'] = MAX_MODELS
         self.imp_maxModels['ax'] = MAX_MODELS
         self.imp_maxModels['lbmi'] = MAX_MODELS
-        #self.imp_maxModels['cut'] = MAX_MODELS
+        self.imp_maxModels['cut'] = MAX_MODELS
         self.imp_num_params['pl'] = 2
         self.imp_num_params['d'] = 4
         self.imp_num_params['ax'] = 2
         self.imp_num_params['lbmi'] = 1
-        #self.imp_num_params['cut'] = 3
+        self.imp_num_params['cut'] = 3
         rowLabels['pl'] = 'Position theta:\tPosition z/H:\t'
         rowLabels['d'] = 'Position theta:\tPosition z/H:\t' + \
                            'Parameter a:\tParameter b:\t'
         rowLabels['ax'] = 'Position z/H:\tParameter b:\t'
         rowLabels['lbmi'] = 'Mode number\t'
-        #rowLabels['cut'] = 'Position theta:\tPosition z/H:' +\
-                           #'\tNr. elements around\t'
+        rowLabels['cut'] = 'Position theta:\tPosition z/H:' +\
+                           '\tNr. radial elements\t'
         rowLabels2['pl'] = '\tPL value for model'
         rowLabels2['d'] = '\tWb for model'
         rowLabels2['ax'] = '\tWb for model'
         rowLabels2['lbmi'] = '\tSF for model'
-        #rowLabels2['cut'] = '\tcutout diameter for model'
+        rowLabels2['cut'] = '\tcutout diameter for model'
         pngs['pl'] = 'pl2.png'
         pngs['d'] = 'd2.png'
         pngs['ax'] = 'axisymmetric.png'
         pngs['lbmi'] = 'lbmi2.png'
-        #pngs['cut'] = 'cutout2.png'
+        pngs['cut'] = 'cutout2.png'
         self.imp_tableKw['pl'] = form.pl_tableKw
         self.imp_tableKw['d'] = form.d_tableKw
         self.imp_tableKw['ax'] = form.ax_tableKw
         self.imp_tableKw['lbmi'] = form.lbmi_tableKw
-        #self.imp_tableKw['cut'] = form.cut_tableKw
+        self.imp_tableKw['cut'] = form.cut_tableKw
         imp_numKw['pl'] = form.pl_numKw
         imp_numKw['d'] = form.d_numKw
         imp_numKw['ax'] = form.ax_numKw
         imp_numKw['lbmi'] = form.lbmi_numKw
-        #imp_numKw['cut'] = form.cut_numKw
+        imp_numKw['cut'] = form.cut_numKw
         #
-        #for k in ['pl', 'd', 'ax', 'lbmi', 'cut']:
-        for k in ['pl', 'd', 'ax', 'lbmi']:
+        for k in ['pl', 'd', 'ax', 'lbmi', 'cut']:
             maxIMP = self.imp_current_num[k]
             num_param = self.imp_num_params[k]
             maxModels = self.imp_maxModels[k]
@@ -1173,8 +1172,7 @@ class TestDB(AFXDataDialog):
         form.std_nameKw.setValue(rsc(std_name))
 
         # imp_tables[k]
-        #for k in ['pl', 'd', 'ax', 'lbmi', 'cut']:
-        for k in ['pl', 'd', 'ax', 'lbmi']:
+        for k in ['pl', 'd', 'ax', 'lbmi', 'cut']:
             correct_num = self.imp_spinners[k].getValue()
             current_num = self.imp_current_num[k]
             if   current_num > correct_num:
