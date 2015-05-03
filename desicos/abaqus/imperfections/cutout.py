@@ -16,24 +16,29 @@ class Cutout(object):
         Normalized meridional position.
     d : float
         Diameter of the drilling machine.
-    drill_offset_deg : float
+    drill_offset_deg : float, optional
         Angular offset when the drilling is not normal to the shell
         surface. A positive offset means a positive rotation about the
         `\theta` axis, along the meridional plane.
-    clearance_factor : float
+    clearance_factor : float, optional
         Fraction of the diameter to apply as clearance around the cutout.
         This clearance is partitoned and meshed separately from the rest of
         the cone / cylinder.
+    numel_radial_edge : int, optional
+        Number of elements along the radial edges about the cutout center.
+        This parameter affects the aspect ratio of the elements inside the
+        cutout area.
 
     """
     def __init__(self, thetadeg, pt, d, drill_offset_deg=0.,
-                 clearance_factor=0.75):
+                 clearance_factor=0.75, numel_radial_edge=4):
         self.thetadeg = thetadeg
         self.pt = pt
         self.d = d
         self.index = None
         self.drill_offset_deg = drill_offset_deg
         self.clearance_factor = clearance_factor
+        self.numel_radial_edge = numel_radial_edge
         self.impconf = None
         self.name = ''
         self.thetadeg1 = None
@@ -234,6 +239,24 @@ class Cutout(object):
             searchTolerance=1.).values()]
         p.seedEdgeByNumber(edges=edgeList, number=numel_per_edge, constraint=FIXED)
 
+        # Seed radial edges about the cutout
+        edge_coords = [
+            (r, 0.5*(thetadeg2 + thetadeg), z),
+            (0.5*(rup + r), 0.5*(thetadeg2 + thetadeg), 0.5*(zup + z)),
+            (0.5*(rup + r), thetadeg, 0.5*(zup + z)),
+            (0.5*(rup + r), 0.5*(thetadeg1 + thetadeg), 0.5*(zup + z)),
+            (r, 0.5*(thetadeg1 + thetadeg), z),
+            (0.5*(rlow + r), 0.5*(thetadeg1 + thetadeg), 0.5*(zlow + z)),
+            (0.5*(rlow + r), thetadeg, 0.5*(zlow + z)),
+            (0.5*(rlow + r), 0.5*(thetadeg2 + thetadeg), 0.5*(zlow + z)),
+        ]
+        edge_coords = [cyl2rec(*c) for c in edge_coords]
+        edgeList = [e[0] for e in p.edges.getClosest(coordinates=edge_coords,
+            searchTolerance=1.).values()]
+        p.seedEdgeByNumber(edges=edgeList, number=self.numel_radial_edge,
+                           constraint=FIXED)
+
+        # Mesh control for cutout faces
         try:
             p.setMeshControls(regions=p.faces, technique=SWEEP)
         except:
@@ -247,7 +270,7 @@ class Cutout(object):
                 coords = cyl2rec(r, thetadeg + np.rad2deg(self.d/2./r), z)
                 new_vertex = inst_shell.vertices.getClosest(
                     coordinates=[coords], searchTolerance=1.).values()[0][0]
-                # Unfortunately you cannot simply pass a vertex or list of vertices
+                #TODO Unfortunately you cannot simply pass a vertex or list of vertices
                 # It has to be some internal abaqus sequence type... work around that:
                 index = inst_shell.vertices.index(new_vertex)
                 region = Region(vertices=inst_shell.vertices[index:index+1])

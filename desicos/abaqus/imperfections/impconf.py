@@ -416,7 +416,7 @@ class ImpConf(object):
 
 
     def add_cutout(self, thetadeg, pt, d, drill_offset_deg=0.,
-                   clearance_factor=0.75):
+                   clearance_factor=0.75, numel_radial_edge=4):
         r"""Add a cutout
 
         Parameters
@@ -427,21 +427,26 @@ class ImpConf(object):
             Normalized meridional position.
         d : float
             Diameter of the drilling machine.
-        drill_offset_deg : float
+        drill_offset_deg : float, optional
             Angular offset when the drilling is not normal to the shell
             surface. A positive offset means a positive rotation about the
             `\theta` axis, along the meridional plane.
-        clearance_factor : float
+        clearance_factor : float, optional
             Fraction of the diameter to apply as clearance around the cutout.
             This clearance is partitoned and meshed separately from the rest of
             the cone / cylinder.
+        numel_radial_edge : int, optional
+            Number of elements along the radial edges about the cutout center.
+            This parameter affects the aspect ratio of the elements inside the
+            cutout area.
 
         Returns
         -------
         cutout : :class:`.Cutout` object.
 
         """
-        cutout = Cutout(thetadeg, pt, d, drill_offset_deg, clearance_factor)
+        cutout = Cutout(thetadeg, pt, d, drill_offset_deg, clearance_factor,
+                numel_radial_edge)
         cutout.impconf = self
         self.cutouts.append(cutout)
         return cutout
