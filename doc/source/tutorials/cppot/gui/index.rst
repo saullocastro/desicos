@@ -14,10 +14,9 @@ accessible through the Menu Bar Item ‘Tools’.
 
 Installation Requirements
 -------------------------
-To use this tool one needs Python (x,y) (full installation) and the
-Add-on `Shapely <http://toblerity.org/shapely/index.html>`_.
-All can be downloaded at http://code.google.com/p/pythonxy/ .
-
+To use this tool one needs Python 2.x, numpy and matplotlib, like for the
+Abaqus-plugin. Additionally, PyQt4 (https://wiki.python.org/moin/PyQt4) is
+needed.
 
 Input Tool
 ----------
@@ -153,24 +152,19 @@ This tool changes the geometry of the studied cone. This tool can be entered
 by clicking the ‘Set Cone Geometry’-Button or the ‘Cone Geometry Tool’- Item
 in the Menu ‘Tools’ in the menu bar.
 
-When started, the window in Figure 7 will be opened. On the left side are five
+When started, the window in Figure 7 will be opened. On the left side are four
 changeable lines and some further information about the cone geometry. It is
-possible to change the the half-cone angle and the radii of the different cone
-parts. The parts between `r1` and `r2` and between `r3` and `r4` are auxiliary
+possible to change the the half-cone angle and the dimensions of the cone. The
+parts between `r1` and `r2` and between `r3` and `r4` are auxiliary
 parts used for cutting and molding the edges of the cone. Between `r2` and
-`r3` is the so called free cone area.
+`r3` (each with height `H`) is the so called *free cone area*.
 
 The algorithm of the ply piece design will try to cover the whole cone, but
 the investigation and evaluation of the fiber angle deviation will be only
 applied to the free cone.
 
 On the right side of the window is a dynamic drawing, which will change with
-the entered values. There is also the definition of the cone coordinate system
-at the vertex.
-
-On the right side of the Input lines are the maximum length and width of the
-free cone and the length of both support areas. The length is measured in the
-z-direction.
+the entered values. There is also the definition of the coordinate system.
 
 .. figure:: ../../../../figures/modules/cppot/gui/fig_07.png
     :width: 700
@@ -194,7 +188,7 @@ The loading application is used when the tool is opened directly from the
 Input-Tool window. Only files created by the save-function can be loaded into
 the program and not the export files.
 
-To draw a graphic one has to choose witch results should be shown. It is
+To draw a graphic one has to choose which results should be shown. It is
 possible to show all evaluation parameters in one drawing. In the next step
 one has to decide if the drawing should be a 2D or 3D Graphic. In a 2D-Graphic
 is for every design parameter an own drawing made. At each Step are the
@@ -291,7 +285,7 @@ explanations’-box is set, the drawing contains further information about the
 input parameters.
 
 .. figure:: ../../../../figures/modules/cppot/gui/fig_13.png
-    :width: 350
+    :width: 250
 
     Figure 13: Plot Ply Piece Tool
 
@@ -315,47 +309,48 @@ bar.
 
     Figure 14: Example of ply piece plot
 
-Cutting Design - Tool
-.....................
-This tool calculates the ideal cutting design for two given boundaries of the
-cone. This is necessary for tools with a finite length. As one can see in
-Figure 14, the ply pieces are larger than the outer boundaries of the cone
-(shown as blue dotted lines). If these were the boundaries of the conical
-tooling, the manufacturing would be impossible or one would have to shorten
-the ply pieces.  The cutting design tool uses the original design with the
-same design parameters as the other tools and calculates the intersections of
-the ply piece with the edges of the cone, see Figure 15.
 
-.. figure:: ../../../../figures/modules/cppot/gui/fig_15.png
-    :width: 700
+..  Cutting Design - Tool
+    .....................
+    This tool calculates the ideal cutting design for two given boundaries of the
+    cone. This is necessary for tools with a finite length. As one can see in
+    Figure 14, the ply pieces are larger than the outer boundaries of the cone
+    (shown as blue dotted lines). If these were the boundaries of the conical
+    tooling, the manufacturing would be impossible or one would have to shorten
+    the ply pieces.  The cutting design tool uses the original design with the
+    same design parameters as the other tools and calculates the intersections of
+    the ply piece with the edges of the cone, see Figure 15.
 
-    Figure 15: Example of cutting design
+    .. figure:: ../../../../figures/modules/cppot/gui/fig_15.png
+        :width: 700
 
-The values of slower limit and supper limit are the s-coordinates of the used
-edges. The cutting design is not only useful to make the ply pieces smaller
-but also help to align the ply pieces properly. It is recommended to make
-circumferential markings of the different radii / limit values and align the
-ply pieces appropriately.
+        Figure 15: Example of cutting design
 
-The tool itself is shown in Figure 16. In the upper part of the GUI are the
-common controls for the design parameters and the cone geometry. In the last
-two rows are the controls for the upper and lower limits of s. By clicking the
-‘Calculate Cutting Shape’-Button two new windows are opened.
+    The values of slower limit and supper limit are the s-coordinates of the used
+    edges. The cutting design is not only useful to make the ply pieces smaller
+    but also help to align the ply pieces properly. It is recommended to make
+    circumferential markings of the different radii / limit values and align the
+    ply pieces appropriately.
 
-.. figure:: ../../../../figures/modules/cppot/gui/fig_16.png
-    :width: 350
+    The tool itself is shown in Figure 16. In the upper part of the GUI are the
+    common controls for the design parameters and the cone geometry. In the last
+    two rows are the controls for the upper and lower limits of s. By clicking the
+    ‘Calculate Cutting Shape’-Button two new windows are opened.
 
-    Figure 16: Cutting Design Tool
+    .. figure:: ../../../../figures/modules/cppot/gui/fig_16.png
+        :width: 350
 
-The opened windows show the cutting design as a drawing and the corresponding
-values of the four sides, see Figure 17. To simplify the transposing from this
-tool to any drawing software, the lengths are given relatively to the fiber
-orientation (x-axis).
+        Figure 16: Cutting Design Tool
 
-.. figure:: ../../../../figures/modules/cppot/gui/fig_17.png
-    :width: 700
+    The opened windows show the cutting design as a drawing and the corresponding
+    values of the four sides, see Figure 17. To simplify the transposing from this
+    tool to any drawing software, the lengths are given relatively to the fiber
+    orientation (x-axis).
 
-    Figure 17: Cutting Design Window
+    .. figure:: ../../../../figures/modules/cppot/gui/fig_17.png
+        :width: 700
+
+        Figure 17: Cutting Design Window
 
 Python Programming
 ------------------
@@ -369,9 +364,6 @@ To handle the design and cone geometry parameters a python class called
 ‘DataHandle’ and the ‘ResultHandle’ for the results of the study. Both can be
 fined in ``GUIHandle.py``.
 
-The DataHandle has 10 variables and set/get-methods for each of them. Except
-from the shape variable, all are arrays of integers or floats.
-
 GUI Programming
 ...............
 
@@ -383,7 +375,6 @@ the python files and the GUI-Tools:
 - Cone Geometry Tool: ``GUIConeGeo.py``
 - Evaluation Tool: ``GUIEval.py``
 - Plot Ply Piece Tool: ``GUIPlot.py``
-- Plot Ply Piece Tool: ``GUIDesign.py``
 
 Backbone Programming
 ....................
@@ -391,12 +382,6 @@ Backbone Programming
 In the following list are the Python files used to calculate the shapes and
 draw the graphs:
 
-- ``Bpart.py`` Collection of small functions to calculate coordinate
-  transformations, intersections and evaluation parameters
-- ``Bproto.py`` Contains the algorithms for the basic shapes: Trapez (Shape
-  A), Trapez2 (Shape B), Rect (Shape C). The functions only return the
-  vertices of the prototype shape., which will be later rotated around the
-  cone vertex.
 - ``GUICalc.py`` Contains the class used to make all variations of the study.
   Is called by Input-Tool, calls afterwards the evaluation tool and shows a
   progress bar.
