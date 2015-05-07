@@ -462,7 +462,7 @@ class ImpConf(object):
         Parameters
         ----------
         info : list
-            `List of dictionaries with info about the layup of this cone.
+            List of dictionaries with info about the layup of this cone.
             See :class:`.PPI` for more details
         extra_height : float
             Extra height above and below the cone height (`cc.H`) to consider

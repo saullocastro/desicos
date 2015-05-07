@@ -24,7 +24,8 @@ class PPI(Imperfection):
     =====================  ==================================================
     ``info``               ``list`` with info about the layup of this cone.
                            Length of the list should be at least equal to the
-                           number of plies. Eacch entry is a dict, containing:
+                           number of plies. Each entry is a ``dict``,
+                           containing:
                             - ``starting_position``: ``float``, Radius in the
                               flattened cone ((s, phi)-coordinate system)
                               where the origin line (L0) of the basic ply
@@ -39,10 +40,11 @@ class PPI(Imperfection):
                             - ``eccentricity``: ``float``, eccentricity param
                               (range 0...1) that controls the positioning of
                               the ply piece relative to the origin line.
-                              Optional, the default value is:
-                                a) if ``cc.stack[i] == 0`` -> 0.5
-                                b) if ``cc.stack[i] > 0`` -> 0.0
-                                c) if ``cc.stack[i] < 0`` -> 1.0
+                              Optional, the default value is dependent on the
+                              nominal fiber angle:
+                                a) 0.5 if ``cc.stack[i] == 0``
+                                b) 0.0 if ``cc.stack[i] > 0``
+                                c) 1.0 if ``cc.stack[i] < 0``
     ``extra_height``       ``float``, extra height above and below the cone
                            height (`cc.H`) to consider in the ply placement
                            model.
