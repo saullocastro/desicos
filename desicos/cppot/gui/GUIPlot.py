@@ -370,8 +370,11 @@ class PlotTool(QtGui.QMainWindow):
         value = np.reshape(value, s.shape)
 
         if print_angle:
-            colors = ax.contourf(x, y, value)
-            fig.colorbar(colors)
+            min_val = int(np.floor(value.min()))
+            max_val = int(np.ceil(value.max()))
+            levels = np.linspace(min_val, max_val, 10*(max_val - min_val) + 1)
+            colors = ax.contourf(x, y, value, levels)
+            fig.colorbar(colors, ticks=levels[::20], format=u'%d\u00B0')
         else:
             levels = range(1, 14)
             colors = ax.contourf(x, y, value, levels)
