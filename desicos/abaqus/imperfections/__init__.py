@@ -91,6 +91,16 @@ Cutout (:mod:`desicos.abaqus.imperfections.cutout`)
 .. automodule:: desicos.abaqus.imperfections.cutout
     :members:
 
+Ply Piece Imperfection (:mod:`desicos.abaqus.imperfections.ppi`)
+-------------------------------------------------------------------
+.. automodule:: desicos.abaqus.imperfections.ppi
+    :members:
+
+Fiber Fraction Imperfection (:mod:`desicos.abaqus.imperfections.ffi`)
+---------------------------------------------------
+.. automodule:: desicos.abaqus.imperfections.ffi
+    :members:
+
 """
 from impconf import ImpConf
 from imperfection import Imperfection
@@ -102,3 +112,5 @@ import msi
 import ti
 import uneven_edges
 import cutout
+import ppi
+import ffi
