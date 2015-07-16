@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>desicos.abaqus.utils.geom &mdash; DESICOS 2.3.0 documentation</title>
+    <title>desicos.abaqus.utils.geom &mdash; DESICOS 2.4.1 documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     '2.3.0',
+        VERSION:     '2.4.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../../_static/doctools.js"></script>
-    <link rel="top" title="DESICOS 2.3.0 documentation" href="../../../../index.html" />
+    <link rel="top" title="DESICOS 2.4.1 documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
    
   
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="../../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../index.html">DESICOS 2.3.0 documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">DESICOS 2.4.1 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../../../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
@@ -62,6 +62,12 @@
 <span class="sd">.. currentmodule:: desicos.abaqus.utils.geom</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
+<span class="c"># These classes were located here in some development versions of the</span>
+<span class="c"># PPI imperfection and CPPOT tool. Import them here to maintain save/load</span>
+<span class="c"># compatibility with then-created studies</span>
+<span class="kn">from</span> <span class="nn">desicos.cppot.core.geom</span> <span class="kn">import</span> <span class="n">Point2D</span><span class="p">,</span> <span class="n">Line2D</span>
+
+
 <div class="viewcode-block" id="Plane"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.utils.geom.Plane">[docs]</a><span class="k">class</span> <span class="nc">Plane</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Plane object</span>
 

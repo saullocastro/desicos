@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>desicos.abaqus.abaqus_functions &mdash; DESICOS 2.3.0 documentation</title>
+    <title>desicos.abaqus.abaqus_functions &mdash; DESICOS 2.4.1 documentation</title>
     
     <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.3.0',
+        VERSION:     '2.4.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <link rel="top" title="DESICOS 2.3.0 documentation" href="../../../index.html" />
+    <link rel="top" title="DESICOS 2.4.1 documentation" href="../../../index.html" />
     <link rel="up" title="Module code" href="../../index.html" />
    
   
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">DESICOS 2.3.0 documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">DESICOS 2.4.1 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
@@ -378,6 +378,50 @@
                              <span class="n">numIntPoints</span><span class="o">=</span><span class="n">numIntPoints</span><span class="p">)</span>
 
 </div>
+<div class="viewcode-block" id="modify_composite_layup"><a class="viewcode-back" href="../../../modules/abaqus/index.html#desicos.abaqus.abaqus_functions.modify_composite_layup">[docs]</a><span class="k">def</span> <span class="nf">modify_composite_layup</span><span class="p">(</span><span class="n">part</span><span class="p">,</span> <span class="n">layup_name</span><span class="p">,</span> <span class="n">modify_func</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Modify plies within a composite layup</span>
+
+<span class="sd">    Directly modififying plies within a CompositeLayup is not possible, as</span>
+<span class="sd">    the plies are read-only after creation. This function emulates modifying,</span>
+<span class="sd">    by deleting and then re-creating plies, with modifications.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    part : an Abaqus part object</span>
+<span class="sd">        The part that the to-be-modified layup is attached to.</span>
+<span class="sd">    layup_name : str</span>
+<span class="sd">        Name of the layup that is to be modified.</span>
+<span class="sd">    modify_func : function</span>
+<span class="sd">        Function that will be called for each ply. It should take as arguments</span>
+<span class="sd">        the ply index and a dictionary of keyword arguments. This dictionary</span>
+<span class="sd">        contains all keyword arguments that would re-create the original ply,</span>
+<span class="sd">        if passed to the ``CompositePly``-constructor. This function should</span>
+<span class="sd">        should make the necessary changes this dictionary and then return it.</span>
+<span class="sd">        The returned dictionary will then be used to create the new ply.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">abaqusConstants</span> <span class="kn">import</span> <span class="n">SPECIFY_ORIENT</span><span class="p">,</span> <span class="n">CSYS</span>
+    <span class="n">layup</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">compositeLayups</span><span class="p">[</span><span class="n">layup_name</span><span class="p">]</span>
+
+    <span class="n">ply_data</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">STORE_PLY_ATTRS</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;additionalRotationField&#39;</span><span class="p">,</span> <span class="s">&#39;additionalRotationType&#39;</span><span class="p">,</span>
+        <span class="s">&#39;angle&#39;</span><span class="p">,</span> <span class="s">&#39;axis&#39;</span><span class="p">,</span> <span class="s">&#39;material&#39;</span><span class="p">,</span> <span class="s">&#39;numIntPoints&#39;</span><span class="p">,</span> <span class="s">&#39;orientation&#39;</span><span class="p">,</span>
+        <span class="s">&#39;orientationType&#39;</span><span class="p">,</span> <span class="s">&#39;orientationValue&#39;</span><span class="p">,</span> <span class="s">&#39;plyName&#39;</span><span class="p">,</span> <span class="s">&#39;region&#39;</span><span class="p">,</span>
+        <span class="s">&#39;suppressed&#39;</span><span class="p">,</span> <span class="s">&#39;thickness&#39;</span><span class="p">,</span> <span class="s">&#39;thicknessType&#39;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">ply</span> <span class="ow">in</span> <span class="n">layup</span><span class="o">.</span><span class="n">plies</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+        <span class="n">ply_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">dict</span><span class="p">((</span><span class="n">attr</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">ply</span><span class="p">,</span> <span class="n">attr</span><span class="p">))</span> <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">STORE_PLY_ATTRS</span><span class="p">))</span>
+    <span class="n">layup</span><span class="o">.</span><span class="n">deletePlies</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">kwargs</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ply_data</span><span class="p">):</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;region&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">sets</span><span class="p">[</span><span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;region&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]]</span>
+        <span class="k">if</span> <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;orientationType&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">SPECIFY_ORIENT</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&#39;orientationValue&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;orientationType&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">CSYS</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&#39;orientation&#39;</span><span class="p">)</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="n">modify_func</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">layup</span><span class="o">.</span><span class="n">CompositePly</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+</div>
 <span class="k">def</span> <span class="nf">createDiscreteField</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="n">odb</span><span class="p">,</span> <span class="n">step_name</span><span class="p">,</span> <span class="n">frame_num</span><span class="p">):</span>
     <span class="kn">from</span> <span class="nn">abaqusConstants</span> <span class="kn">import</span> <span class="p">(</span><span class="n">NODES</span><span class="p">,</span> <span class="n">PRESCRIBEDCONDITION_DOF</span><span class="p">)</span>
     <span class="n">u</span><span class="o">=</span><span class="n">odb</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="n">step_name</span><span class="p">]</span><span class="o">.</span><span class="n">frames</span><span class="p">[</span><span class="n">frame_num</span><span class="p">]</span><span class="o">.</span><span class="n">fieldOutputs</span><span class="p">[</span><span class="s">&#39;U&#39;</span><span class="p">]</span>
@@ -460,6 +504,8 @@
 
     <span class="n">part</span> <span class="o">=</span> <span class="n">mdb</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="n">cc</span><span class="o">.</span><span class="n">model_name</span><span class="p">]</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="n">cc</span><span class="o">.</span><span class="n">part_name_shell</span><span class="p">]</span>
     <span class="n">viewport</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">viewports</span><span class="p">[</span><span class="n">session</span><span class="o">.</span><span class="n">currentViewportName</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">viewport</span><span class="o">.</span><span class="n">displayedObject</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">viewport</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">displayedObject</span><span class="o">=</span><span class="n">part</span><span class="p">)</span>
     <span class="n">cmap</span> <span class="o">=</span> <span class="n">viewport</span><span class="o">.</span><span class="n">colorMappings</span><span class="p">[</span><span class="s">&#39;Set&#39;</span><span class="p">]</span>
     <span class="n">viewport</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="n">colorMapping</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
     <span class="n">viewport</span><span class="o">.</span><span class="n">enableMultipleColors</span><span class="p">()</span>

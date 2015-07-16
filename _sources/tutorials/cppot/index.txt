@@ -1,3 +1,5 @@
+.. _cppot_tutorial:
+
 Cone Ply Piece Optimization Tool (CPPOT)
 ========================================
 

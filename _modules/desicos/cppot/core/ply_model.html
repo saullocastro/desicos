@@ -1,0 +1,834 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>desicos.cppot.core.ply_model &mdash; DESICOS 2.4.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2.4.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="DESICOS 2.4.1 documentation" href="../../../../index.html" />
+    <link rel="up" title="Module code" href="../../../index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../np-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">DESICOS 2.4.1 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for desicos.cppot.core.ply_model</h1><div class="highlight"><pre>
+<span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">=======================================================</span>
+<span class="sd">Virtual Ply Model (:mod:`desicos.cppot.core.ply_model`)</span>
+<span class="sd">=======================================================</span>
+
+<span class="sd">.. currentmodule:: desicos.cppot.core.ply_model</span>
+
+<span class="sd">Classes to create a virtual model of the ply pieces on an actual cone.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">desicos.constants</span> <span class="kn">import</span> <span class="n">TOL</span>
+<span class="kn">from</span> <span class="nn">desicos.cppot.core.geom</span> <span class="kn">import</span> <span class="n">Point2D</span><span class="p">,</span> <span class="n">Line2D</span><span class="p">,</span> <span class="n">Polygon2D</span>
+<span class="kn">from</span> <span class="nn">desicos.cppot.core.geom</span> <span class="kn">import</span> <span class="n">wrap_to_pi</span><span class="p">,</span> <span class="n">angle_in_range</span><span class="p">,</span> <span class="n">circle_segment_area</span>
+
+
+<div class="viewcode-block" id="PlyPieceModel"><a class="viewcode-back" href="../../../../modules/cppot/index.html#desicos.cppot.core.ply_model.PlyPieceModel">[docs]</a><span class="k">class</span> <span class="nc">PlyPieceModel</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Abstract base class for all ply piece models</span>
+
+<span class="sd">    This class encapsulates all functionality to create a virtual ply model</span>
+<span class="sd">    based on the given parameters. Various methods are available to</span>
+<span class="sd">    subsequently extract information about this virtual ply model.</span>
+
+<span class="sd">    For the different ply piece shapes, subclasses should be made that define</span>
+<span class="sd">    at least the method ``construct_single_ply_piece`` and possibly others.</span>
+
+<span class="sd">    =====================  ==================================================</span>
+<span class="sd">    Attribute              Description</span>
+<span class="sd">    =====================  ==================================================</span>
+<span class="sd">    ``cg``                 :class:`.ConeGeometry`, object that describes the</span>
+<span class="sd">                           geometry of the cone.</span>
+<span class="sd">    ``fiber_angle``        ``float``, nominal fiber angle in degrees.</span>
+<span class="sd">    ``starting_position``  ``float``, radius in the flattened cone</span>
+<span class="sd">                           ((s, phi)-coordinate system) where the origin line</span>
+<span class="sd">                           (L0) of the basic ply piece intersects the</span>
+<span class="sd">                           eta-axis.</span>
+<span class="sd">    ``max_width``          ``float``, maximum width of a single ply piece.</span>
+<span class="sd">    ``rel_ang_offset``     ``float`` optional, default is 0. Relative angular</span>
+<span class="sd">                           offset (0..1) to be used when positioning the</span>
+<span class="sd">                           pieces in this ply. Can be used to avoid</span>
+<span class="sd">                           overlapping of seams, when multiple plies have the</span>
+<span class="sd">                           same fiber angle.</span>
+<span class="sd">    ``eccentricity``       ``float``, eccentricity parameter (range 0...1)</span>
+<span class="sd">                           that controls the positioning of the ply piece</span>
+<span class="sd">                           relative to the origin line.</span>
+<span class="sd">                           Optional, the default value is:</span>
+<span class="sd">                                a) if ``cc.stack[i] == 0`` -&gt; 0.5</span>
+<span class="sd">                                b) if ``cc.stack[i] &gt; 0`` -&gt; 0.0</span>
+<span class="sd">                                c) if ``cc.stack[i] &lt; 0`` -&gt; 1.0</span>
+<span class="sd">    ``base_piece``        :class:`PlyPiece`, base (prototype) ply piece,</span>
+<span class="sd">                          with a nominal angle of 0. This ply piece is not</span>
+<span class="sd">                          part of the layup, but used as a prototype to</span>
+<span class="sd">                          construct all other ply pieces.</span>
+<span class="sd">    ``ply_pieces``        ``list`` of :class:`PlyPiece`, a list containing</span>
+<span class="sd">                          all ply pieces in the virtual cone model.</span>
+<span class="sd">    ====================  ==================================================</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cg</span><span class="p">,</span> <span class="n">fiber_angle</span><span class="p">,</span> <span class="n">starting_position</span><span class="p">,</span>
+                 <span class="n">max_width</span><span class="p">,</span> <span class="n">rel_ang_offset</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">eccentricity</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cg</span> <span class="o">=</span> <span class="n">cg</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fiber_angle</span> <span class="o">=</span> <span class="n">fiber_angle</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">starting_position</span> <span class="o">=</span> <span class="n">starting_position</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_width</span> <span class="o">=</span> <span class="n">max_width</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rel_ang_offset</span> <span class="o">=</span> <span class="n">rel_ang_offset</span>
+        <span class="k">if</span> <span class="n">eccentricity</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">eccentricity</span> <span class="o">=</span> <span class="n">eccentricity</span>
+        <span class="k">elif</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fiber_angle</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">TOL</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">eccentricity</span> <span class="o">=</span> <span class="mf">0.5</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">fiber_angle</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">eccentricity</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">eccentricity</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_piece</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ply_pieces</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_useful_polygon_cache</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span> <span class="c"># Cache for _useful_polygon</span>
+
+<div class="viewcode-block" id="PlyPieceModel.construct_single_ply_piece"><a class="viewcode-back" href="../../../../modules/cppot/index.html#desicos.cppot.core.ply_model.PlyPieceModel.construct_single_ply_piece">[docs]</a>    <span class="k">def</span> <span class="nf">construct_single_ply_piece</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Construct a single ply piece.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        fraction : float</span>
+<span class="sd">            Optional, range (0, 1], default is 1.</span>
+<span class="sd">            The newly constructed ply piece will normally span an angle</span>
+<span class="sd">            ``delta_phi`` on the nominal circle (radius ``s_theta_nom``) from</span>
+<span class="sd">            ``phi_nom_min`` to ``phi_nom_max``. When this parameter is set</span>
+<span class="sd">            unequal to 1, ``delta_phi`` of the resulting ply piece will be the</span>
+<span class="sd">            indicated fraction of the value it would normally have. This</span>
+<span class="sd">            functionality is used to construct rest-pieces.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ply_piece : :class:`.PlyPiece`</span>
+<span class="sd">            The newly constructed ply piece.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        This method is just to define the interface, implementation should be</span>
+<span class="sd">        provided by a derived class.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="PlyPieceModel.rebuild"><a class="viewcode-back" href="../../../../modules/cppot/index.html#desicos.cppot.core.ply_model.PlyPieceModel.rebuild">[docs]</a>    <span class="k">def</span> <span class="nf">rebuild</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Rebuild the model, actually constructing all ply pieces</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_useful_polygon_cache</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="n">base_piece</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">construct_single_ply_piece</span><span class="p">()</span>
+        <span class="n">ply_pieces</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_piece</span> <span class="o">=</span> <span class="n">base_piece</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ply_pieces</span> <span class="o">=</span> <span class="n">ply_pieces</span>
+        <span class="c"># Nominal angle covered per piece</span>
+        <span class="n">delta_phi</span> <span class="o">=</span> <span class="n">base_piece</span><span class="o">.</span><span class="n">phi_nom_max</span> <span class="o">-</span> <span class="n">base_piece</span><span class="o">.</span><span class="n">phi_nom_min</span>
+        <span class="c"># Total angle to cover</span>
+        <span class="n">phi_min</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">phi_max</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">cg</span><span class="o">.</span><span class="n">sin_alpha</span>
+        <span class="n">rest_piece_fraction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_pieces</span><span class="p">()</span> <span class="o">%</span> <span class="mf">1.0</span>
+        <span class="n">rest_piece_todo</span> <span class="o">=</span> <span class="n">TOL</span> <span class="o">&lt;</span> <span class="n">rest_piece_fraction</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">TOL</span><span class="p">)</span>
+
+        <span class="n">offset_phi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rel_ang_offset</span><span class="o">*</span><span class="n">delta_phi</span>
+        <span class="c"># Go backwards as far as needed,</span>
+        <span class="c"># use the fact that the base piece has phi_nom = 0,</span>
+        <span class="c"># so new_piece.phi_limit_max = current_phi + base_piece.phi_limit_max</span>
+        <span class="n">current_phi</span> <span class="o">=</span> <span class="n">offset_phi</span>
+        <span class="k">while</span> <span class="n">current_phi</span> <span class="o">+</span> <span class="n">base_piece</span><span class="o">.</span><span class="n">phi_limit_max</span> <span class="o">&gt;</span> <span class="n">phi_min</span><span class="p">:</span>
+            <span class="n">ply_pieces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">base_piece</span><span class="o">.</span><span class="n">copy_rotated</span><span class="p">(</span><span class="n">current_phi</span><span class="p">))</span>
+            <span class="n">current_phi</span> <span class="o">-=</span> <span class="n">delta_phi</span>
+        <span class="c"># reverse the list to maintain CCW order, not strictly necessary but nice</span>
+        <span class="n">ply_pieces</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+
+        <span class="c"># Go forwards as far as needed</span>
+        <span class="c"># use the fact that the base piece has phi_nom = 0,</span>
+        <span class="c"># so new_piece.phi_limit_min = current_phi + base_piece.phi_limit_min</span>
+        <span class="n">current_phi</span> <span class="o">=</span> <span class="n">offset_phi</span> <span class="o">+</span> <span class="n">delta_phi</span>
+        <span class="k">while</span> <span class="n">current_phi</span> <span class="o">+</span> <span class="n">base_piece</span><span class="o">.</span><span class="n">phi_limit_min</span> <span class="o">&lt;=</span> <span class="n">phi_max</span><span class="p">:</span>
+            <span class="n">ply_pieces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">base_piece</span><span class="o">.</span><span class="n">copy_rotated</span><span class="p">(</span><span class="n">current_phi</span><span class="p">))</span>
+            <span class="c"># Insert rest piece just after the first piece that is entirely</span>
+            <span class="c"># above phi = 0</span>
+            <span class="k">if</span> <span class="n">rest_piece_todo</span> <span class="ow">and</span> <span class="n">ply_pieces</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">phi_limit_min</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">rest_piece_todo</span> <span class="o">=</span> <span class="bp">False</span>
+                <span class="n">current_phi</span> <span class="o">+=</span> <span class="n">base_piece</span><span class="o">.</span><span class="n">phi_nom_max</span> <span class="o">-</span> <span class="n">rest_piece_fraction</span><span class="o">*</span><span class="n">base_piece</span><span class="o">.</span><span class="n">phi_nom_min</span>
+                <span class="n">rest_piece</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">construct_single_ply_piece</span><span class="p">(</span><span class="n">fraction</span><span class="o">=</span><span class="n">rest_piece_fraction</span><span class="p">)</span>
+                <span class="n">rest_piece</span> <span class="o">=</span> <span class="n">rest_piece</span><span class="o">.</span><span class="n">copy_rotated</span><span class="p">(</span><span class="n">current_phi</span><span class="p">)</span>
+                <span class="n">ply_pieces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rest_piece</span><span class="p">)</span>
+                <span class="n">current_phi</span> <span class="o">+=</span> <span class="n">rest_piece_fraction</span><span class="o">*</span><span class="n">base_piece</span><span class="o">.</span><span class="n">phi_nom_max</span> <span class="o">-</span> <span class="n">base_piece</span><span class="o">.</span><span class="n">phi_nom_min</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">current_phi</span> <span class="o">+=</span> <span class="n">delta_phi</span>
+        <span class="k">assert</span> <span class="ow">not</span> <span class="n">rest_piece_todo</span>
+</div>
+<div class="viewcode-block" id="PlyPieceModel.local_orientation"><a class="viewcode-back" href="../../../../modules/cppot/index.html#desicos.cppot.core.ply_model.PlyPieceModel.local_orientation">[docs]</a>    <span class="k">def</span> <span class="nf">local_orientation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eta</span><span class="p">,</span> <span class="n">zeta</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Determine the local fiber orientation at a given point. If the</span>
+<span class="sd">        given point is not inside any ply piece, NaN is returned. If there are</span>
+<span class="sd">        multiple overlapping ply pieces, the orientation belonging to one of</span>
+<span class="sd">        them (the first in the ply piece list) is returned.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        eta : float</span>
+<span class="sd">            Horizontal coordinate of point, in the coordinate system of the</span>
+<span class="sd">            unfolded cone.</span>
+<span class="sd">        zeta : float</span>
+<span class="sd">            Vertical coordinate of point, in the coordinate system of the</span>
+<span class="sd">            unfolded cone.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        local_angle : float</span>
+<span class="sd">            Local fiber angle at the given point in the given ply, in degrees.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">point</span> <span class="o">=</span> <span class="n">Point2D</span><span class="p">(</span><span class="n">eta</span><span class="p">,</span> <span class="n">zeta</span><span class="p">)</span>
+        <span class="n">phi</span> <span class="o">=</span> <span class="n">point</span><span class="o">.</span><span class="n">angle</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">pp</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ply_pieces</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">pp</span><span class="o">.</span><span class="n">contains_point</span><span class="p">(</span><span class="n">point</span><span class="p">,</span> <span class="n">phi</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fiber_angle</span> <span class="o">+</span> <span class="n">pp</span><span class="o">.</span><span class="n">angle_deviation</span><span class="p">(</span><span class="n">point</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+</div>
+<div class="viewcode-block" id="PlyPieceModel.all_local_orientations"><a class="viewcode-back" href="../../../../modules/cppot/index.html#desicos.cppot.core.ply_model.PlyPieceModel.all_local_orientations">[docs]</a>    <span class="k">def</span> <span class="nf">all_local_orientations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eta</span><span class="p">,</span> <span class="n">zeta</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Determine the local fiber orientations of all plies at a point.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        eta : float</span>
+<span class="sd">            Horizontal coordinate of point, in the coordinate system of the</span>
+<span class="sd">            unfolded cone.</span>
+<span class="sd">        zeta : float</span>
+<span class="sd">            Vertical coordinate of point, in the coordinate system of the</span>
+<span class="sd">            unfolded cone.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        local_angles : list</span>
+<span class="sd">            Lists of floats representing the local fiber angle of each</span>
+<span class="sd">            (possibly overlapping) ply piece at this point, in degrees.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">point</span> <span class="o">=</span> <span class="n">Point2D</span><span class="p">(</span><span class="n">eta</span><span class="p">,</span> <span class="n">zeta</span><span class="p">)</span>
+        <span class="n">phi</span> <span class="o">=</span> <span class="n">point</span><span class="o">.</span><span class="n">angle</span><span class="p">()</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">fiber_angle</span> <span class="o">+</span> <span class="n">pp</span><span class="o">.</span><span class="n">angle_deviation</span><span class="p">(</span><span class="n">point</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">pp</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ply_pieces</span> <span class="k">if</span> <span class="n">pp</span><span class="o">.</span><span class="n">contains_point</span><span class="p">(</span><span class="n">point</span><span class="p">,</span> <span class="n">phi</span><span class="p">)])</span>
+</div>
+<div class="viewcode-block" id="PlyPieceModel.local_num_pieces"><a class="viewcode-back" href="../../../../modules/cppot/index.html#desicos.cppot.core.ply_model.PlyPieceModel.local_num_pieces">[docs]</a>    <span class="k">def</span> <span class="nf">local_num_pieces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eta</span><span class="p">,</span> <span class="n">zeta</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Determine the local number of overlapping pieces at a given point.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        eta : float</span>
+<span class="sd">            Horizontal coordinate of point, in the coordinate system of the</span>
+<span class="sd">            unfolded cone.</span>
+<span class="sd">        zeta : float</span>
+<span class="sd">            Vertical coordinate of point, in the coordinate system of the</span>
+<span class="sd">            unfolded cone.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        num_pieces : int</span>
+<span class="sd">            Number of overlapping pieces at the given point in the ply</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">all_local_orientations</span><span class="p">(</span><span class="n">eta</span><span class="p">,</span> <span class="n">zeta</span><span class="p">))</span>
+</div>
+    <span class="k">def</span> <span class="nf">_useful_polygon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ply_piece</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="c"># Internal function to get a polygon representing the section of a</span>
+        <span class="c"># ply piece that overlaps with the useful area of the cone (between s2</span>
+        <span class="c"># and s3). Additionally, return the points on s2 and s3 separately.</span>
+        <span class="k">if</span> <span class="n">ply_piece</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">ply_piece</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_piece</span>
+        <span class="c"># Re-use cached value if possible, for performance</span>
+        <span class="k">if</span> <span class="n">ply_piece</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_useful_polygon_cache</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_useful_polygon_cache</span><span class="p">[</span><span class="n">ply_piece</span><span class="p">]</span>
+
+        <span class="n">P1</span><span class="p">,</span> <span class="n">P2</span><span class="p">,</span> <span class="n">P3</span><span class="p">,</span> <span class="n">P4</span> <span class="o">=</span> <span class="n">ply_piece</span><span class="o">.</span><span class="n">polygon</span><span class="o">.</span><span class="n">points</span><span class="p">()</span>
+        <span class="n">phi_nom</span> <span class="o">=</span> <span class="n">ply_piece</span><span class="o">.</span><span class="n">phi_nom</span>
+        <span class="n">L1</span> <span class="o">=</span> <span class="n">Line2D</span><span class="o">.</span><span class="n">from_points</span><span class="p">(</span><span class="n">P1</span><span class="p">,</span> <span class="n">P2</span><span class="p">)</span>
+        <span class="n">L3</span> <span class="o">=</span> <span class="n">Line2D</span><span class="o">.</span><span class="n">from_points</span><span class="p">(</span><span class="n">P3</span><span class="p">,</span> <span class="n">P4</span><span class="p">)</span>
+        <span class="n">points</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c"># Define a quick helper function that will be useful later</span>
+        <span class="k">def</span> <span class="nf">make_intersection</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">L</span><span class="o">.</span><span class="n">intersection_circle_near</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">Point2D</span><span class="o">.</span><span class="n">from_polar</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">phi_nom</span><span class="p">))</span>
+
+        <span class="c"># Add the intersection with s2 near P1</span>
+        <span class="k">if</span> <span class="n">P1</span><span class="o">.</span><span class="n">norm</span><span class="p">()</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">cg</span><span class="o">.</span><span class="n">s2</span><span class="p">:</span>
+            <span class="c"># P1 is inside the useful area, add it as well</span>
+            <span class="n">L4</span> <span class="o">=</span> <span class="n">Line2D</span><span class="o">.</span><span class="n">from_points</span><span class="p">(</span><span class="n">P4</span><span class="p">,</span> <span class="n">P1</span><span class="p">)</span>
+            <span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">make_intersection</span><span class="p">(</span><span class="n">L4</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cg</span><span class="o">.</span><span class="n">s2</span><span class="p">))</span>
+            <span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">P1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c"># P1 is outside the useful area</span>
+            <span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">make_intersection</span><span class="p">(</span><span class="n">L1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cg</span><span class="o">.</span><span class="n">s2</span><span class="p">))</span>
+
+        <span class="c"># Add the intersection points with s3</span>
+        <span class="n">pts_on_s3</span> <span class="o">=</span> <span class="p">(</span><span class="n">make_intersection</span><span class="p">(</span><span class="n">L1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cg</span><span class="o">.</span><span class="n">s3</span><span class="p">),</span>
+                     <span class="n">make_intersection</span><span class="p">(</span><span class="n">L3</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cg</span><span class="o">.</span><span class="n">s3</span><span class="p">))</span>
+        <span class="n">points</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">pts_on_s3</span><span class="p">)</span>
+
+        <span class="c"># Add the intersection with s2 near P4</span>
+        <span class="k">if</span> <span class="n">P4</span><span class="o">.</span><span class="n">norm</span><span class="p">()</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">cg</span><span class="o">.</span><span class="n">s2</span><span class="p">:</span>
+            <span class="c"># P4 is inside the useful area, add it as well</span>
+            <span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">P4</span><span class="p">)</span>
+            <span class="n">L4</span> <span class="o">=</span> <span class="n">Line2D</span><span class="o">.</span><span class="n">from_points</span><span class="p">(</span><span class="n">P4</span><span class="p">,</span> <span class="n">P1</span><span class="p">)</span>
+            <span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">make_intersection</span><span class="p">(</span><span class="n">L4</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cg</span><span class="o">.</span><span class="n">s2</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c"># P4 is outside the useful area</span>
+            <span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">make_intersection</span><span class="p">(</span><span class="n">L3</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cg</span><span class="o">.</span><span class="n">s2</span><span class="p">))</span>
+
+        <span class="n">pts_on_s2</span> <span class="o">=</span> <span class="p">(</span><span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">points</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">retval</span> <span class="o">=</span> <span class="p">(</span><span class="n">Polygon2D</span><span class="p">(</span><span class="n">points</span><span class="p">),</span> <span class="n">pts_on_s2</span><span class="p">,</span> <span class="n">pts_on_s3</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_useful_polygon_cache</span><span class="p">[</span><span class="n">ply_piece</span><span class="p">]</span> <span class="o">=</span> <span class="n">retval</span>
+        <span class="k">return</span> <span class="n">retval</span>
+
+<div class="viewcode-block" id="PlyPieceModel.corner_orientations"><a class="viewcode-back" href="../../../../modules/cppot/index.html#desicos.cppot.core.ply_model.PlyPieceModel.corner_orientations">[docs]</a>    <span class="k">def</span> <span class="nf">corner_orientations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the fiber orientations at all corners of the useful area,</span>
+<span class="sd">        which is the area between radii s2 and s3.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        corner_orientations : list</span>
+<span class="sd">            Fiber angles (in degrees) at the four useful corner points of</span>
+<span class="sd">            the base ply piece. The order of values matches P1, P2, P3, P4.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">pts_on_s2</span><span class="p">,</span> <span class="n">pts_on_s3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_useful_polygon</span><span class="p">()</span>
+        <span class="c"># Change the order to match P1, P2, P3, P4</span>
+        <span class="n">points</span> <span class="o">=</span> <span class="n">pts_on_s2</span><span class="p">[:</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">pts_on_s3</span> <span class="o">+</span> <span class="n">pts_on_s2</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">fiber_angle</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_piece</span><span class="o">.</span><span class="n">angle_deviation</span><span class="p">(</span><span class="n">point</span><span class="p">)</span> <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">points</span><span class="p">]</span>
+</div>
+<div class="viewcode-block" id="PlyPieceModel.num_pieces"><a class="viewcode-back" href="../../../../modules/cppot/index.html#desicos.cppot.core.ply_model.PlyPieceModel.num_pieces">[docs]</a>    <span class="k">def</span> <span class="nf">num_pieces</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Determine the total number of pieces needed to fully cover the cone.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        num_pieces : float</span>
+<span class="sd">            The number of needed pieces, as a float. The fractional part</span>
+<span class="sd">            indicates the size of the &#39;rest piece&#39; that is needed.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">delta_phi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_piece</span><span class="o">.</span><span class="n">phi_nom_max</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_piece</span><span class="o">.</span><span class="n">phi_nom_min</span>
+        <span class="k">return</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">cg</span><span class="o">.</span><span class="n">sin_alpha</span> <span class="o">/</span> <span class="n">delta_phi</span>
+</div>
+<div class="viewcode-block" id="PlyPieceModel.edge_lengths"><a class="viewcode-back" href="../../../../modules/cppot/index.html#desicos.cppot.core.ply_model.PlyPieceModel.edge_lengths">[docs]</a>    <span class="k">def</span> <span class="nf">edge_lengths</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the lengths of the edges of the (base) ply piece.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        edge_lengths : list</span>
+<span class="sd">            List of edge lengths (L1 to L4)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">points</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_piece</span><span class="o">.</span><span class="n">polygon</span><span class="o">.</span><span class="n">points</span><span class="p">())</span>
+        <span class="n">NUM</span> <span class="o">=</span> <span class="mi">4</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">)</span> <span class="o">==</span> <span class="n">NUM</span>
+        <span class="k">return</span> <span class="p">[(</span><span class="n">points</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">points</span><span class="p">[(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">NUM</span><span class="p">])</span><span class="o">.</span><span class="n">norm</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NUM</span><span class="p">)]</span>
+</div>
+<div class="viewcode-block" id="PlyPieceModel.ratio_continuous_fibers"><a class="viewcode-back" href="../../../../modules/cppot/index.html#desicos.cppot.core.ply_model.PlyPieceModel.ratio_continuous_fibers">[docs]</a>    <span class="k">def</span> <span class="nf">ratio_continuous_fibers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the ratio of continuous fibers, i.e. the fraction of the fibers</span>
+<span class="sd">        at the bottom edge (radius s3) that reach the top edge (radius s2).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ratio : float</span>
+<span class="sd">            The ratio of continuous fibers</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">pts_on_s2</span><span class="p">,</span> <span class="n">pts_on_s3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_useful_polygon</span><span class="p">()</span>
+        <span class="n">th_nom</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fiber_angle</span><span class="p">)</span>
+        <span class="n">cont_length_1</span> <span class="o">=</span> <span class="n">Line2D</span><span class="o">.</span><span class="n">from_point_angle</span><span class="p">(</span><span class="n">pts_on_s2</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">th_nom</span><span class="p">)</span><span class="o">.</span><span class="n">distance_point</span><span class="p">(</span><span class="n">pts_on_s2</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">cont_length_2</span> <span class="o">=</span> <span class="n">Line2D</span><span class="o">.</span><span class="n">from_point_angle</span><span class="p">(</span><span class="n">pts_on_s3</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">th_nom</span><span class="p">)</span><span class="o">.</span><span class="n">distance_point</span><span class="p">(</span><span class="n">pts_on_s3</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">cont_length_1</span> <span class="o">/</span> <span class="n">cont_length_2</span>
+</div>
+<div class="viewcode-block" id="PlyPieceModel.ply_piece_area"><a class="viewcode-back" href="../../../../modules/cppot/index.html#desicos.cppot.core.ply_model.PlyPieceModel.ply_piece_area">[docs]</a>    <span class="k">def</span> <span class="nf">ply_piece_area</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the area of a single ply piece that is on the free cone area,</span>
+<span class="sd">        i.e. between radii s2 and s3.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        area : float</span>
+<span class="sd">            The aforementioned area</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">poly</span><span class="p">,</span> <span class="n">pts_on_s2</span><span class="p">,</span> <span class="n">pts_on_s3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_useful_polygon</span><span class="p">()</span>
+        <span class="c"># Correct the area of the _useful_polygon to account for the arcs</span>
+        <span class="n">s2_angle</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">pts_on_s2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">angle</span><span class="p">()</span> <span class="o">-</span> <span class="n">pts_on_s2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">angle</span><span class="p">())</span>
+        <span class="n">s3_angle</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">pts_on_s3</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">angle</span><span class="p">()</span> <span class="o">-</span> <span class="n">pts_on_s3</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">angle</span><span class="p">())</span>
+        <span class="n">area_s2</span> <span class="o">=</span> <span class="n">circle_segment_area</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cg</span><span class="o">.</span><span class="n">s2</span><span class="p">,</span> <span class="n">s2_angle</span><span class="p">)</span>
+        <span class="n">area_s3</span> <span class="o">=</span> <span class="n">circle_segment_area</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cg</span><span class="o">.</span><span class="n">s3</span><span class="p">,</span> <span class="n">s3_angle</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">poly</span><span class="o">.</span><span class="n">area</span><span class="p">()</span> <span class="o">-</span> <span class="n">area_s2</span> <span class="o">+</span> <span class="n">area_s3</span>
+</div>
+<div class="viewcode-block" id="PlyPieceModel.effective_area"><a class="viewcode-back" href="../../../../modules/cppot/index.html#desicos.cppot.core.ply_model.PlyPieceModel.effective_area">[docs]</a>    <span class="k">def</span> <span class="nf">effective_area</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ply_piece</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">max_angle_dev</span><span class="o">=</span><span class="mf">2.0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the effective area of a single ply piece. This is the area on</span>
+<span class="sd">        useful section of the cone, where the deviation of the fiber angle</span>
+<span class="sd">        is less than a given maximum.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ply_piece : :class:`PlyPiece`, optional</span>
+<span class="sd">            Ply piece to get the effective area for. If not set, the base</span>
+<span class="sd">            piece is used.</span>
+<span class="sd">        max_angle_dev : float, optional</span>
+<span class="sd">            Maximum deviation from the nominal fiber angle to consider</span>
+<span class="sd">            the material &#39;effective&#39;. In degrees.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        out : tuple</span>
+<span class="sd">            2-tuple, where ``out[0]`` is the effective surface area and</span>
+<span class="sd">            ``out[1]`` is the corresponding polygon.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        Note that the polygon has straight edges, while the calculation of</span>
+<span class="sd">        the effective area takes into account that some edges of the effective</span>
+<span class="sd">        area may be arc sections.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">ply_piece</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">ply_piece</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_piece</span>
+        <span class="n">poly</span><span class="p">,</span> <span class="n">pts_on_s2</span><span class="p">,</span> <span class="n">pts_on_s3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_useful_polygon</span><span class="p">(</span><span class="n">ply_piece</span><span class="p">)</span>
+        <span class="c"># Construct lines through those corner points of the polygon,</span>
+        <span class="c"># that are on s2/s3. They will be useful later</span>
+        <span class="n">line_s2</span> <span class="o">=</span> <span class="n">Line2D</span><span class="o">.</span><span class="n">from_points</span><span class="p">(</span><span class="o">*</span><span class="n">pts_on_s2</span><span class="p">)</span>
+        <span class="n">line_s3</span> <span class="o">=</span> <span class="n">Line2D</span><span class="o">.</span><span class="n">from_points</span><span class="p">(</span><span class="o">*</span><span class="n">pts_on_s3</span><span class="p">)</span>
+
+        <span class="c"># Lines to cut away the non-effective area</span>
+        <span class="n">cut_line_1</span> <span class="o">=</span> <span class="n">Line2D</span><span class="o">.</span><span class="n">from_point_angle</span><span class="p">(</span><span class="n">Point2D</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">),</span>
+            <span class="n">ply_piece</span><span class="o">.</span><span class="n">phi_nom</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">max_angle_dev</span><span class="p">))</span>
+        <span class="n">cut_line_2</span> <span class="o">=</span> <span class="n">Line2D</span><span class="o">.</span><span class="n">from_point_angle</span><span class="p">(</span><span class="n">Point2D</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">),</span>
+            <span class="n">ply_piece</span><span class="o">.</span><span class="n">phi_nom</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">max_angle_dev</span><span class="p">))</span>
+        <span class="c"># Slice the polygon, with some corrections</span>
+        <span class="k">for</span> <span class="n">cut_line</span> <span class="ow">in</span> <span class="p">(</span><span class="n">cut_line_1</span><span class="p">,</span> <span class="n">cut_line_2</span><span class="p">):</span>
+            <span class="n">outp</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">poly</span><span class="o">.</span><span class="n">slice_line</span><span class="p">(</span><span class="n">cut_line</span><span class="p">)</span><span class="o">.</span><span class="n">points</span><span class="p">():</span>
+                <span class="c"># Polygon intersection can result in points that are not</span>
+                <span class="c"># exactly on circles s2/s3, while they should be. Correct that.</span>
+                <span class="k">if</span> <span class="n">cut_line</span><span class="o">.</span><span class="n">distance_point</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">TOL</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">line_s2</span><span class="o">.</span><span class="n">distance_point</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">TOL</span><span class="p">:</span>
+                        <span class="n">p</span> <span class="o">=</span> <span class="n">cut_line</span><span class="o">.</span><span class="n">intersection_circle_near</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cg</span><span class="o">.</span><span class="n">s2</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">line_s3</span><span class="o">.</span><span class="n">distance_point</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">TOL</span><span class="p">:</span>
+                        <span class="n">p</span> <span class="o">=</span> <span class="n">cut_line</span><span class="o">.</span><span class="n">intersection_circle_near</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cg</span><span class="o">.</span><span class="n">s3</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+                <span class="n">outp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+            <span class="n">poly</span> <span class="o">=</span> <span class="n">Polygon2D</span><span class="p">(</span><span class="n">outp</span><span class="p">)</span>
+
+        <span class="c"># Calculate area</span>
+        <span class="n">area</span> <span class="o">=</span> <span class="n">poly</span><span class="o">.</span><span class="n">area</span><span class="p">()</span>
+        <span class="c"># Correct polygon area for arc sections s2/s3, if needed</span>
+        <span class="n">pts_on_s2</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">poly</span><span class="o">.</span><span class="n">points</span><span class="p">()</span> <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">norm</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">cg</span><span class="o">.</span><span class="n">s2</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">TOL</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pts_on_s2</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">angles</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">angle</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pts_on_s2</span><span class="p">]</span>
+            <span class="n">area</span> <span class="o">-=</span> <span class="n">circle_segment_area</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cg</span><span class="o">.</span><span class="n">s2</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">angles</span><span class="p">)</span> <span class="o">-</span> <span class="nb">min</span><span class="p">(</span><span class="n">angles</span><span class="p">))</span>
+        <span class="n">pts_on_s3</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">poly</span><span class="o">.</span><span class="n">points</span><span class="p">()</span> <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">norm</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">cg</span><span class="o">.</span><span class="n">s3</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">TOL</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pts_on_s3</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">angles</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">angle</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pts_on_s3</span><span class="p">]</span>
+            <span class="n">area</span> <span class="o">+=</span> <span class="n">circle_segment_area</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cg</span><span class="o">.</span><span class="n">s3</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">angles</span><span class="p">)</span> <span class="o">-</span> <span class="nb">min</span><span class="p">(</span><span class="n">angles</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">area</span><span class="p">,</span> <span class="n">poly</span>
+
+</div></div>
+<div class="viewcode-block" id="TrapezPlyPieceModel"><a class="viewcode-back" href="../../../../modules/cppot/index.html#desicos.cppot.core.ply_model.TrapezPlyPieceModel">[docs]</a><span class="k">class</span> <span class="nc">TrapezPlyPieceModel</span><span class="p">(</span><span class="n">PlyPieceModel</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Sub-class of ``PlyPieceModel``, for shape A (trapezium)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="TrapezPlyPieceModel.construct_single_ply_piece"><a class="viewcode-back" href="../../../../modules/cppot/index.html#desicos.cppot.core.ply_model.TrapezPlyPieceModel.construct_single_ply_piece">[docs]</a>    <span class="k">def</span> <span class="nf">construct_single_ply_piece</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Construct a ply piece for shape A (trapezium)&quot;&quot;&quot;</span>
+        <span class="n">th_nom</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fiber_angle</span><span class="p">)</span>
+        <span class="c"># Step 1: Define origin line L0</span>
+        <span class="n">origin_point</span> <span class="o">=</span> <span class="n">Point2D</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">starting_position</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="n">L0</span> <span class="o">=</span> <span class="n">Line2D</span><span class="o">.</span><span class="n">from_point_angle</span><span class="p">(</span><span class="n">origin_point</span><span class="p">,</span> <span class="n">th_nom</span><span class="p">)</span>
+        <span class="c"># Step 2: Define line L2, perpendicular to L0, tangent to circle s4</span>
+        <span class="n">tangent_point</span> <span class="o">=</span> <span class="n">Point2D</span><span class="o">.</span><span class="n">from_polar</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cg</span><span class="o">.</span><span class="n">s4</span><span class="p">,</span> <span class="n">th_nom</span><span class="p">)</span>
+        <span class="n">L2</span> <span class="o">=</span> <span class="n">Line2D</span><span class="o">.</span><span class="n">from_point_angle</span><span class="p">(</span><span class="n">tangent_point</span><span class="p">,</span> <span class="n">th_nom</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">P0</span> <span class="o">=</span> <span class="n">L0</span><span class="o">.</span><span class="n">intersection_line</span><span class="p">(</span><span class="n">L2</span><span class="p">)</span>
+
+        <span class="c"># Step 3: Position P2 and P3 based on max_width and eccentricity</span>
+        <span class="n">P2_dist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_width</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">eccentricity</span>
+        <span class="n">P3_dist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_width</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">eccentricity</span><span class="p">)</span>
+        <span class="n">P2</span> <span class="o">=</span> <span class="n">P0</span> <span class="o">+</span> <span class="n">Point2D</span><span class="o">.</span><span class="n">from_polar</span><span class="p">(</span><span class="n">P2_dist</span><span class="p">,</span> <span class="n">L2</span><span class="o">.</span><span class="n">angle</span><span class="p">())</span>
+        <span class="n">P3</span> <span class="o">=</span> <span class="n">P0</span> <span class="o">+</span> <span class="n">Point2D</span><span class="o">.</span><span class="n">from_polar</span><span class="p">(</span><span class="n">P3_dist</span><span class="p">,</span> <span class="n">L2</span><span class="o">.</span><span class="n">angle</span><span class="p">()</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+
+        <span class="c"># Step 4: Calculate the spanned angle (both deltas should be &gt;= 0)</span>
+        <span class="n">T2</span> <span class="o">=</span> <span class="n">L0</span><span class="o">.</span><span class="n">intersection_circle_near</span><span class="p">(</span><span class="n">P2</span><span class="o">.</span><span class="n">norm</span><span class="p">(),</span> <span class="n">P0</span><span class="p">)</span>
+        <span class="n">T3</span> <span class="o">=</span> <span class="n">L0</span><span class="o">.</span><span class="n">intersection_circle_near</span><span class="p">(</span><span class="n">P3</span><span class="o">.</span><span class="n">norm</span><span class="p">(),</span> <span class="n">P0</span><span class="p">)</span>
+        <span class="n">delta_phi_1</span> <span class="o">=</span> <span class="n">fraction</span><span class="o">*</span><span class="p">(</span><span class="n">P2</span><span class="o">.</span><span class="n">angle</span><span class="p">()</span> <span class="o">-</span> <span class="n">T2</span><span class="o">.</span><span class="n">angle</span><span class="p">())</span>
+        <span class="n">delta_phi_2</span> <span class="o">=</span> <span class="n">fraction</span><span class="o">*</span><span class="p">(</span><span class="n">T3</span><span class="o">.</span><span class="n">angle</span><span class="p">()</span> <span class="o">-</span> <span class="n">P3</span><span class="o">.</span><span class="n">angle</span><span class="p">())</span>
+
+        <span class="c"># Step 5: Calculate the side lines L1 and L3</span>
+        <span class="n">L1</span> <span class="o">=</span> <span class="n">L0</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">delta_phi_1</span><span class="p">)</span>
+        <span class="n">L3</span> <span class="o">=</span> <span class="n">L0</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="o">-</span><span class="n">delta_phi_2</span><span class="p">)</span>
+        <span class="n">near_pt</span> <span class="o">=</span> <span class="n">Point2D</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cg</span><span class="o">.</span><span class="n">s1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">P1a</span> <span class="o">=</span> <span class="n">L1</span><span class="o">.</span><span class="n">intersection_circle_near</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cg</span><span class="o">.</span><span class="n">s1</span><span class="p">,</span> <span class="n">near_pt</span><span class="p">)</span>
+        <span class="n">P4a</span> <span class="o">=</span> <span class="n">L3</span><span class="o">.</span><span class="n">intersection_circle_near</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cg</span><span class="o">.</span><span class="n">s1</span><span class="p">,</span> <span class="n">near_pt</span><span class="p">)</span>
+        <span class="c"># Redefine P2 and P3 if needed (for rest pieces)</span>
+        <span class="k">if</span> <span class="n">fraction</span> <span class="o">!=</span> <span class="mf">1.0</span><span class="p">:</span>
+            <span class="n">P2</span> <span class="o">=</span> <span class="n">L2</span><span class="o">.</span><span class="n">intersection_line</span><span class="p">(</span><span class="n">L1</span><span class="p">)</span>
+            <span class="n">P3</span> <span class="o">=</span> <span class="n">L2</span><span class="o">.</span><span class="n">intersection_line</span><span class="p">(</span><span class="n">L3</span><span class="p">)</span>
+
+        <span class="c"># Step 6: Construct L4, parallel to L2, through either P1a or P4a,</span>
+        <span class="c"># whichever is furthest from L2</span>
+        <span class="k">if</span> <span class="n">L2</span><span class="o">.</span><span class="n">distance_point</span><span class="p">(</span><span class="n">P1a</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">L2</span><span class="o">.</span><span class="n">distance_point</span><span class="p">(</span><span class="n">P4a</span><span class="p">):</span>
+            <span class="n">L4_through_point</span> <span class="o">=</span> <span class="n">P1a</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">L4_through_point</span> <span class="o">=</span> <span class="n">P4a</span>
+        <span class="n">L4</span> <span class="o">=</span> <span class="n">Line2D</span><span class="o">.</span><span class="n">from_point_angle</span><span class="p">(</span><span class="n">L4_through_point</span><span class="p">,</span> <span class="n">L2</span><span class="o">.</span><span class="n">angle</span><span class="p">())</span>
+        <span class="c"># now redefine P1 and P4 as the intersection points:</span>
+        <span class="n">P1b</span> <span class="o">=</span> <span class="n">L4</span><span class="o">.</span><span class="n">intersection_line</span><span class="p">(</span><span class="n">L1</span><span class="p">)</span>
+        <span class="n">P4b</span> <span class="o">=</span> <span class="n">L4</span><span class="o">.</span><span class="n">intersection_line</span><span class="p">(</span><span class="n">L3</span><span class="p">)</span>
+
+        <span class="n">ip_L1_L3</span> <span class="o">=</span> <span class="n">L1</span><span class="o">.</span><span class="n">intersection_line</span><span class="p">(</span><span class="n">L3</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">L2</span><span class="o">.</span><span class="n">distance_point</span><span class="p">(</span><span class="n">ip_L1_L3</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">L2</span><span class="o">.</span><span class="n">distance_point</span><span class="p">(</span><span class="n">P4b</span><span class="p">):</span>
+            <span class="c"># Line segments L1 and L3 intersect within the polygon, so we have</span>
+            <span class="c"># a &#39;hourglass&#39; shape. Move P1 and P4 to the intersection point,</span>
+            <span class="c"># effectively forming a triangle. We could just drop P4, if not</span>
+            <span class="c"># for some other code expeccting 4-point polygons.</span>
+            <span class="n">P1</span><span class="p">,</span> <span class="n">P4</span> <span class="o">=</span> <span class="n">ip_L1_L3</span><span class="p">,</span> <span class="n">ip_L1_L3</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">P1</span><span class="p">,</span> <span class="n">P4</span> <span class="o">=</span> <span class="n">P1b</span><span class="p">,</span> <span class="n">P4b</span>
+
+        <span class="c"># Step 7: Return the final ply piece</span>
+        <span class="k">return</span> <span class="n">PlyPiece</span><span class="p">(</span><span class="n">Polygon2D</span><span class="p">((</span><span class="n">P1</span><span class="p">,</span> <span class="n">P2</span><span class="p">,</span> <span class="n">P3</span><span class="p">,</span> <span class="n">P4</span><span class="p">)),</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="n">delta_phi_2</span><span class="p">,</span> <span class="n">delta_phi_1</span><span class="p">)</span>
+
+</div></div>
+<div class="viewcode-block" id="Trapez2PlyPieceModel"><a class="viewcode-back" href="../../../../modules/cppot/index.html#desicos.cppot.core.ply_model.Trapez2PlyPieceModel">[docs]</a><span class="k">class</span> <span class="nc">Trapez2PlyPieceModel</span><span class="p">(</span><span class="n">PlyPieceModel</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Sub-class of ``PlyPieceModel``, for shape B (trapezium with one overlap)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Trapez2PlyPieceModel.construct_single_ply_piece"><a class="viewcode-back" href="../../../../modules/cppot/index.html#desicos.cppot.core.ply_model.Trapez2PlyPieceModel.construct_single_ply_piece">[docs]</a>    <span class="k">def</span> <span class="nf">construct_single_ply_piece</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Construct a ply piece for shape A (trapezium)&quot;&quot;&quot;</span>
+        <span class="n">th_nom</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fiber_angle</span><span class="p">)</span>
+        <span class="c"># Step 1: Define origin line L0</span>
+        <span class="n">origin_point</span> <span class="o">=</span> <span class="n">Point2D</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">starting_position</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="n">L0</span> <span class="o">=</span> <span class="n">Line2D</span><span class="o">.</span><span class="n">from_point_angle</span><span class="p">(</span><span class="n">origin_point</span><span class="p">,</span> <span class="n">th_nom</span> <span class="p">)</span>
+        <span class="c"># Step 2: Define line L2, perpendicular to L0, tangent to circle s4</span>
+        <span class="n">tangent_point</span> <span class="o">=</span> <span class="n">Point2D</span><span class="o">.</span><span class="n">from_polar</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cg</span><span class="o">.</span><span class="n">s4</span><span class="p">,</span> <span class="n">th_nom</span><span class="p">)</span>
+        <span class="n">L2</span> <span class="o">=</span> <span class="n">Line2D</span><span class="o">.</span><span class="n">from_point_angle</span><span class="p">(</span><span class="n">tangent_point</span><span class="p">,</span> <span class="n">th_nom</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">P0</span> <span class="o">=</span> <span class="n">L0</span><span class="o">.</span><span class="n">intersection_line</span><span class="p">(</span><span class="n">L2</span><span class="p">)</span>
+
+        <span class="c"># Step 3: Position P2 and P3 based on max_width and eccentricity</span>
+        <span class="n">P2_dist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_width</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">eccentricity</span>
+        <span class="n">P3_dist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_width</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">eccentricity</span><span class="p">)</span>
+        <span class="n">P2</span> <span class="o">=</span> <span class="n">P0</span> <span class="o">+</span> <span class="n">Point2D</span><span class="o">.</span><span class="n">from_polar</span><span class="p">(</span><span class="n">P2_dist</span><span class="p">,</span> <span class="n">L2</span><span class="o">.</span><span class="n">angle</span><span class="p">())</span>
+        <span class="n">P3</span> <span class="o">=</span> <span class="n">P0</span> <span class="o">+</span> <span class="n">Point2D</span><span class="o">.</span><span class="n">from_polar</span><span class="p">(</span><span class="n">P3_dist</span><span class="p">,</span> <span class="n">L2</span><span class="o">.</span><span class="n">angle</span><span class="p">()</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+
+        <span class="c"># Step 4: Calculate a rough estimate of the spanned angle</span>
+        <span class="n">delta_phi_1</span> <span class="o">=</span> <span class="p">(</span><span class="n">P2</span><span class="o">.</span><span class="n">angle</span><span class="p">()</span> <span class="o">-</span> <span class="n">P0</span><span class="o">.</span><span class="n">angle</span><span class="p">())</span>
+        <span class="n">delta_phi_2</span> <span class="o">=</span> <span class="p">(</span><span class="n">P0</span><span class="o">.</span><span class="n">angle</span><span class="p">()</span> <span class="o">-</span> <span class="n">P3</span><span class="o">.</span><span class="n">angle</span><span class="p">())</span>
+        <span class="n">ip_L0_s2</span> <span class="o">=</span> <span class="n">L0</span><span class="o">.</span><span class="n">intersection_circle_near</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cg</span><span class="o">.</span><span class="n">s2</span><span class="p">,</span> <span class="n">origin_point</span><span class="p">)</span>
+        <span class="n">ip_L0_s4</span> <span class="o">=</span> <span class="n">L0</span><span class="o">.</span><span class="n">intersection_circle_near</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cg</span><span class="o">.</span><span class="n">s4</span><span class="p">,</span> <span class="n">origin_point</span><span class="p">)</span>
+
+        <span class="n">ratio</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">REQ_RATIO</span> <span class="o">=</span> <span class="mf">2.0</span>
+        <span class="c"># Step 5: Iterate until the ratio of spanned angles on s4 and s2 is (nearly) correct</span>
+        <span class="k">while</span> <span class="nb">abs</span><span class="p">(</span><span class="n">ratio</span> <span class="o">-</span> <span class="n">REQ_RATIO</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">TOL</span><span class="p">:</span>
+            <span class="n">delta_phi_on_s2</span> <span class="o">=</span> <span class="n">REQ_RATIO</span> <span class="o">*</span> <span class="p">(</span><span class="n">delta_phi_1</span> <span class="o">+</span> <span class="n">delta_phi_2</span><span class="p">)</span>
+            <span class="n">ip_L1_s2</span> <span class="o">=</span> <span class="n">ip_L0_s2</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">REQ_RATIO</span> <span class="o">*</span> <span class="n">delta_phi_1</span><span class="p">)</span>
+            <span class="n">ip_L3_s2</span> <span class="o">=</span> <span class="n">ip_L0_s2</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="o">-</span><span class="n">REQ_RATIO</span> <span class="o">*</span> <span class="n">delta_phi_2</span><span class="p">)</span>
+            <span class="n">L1</span> <span class="o">=</span> <span class="n">Line2D</span><span class="o">.</span><span class="n">from_points</span><span class="p">(</span><span class="n">ip_L1_s2</span><span class="p">,</span> <span class="n">P2</span><span class="p">)</span>
+            <span class="n">L3</span> <span class="o">=</span> <span class="n">Line2D</span><span class="o">.</span><span class="n">from_points</span><span class="p">(</span><span class="n">ip_L3_s2</span><span class="p">,</span> <span class="n">P3</span><span class="p">)</span>
+            <span class="n">ip_L1_s4</span> <span class="o">=</span> <span class="n">L1</span><span class="o">.</span><span class="n">intersection_circle_near</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cg</span><span class="o">.</span><span class="n">s4</span><span class="p">,</span> <span class="n">P0</span><span class="p">)</span>
+            <span class="n">ip_L3_s4</span> <span class="o">=</span> <span class="n">L3</span><span class="o">.</span><span class="n">intersection_circle_near</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cg</span><span class="o">.</span><span class="n">s4</span><span class="p">,</span> <span class="n">P0</span><span class="p">)</span>
+            <span class="n">delta_phi_1</span> <span class="o">=</span> <span class="n">ip_L1_s4</span><span class="o">.</span><span class="n">angle</span><span class="p">()</span> <span class="o">-</span> <span class="n">ip_L0_s4</span><span class="o">.</span><span class="n">angle</span><span class="p">()</span>
+            <span class="n">delta_phi_2</span> <span class="o">=</span> <span class="n">ip_L0_s4</span><span class="o">.</span><span class="n">angle</span><span class="p">()</span> <span class="o">-</span> <span class="n">ip_L3_s4</span><span class="o">.</span><span class="n">angle</span><span class="p">()</span>
+            <span class="n">delta_phi_on_s4</span> <span class="o">=</span> <span class="n">delta_phi_1</span> <span class="o">+</span> <span class="n">delta_phi_2</span>
+            <span class="n">ratio</span> <span class="o">=</span> <span class="n">delta_phi_on_s2</span> <span class="o">/</span> <span class="n">delta_phi_on_s4</span>
+
+        <span class="c"># Redefine P2 and P3 if needed (for rest pieces)</span>
+        <span class="k">if</span> <span class="n">fraction</span> <span class="o">!=</span> <span class="mf">1.0</span><span class="p">:</span>
+            <span class="n">ip_L1_s2</span> <span class="o">=</span> <span class="n">ip_L1_s2</span><span class="o">.</span><span class="n">rotate</span><span class="p">((</span><span class="n">fraction</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">delta_phi_1</span><span class="p">)</span>
+            <span class="n">ip_L3_s2</span> <span class="o">=</span> <span class="n">ip_L3_s2</span><span class="o">.</span><span class="n">rotate</span><span class="p">((</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">fraction</span><span class="p">)</span> <span class="o">*</span> <span class="n">delta_phi_2</span><span class="p">)</span>
+            <span class="c"># Apply an additional rotation to avoid having more than one overlap</span>
+            <span class="n">ip_L3_s2</span> <span class="o">=</span> <span class="n">ip_L3_s2</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">delta_phi_1</span> <span class="o">+</span> <span class="n">delta_phi_2</span><span class="p">)</span>
+            <span class="n">ip_L1_s4</span> <span class="o">=</span> <span class="n">ip_L1_s4</span><span class="o">.</span><span class="n">rotate</span><span class="p">((</span><span class="n">fraction</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">delta_phi_1</span><span class="p">)</span>
+            <span class="n">ip_L3_s4</span> <span class="o">=</span> <span class="n">ip_L3_s4</span><span class="o">.</span><span class="n">rotate</span><span class="p">((</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">fraction</span><span class="p">)</span> <span class="o">*</span> <span class="n">delta_phi_2</span><span class="p">)</span>
+            <span class="n">L1</span> <span class="o">=</span> <span class="n">Line2D</span><span class="o">.</span><span class="n">from_points</span><span class="p">(</span><span class="n">ip_L1_s2</span><span class="p">,</span> <span class="n">ip_L1_s4</span><span class="p">)</span>
+            <span class="n">L3</span> <span class="o">=</span> <span class="n">Line2D</span><span class="o">.</span><span class="n">from_points</span><span class="p">(</span><span class="n">ip_L3_s2</span><span class="p">,</span> <span class="n">ip_L3_s4</span><span class="p">)</span>
+            <span class="n">delta_phi_1</span> <span class="o">*=</span> <span class="n">fraction</span>
+            <span class="n">delta_phi_2</span> <span class="o">*=</span> <span class="n">fraction</span>
+
+        <span class="c"># Step 6: redefine P1 to P4 as the intersection points</span>
+        <span class="n">L4</span> <span class="o">=</span> <span class="n">Line2D</span><span class="o">.</span><span class="n">from_point_angle</span><span class="p">(</span><span class="n">Point2D</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span> <span class="n">L2</span><span class="o">.</span><span class="n">angle</span><span class="p">())</span>
+        <span class="n">P1</span> <span class="o">=</span> <span class="n">L1</span><span class="o">.</span><span class="n">intersection_line</span><span class="p">(</span><span class="n">L4</span><span class="p">)</span>
+        <span class="n">P2</span> <span class="o">=</span> <span class="n">L2</span><span class="o">.</span><span class="n">intersection_line</span><span class="p">(</span><span class="n">L1</span><span class="p">)</span>
+        <span class="n">P3</span> <span class="o">=</span> <span class="n">L3</span><span class="o">.</span><span class="n">intersection_line</span><span class="p">(</span><span class="n">L2</span><span class="p">)</span>
+        <span class="n">P4</span> <span class="o">=</span> <span class="n">L4</span><span class="o">.</span><span class="n">intersection_line</span><span class="p">(</span><span class="n">L3</span><span class="p">)</span>
+
+        <span class="c"># Step 7: Return the final ply piece</span>
+        <span class="k">return</span> <span class="n">PlyPiece</span><span class="p">(</span><span class="n">Polygon2D</span><span class="p">((</span><span class="n">P1</span><span class="p">,</span> <span class="n">P2</span><span class="p">,</span> <span class="n">P3</span><span class="p">,</span> <span class="n">P4</span><span class="p">)),</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="n">delta_phi_2</span><span class="p">,</span> <span class="n">delta_phi_1</span><span class="p">)</span>
+
+</div></div>
+<div class="viewcode-block" id="RectPlyPieceModel"><a class="viewcode-back" href="../../../../modules/cppot/index.html#desicos.cppot.core.ply_model.RectPlyPieceModel">[docs]</a><span class="k">class</span> <span class="nc">RectPlyPieceModel</span><span class="p">(</span><span class="n">PlyPieceModel</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Sub-class of ``PlyPieceModel``, for shape C (rectangle)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="RectPlyPieceModel.construct_single_ply_piece"><a class="viewcode-back" href="../../../../modules/cppot/index.html#desicos.cppot.core.ply_model.RectPlyPieceModel.construct_single_ply_piece">[docs]</a>    <span class="k">def</span> <span class="nf">construct_single_ply_piece</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Construct a ply piece for shape C (rectangle)&quot;&quot;&quot;</span>
+        <span class="n">th_nom</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fiber_angle</span><span class="p">)</span>
+        <span class="c"># Define origin line L0</span>
+        <span class="n">origin_point</span> <span class="o">=</span> <span class="n">Point2D</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">starting_position</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="n">L0</span> <span class="o">=</span> <span class="n">Line2D</span><span class="o">.</span><span class="n">from_point_angle</span><span class="p">(</span><span class="n">origin_point</span><span class="p">,</span> <span class="n">th_nom</span><span class="p">)</span>
+        <span class="c"># Define line L4</span>
+        <span class="n">L4</span> <span class="o">=</span> <span class="n">Line2D</span><span class="o">.</span><span class="n">from_point_angle</span><span class="p">(</span><span class="n">Point2D</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span> <span class="n">th_nom</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">ip_L0_L4</span> <span class="o">=</span> <span class="n">L0</span><span class="o">.</span><span class="n">intersection_line</span><span class="p">(</span><span class="n">L4</span><span class="p">)</span>
+
+        <span class="c"># Construct P1 and P4</span>
+        <span class="n">P1_dist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_width</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">eccentricity</span>
+        <span class="n">P4_dist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_width</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">eccentricity</span><span class="p">)</span>
+        <span class="n">P1</span> <span class="o">=</span> <span class="n">ip_L0_L4</span> <span class="o">+</span> <span class="n">Point2D</span><span class="o">.</span><span class="n">from_polar</span><span class="p">(</span><span class="n">P1_dist</span><span class="p">,</span> <span class="n">L4</span><span class="o">.</span><span class="n">angle</span><span class="p">())</span>
+        <span class="n">P4</span> <span class="o">=</span> <span class="n">ip_L0_L4</span> <span class="o">+</span> <span class="n">Point2D</span><span class="o">.</span><span class="n">from_polar</span><span class="p">(</span><span class="n">P4_dist</span><span class="p">,</span> <span class="n">L4</span><span class="o">.</span><span class="n">angle</span><span class="p">()</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+
+        <span class="c"># Construct side lines L1, L3, parallel to L0</span>
+        <span class="n">L1</span> <span class="o">=</span> <span class="n">Line2D</span><span class="o">.</span><span class="n">from_point_angle</span><span class="p">(</span><span class="n">P1</span><span class="p">,</span> <span class="n">L0</span><span class="o">.</span><span class="n">angle</span><span class="p">())</span>
+        <span class="n">L3</span> <span class="o">=</span> <span class="n">Line2D</span><span class="o">.</span><span class="n">from_point_angle</span><span class="p">(</span><span class="n">P4</span><span class="p">,</span> <span class="n">L0</span><span class="o">.</span><span class="n">angle</span><span class="p">())</span>
+        <span class="c"># Intersection points L0, L1, L3 with circle</span>
+        <span class="n">P0</span> <span class="o">=</span> <span class="n">L0</span><span class="o">.</span><span class="n">intersection_circle_near</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cg</span><span class="o">.</span><span class="n">s4</span><span class="p">,</span> <span class="n">origin_point</span><span class="p">)</span>
+        <span class="n">P2</span> <span class="o">=</span> <span class="n">L1</span><span class="o">.</span><span class="n">intersection_circle_near</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cg</span><span class="o">.</span><span class="n">s4</span><span class="p">,</span> <span class="n">P0</span><span class="p">)</span>
+        <span class="n">P3</span> <span class="o">=</span> <span class="n">L3</span><span class="o">.</span><span class="n">intersection_circle_near</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cg</span><span class="o">.</span><span class="n">s4</span><span class="p">,</span> <span class="n">P0</span><span class="p">)</span>
+
+        <span class="c"># Handle creation of rest pieces, with fraction &lt; 1.0</span>
+        <span class="n">delta_phi_1</span> <span class="o">=</span> <span class="p">(</span><span class="n">P2</span><span class="o">.</span><span class="n">angle</span><span class="p">()</span> <span class="o">-</span> <span class="n">P0</span><span class="o">.</span><span class="n">angle</span><span class="p">())</span>
+        <span class="n">delta_phi_2</span> <span class="o">=</span> <span class="p">(</span><span class="n">P0</span><span class="o">.</span><span class="n">angle</span><span class="p">()</span> <span class="o">-</span> <span class="n">P3</span><span class="o">.</span><span class="n">angle</span><span class="p">())</span>
+        <span class="k">if</span> <span class="n">fraction</span> <span class="o">!=</span> <span class="mf">1.0</span><span class="p">:</span>
+            <span class="n">P2</span> <span class="o">=</span> <span class="n">P2</span><span class="o">.</span><span class="n">rotate</span><span class="p">((</span><span class="n">fraction</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">delta_phi_1</span><span class="p">)</span>
+            <span class="n">P3</span> <span class="o">=</span> <span class="n">P3</span><span class="o">.</span><span class="n">rotate</span><span class="p">((</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">fraction</span><span class="p">)</span> <span class="o">*</span> <span class="n">delta_phi_2</span><span class="p">)</span>
+            <span class="n">L1</span> <span class="o">=</span> <span class="n">Line2D</span><span class="o">.</span><span class="n">from_point_angle</span><span class="p">(</span><span class="n">P2</span><span class="p">,</span> <span class="n">L1</span><span class="o">.</span><span class="n">angle</span><span class="p">())</span>
+            <span class="n">L3</span> <span class="o">=</span> <span class="n">Line2D</span><span class="o">.</span><span class="n">from_point_angle</span><span class="p">(</span><span class="n">P3</span><span class="p">,</span> <span class="n">L3</span><span class="o">.</span><span class="n">angle</span><span class="p">())</span>
+            <span class="n">P1</span> <span class="o">=</span> <span class="n">L4</span><span class="o">.</span><span class="n">intersection_line</span><span class="p">(</span><span class="n">L1</span><span class="p">)</span>
+            <span class="n">P4</span> <span class="o">=</span> <span class="n">L4</span><span class="o">.</span><span class="n">intersection_line</span><span class="p">(</span><span class="n">L3</span><span class="p">)</span>
+            <span class="n">delta_phi_1</span> <span class="o">*=</span> <span class="n">fraction</span>
+            <span class="n">delta_phi_2</span> <span class="o">*=</span> <span class="n">fraction</span>
+
+        <span class="c"># Construct L2 through P2 or P3, whichever is furthest from L4</span>
+        <span class="c"># Adjust the other point</span>
+        <span class="k">if</span> <span class="n">L4</span><span class="o">.</span><span class="n">distance_point</span><span class="p">(</span><span class="n">P2</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">L4</span><span class="o">.</span><span class="n">distance_point</span><span class="p">(</span><span class="n">P3</span><span class="p">):</span>
+            <span class="n">L2</span> <span class="o">=</span> <span class="n">Line2D</span><span class="o">.</span><span class="n">from_point_angle</span><span class="p">(</span><span class="n">P2</span><span class="p">,</span> <span class="n">L4</span><span class="o">.</span><span class="n">angle</span><span class="p">())</span>
+            <span class="n">P3</span> <span class="o">=</span> <span class="n">L2</span><span class="o">.</span><span class="n">intersection_line</span><span class="p">(</span><span class="n">L3</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">L2</span> <span class="o">=</span> <span class="n">Line2D</span><span class="o">.</span><span class="n">from_point_angle</span><span class="p">(</span><span class="n">P3</span><span class="p">,</span> <span class="n">L4</span><span class="o">.</span><span class="n">angle</span><span class="p">())</span>
+            <span class="n">P2</span> <span class="o">=</span> <span class="n">L2</span><span class="o">.</span><span class="n">intersection_line</span><span class="p">(</span><span class="n">L1</span><span class="p">)</span>
+
+        <span class="c"># Return the final ply piece</span>
+        <span class="k">return</span> <span class="n">PlyPiece</span><span class="p">(</span><span class="n">Polygon2D</span><span class="p">((</span><span class="n">P1</span><span class="p">,</span> <span class="n">P2</span><span class="p">,</span> <span class="n">P3</span><span class="p">,</span> <span class="n">P4</span><span class="p">)),</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="n">delta_phi_2</span><span class="p">,</span> <span class="n">delta_phi_1</span><span class="p">)</span>
+
+</div></div>
+<div class="viewcode-block" id="PlyPiece"><a class="viewcode-back" href="../../../../modules/cppot/index.html#desicos.cppot.core.ply_model.PlyPiece">[docs]</a><span class="k">class</span> <span class="nc">PlyPiece</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">r&quot;&quot;&quot;PlyPiece object</span>
+
+<span class="sd">    Carries all the information about a single piece of ply in the layup of a</span>
+<span class="sd">    cone, with a defined size and orientation.</span>
+
+<span class="sd">    =====================  ==================================================</span>
+<span class="sd">    Attributes             Description</span>
+<span class="sd">    =====================  ==================================================</span>
+<span class="sd">    ``polygon``            ``Polygon2D``, containing the geometry of the</span>
+<span class="sd">                           ply piece.</span>
+<span class="sd">    ``phi_nom``            ``float``, angle at which the origin line (L0) of</span>
+<span class="sd">                           the ply piece intersects the circle with radius</span>
+<span class="sd">                           ``starting_position``</span>
+<span class="sd">    ``phi_nom_min``        ``float``, smallest angle phi that is contained</span>
+<span class="sd">                           within this ply piece at radius ``starting_position``</span>
+<span class="sd">    ``phi_nom_max``        ``float``, largest angle phi that is contained</span>
+<span class="sd">                           within this ply piece at radius ``starting_position``</span>
+<span class="sd">    ``phi_limit_min``      ``float``, minimum value of phi for any of the</span>
+<span class="sd">                           points in ``polygon``. Optional, will be calculated</span>
+<span class="sd">                           if not supplied to the constructor.</span>
+<span class="sd">    ``phi_limit_max``      ``float``, minimum value of phi for any of the</span>
+<span class="sd">                           points in ``polygon``. Optional, will be calculated</span>
+<span class="sd">                           if not supplied to the constructor.</span>
+<span class="sd">    =====================  ==================================================</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    On the nominal circle (radius ``starting_position``), this ply piece occupies</span>
+<span class="sd">    the range ``phi_nom_min``...``phi_nom_max``.</span>
+
+<span class="sd">    For all points in this ply piece, the inequality</span>
+<span class="sd">    ``phi_limit_min &lt;= phi &lt;= phi_limit_max`` should hold.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">polygon</span><span class="p">,</span> <span class="n">phi_nom</span><span class="p">,</span> <span class="n">phi_nom_min</span><span class="p">,</span> <span class="n">phi_nom_max</span><span class="p">,</span> <span class="n">phi_limit_min</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">phi_limit_max</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">polygon</span> <span class="o">=</span> <span class="n">polygon</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">phi_nom</span> <span class="o">=</span> <span class="n">phi_nom</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">phi_nom_min</span> <span class="o">=</span> <span class="n">phi_nom_min</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">phi_nom_max</span> <span class="o">=</span> <span class="n">phi_nom_max</span>
+
+        <span class="c"># If phi_limit_min/max are not set explicitly, assign them based on the</span>
+        <span class="c"># minimal resp. maximal angle of the points in the polygon</span>
+        <span class="k">if</span> <span class="n">phi_limit_min</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">phi_limit_min</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">angle</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">polygon</span><span class="o">.</span><span class="n">points</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">phi_limit_min</span> <span class="o">=</span> <span class="n">phi_limit_min</span>
+        <span class="k">if</span> <span class="n">phi_limit_max</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">phi_limit_max</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">angle</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">polygon</span><span class="o">.</span><span class="n">points</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">phi_limit_max</span> <span class="o">=</span> <span class="n">phi_limit_max</span>
+
+
+<div class="viewcode-block" id="PlyPiece.copy_rotated"><a class="viewcode-back" href="../../../../modules/cppot/index.html#desicos.cppot.core.ply_model.PlyPiece.copy_rotated">[docs]</a>    <span class="k">def</span> <span class="nf">copy_rotated</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rotate_angle</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a copy of this ply piece, which is rotated by a certain angle.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        rotate_angle : float</span>
+<span class="sd">            Angle of new ply piece with respect to this one, in radians</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        new_piece : :class:`.PlyPiece`</span>
+<span class="sd">            Rotated ply piece</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">PlyPiece</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">polygon</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">rotate_angle</span><span class="p">),</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">phi_nom</span> <span class="o">+</span> <span class="n">rotate_angle</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">phi_nom_min</span> <span class="o">+</span> <span class="n">rotate_angle</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">phi_nom_max</span> <span class="o">+</span> <span class="n">rotate_angle</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">phi_limit_min</span> <span class="o">+</span> <span class="n">rotate_angle</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">phi_limit_max</span> <span class="o">+</span> <span class="n">rotate_angle</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="PlyPiece.angle_deviation"><a class="viewcode-back" href="../../../../modules/cppot/index.html#desicos.cppot.core.ply_model.PlyPiece.angle_deviation">[docs]</a>    <span class="k">def</span> <span class="nf">angle_deviation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the deviation between the local and nominal fiber angle at a certain point</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        point : Point2D</span>
+<span class="sd">            Cartesian coordinates of the point. These are in the coordinate</span>
+<span class="sd">            system of the unfolded cone, so (eta, zeta) (as floats).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        angle_diff : float</span>
+<span class="sd">            Local minus nominal fiber angle at this point, in degrees</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">wrap_to_pi</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phi_nom</span> <span class="o">-</span> <span class="n">point</span><span class="o">.</span><span class="n">angle</span><span class="p">()))</span>
+
+</div>
+<div class="viewcode-block" id="PlyPiece.contains_point"><a class="viewcode-back" href="../../../../modules/cppot/index.html#desicos.cppot.core.ply_model.PlyPiece.contains_point">[docs]</a>    <span class="k">def</span> <span class="nf">contains_point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point</span><span class="p">,</span> <span class="n">phi</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Check if a point is contained in this ply piece</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        point : Point2D</span>
+<span class="sd">            The point to check. This is in the coordinate</span>
+<span class="sd">            system of the unfolded cone, so (eta, zeta).</span>
+<span class="sd">        phi : float</span>
+<span class="sd">            Angle corresponding to ``point``. Parameter is optional, but</span>
+<span class="sd">            passing it from the caller can help performance.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        cointains_point : bool</span>
+<span class="sd">            True if the point is in this ply piece, false otherwise. For</span>
+<span class="sd">            points exactly on the edge of the ply piece, resuls are undefined.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">phi</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">angle_in_range</span><span class="p">(</span><span class="n">phi</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">phi_limit_min</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">phi_limit_max</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">polygon</span><span class="o">.</span><span class="n">contains_point</span><span class="p">(</span><span class="n">point</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../../../index.html">
+    <img class="logo" src="../../../../_static/desicos.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/index.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/index.html">Tutorials</a></li>
+</ul>
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2012-2015 Desicos Improved Software Team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.2</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

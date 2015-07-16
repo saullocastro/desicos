@@ -10,3 +10,4 @@ Modules
    abaqus/index.rst
    composite/index.rst
    conecylDB/index.rst
+   cppot/index.rst

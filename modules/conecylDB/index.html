@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Cone / Cylinder DataBase (desicos.conecylDB) &mdash; DESICOS 2.3.0 documentation</title>
+    <title>Cone / Cylinder DataBase (desicos.conecylDB) &mdash; DESICOS 2.4.1 documentation</title>
     
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.3.0',
+        VERSION:     '2.4.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,9 +23,9 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <link rel="top" title="DESICOS 2.3.0 documentation" href="../../index.html" />
+    <link rel="top" title="DESICOS 2.4.1 documentation" href="../../index.html" />
     <link rel="up" title="Modules" href="../index.html" />
-    <link rel="next" title="Tutorials" href="../../tutorials/index.html" />
+    <link rel="next" title="Cone Ply Piece Optimization Tool (desicos.cppot)" href="../cppot/index.html" />
    
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
@@ -45,9 +45,9 @@
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="../../tutorials/index.html" title="Tutorials"
+          <a href="../cppot/index.html" title="Cone Ply Piece Optimization Tool (desicos.cppot)"
              accesskey="N">next</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">DESICOS 2.3.0 documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">DESICOS 2.4.1 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Modules</a> &raquo;</li> 
       </ul>
     </div>  
@@ -925,38 +925,10 @@ calculated as follows:</p>
 <p><img src="../../_images/math/7bc601087ecb5136853c44bdc9b29b36961f3168.png" alt="{w_0}_{node} = \frac{\sum_{i}^{n_{CP}}{{w_0}_i\frac{1}{w_i}}}
                     {\sum_{i}^{n_{CP}}{\frac{1}{w_i}}}"/></p>
 </div><p>where <img class="math" src="../../_images/math/5df9759a75683abeb124c0ed31d59208089a5a78.png" alt="w_i"/> is the inverse weight of each measured point, calculated as:</p>
-<div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">w_i = \left[(x_{node}-x_i)^2+(y_{node}-y_i)^2+(z_{node}-z_i)^2
-      \right]^p
-
-</tt>)</p>
-latex exited with error
-[stdout]
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9 64-bit)
-entering extended mode
-(c:\users\saullo\appdata\local\temp\tmpnhz1bg\math.tex
-LaTeX2e &lt;2014/05/01&gt;
-Babel &lt;3.9l&gt; and hyphenation patterns for 68 languages loaded.
-(&#8220;C:\Program Files\MiKTeX 2.9\tex\latex\base\article.cls&#8221;
-Document Class: article 2014/09/29 v1.4h Standard LaTeX document class
-(&#8220;C:\Program Files\MiKTeX 2.9\tex\latex\base\size12.clo&#8221;))
-(&#8220;C:\Program Files\MiKTeX 2.9\tex\latex\base\inputenc.sty&#8221;
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.165 \endinput
-               
-No pages of output.
-Transcript written on math.log.
-</div>
-<p>with <img class="math" src="../../_images/math/26b5461109d4bfe4c6dd43f103a74993eedd863b.png" alt="p"/> being a power parameter that when increased will increase the
+<div class="math">
+<p><img src="../../_images/math/ed3784a360339cd77eb398e35bdff30477968d09.png" alt="w_i = \left[(x_{node}-x_i)^2+(y_{node}-y_i)^2+(z_{node}-z_i)^2
+      \right]^p"/></p>
+</div><p>with <img class="math" src="../../_images/math/26b5461109d4bfe4c6dd43f103a74993eedd863b.png" alt="p"/> being a power parameter that when increased will increase the
 relative influence of a closest point.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />

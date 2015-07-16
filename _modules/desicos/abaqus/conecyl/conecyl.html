@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>desicos.abaqus.conecyl.conecyl &mdash; DESICOS 2.3.0 documentation</title>
+    <title>desicos.abaqus.conecyl.conecyl &mdash; DESICOS 2.4.1 documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     '2.3.0',
+        VERSION:     '2.4.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../../_static/doctools.js"></script>
-    <link rel="top" title="DESICOS 2.3.0 documentation" href="../../../../index.html" />
+    <link rel="top" title="DESICOS 2.4.1 documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
    
   
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="../../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../index.html">DESICOS 2.3.0 documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">DESICOS 2.4.1 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../../../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
@@ -65,7 +65,7 @@
 <span class="kn">from</span> <span class="nn">desicos.abaqus.constants</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">desicos.composite.laminate</span> <span class="kn">import</span> <span class="n">read_stack</span>
 <span class="kn">from</span> <span class="nn">desicos.conecylDB</span> <span class="kn">import</span> <span class="n">fetch</span>
-<span class="kn">from</span> <span class="nn">desicos.abaqus.utils</span> <span class="kn">import</span> <span class="n">vec_calc_elem_cg</span>
+<span class="kn">from</span> <span class="nn">desicos.abaqus.utils</span> <span class="kn">import</span> <span class="n">make_uniform_cells</span>
 
 
 <div class="viewcode-block" id="ConeCyl"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl">[docs]</a><span class="k">class</span> <span class="nc">ConeCyl</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -880,15 +880,83 @@
         <span class="k">return</span> <span class="n">_plot</span><span class="o">.</span><span class="n">extract_field_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ignore</span><span class="p">)</span>
 
 </div>
-<div class="viewcode-block" id="ConeCyl.transform_plot_data"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl.transform_plot_data">[docs]</a>    <span class="k">def</span> <span class="nf">transform_plot_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thetas</span><span class="p">,</span> <span class="n">zs</span><span class="p">,</span> <span class="n">plot_type</span><span class="p">):</span>
+<div class="viewcode-block" id="ConeCyl.extract_fiber_orientation"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl.extract_fiber_orientation">[docs]</a>    <span class="k">def</span> <span class="nf">extract_fiber_orientation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ply_index</span><span class="p">,</span> <span class="n">use_elements</span><span class="p">):</span>
+        <span class="sd">r&quot;&quot;&quot;Get the fiber orientation at the centroid of each element</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ply_index : int</span>
+<span class="sd">            Index of the ply of interest</span>
+<span class="sd">        use_elements : bool</span>
+<span class="sd">            If ``True``, use the actual element centroids (from Abaqus)</span>
+<span class="sd">            If ``False``, estimate their locations instead.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        out : tuple</span>
+<span class="sd">            Where ``out[0]`` and ``out[1]`` contain the circumferential (theta)</span>
+<span class="sd">            and vertical (z) coordinates and ``out[2]`` the corresponding</span>
+<span class="sd">            values.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        Must be called from Abaqus if ``use_elements == True``</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">_plot</span>
+        <span class="k">return</span> <span class="n">_plot</span><span class="o">.</span><span class="n">extract_fiber_orientation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ply_index</span><span class="p">,</span> <span class="n">use_elements</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="ConeCyl.extract_thickness_data"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl.extract_thickness_data">[docs]</a>    <span class="k">def</span> <span class="nf">extract_thickness_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">r&quot;&quot;&quot;Get the thickness at the centroid of each element</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        out : tuple</span>
+<span class="sd">            Where ``out[0]`` and ``out[1]`` contain the circumferential (theta)</span>
+<span class="sd">            and vertical (z) coordinates and ``out[2]`` the corresponding</span>
+<span class="sd">            thicknesses.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        Must be called from Abaqus</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">_plot</span>
+        <span class="k">return</span> <span class="n">_plot</span><span class="o">.</span><span class="n">extract_thickness_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="ConeCyl.extract_msi_data"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl.extract_msi_data">[docs]</a>    <span class="k">def</span> <span class="nf">extract_msi_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">r&quot;&quot;&quot;Get a data grid representing the nodal offsets w.r.t. the</span>
+<span class="sd">        reference surface, caused by mid-surface imperfection(s).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        out : tuple</span>
+<span class="sd">            Where ``out[0]`` and ``out[1]`` contain the circumferential (theta)</span>
+<span class="sd">            and vertical (z) coordinates and ``out[2]`` the corresponding</span>
+<span class="sd">            imperfection offsets.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        Must be called from Abaqus</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">_plot</span>
+        <span class="k">return</span> <span class="n">_plot</span><span class="o">.</span><span class="n">extract_msi_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="ConeCyl.transform_plot_data"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl.transform_plot_data">[docs]</a>    <span class="k">def</span> <span class="nf">transform_plot_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thetas</span><span class="p">,</span> <span class="n">zs</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">plot_type</span><span class="p">,</span> <span class="n">wrap</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
         <span class="sd">r&quot;&quot;&quot;Transform coordinates of plot data, to prepare for plotting</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        theta : numpy.array</span>
+<span class="sd">        thetas : numpy.array</span>
 <span class="sd">            Array of circumferential coordinates</span>
-<span class="sd">        z : numpy.array</span>
+<span class="sd">        zs : numpy.array</span>
 <span class="sd">            Array of vertical coordinates</span>
+<span class="sd">        values : numpy.array</span>
+<span class="sd">            Array of values</span>
 <span class="sd">        plot_type : int, optional</span>
 <span class="sd">            For cylinders only ``4`` and ``5`` are valid.</span>
 <span class="sd">            For cones all the following types can be used:</span>
@@ -898,23 +966,27 @@
 <span class="sd">            - ``3``: stretched closed</span>
 <span class="sd">            - ``4``: stretched opened (`r(z) \times \theta` vs. `H`)</span>
 <span class="sd">            - ``5``: stretched opened (`r_{bottom}` vs. `H`)</span>
+<span class="sd">            - ``6``: concave, starting at `\theta = 0`</span>
+<span class="sd">        wrap : bool, optional</span>
+<span class="sd">            If ``True``, wrap `\theta`-coordinates to within the correct</span>
+<span class="sd">            range (either `0..2\pi` or `-\pi..\pi`).</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        out : tuple</span>
 <span class="sd">            Where ``out[0]`` and ``out[1]`` contain the horizontal and</span>
-<span class="sd">            vertical grids of coordinates.</span>
+<span class="sd">            vertical grids of coordinates and ``out[2]`` the values.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">import</span> <span class="nn">_plot</span>
-        <span class="k">return</span> <span class="n">_plot</span><span class="o">.</span><span class="n">transform_plot_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thetas</span><span class="p">,</span> <span class="n">zs</span><span class="p">,</span> <span class="n">plot_type</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_plot</span><span class="o">.</span><span class="n">transform_plot_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thetas</span><span class="p">,</span> <span class="n">zs</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">plot_type</span><span class="p">,</span> <span class="n">wrap</span><span class="p">)</span>
 
 </div>
 <div class="viewcode-block" id="ConeCyl.plot_field_data"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl.plot_field_data">[docs]</a>    <span class="k">def</span> <span class="nf">plot_field_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">create_npz_only</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
             <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">3.3</span><span class="p">,</span> <span class="mf">3.3</span><span class="p">),</span> <span class="n">save_png</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s">&#39;equal&#39;</span><span class="p">,</span> <span class="n">clean</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
             <span class="n">outpath</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">pngname</span><span class="o">=</span><span class="s">&#39;plot_from_abaqus.png&#39;</span><span class="p">,</span>
             <span class="n">npzname</span><span class="o">=</span><span class="s">&#39;plot_from_abaqus.npz&#39;</span><span class="p">,</span> <span class="n">pyname</span><span class="o">=</span><span class="s">&#39;plot_from_abaqus.py&#39;</span><span class="p">,</span>
-            <span class="n">num_levels</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">show_colorbar</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+            <span class="n">num_levels</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">show_colorbar</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">lines</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">r&quot;&quot;&quot;Print data field output to a file</span>
 
 <span class="sd">        Parameters</span>
@@ -952,6 +1024,10 @@
 <span class="sd">            Number of contour levels (higher values make the contour smoother).</span>
 <span class="sd">        show_colorbar : bool, optional</span>
 <span class="sd">            Include a color bar in the figure.</span>
+<span class="sd">        lines : list, optional</span>
+<span class="sd">            List of lines to draw on top of the contour plot. Each line is</span>
+<span class="sd">            either a 2-tuple (list of x-coords, list of y-coords), or a 2xN</span>
+<span class="sd">            numpy array.</span>
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
@@ -986,6 +1062,7 @@
 <span class="sd">            - ``3``: stretched closed</span>
 <span class="sd">            - ``4``: stretched opened (`r(z) \times \theta` vs. `H`)</span>
 <span class="sd">            - ``5``: stretched opened (`r_{bottom}` vs. `H`)</span>
+<span class="sd">            - ``6``: concave, starting at `\theta = 0`</span>
 <span class="sd">        kwargs : dict</span>
 <span class="sd">            Other keyword args will be directly passed to ``plot_field_data``</span>
 <span class="sd">            See the documentation of that method for more details.</span>
@@ -1001,12 +1078,124 @@
 
         <span class="k">try</span><span class="p">:</span>
             <span class="n">thetas</span><span class="p">,</span> <span class="n">zs</span><span class="p">,</span> <span class="n">field</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_field_output</span><span class="p">(</span><span class="n">ignore</span><span class="p">)</span>
-            <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform_plot_data</span><span class="p">(</span><span class="n">thetas</span><span class="p">,</span> <span class="n">zs</span><span class="p">,</span> <span class="n">plot_type</span><span class="p">)</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">field</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform_plot_data</span><span class="p">(</span><span class="n">thetas</span><span class="p">,</span> <span class="n">zs</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">plot_type</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">plot_field_data</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">field</span>
         <span class="k">except</span><span class="p">:</span>
             <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">()</span>
             <span class="n">error</span><span class="p">(</span><span class="s">&#39;Opened field plot could not be generated! :(&#39;</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="ConeCyl.plot_orientation_opened"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl.plot_orientation_opened">[docs]</a>    <span class="k">def</span> <span class="nf">plot_orientation_opened</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ply_index</span><span class="p">,</span> <span class="n">use_elements</span><span class="p">,</span> <span class="n">plot_type</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">r&quot;&quot;&quot;Make a fiber orientation plot from the current cone model</span>
+
+<span class="sd">        Only valid for cones that have a ply piece imperfection.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ply_index : int</span>
+<span class="sd">            Index of the ply of interest</span>
+<span class="sd">        use_elements : bool</span>
+<span class="sd">            If ``True``, use the actual element centroids (from Abaqus)</span>
+<span class="sd">            If ``False``, estimate their locations instead.</span>
+<span class="sd">        plot_type : int, optional</span>
+<span class="sd">            For cones all the following types can be used:</span>
+
+<span class="sd">            - ``1``: concave up (default for cones)</span>
+<span class="sd">            - ``2``: concave down</span>
+<span class="sd">            - ``3``: stretched closed</span>
+<span class="sd">            - ``4``: stretched opened (`r(z) \times \theta` vs. `H`)</span>
+<span class="sd">            - ``5``: stretched opened (`r_{bottom}` vs. `H`)</span>
+<span class="sd">            - ``6``: concave, starting at `\theta = 0`</span>
+<span class="sd">        kwargs : dict</span>
+<span class="sd">            Other keyword args will be passed to ``plot_field_data``</span>
+<span class="sd">            See the documentation of that method for more details.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        Must be called from Abaqus if ``use_elements == True``</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">ppi</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">error</span><span class="p">(</span><span class="s">&#39;Cannot plot orientations: ConeCyl object has no ply piece imperfection!&#39;</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">thetas</span><span class="p">,</span> <span class="n">zs</span><span class="p">,</span> <span class="n">field</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_fiber_orientation</span><span class="p">(</span><span class="n">ply_index</span><span class="p">,</span> <span class="n">use_elements</span><span class="p">)</span>
+            <span class="n">thetas</span><span class="p">,</span> <span class="n">zs</span><span class="p">,</span> <span class="n">field</span> <span class="o">=</span> <span class="n">make_uniform_cells</span><span class="p">(</span><span class="n">thetas</span><span class="p">,</span> <span class="n">zs</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">field</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform_plot_data</span><span class="p">(</span><span class="n">thetas</span><span class="p">,</span> <span class="n">zs</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">plot_type</span><span class="p">)</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">ppi</span><span class="o">.</span><span class="n">get_ply_lines</span><span class="p">(</span><span class="n">ply_index</span><span class="p">,</span> <span class="n">center_theta_zero</span><span class="o">=</span><span class="p">(</span><span class="n">plot_type</span> <span class="o">!=</span> <span class="mi">6</span><span class="p">))</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">transform_plot_data</span><span class="p">(</span><span class="n">thetas</span><span class="p">,</span> <span class="n">zs</span><span class="p">,</span> <span class="n">zs</span><span class="p">,</span> <span class="n">plot_type</span><span class="p">,</span> <span class="n">wrap</span><span class="o">=</span><span class="bp">False</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">thetas</span><span class="p">,</span> <span class="n">zs</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plot_field_data</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">lines</span><span class="o">=</span><span class="n">lines</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">()</span>
+            <span class="n">error</span><span class="p">(</span><span class="s">&#39;Opened orientation plot could not be generated! :(&#39;</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="ConeCyl.plot_thickness_opened"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl.plot_thickness_opened">[docs]</a>    <span class="k">def</span> <span class="nf">plot_thickness_opened</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plot_type</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">r&quot;&quot;&quot;Make an opened thickness plot from the current conecyl model</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        plot_type : int, optional</span>
+<span class="sd">            For cylinders only ``4`` and ``5`` are valid.</span>
+<span class="sd">            For cones all the following types can be used:</span>
+
+<span class="sd">            - ``1``: concave up (default for cones)</span>
+<span class="sd">            - ``2``: concave down</span>
+<span class="sd">            - ``3``: stretched closed</span>
+<span class="sd">            - ``4``: stretched opened (`r(z) \times \theta` vs. `H`)</span>
+<span class="sd">            - ``5``: stretched opened (`r_{bottom}` vs. `H`)</span>
+<span class="sd">            - ``6``: concave, starting at `\theta = 0`</span>
+<span class="sd">        kwargs : dict</span>
+<span class="sd">            Other keyword args will be passed to ``plot_field_data``</span>
+<span class="sd">            See the documentation of that method for more details.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        Must be called from Abaqus</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">thetas</span><span class="p">,</span> <span class="n">zs</span><span class="p">,</span> <span class="n">field</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_thickness_data</span><span class="p">()</span>
+            <span class="n">thetas</span><span class="p">,</span> <span class="n">zs</span><span class="p">,</span> <span class="n">field</span> <span class="o">=</span> <span class="n">make_uniform_cells</span><span class="p">(</span><span class="n">thetas</span><span class="p">,</span> <span class="n">zs</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">field</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform_plot_data</span><span class="p">(</span><span class="n">thetas</span><span class="p">,</span> <span class="n">zs</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">plot_type</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plot_field_data</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">()</span>
+            <span class="n">error</span><span class="p">(</span><span class="s">&#39;Opened thickness plot could not be generated! :(&#39;</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="ConeCyl.plot_msi_opened"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl.plot_msi_opened">[docs]</a>    <span class="k">def</span> <span class="nf">plot_msi_opened</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plot_type</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">r&quot;&quot;&quot;Make an opened MSI (mid-surface imperfection) plot from the current conecyl model</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        plot_type : int, optional</span>
+<span class="sd">            For cylinders only ``4`` and ``5`` are valid.</span>
+<span class="sd">            For cones all the following types can be used:</span>
+
+<span class="sd">            - ``1``: concave up (default for cones)</span>
+<span class="sd">            - ``2``: concave down</span>
+<span class="sd">            - ``3``: stretched closed</span>
+<span class="sd">            - ``4``: stretched opened (`r(z) \times \theta` vs. `H`)</span>
+<span class="sd">            - ``5``: stretched opened (`r_{bottom}` vs. `H`)</span>
+<span class="sd">            - ``6``: concave, starting at `\theta = 0`</span>
+<span class="sd">        kwargs : dict</span>
+<span class="sd">            Other keyword args will be passed to ``plot_field_data``</span>
+<span class="sd">            See the documentation of that method for more details.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        Must be called from Abaqus</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">thetas</span><span class="p">,</span> <span class="n">zs</span><span class="p">,</span> <span class="n">field</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_msi_data</span><span class="p">()</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">field</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform_plot_data</span><span class="p">(</span><span class="n">thetas</span><span class="p">,</span> <span class="n">zs</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">plot_type</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plot_field_data</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">()</span>
+            <span class="n">error</span><span class="p">(</span><span class="s">&#39;Opened MSI plot could not be generated! :(&#39;</span><span class="p">)</span>
 
 </div>
     <span class="k">def</span> <span class="nf">check_completed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wait</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">print_found</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
@@ -1084,6 +1273,55 @@
                               <span class="n">plyts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">plyts</span><span class="p">,</span>
                               <span class="n">laminaprops</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">laminaprops</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lam</span>
+
+</div>
+<div class="viewcode-block" id="ConeCyl.calc_SPL_prediction"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl.calc_SPL_prediction">[docs]</a>    <span class="k">def</span> <span class="nf">calc_SPL_prediction</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculates the predicted values for P1 and N1</span>
+<span class="sd">        based on empirically obtained formulae</span>
+
+<span class="sd">        Here P1 is the perturbation load (in N) at which a local snap-through</span>
+<span class="sd">        (LST) appears at an axial load level equal to the global buckling load.</span>
+<span class="sd">        N1 is the global buckling load that is obtained with P1 applied.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        out : tuple</span>
+<span class="sd">            2-tuple, containing the calculated values for P1 and N1</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        The empirical formulae (for now) do not take the full set of laminate</span>
+<span class="sd">        properties (A, B, D) into account. Instead, the equivalent orthotropic</span>
+<span class="sd">        material is calculated (based on the A-matrix only) and used in the</span>
+<span class="sd">        formulae.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c"># Calculate properties of equivalent orthotropic material</span>
+        <span class="n">lam</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_ABD_matrix</span><span class="p">()</span>
+        <span class="n">lam</span><span class="o">.</span><span class="n">calc_equivalent_modulus</span><span class="p">()</span>
+
+        <span class="c"># Calculate a single &#39;Equivalent modulus&#39;</span>
+        <span class="n">E_x</span> <span class="o">=</span> <span class="n">lam</span><span class="o">.</span><span class="n">e1</span>
+        <span class="n">E_y</span> <span class="o">=</span> <span class="n">lam</span><span class="o">.</span><span class="n">e2</span>
+        <span class="n">G_xy</span> <span class="o">=</span> <span class="n">lam</span><span class="o">.</span><span class="n">g12</span>
+        <span class="n">nu_norm</span> <span class="o">=</span> <span class="n">lam</span><span class="o">.</span><span class="n">nu12</span> <span class="o">/</span> <span class="p">(</span><span class="n">E_x</span><span class="o">/</span><span class="n">E_y</span><span class="p">)</span><span class="o">**</span><span class="mf">0.5</span>
+        <span class="n">E_eq_P1</span> <span class="o">=</span> <span class="n">E_x</span><span class="o">**</span><span class="mf">0.05</span> <span class="o">*</span> <span class="n">E_y</span><span class="o">**</span><span class="mf">0.59</span> <span class="o">*</span> <span class="n">G_xy</span><span class="o">**</span><span class="mf">0.36</span>
+        <span class="n">E_eq_N1</span> <span class="o">=</span> <span class="n">E_x</span><span class="o">**</span><span class="mf">0.45</span> <span class="o">*</span> <span class="n">E_y</span><span class="o">**</span><span class="mf">0.37</span> <span class="o">*</span> <span class="n">G_xy</span><span class="o">**</span><span class="mf">0.18</span>
+
+        <span class="c"># Extract some cone properties that will be needed</span>
+        <span class="n">R</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rbot</span><span class="p">)</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rtop</span><span class="p">)</span>
+        <span class="n">H</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">H</span><span class="p">)</span>
+        <span class="n">cos_alpha</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpharad</span><span class="p">)</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plyts</span><span class="p">))</span>
+
+        <span class="c"># The actual emperical formulae</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">P1</span> <span class="o">=</span> <span class="mf">2.98</span><span class="o">/</span><span class="mi">12</span> <span class="o">*</span> <span class="p">(</span><span class="n">E_eq_P1</span> <span class="o">*</span> <span class="p">(</span><span class="n">t</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="p">((</span><span class="mi">1</span> <span class="o">+</span> <span class="n">nu_norm</span><span class="p">)</span><span class="o">**</span><span class="mf">0.08</span><span class="p">)</span> <span class="o">*</span>
+                <span class="p">((</span><span class="n">R</span><span class="o">/</span><span class="n">r</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="mi">3</span><span class="p">))</span> <span class="o">*</span> <span class="n">cos_alpha</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">R</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">nu_norm</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+        <span class="c"># Divide N1 by 1000 to obtain kN instead of N</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">N1</span> <span class="o">=</span> <span class="mf">2.3</span><span class="o">/</span><span class="mi">1000</span> <span class="o">*</span> <span class="p">(</span><span class="n">E_eq_N1</span> <span class="o">*</span> <span class="p">(</span><span class="n">t</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">((</span><span class="mi">1</span> <span class="o">+</span> <span class="n">nu_norm</span><span class="p">)</span><span class="o">**</span><span class="mf">0.75</span><span class="p">)</span> <span class="o">*</span>
+                <span class="p">((</span><span class="n">R</span><span class="o">/</span><span class="n">H</span><span class="p">)</span><span class="o">**</span><span class="mf">0.06</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">cos_alpha</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">nu_norm</span><span class="o">**</span><span class="mi">7</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">P1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">N1</span>
 
 </div>
 <div class="viewcode-block" id="ConeCyl.calc_nasaKDF"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl.calc_nasaKDF">[docs]</a>    <span class="k">def</span> <span class="nf">calc_nasaKDF</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

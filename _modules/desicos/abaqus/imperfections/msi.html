@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>desicos.abaqus.imperfections.msi &mdash; DESICOS 2.3.0 documentation</title>
+    <title>desicos.abaqus.imperfections.msi &mdash; DESICOS 2.4.1 documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     '2.3.0',
+        VERSION:     '2.4.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../../_static/doctools.js"></script>
-    <link rel="top" title="DESICOS 2.3.0 documentation" href="../../../../index.html" />
+    <link rel="top" title="DESICOS 2.4.1 documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
    
   
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="../../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../index.html">DESICOS 2.3.0 documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">DESICOS 2.4.1 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../../../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
@@ -225,6 +225,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">created</span> <span class="o">=</span> <span class="bp">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">thetadegs</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pts</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span> <span class="nf">__setstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attrs</span><span class="p">):</span>
+        <span class="c"># Old versions had a bug where self.xaxis was set to &#39;amplitude&#39;</span>
+        <span class="c"># Fix that during loading</span>
+        <span class="k">if</span> <span class="n">attrs</span><span class="p">[</span><span class="s">&#39;xaxis&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;amplitude&#39;</span><span class="p">:</span>
+            <span class="n">attrs</span><span class="p">[</span><span class="s">&#39;xaxis&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;scaling_factor&#39;</span>
+            <span class="n">attrs</span><span class="p">[</span><span class="s">&#39;xaxis_label&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;Scaling factor&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">attrs</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">rebuild</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">cc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">conecyl</span>

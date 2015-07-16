@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>GUI for the Cone Ply Piece Optimization Tool &mdash; DESICOS 2.3.0 documentation</title>
+    <title>GUI for the Cone Ply Piece Optimization Tool &mdash; DESICOS 2.4.1 documentation</title>
     
     <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.3.0',
+        VERSION:     '2.4.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,9 +23,9 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <link rel="top" title="DESICOS 2.3.0 documentation" href="../../../index.html" />
+    <link rel="top" title="DESICOS 2.4.1 documentation" href="../../../index.html" />
     <link rel="up" title="Cone Ply Piece Optimization Tool (CPPOT)" href="../index.html" />
-    <link rel="next" title="Virtual Material Model Tool (VMMT)" href="../vmmt/index.html" />
+    <link rel="next" title="Virtual Material Model (VMM)" href="../vmmt/index.html" />
     <link rel="prev" title="Cone Ply Piece Optimization Tool (CPPOT)" href="../index.html" />
    
   
@@ -46,12 +46,12 @@
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="../vmmt/index.html" title="Virtual Material Model Tool (VMMT)"
+          <a href="../vmmt/index.html" title="Virtual Material Model (VMM)"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="../index.html" title="Cone Ply Piece Optimization Tool (CPPOT)"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">DESICOS 2.3.0 documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">DESICOS 2.4.1 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Tutorials</a> &raquo;</li>
           <li class="nav-item nav-item-2"><a href="../index.html" accesskey="U">Cone Ply Piece Optimization Tool (CPPOT)</a> &raquo;</li> 
       </ul>
@@ -76,9 +76,9 @@ shape for laminated cones. There are four different tools that can be used:</p>
 accessible through the Menu Bar Item ‘Tools’.</p>
 <div class="section" id="installation-requirements">
 <h2>Installation Requirements<a class="headerlink" href="#installation-requirements" title="Permalink to this headline">¶</a></h2>
-<p>To use this tool one needs Python (x,y) (full installation) and the
-Add-on <a class="reference external" href="http://toblerity.org/shapely/index.html">Shapely</a>.
-All can be downloaded at <a class="reference external" href="http://code.google.com/p/pythonxy/">http://code.google.com/p/pythonxy/</a> .</p>
+<p>To use this tool one needs Python 2.x, numpy and matplotlib, like for the
+Abaqus-plugin. Additionally, PyQt4 (<a class="reference external" href="https://wiki.python.org/moin/PyQt4">https://wiki.python.org/moin/PyQt4</a>) is
+needed.</p>
 </div>
 <div class="section" id="input-tool">
 <h2>Input Tool<a class="headerlink" href="#input-tool" title="Permalink to this headline">¶</a></h2>
@@ -186,21 +186,17 @@ tool. For this it is recommended to export the result data to Excel.</p>
 <p>This tool changes the geometry of the studied cone. This tool can be entered
 by clicking the ‘Set Cone Geometry’-Button or the ‘Cone Geometry Tool’- Item
 in the Menu ‘Tools’ in the menu bar.</p>
-<p>When started, the window in Figure 7 will be opened. On the left side are five
+<p>When started, the window in Figure 7 will be opened. On the left side are four
 changeable lines and some further information about the cone geometry. It is
-possible to change the the half-cone angle and the radii of the different cone
-parts. The parts between <img class="math" src="../../../_images/math/aa4bf74a883302b5f2daa501b664dfeb67332899.png" alt="r1"/> and <img class="math" src="../../../_images/math/f8f4ef557532aa1b5e82c6326176fed17bb1854f.png" alt="r2"/> and between <img class="math" src="../../../_images/math/8c6a144e1fc6c5e8930e3c54bf402a03b93edfc1.png" alt="r3"/> and <img class="math" src="../../../_images/math/5503550e9c9e0df59a8ead955d37954a8fc1e72f.png" alt="r4"/> are auxiliary
+possible to change the the half-cone angle and the dimensions of the cone. The
+parts between <img class="math" src="../../../_images/math/aa4bf74a883302b5f2daa501b664dfeb67332899.png" alt="r1"/> and <img class="math" src="../../../_images/math/f8f4ef557532aa1b5e82c6326176fed17bb1854f.png" alt="r2"/> and between <img class="math" src="../../../_images/math/8c6a144e1fc6c5e8930e3c54bf402a03b93edfc1.png" alt="r3"/> and <img class="math" src="../../../_images/math/5503550e9c9e0df59a8ead955d37954a8fc1e72f.png" alt="r4"/> are auxiliary
 parts used for cutting and molding the edges of the cone. Between <img class="math" src="../../../_images/math/f8f4ef557532aa1b5e82c6326176fed17bb1854f.png" alt="r2"/> and
-<img class="math" src="../../../_images/math/8c6a144e1fc6c5e8930e3c54bf402a03b93edfc1.png" alt="r3"/> is the so called free cone area.</p>
+<img class="math" src="../../../_images/math/8c6a144e1fc6c5e8930e3c54bf402a03b93edfc1.png" alt="r3"/> (each with height <img class="math" src="../../../_images/math/5b4dfe819df3c0c09e92d12de54b6910e15f8457.png" alt="H"/>) is the so called <em>free cone area</em>.</p>
 <p>The algorithm of the ply piece design will try to cover the whole cone, but
 the investigation and evaluation of the fiber angle deviation will be only
 applied to the free cone.</p>
 <p>On the right side of the window is a dynamic drawing, which will change with
-the entered values. There is also the definition of the cone coordinate system
-at the vertex.</p>
-<p>On the right side of the Input lines are the maximum length and width of the
-free cone and the length of both support areas. The length is measured in the
-z-direction.</p>
+the entered values. There is also the definition of the coordinate system.</p>
 <div class="figure" id="id7">
 <a class="reference internal image-reference" href="../../../_images/fig_071.png"><img alt="../../../_images/fig_071.png" src="../../../_images/fig_071.png" style="width: 700px;" /></a>
 <p class="caption"><span class="caption-text">Figure 7: Cone Geometry Tool</span></p>
@@ -219,7 +215,7 @@ parametric study is finished or by clicking its Item in the Input-Tool Menu
 The loading application is used when the tool is opened directly from the
 Input-Tool window. Only files created by the save-function can be loaded into
 the program and not the export files.</p>
-<p>To draw a graphic one has to choose witch results should be shown. It is
+<p>To draw a graphic one has to choose which results should be shown. It is
 possible to show all evaluation parameters in one drawing. In the next step
 one has to decide if the drawing should be a 2D or 3D Graphic. In a 2D-Graphic
 is for every design parameter an own drawing made. At each Step are the
@@ -296,7 +292,7 @@ design parameters. In  is the Tool window shown. If the ‘Plot with/without
 explanations’-box is set, the drawing contains further information about the
 input parameters.</p>
 <div class="figure" id="id13">
-<a class="reference internal image-reference" href="../../../_images/fig_131.png"><img alt="../../../_images/fig_131.png" src="../../../_images/fig_131.png" style="width: 350px;" /></a>
+<a class="reference internal image-reference" href="../../../_images/fig_131.png"><img alt="../../../_images/fig_131.png" src="../../../_images/fig_131.png" style="width: 250px;" /></a>
 <p class="caption"><span class="caption-text">Figure 13: Plot Ply Piece Tool</span></p>
 </div>
 <p>By clicking the ‘Plot Ply Pieces’-Button two new windows are opened, see
@@ -315,42 +311,6 @@ bar.</p>
 <a class="reference internal image-reference" href="../../../_images/fig_141.png"><img alt="../../../_images/fig_141.png" src="../../../_images/fig_141.png" style="width: 700px;" /></a>
 <p class="caption"><span class="caption-text">Figure 14: Example of ply piece plot</span></p>
 </div>
-<div class="section" id="cutting-design-tool">
-<h3>Cutting Design - Tool<a class="headerlink" href="#cutting-design-tool" title="Permalink to this headline">¶</a></h3>
-<p>This tool calculates the ideal cutting design for two given boundaries of the
-cone. This is necessary for tools with a finite length. As one can see in
-Figure 14, the ply pieces are larger than the outer boundaries of the cone
-(shown as blue dotted lines). If these were the boundaries of the conical
-tooling, the manufacturing would be impossible or one would have to shorten
-the ply pieces.  The cutting design tool uses the original design with the
-same design parameters as the other tools and calculates the intersections of
-the ply piece with the edges of the cone, see Figure 15.</p>
-<div class="figure" id="id15">
-<a class="reference internal image-reference" href="../../../_images/fig_151.png"><img alt="../../../_images/fig_151.png" src="../../../_images/fig_151.png" style="width: 700px;" /></a>
-<p class="caption"><span class="caption-text">Figure 15: Example of cutting design</span></p>
-</div>
-<p>The values of slower limit and supper limit are the s-coordinates of the used
-edges. The cutting design is not only useful to make the ply pieces smaller
-but also help to align the ply pieces properly. It is recommended to make
-circumferential markings of the different radii / limit values and align the
-ply pieces appropriately.</p>
-<p>The tool itself is shown in Figure 16. In the upper part of the GUI are the
-common controls for the design parameters and the cone geometry. In the last
-two rows are the controls for the upper and lower limits of s. By clicking the
-‘Calculate Cutting Shape’-Button two new windows are opened.</p>
-<div class="figure" id="id16">
-<a class="reference internal image-reference" href="../../../_images/fig_161.png"><img alt="../../../_images/fig_161.png" src="../../../_images/fig_161.png" style="width: 350px;" /></a>
-<p class="caption"><span class="caption-text">Figure 16: Cutting Design Tool</span></p>
-</div>
-<p>The opened windows show the cutting design as a drawing and the corresponding
-values of the four sides, see Figure 17. To simplify the transposing from this
-tool to any drawing software, the lengths are given relatively to the fiber
-orientation (x-axis).</p>
-<div class="figure" id="id17">
-<a class="reference internal image-reference" href="../../../_images/fig_171.png"><img alt="../../../_images/fig_171.png" src="../../../_images/fig_171.png" style="width: 700px;" /></a>
-<p class="caption"><span class="caption-text">Figure 17: Cutting Design Window</span></p>
-</div>
-</div>
 </div>
 <div class="section" id="python-programming">
 <h2>Python Programming<a class="headerlink" href="#python-programming" title="Permalink to this headline">¶</a></h2>
@@ -361,8 +321,6 @@ program and the basic ideas behind the programming.</p>
 <p>To handle the design and cone geometry parameters a python class called
 ‘DataHandle’ and the ‘ResultHandle’ for the results of the study. Both can be
 fined in <code class="docutils literal"><span class="pre">GUIHandle.py</span></code>.</p>
-<p>The DataHandle has 10 variables and set/get-methods for each of them. Except
-from the shape variable, all are arrays of integers or floats.</p>
 </div>
 <div class="section" id="gui-programming">
 <h3>GUI Programming<a class="headerlink" href="#gui-programming" title="Permalink to this headline">¶</a></h3>
@@ -374,7 +332,6 @@ the python files and the GUI-Tools:</p>
 <li>Cone Geometry Tool: <code class="docutils literal"><span class="pre">GUIConeGeo.py</span></code></li>
 <li>Evaluation Tool: <code class="docutils literal"><span class="pre">GUIEval.py</span></code></li>
 <li>Plot Ply Piece Tool: <code class="docutils literal"><span class="pre">GUIPlot.py</span></code></li>
-<li>Plot Ply Piece Tool: <code class="docutils literal"><span class="pre">GUIDesign.py</span></code></li>
 </ul>
 </div>
 <div class="section" id="backbone-programming">
@@ -382,12 +339,6 @@ the python files and the GUI-Tools:</p>
 <p>In the following list are the Python files used to calculate the shapes and
 draw the graphs:</p>
 <ul class="simple">
-<li><code class="docutils literal"><span class="pre">Bpart.py</span></code> Collection of small functions to calculate coordinate
-transformations, intersections and evaluation parameters</li>
-<li><code class="docutils literal"><span class="pre">Bproto.py</span></code> Contains the algorithms for the basic shapes: Trapez (Shape
-A), Trapez2 (Shape B), Rect (Shape C). The functions only return the
-vertices of the prototype shape., which will be later rotated around the
-cone vertex.</li>
 <li><code class="docutils literal"><span class="pre">GUICalc.py</span></code> Contains the class used to make all variations of the study.
 Is called by Input-Tool, calls afterwards the evaluation tool and shows a
 progress bar.</li>

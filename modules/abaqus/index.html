@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Abaqus Plug-In (desicos.abaqus) &mdash; DESICOS 2.3.0 documentation</title>
+    <title>Abaqus Plug-In (desicos.abaqus) &mdash; DESICOS 2.4.1 documentation</title>
     
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.3.0',
+        VERSION:     '2.4.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <link rel="top" title="DESICOS 2.3.0 documentation" href="../../index.html" />
+    <link rel="top" title="DESICOS 2.4.1 documentation" href="../../index.html" />
     <link rel="up" title="Modules" href="../index.html" />
     <link rel="prev" title="Modules" href="../index.html" />
    
@@ -47,7 +47,7 @@
         <li class="right" >
           <a href="../index.html" title="Modules"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">DESICOS 2.3.0 documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">DESICOS 2.4.1 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Modules</a> &raquo;</li> 
       </ul>
     </div>  
@@ -566,23 +566,35 @@ will be printed in the output</td>
 <tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.calc_ABD_matrix" title="desicos.abaqus.conecyl.conecyl.ConeCyl.calc_ABD_matrix"><code class="xref py py-obj docutils literal"><span class="pre">calc_ABD_matrix</span></code></a>()</td>
 <td>Calculates the laminate stiffness matrix (ABD matrix)</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.calc_nasaKDF" title="desicos.abaqus.conecyl.conecyl.ConeCyl.calc_nasaKDF"><code class="xref py py-obj docutils literal"><span class="pre">calc_nasaKDF</span></code></a>()</td>
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.calc_SPL_prediction" title="desicos.abaqus.conecyl.conecyl.ConeCyl.calc_SPL_prediction"><code class="xref py py-obj docutils literal"><span class="pre">calc_SPL_prediction</span></code></a>()</td>
+<td>Calculates the predicted values for P1 and N1</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.calc_nasaKDF" title="desicos.abaqus.conecyl.conecyl.ConeCyl.calc_nasaKDF"><code class="xref py py-obj docutils literal"><span class="pre">calc_nasaKDF</span></code></a>()</td>
 <td>Calculates the KDF using the NASA SP-8007 guideline</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.calc_partitions" title="desicos.abaqus.conecyl.conecyl.ConeCyl.calc_partitions"><code class="xref py py-obj docutils literal"><span class="pre">calc_partitions</span></code></a>([thetadegs,&nbsp;pts])</td>
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.calc_partitions" title="desicos.abaqus.conecyl.conecyl.ConeCyl.calc_partitions"><code class="xref py py-obj docutils literal"><span class="pre">calc_partitions</span></code></a>([thetadegs,&nbsp;pts])</td>
 <td>Updates all circumferential and axial positions to partition</td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">check_completed</span></code>([wait,&nbsp;print_found])</td>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">check_completed</span></code>([wait,&nbsp;print_found])</td>
 <td></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.create_model" title="desicos.abaqus.conecyl.conecyl.ConeCyl.create_model"><code class="xref py py-obj docutils literal"><span class="pre">create_model</span></code></a>([force])</td>
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.create_model" title="desicos.abaqus.conecyl.conecyl.ConeCyl.create_model"><code class="xref py py-obj docutils literal"><span class="pre">create_model</span></code></a>([force])</td>
 <td>Triggers the routines to create the model in Abaqus</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.detach_results" title="desicos.abaqus.conecyl.conecyl.ConeCyl.detach_results"><code class="xref py py-obj docutils literal"><span class="pre">detach_results</span></code></a>(odb)</td>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.detach_results" title="desicos.abaqus.conecyl.conecyl.ConeCyl.detach_results"><code class="xref py py-obj docutils literal"><span class="pre">detach_results</span></code></a>(odb)</td>
 <td>Detach an odb file from Abaqus</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.extract_fiber_orientation" title="desicos.abaqus.conecyl.conecyl.ConeCyl.extract_fiber_orientation"><code class="xref py py-obj docutils literal"><span class="pre">extract_fiber_orientation</span></code></a>(ply_index,&nbsp;...)</td>
+<td>Get the fiber orientation at the centroid of each element</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.extract_field_output" title="desicos.abaqus.conecyl.conecyl.ConeCyl.extract_field_output"><code class="xref py py-obj docutils literal"><span class="pre">extract_field_output</span></code></a>([ignore])</td>
 <td>Extract the current field output for a cylinder/cone from Abaqus</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.extract_msi_data" title="desicos.abaqus.conecyl.conecyl.ConeCyl.extract_msi_data"><code class="xref py py-obj docutils literal"><span class="pre">extract_msi_data</span></code></a>()</td>
+<td>Get a data grid representing the nodal offsets w.r.t.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.extract_thickness_data" title="desicos.abaqus.conecyl.conecyl.ConeCyl.extract_thickness_data"><code class="xref py py-obj docutils literal"><span class="pre">extract_thickness_data</span></code></a>()</td>
+<td>Get the thickness at the centroid of each element</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.fr" title="desicos.abaqus.conecyl.conecyl.ConeCyl.fr"><code class="xref py py-obj docutils literal"><span class="pre">fr</span></code></a>(z)</td>
 <td>Calculates the radius at a given <code class="docutils literal"><span class="pre">z</span></code> position</td>
@@ -605,34 +617,43 @@ will be printed in the output</td>
 <tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">plot_forces</span></code>(**kwargs)</td>
 <td></td>
 </tr>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.plot_msi_opened" title="desicos.abaqus.conecyl.conecyl.ConeCyl.plot_msi_opened"><code class="xref py py-obj docutils literal"><span class="pre">plot_msi_opened</span></code></a>([plot_type])</td>
+<td>Make an opened MSI (mid-surface imperfection) plot from the current conecyl model</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.plot_orientation_opened" title="desicos.abaqus.conecyl.conecyl.ConeCyl.plot_orientation_opened"><code class="xref py py-obj docutils literal"><span class="pre">plot_orientation_opened</span></code></a>(ply_index,&nbsp;use_elements)</td>
+<td>Make a fiber orientation plot from the current cone model</td>
+</tr>
 <tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">plot_stress_analysis</span></code>(**kwargs)</td>
 <td></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">plot_xy</span></code>(xs,&nbsp;ys,&nbsp;**kwargs)</td>
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.plot_thickness_opened" title="desicos.abaqus.conecyl.conecyl.ConeCyl.plot_thickness_opened"><code class="xref py py-obj docutils literal"><span class="pre">plot_thickness_opened</span></code></a>([plot_type])</td>
+<td>Make an opened thickness plot from the current conecyl model</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">plot_xy</span></code>(xs,&nbsp;ys,&nbsp;**kwargs)</td>
 <td></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.prepare_to_save" title="desicos.abaqus.conecyl.conecyl.ConeCyl.prepare_to_save"><code class="xref py py-obj docutils literal"><span class="pre">prepare_to_save</span></code></a>()</td>
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.prepare_to_save" title="desicos.abaqus.conecyl.conecyl.ConeCyl.prepare_to_save"><code class="xref py py-obj docutils literal"><span class="pre">prepare_to_save</span></code></a>()</td>
 <td>Prepare the <a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl" title="desicos.abaqus.conecyl.conecyl.ConeCyl"><code class="xref py py-class docutils literal"><span class="pre">ConeCyl</span></code></a> to be saved</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.r_z_from_pt" title="desicos.abaqus.conecyl.conecyl.ConeCyl.r_z_from_pt"><code class="xref py py-obj docutils literal"><span class="pre">r_z_from_pt</span></code></a>([pt])</td>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.r_z_from_pt" title="desicos.abaqus.conecyl.conecyl.ConeCyl.r_z_from_pt"><code class="xref py py-obj docutils literal"><span class="pre">r_z_from_pt</span></code></a>([pt])</td>
 <td>Radius and the axial position from a given normalized position</td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">read_outputs</span></code>(**kwargs)</td>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">read_outputs</span></code>(**kwargs)</td>
 <td></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">read_walltime</span></code>()</td>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">read_walltime</span></code>()</td>
 <td></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.rebuild" title="desicos.abaqus.conecyl.conecyl.ConeCyl.rebuild"><code class="xref py py-obj docutils literal"><span class="pre">rebuild</span></code></a>([force,&nbsp;save_rebuild])</td>
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.rebuild" title="desicos.abaqus.conecyl.conecyl.ConeCyl.rebuild"><code class="xref py py-obj docutils literal"><span class="pre">rebuild</span></code></a>([force,&nbsp;save_rebuild])</td>
 <td>Updates the properties of the current <a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl" title="desicos.abaqus.conecyl.conecyl.ConeCyl"><code class="xref py py-class docutils literal"><span class="pre">ConeCyl</span></code></a> object</td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">stress_analysis</span></code>(**kwargs)</td>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">stress_analysis</span></code>(**kwargs)</td>
 <td></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.transform_plot_data" title="desicos.abaqus.conecyl.conecyl.ConeCyl.transform_plot_data"><code class="xref py py-obj docutils literal"><span class="pre">transform_plot_data</span></code></a>(thetas,&nbsp;zs,&nbsp;plot_type)</td>
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.transform_plot_data" title="desicos.abaqus.conecyl.conecyl.ConeCyl.transform_plot_data"><code class="xref py py-obj docutils literal"><span class="pre">transform_plot_data</span></code></a>(thetas,&nbsp;zs,&nbsp;values,&nbsp;...)</td>
 <td>Transform coordinates of plot data, to prepare for plotting</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.write_job" title="desicos.abaqus.conecyl.conecyl.ConeCyl.write_job"><code class="xref py py-obj docutils literal"><span class="pre">write_job</span></code></a>([submit,&nbsp;wait,&nbsp;multiple_cores])</td>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.write_job" title="desicos.abaqus.conecyl.conecyl.ConeCyl.write_job"><code class="xref py py-obj docutils literal"><span class="pre">write_job</span></code></a>([submit,&nbsp;wait,&nbsp;multiple_cores])</td>
 <td>Writes the job of the corresponding Abaqus model</td>
 </tr>
 </tbody>
@@ -662,6 +683,33 @@ Abaqus.</p>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="method">
+<dt id="desicos.abaqus.conecyl.conecyl.ConeCyl.calc_SPL_prediction">
+<code class="descname">calc_SPL_prediction</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/abaqus/conecyl/conecyl.html#ConeCyl.calc_SPL_prediction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.calc_SPL_prediction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the predicted values for P1 and N1
+based on empirically obtained formulae</p>
+<p>Here P1 is the perturbation load (in N) at which a local snap-through
+(LST) appears at an axial load level equal to the global buckling load.
+N1 is the global buckling load that is obtained with P1 applied.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>out</strong> : tuple</p>
+<blockquote class="last">
+<div><p>2-tuple, containing the calculated values for P1 and N1</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>The empirical formulae (for now) do not take the full set of laminate
+properties (A, B, D) into account. Instead, the equivalent orthotropic
+material is calculated (based on the A-matrix only) and used in the
+formulae.</p>
 </dd></dl>
 
 <dl class="method">
@@ -753,6 +801,39 @@ corresponding to this <a class="reference internal" href="#desicos.abaqus.conecy
 </dd></dl>
 
 <dl class="method">
+<dt id="desicos.abaqus.conecyl.conecyl.ConeCyl.extract_fiber_orientation">
+<code class="descname">extract_fiber_orientation</code><span class="sig-paren">(</span><em>ply_index</em>, <em>use_elements</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/abaqus/conecyl/conecyl.html#ConeCyl.extract_fiber_orientation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.extract_fiber_orientation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the fiber orientation at the centroid of each element</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>ply_index</strong> : int</p>
+<blockquote>
+<div><p>Index of the ply of interest</p>
+</div></blockquote>
+<p><strong>use_elements</strong> : bool</p>
+<blockquote>
+<div><p>If <code class="docutils literal"><span class="pre">True</span></code>, use the actual element centroids (from Abaqus)
+If <code class="docutils literal"><span class="pre">False</span></code>, estimate their locations instead.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>out</strong> : tuple</p>
+<blockquote class="last">
+<div><p>Where <code class="docutils literal"><span class="pre">out[0]</span></code> and <code class="docutils literal"><span class="pre">out[1]</span></code> contain the circumferential (theta)
+and vertical (z) coordinates and <code class="docutils literal"><span class="pre">out[2]</span></code> the corresponding
+values.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Must be called from Abaqus if <code class="docutils literal"><span class="pre">use_elements</span> <span class="pre">==</span> <span class="pre">True</span></code></p>
+</dd></dl>
+
+<dl class="method">
 <dt id="desicos.abaqus.conecyl.conecyl.ConeCyl.extract_field_output">
 <code class="descname">extract_field_output</code><span class="sig-paren">(</span><em>ignore=[]</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/abaqus/conecyl/conecyl.html#ConeCyl.extract_field_output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.extract_field_output" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract the current field output for a cylinder/cone from Abaqus</p>
@@ -778,6 +859,51 @@ values.</p>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="method">
+<dt id="desicos.abaqus.conecyl.conecyl.ConeCyl.extract_msi_data">
+<code class="descname">extract_msi_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/abaqus/conecyl/conecyl.html#ConeCyl.extract_msi_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.extract_msi_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a data grid representing the nodal offsets w.r.t. the
+reference surface, caused by mid-surface imperfection(s).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>out</strong> : tuple</p>
+<blockquote class="last">
+<div><p>Where <code class="docutils literal"><span class="pre">out[0]</span></code> and <code class="docutils literal"><span class="pre">out[1]</span></code> contain the circumferential (theta)
+and vertical (z) coordinates and <code class="docutils literal"><span class="pre">out[2]</span></code> the corresponding
+imperfection offsets.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Must be called from Abaqus</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="desicos.abaqus.conecyl.conecyl.ConeCyl.extract_thickness_data">
+<code class="descname">extract_thickness_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/abaqus/conecyl/conecyl.html#ConeCyl.extract_thickness_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.extract_thickness_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the thickness at the centroid of each element</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>out</strong> : tuple</p>
+<blockquote class="last">
+<div><p>Where <code class="docutils literal"><span class="pre">out[0]</span></code> and <code class="docutils literal"><span class="pre">out[1]</span></code> contain the circumferential (theta)
+and vertical (z) coordinates and <code class="docutils literal"><span class="pre">out[2]</span></code> the corresponding
+thicknesses.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Must be called from Abaqus</p>
 </dd></dl>
 
 <dl class="method">
@@ -874,6 +1000,7 @@ For cones all the following types can be used:</p>
 <li><code class="docutils literal"><span class="pre">3</span></code>: stretched closed</li>
 <li><code class="docutils literal"><span class="pre">4</span></code>: stretched opened (<img class="math" src="../../_images/math/7e78f20e2452971ffe8ac1537a12e4ddd41b69d2.png" alt="r(z) \times \theta"/> vs. <img class="math" src="../../_images/math/5b4dfe819df3c0c09e92d12de54b6910e15f8457.png" alt="H"/>)</li>
 <li><code class="docutils literal"><span class="pre">5</span></code>: stretched opened (<img class="math" src="../../_images/math/4549d58d6609928262333a15e47dfc944da71a7e.png" alt="r_{bottom}"/> vs. <img class="math" src="../../_images/math/5b4dfe819df3c0c09e92d12de54b6910e15f8457.png" alt="H"/>)</li>
+<li><code class="docutils literal"><span class="pre">6</span></code>: concave, starting at <img class="math" src="../../_images/math/f0fa61b6b88ccfe00b191a2d1d06c5c0c28a5ef8.png" alt="\theta = 0"/></li>
 </ul>
 </div></blockquote>
 <p><strong>kwargs</strong> : dict</p>
@@ -897,7 +1024,7 @@ field output.</p>
 
 <dl class="method">
 <dt id="desicos.abaqus.conecyl.conecyl.ConeCyl.plot_field_data">
-<code class="descname">plot_field_data</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>field</em>, <em>create_npz_only=False</em>, <em>ax=None</em>, <em>figsize=(3.3</em>, <em>3.3)</em>, <em>save_png=True</em>, <em>aspect='equal'</em>, <em>clean=True</em>, <em>outpath=''</em>, <em>pngname='plot_from_abaqus.png'</em>, <em>npzname='plot_from_abaqus.npz'</em>, <em>pyname='plot_from_abaqus.py'</em>, <em>num_levels=400</em>, <em>show_colorbar=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/abaqus/conecyl/conecyl.html#ConeCyl.plot_field_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.plot_field_data" title="Permalink to this definition">¶</a></dt>
+<code class="descname">plot_field_data</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>field</em>, <em>create_npz_only=False</em>, <em>ax=None</em>, <em>figsize=(3.3</em>, <em>3.3)</em>, <em>save_png=True</em>, <em>aspect='equal'</em>, <em>clean=True</em>, <em>outpath=''</em>, <em>pngname='plot_from_abaqus.png'</em>, <em>npzname='plot_from_abaqus.npz'</em>, <em>pyname='plot_from_abaqus.py'</em>, <em>num_levels=400</em>, <em>show_colorbar=True</em>, <em>lines=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/abaqus/conecyl/conecyl.html#ConeCyl.plot_field_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.plot_field_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Print data field output to a file</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -963,8 +1090,14 @@ saved (see notes).</p>
 <div><p>Number of contour levels (higher values make the contour smoother).</p>
 </div></blockquote>
 <p><strong>show_colorbar</strong> : bool, optional</p>
-<blockquote class="last">
+<blockquote>
 <div><p>Include a color bar in the figure.</p>
+</div></blockquote>
+<p><strong>lines</strong> : list, optional</p>
+<blockquote class="last">
+<div><p>List of lines to draw on top of the contour plot. Each line is
+either a 2-tuple (list of x-coords, list of y-coords), or a 2xN
+numpy array.</p>
 </div></blockquote>
 </td>
 </tr>
@@ -975,6 +1108,117 @@ saved (see notes).</p>
 <code class="docutils literal"><span class="pre">npzname</span></code> with an accompanying script for plotting
 <code class="docutils literal"><span class="pre">pyname</span></code>, very handy when Matplotlib is not
 importable from Abaqus.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="desicos.abaqus.conecyl.conecyl.ConeCyl.plot_msi_opened">
+<code class="descname">plot_msi_opened</code><span class="sig-paren">(</span><em>plot_type=1</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/abaqus/conecyl/conecyl.html#ConeCyl.plot_msi_opened"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.plot_msi_opened" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make an opened MSI (mid-surface imperfection) plot from the current conecyl model</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>plot_type</strong> : int, optional</p>
+<blockquote>
+<div><p>For cylinders only <code class="docutils literal"><span class="pre">4</span></code> and <code class="docutils literal"><span class="pre">5</span></code> are valid.
+For cones all the following types can be used:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">1</span></code>: concave up (default for cones)</li>
+<li><code class="docutils literal"><span class="pre">2</span></code>: concave down</li>
+<li><code class="docutils literal"><span class="pre">3</span></code>: stretched closed</li>
+<li><code class="docutils literal"><span class="pre">4</span></code>: stretched opened (<img class="math" src="../../_images/math/7e78f20e2452971ffe8ac1537a12e4ddd41b69d2.png" alt="r(z) \times \theta"/> vs. <img class="math" src="../../_images/math/5b4dfe819df3c0c09e92d12de54b6910e15f8457.png" alt="H"/>)</li>
+<li><code class="docutils literal"><span class="pre">5</span></code>: stretched opened (<img class="math" src="../../_images/math/4549d58d6609928262333a15e47dfc944da71a7e.png" alt="r_{bottom}"/> vs. <img class="math" src="../../_images/math/5b4dfe819df3c0c09e92d12de54b6910e15f8457.png" alt="H"/>)</li>
+<li><code class="docutils literal"><span class="pre">6</span></code>: concave, starting at <img class="math" src="../../_images/math/f0fa61b6b88ccfe00b191a2d1d06c5c0c28a5ef8.png" alt="\theta = 0"/></li>
+</ul>
+</div></blockquote>
+<p><strong>kwargs</strong> : dict</p>
+<blockquote class="last">
+<div><p>Other keyword args will be passed to <code class="docutils literal"><span class="pre">plot_field_data</span></code>
+See the documentation of that method for more details.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Must be called from Abaqus</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="desicos.abaqus.conecyl.conecyl.ConeCyl.plot_orientation_opened">
+<code class="descname">plot_orientation_opened</code><span class="sig-paren">(</span><em>ply_index</em>, <em>use_elements</em>, <em>plot_type=1</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/abaqus/conecyl/conecyl.html#ConeCyl.plot_orientation_opened"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.plot_orientation_opened" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a fiber orientation plot from the current cone model</p>
+<p>Only valid for cones that have a ply piece imperfection.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>ply_index</strong> : int</p>
+<blockquote>
+<div><p>Index of the ply of interest</p>
+</div></blockquote>
+<p><strong>use_elements</strong> : bool</p>
+<blockquote>
+<div><p>If <code class="docutils literal"><span class="pre">True</span></code>, use the actual element centroids (from Abaqus)
+If <code class="docutils literal"><span class="pre">False</span></code>, estimate their locations instead.</p>
+</div></blockquote>
+<p><strong>plot_type</strong> : int, optional</p>
+<blockquote>
+<div><p>For cones all the following types can be used:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">1</span></code>: concave up (default for cones)</li>
+<li><code class="docutils literal"><span class="pre">2</span></code>: concave down</li>
+<li><code class="docutils literal"><span class="pre">3</span></code>: stretched closed</li>
+<li><code class="docutils literal"><span class="pre">4</span></code>: stretched opened (<img class="math" src="../../_images/math/7e78f20e2452971ffe8ac1537a12e4ddd41b69d2.png" alt="r(z) \times \theta"/> vs. <img class="math" src="../../_images/math/5b4dfe819df3c0c09e92d12de54b6910e15f8457.png" alt="H"/>)</li>
+<li><code class="docutils literal"><span class="pre">5</span></code>: stretched opened (<img class="math" src="../../_images/math/4549d58d6609928262333a15e47dfc944da71a7e.png" alt="r_{bottom}"/> vs. <img class="math" src="../../_images/math/5b4dfe819df3c0c09e92d12de54b6910e15f8457.png" alt="H"/>)</li>
+<li><code class="docutils literal"><span class="pre">6</span></code>: concave, starting at <img class="math" src="../../_images/math/f0fa61b6b88ccfe00b191a2d1d06c5c0c28a5ef8.png" alt="\theta = 0"/></li>
+</ul>
+</div></blockquote>
+<p><strong>kwargs</strong> : dict</p>
+<blockquote class="last">
+<div><p>Other keyword args will be passed to <code class="docutils literal"><span class="pre">plot_field_data</span></code>
+See the documentation of that method for more details.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Must be called from Abaqus if <code class="docutils literal"><span class="pre">use_elements</span> <span class="pre">==</span> <span class="pre">True</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="desicos.abaqus.conecyl.conecyl.ConeCyl.plot_thickness_opened">
+<code class="descname">plot_thickness_opened</code><span class="sig-paren">(</span><em>plot_type=1</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/abaqus/conecyl/conecyl.html#ConeCyl.plot_thickness_opened"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.plot_thickness_opened" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make an opened thickness plot from the current conecyl model</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>plot_type</strong> : int, optional</p>
+<blockquote>
+<div><p>For cylinders only <code class="docutils literal"><span class="pre">4</span></code> and <code class="docutils literal"><span class="pre">5</span></code> are valid.
+For cones all the following types can be used:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">1</span></code>: concave up (default for cones)</li>
+<li><code class="docutils literal"><span class="pre">2</span></code>: concave down</li>
+<li><code class="docutils literal"><span class="pre">3</span></code>: stretched closed</li>
+<li><code class="docutils literal"><span class="pre">4</span></code>: stretched opened (<img class="math" src="../../_images/math/7e78f20e2452971ffe8ac1537a12e4ddd41b69d2.png" alt="r(z) \times \theta"/> vs. <img class="math" src="../../_images/math/5b4dfe819df3c0c09e92d12de54b6910e15f8457.png" alt="H"/>)</li>
+<li><code class="docutils literal"><span class="pre">5</span></code>: stretched opened (<img class="math" src="../../_images/math/4549d58d6609928262333a15e47dfc944da71a7e.png" alt="r_{bottom}"/> vs. <img class="math" src="../../_images/math/5b4dfe819df3c0c09e92d12de54b6910e15f8457.png" alt="H"/>)</li>
+<li><code class="docutils literal"><span class="pre">6</span></code>: concave, starting at <img class="math" src="../../_images/math/f0fa61b6b88ccfe00b191a2d1d06c5c0c28a5ef8.png" alt="\theta = 0"/></li>
+</ul>
+</div></blockquote>
+<p><strong>kwargs</strong> : dict</p>
+<blockquote class="last">
+<div><p>Other keyword args will be passed to <code class="docutils literal"><span class="pre">plot_field_data</span></code>
+See the documentation of that method for more details.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Must be called from Abaqus</p>
 </dd></dl>
 
 <dl class="method">
@@ -1036,19 +1280,23 @@ update.</p>
 
 <dl class="method">
 <dt id="desicos.abaqus.conecyl.conecyl.ConeCyl.transform_plot_data">
-<code class="descname">transform_plot_data</code><span class="sig-paren">(</span><em>thetas</em>, <em>zs</em>, <em>plot_type</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/abaqus/conecyl/conecyl.html#ConeCyl.transform_plot_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.transform_plot_data" title="Permalink to this definition">¶</a></dt>
+<code class="descname">transform_plot_data</code><span class="sig-paren">(</span><em>thetas</em>, <em>zs</em>, <em>values</em>, <em>plot_type</em>, <em>wrap=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/abaqus/conecyl/conecyl.html#ConeCyl.transform_plot_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.transform_plot_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Transform coordinates of plot data, to prepare for plotting</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>theta</strong> : numpy.array</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>thetas</strong> : numpy.array</p>
 <blockquote>
 <div><p>Array of circumferential coordinates</p>
 </div></blockquote>
-<p><strong>z</strong> : numpy.array</p>
+<p><strong>zs</strong> : numpy.array</p>
 <blockquote>
 <div><p>Array of vertical coordinates</p>
+</div></blockquote>
+<p><strong>values</strong> : numpy.array</p>
+<blockquote>
+<div><p>Array of values</p>
 </div></blockquote>
 <p><strong>plot_type</strong> : int, optional</p>
 <blockquote>
@@ -1060,14 +1308,20 @@ For cones all the following types can be used:</p>
 <li><code class="docutils literal"><span class="pre">3</span></code>: stretched closed</li>
 <li><code class="docutils literal"><span class="pre">4</span></code>: stretched opened (<img class="math" src="../../_images/math/7e78f20e2452971ffe8ac1537a12e4ddd41b69d2.png" alt="r(z) \times \theta"/> vs. <img class="math" src="../../_images/math/5b4dfe819df3c0c09e92d12de54b6910e15f8457.png" alt="H"/>)</li>
 <li><code class="docutils literal"><span class="pre">5</span></code>: stretched opened (<img class="math" src="../../_images/math/4549d58d6609928262333a15e47dfc944da71a7e.png" alt="r_{bottom}"/> vs. <img class="math" src="../../_images/math/5b4dfe819df3c0c09e92d12de54b6910e15f8457.png" alt="H"/>)</li>
+<li><code class="docutils literal"><span class="pre">6</span></code>: concave, starting at <img class="math" src="../../_images/math/f0fa61b6b88ccfe00b191a2d1d06c5c0c28a5ef8.png" alt="\theta = 0"/></li>
 </ul>
+</div></blockquote>
+<p><strong>wrap</strong> : bool, optional</p>
+<blockquote>
+<div><p>If <code class="docutils literal"><span class="pre">True</span></code>, wrap <img class="math" src="../../_images/math/4dc4789b8e2f448615b3e2c2bdc22fb9267f7cd8.png" alt="\theta"/>-coordinates to within the correct
+range (either <img class="math" src="../../_images/math/b2076ff47ca66c21673f513d09d1f061ca292b4c.png" alt="0..2\pi"/> or <img class="math" src="../../_images/math/d9cb891d2114eaf21e833718edd10c38af5550e5.png" alt="-\pi..\pi"/>).</p>
 </div></blockquote>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>out</strong> : tuple</p>
 <blockquote class="last">
 <div><p>Where <code class="docutils literal"><span class="pre">out[0]</span></code> and <code class="docutils literal"><span class="pre">out[1]</span></code> contain the horizontal and
-vertical grids of coordinates.</p>
+vertical grids of coordinates and <code class="docutils literal"><span class="pre">out[2]</span></code> the values.</p>
 </div></blockquote>
 </td>
 </tr>
@@ -1211,6 +1465,14 @@ objects</td>
 <tr class="row-even"><td>cutouts</td>
 <td><code class="docutils literal"><span class="pre">list</span></code> of <a class="reference internal" href="#desicos.abaqus.imperfections.cutout.Cutout" title="desicos.abaqus.imperfections.cutout.Cutout"><code class="xref py py-class docutils literal"><span class="pre">Cutout</span></code></a> objects</td>
 </tr>
+<tr class="row-odd"><td>ppi</td>
+<td><a class="reference internal" href="#desicos.abaqus.imperfections.ppi.PPI" title="desicos.abaqus.imperfections.ppi.PPI"><code class="xref py py-class docutils literal"><span class="pre">PPI</span></code></a> (Ply Piece Imperfection) object or
+<code class="docutils literal"><span class="pre">None</span></code> if not set</td>
+</tr>
+<tr class="row-even"><td>ffi</td>
+<td><a class="reference internal" href="#desicos.abaqus.imperfections.ffi.FFI" title="desicos.abaqus.imperfections.ffi.FFI"><code class="xref py py-class docutils literal"><span class="pre">FFI</span></code></a> (Fiber Fraction Imperfection) object or
+<code class="docutils literal"><span class="pre">None</span></code> if not set</td>
+</tr>
 </tbody>
 </table>
 <p class="rubric">Methods</p>
@@ -1223,26 +1485,32 @@ objects</td>
 <tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_axisymmetric" title="desicos.abaqus.imperfections.impconf.ImpConf.add_axisymmetric"><code class="xref py py-obj docutils literal"><span class="pre">add_axisymmetric</span></code></a>(pt,&nbsp;b,&nbsp;wb)</td>
 <td>Add an Axisymmetric Imperfection (AI)</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_cutout" title="desicos.abaqus.imperfections.impconf.ImpConf.add_cutout"><code class="xref py py-obj docutils literal"><span class="pre">add_cutout</span></code></a>(thetadeg,&nbsp;pt,&nbsp;d[,&nbsp;drill_offset_deg])</td>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_cutout" title="desicos.abaqus.imperfections.impconf.ImpConf.add_cutout"><code class="xref py py-obj docutils literal"><span class="pre">add_cutout</span></code></a>(thetadeg,&nbsp;pt,&nbsp;d[,&nbsp;...])</td>
 <td>Add a cutout</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_dimple" title="desicos.abaqus.imperfections.impconf.ImpConf.add_dimple"><code class="xref py py-obj docutils literal"><span class="pre">add_dimple</span></code></a>(thetadeg,&nbsp;pt,&nbsp;a,&nbsp;b,&nbsp;wb)</td>
 <td>Add a Dimple Imperfection (DI)</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_lbmi" title="desicos.abaqus.imperfections.impconf.ImpConf.add_lbmi"><code class="xref py py-obj docutils literal"><span class="pre">add_lbmi</span></code></a>(mode,&nbsp;scaling_factor)</td>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_ffi" title="desicos.abaqus.imperfections.impconf.ImpConf.add_ffi"><code class="xref py py-obj docutils literal"><span class="pre">add_ffi</span></code></a>(nominal_vf,&nbsp;E_matrix,&nbsp;nu_matrix,&nbsp;use_ti)</td>
+<td>Adds Fiber Fraction Imperfection (FFI)</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_lbmi" title="desicos.abaqus.imperfections.impconf.ImpConf.add_lbmi"><code class="xref py py-obj docutils literal"><span class="pre">add_lbmi</span></code></a>(mode,&nbsp;scaling_factor)</td>
 <td>Add a Linear Buckling Mode-shaped Imperfection (LBMI)</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_measured_u3s_bottom_edge" title="desicos.abaqus.imperfections.impconf.ImpConf.add_measured_u3s_bottom_edge"><code class="xref py py-obj docutils literal"><span class="pre">add_measured_u3s_bottom_edge</span></code></a>(thetadegs,&nbsp;u3s)</td>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_measured_u3s_bottom_edge" title="desicos.abaqus.imperfections.impconf.ImpConf.add_measured_u3s_bottom_edge"><code class="xref py py-obj docutils literal"><span class="pre">add_measured_u3s_bottom_edge</span></code></a>(thetadegs,&nbsp;u3s)</td>
 <td>Add a measured uneven bottom edge</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_measured_u3s_top_edge" title="desicos.abaqus.imperfections.impconf.ImpConf.add_measured_u3s_top_edge"><code class="xref py py-obj docutils literal"><span class="pre">add_measured_u3s_top_edge</span></code></a>(thetadegs,&nbsp;u3s)</td>
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_measured_u3s_top_edge" title="desicos.abaqus.imperfections.impconf.ImpConf.add_measured_u3s_top_edge"><code class="xref py py-obj docutils literal"><span class="pre">add_measured_u3s_top_edge</span></code></a>(thetadegs,&nbsp;u3s)</td>
 <td>Add a measured uneven top edge</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_msi" title="desicos.abaqus.imperfections.impconf.ImpConf.add_msi"><code class="xref py py-obj docutils literal"><span class="pre">add_msi</span></code></a>([imp_ms,&nbsp;scaling_factor,&nbsp;...])</td>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_msi" title="desicos.abaqus.imperfections.impconf.ImpConf.add_msi"><code class="xref py py-obj docutils literal"><span class="pre">add_msi</span></code></a>([imp_ms,&nbsp;scaling_factor,&nbsp;...])</td>
 <td>Add a Mid-Surface Imperfection (MSI)</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_pload" title="desicos.abaqus.imperfections.impconf.ImpConf.add_pload"><code class="xref py py-obj docutils literal"><span class="pre">add_pload</span></code></a>(thetadeg,&nbsp;pt,&nbsp;pltotal[,&nbsp;step])</td>
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_pload" title="desicos.abaqus.imperfections.impconf.ImpConf.add_pload"><code class="xref py py-obj docutils literal"><span class="pre">add_pload</span></code></a>(thetadeg,&nbsp;pt,&nbsp;pltotal[,&nbsp;step])</td>
 <td>Add a Perturbation Load</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_ppi" title="desicos.abaqus.imperfections.impconf.ImpConf.add_ppi"><code class="xref py py-obj docutils literal"><span class="pre">add_ppi</span></code></a>(info,&nbsp;extra_height)</td>
+<td>Adds Ply Piece Imperfection (PPI)</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_shim_bottom_edge" title="desicos.abaqus.imperfections.impconf.ImpConf.add_shim_bottom_edge"><code class="xref py py-obj docutils literal"><span class="pre">add_shim_bottom_edge</span></code></a>(thetadeg,&nbsp;thick,&nbsp;width)</td>
 <td>Add a Shim to the bottom edge</td>
@@ -1292,7 +1560,7 @@ objects</td>
 
 <dl class="method">
 <dt id="desicos.abaqus.imperfections.impconf.ImpConf.add_cutout">
-<code class="descname">add_cutout</code><span class="sig-paren">(</span><em>thetadeg</em>, <em>pt</em>, <em>d</em>, <em>drill_offset_deg=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/abaqus/imperfections/impconf.html#ImpConf.add_cutout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_cutout" title="Permalink to this definition">¶</a></dt>
+<code class="descname">add_cutout</code><span class="sig-paren">(</span><em>thetadeg</em>, <em>pt</em>, <em>d</em>, <em>drill_offset_deg=0.0</em>, <em>clearance_factor=0.75</em>, <em>numel_radial_edge=4</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/abaqus/imperfections/impconf.html#ImpConf.add_cutout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_cutout" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a cutout</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1310,11 +1578,23 @@ objects</td>
 <blockquote>
 <div><p>Diameter of the drilling machine.</p>
 </div></blockquote>
-<p><strong>drill_offset_deg</strong> : float</p>
+<p><strong>drill_offset_deg</strong> : float, optional</p>
 <blockquote>
 <div><p>Angular offset when the drilling is not normal to the shell
 surface. A positive offset means a positive rotation about the
 <img class="math" src="../../_images/math/4dc4789b8e2f448615b3e2c2bdc22fb9267f7cd8.png" alt="\theta"/> axis, along the meridional plane.</p>
+</div></blockquote>
+<p><strong>clearance_factor</strong> : float, optional</p>
+<blockquote>
+<div><p>Fraction of the diameter to apply as clearance around the cutout.
+This clearance is partitoned and meshed separately from the rest of
+the cone / cylinder.</p>
+</div></blockquote>
+<p><strong>numel_radial_edge</strong> : int, optional</p>
+<blockquote>
+<div><p>Number of elements along the radial edges about the cutout center.
+This parameter affects the aspect ratio of the elements inside the
+cutout area.</p>
 </div></blockquote>
 </td>
 </tr>
@@ -1352,6 +1632,48 @@ surface. A positive offset means a positive rotation about the
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>d</strong> : <a class="reference internal" href="#desicos.abaqus.imperfections.dimple.Dimple" title="desicos.abaqus.imperfections.dimple.Dimple"><code class="xref py py-class docutils literal"><span class="pre">Dimple</span></code></a> object.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="desicos.abaqus.imperfections.impconf.ImpConf.add_ffi">
+<code class="descname">add_ffi</code><span class="sig-paren">(</span><em>nominal_vf</em>, <em>E_matrix</em>, <em>nu_matrix</em>, <em>use_ti</em>, <em>global_sf=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/abaqus/imperfections/impconf.html#ImpConf.add_ffi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_ffi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds Fiber Fraction Imperfection (FFI)</p>
+<p>There can be only one of these, so calling this function overrides the
+previous imperfection, if any.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>nominal_vf</strong> : float</p>
+<blockquote>
+<div><p>Nominal fiber volume fraction of the material</p>
+</div></blockquote>
+<p><strong>E_matrix</strong> : float</p>
+<blockquote>
+<div><p>Young&#8217;s modulus of the matrix material</p>
+</div></blockquote>
+<p><strong>nu_matrix</strong> : float</p>
+<blockquote>
+<div><p>Poisson&#8217;s ratio of the matrix material</p>
+</div></blockquote>
+<p><strong>use_ti</strong> : bool</p>
+<blockquote>
+<div><p>If <code class="docutils literal"><span class="pre">True</span></code>, create varying material properties according to the
+thickness imperfection data (if present).</p>
+</div></blockquote>
+<p><strong>global_sf</strong> : float or <code class="docutils literal"><span class="pre">None</span></code></p>
+<blockquote>
+<div><p>Global scaling factor to apply to the material thickness.
+Set to <code class="docutils literal"><span class="pre">None</span></code> to disable. The global scaling may be overridden
+by a thickness imperfection, if <code class="docutils literal"><span class="pre">use_ti</span></code> (see above) is <code class="docutils literal"><span class="pre">True</span></code>.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>ffi</strong> : <a class="reference internal" href="#desicos.abaqus.imperfections.ffi.FFI" title="desicos.abaqus.imperfections.ffi.FFI"><code class="xref py py-class docutils literal"><span class="pre">FFI</span></code></a> object.</p>
 </td>
 </tr>
 </tbody>
@@ -1570,6 +1892,36 @@ normally to the shell surface).</p>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>pload</strong> : <a class="reference internal" href="#desicos.abaqus.imperfections.pload.PLoad" title="desicos.abaqus.imperfections.pload.PLoad"><code class="xref py py-class docutils literal"><span class="pre">PLoad</span></code></a> object.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="desicos.abaqus.imperfections.impconf.ImpConf.add_ppi">
+<code class="descname">add_ppi</code><span class="sig-paren">(</span><em>info</em>, <em>extra_height</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/abaqus/imperfections/impconf.html#ImpConf.add_ppi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.imperfections.impconf.ImpConf.add_ppi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds Ply Piece Imperfection (PPI)</p>
+<p>There can be only one of these, so calling this function overrides the
+previous imperfection, if any.
+Note: Applicable for cones only!</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>info</strong> : list</p>
+<blockquote>
+<div><p>List of dictionaries with info about the layup of this cone.
+See <a class="reference internal" href="#desicos.abaqus.imperfections.ppi.PPI" title="desicos.abaqus.imperfections.ppi.PPI"><code class="xref py py-class docutils literal"><span class="pre">PPI</span></code></a> for more details</p>
+</div></blockquote>
+<p><strong>extra_height</strong> : float</p>
+<blockquote>
+<div><p>Extra height above and below the cone height (<img class="math" src="../../_images/math/b8d65d41c45d33bd8883577210c0d837bb2d7f1a.png" alt="cc.H"/>) to consider
+in the ply placement model.</p>
+</div></blockquote>
+<p><strong>Returns</strong> :</p>
+<p><strong>&#8212;&#8212;-</strong> :</p>
+<p class="last"><strong>ppi</strong> : <a class="reference internal" href="#desicos.abaqus.imperfections.ppi.PPI" title="desicos.abaqus.imperfections.ppi.PPI"><code class="xref py py-class docutils literal"><span class="pre">PPI</span></code></a> object.</p>
 </td>
 </tr>
 </tbody>
@@ -2533,7 +2885,7 @@ for all the shell and resin ring nodes, but the load asymmetry angle
 <span id="cutout-desicos-abaqus-imperfections-cutout"></span><h3>Cutout (<a class="reference internal" href="#module-desicos.abaqus.imperfections.cutout" title="desicos.abaqus.imperfections.cutout"><code class="xref py py-mod docutils literal"><span class="pre">desicos.abaqus.imperfections.cutout</span></code></a>)<a class="headerlink" href="#module-desicos.abaqus.imperfections.cutout" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="desicos.abaqus.imperfections.cutout.Cutout">
-<em class="property">class </em><code class="descclassname">desicos.abaqus.imperfections.cutout.</code><code class="descname">Cutout</code><span class="sig-paren">(</span><em>thetadeg</em>, <em>pt</em>, <em>d</em>, <em>drill_offset_deg=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/abaqus/imperfections/cutout.html#Cutout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.imperfections.cutout.Cutout" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">desicos.abaqus.imperfections.cutout.</code><code class="descname">Cutout</code><span class="sig-paren">(</span><em>thetadeg</em>, <em>pt</em>, <em>d</em>, <em>drill_offset_deg=0.0</em>, <em>clearance_factor=0.75</em>, <em>numel_radial_edge=4</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/abaqus/imperfections/cutout.html#Cutout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.imperfections.cutout.Cutout" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -2550,11 +2902,23 @@ for all the shell and resin ring nodes, but the load asymmetry angle
 <blockquote>
 <div><p>Diameter of the drilling machine.</p>
 </div></blockquote>
-<p><strong>drill_offset_deg</strong> : float</p>
-<blockquote class="last">
+<p><strong>drill_offset_deg</strong> : float, optional</p>
+<blockquote>
 <div><p>Angular offset when the drilling is not normal to the shell
 surface. A positive offset means a positive rotation about the
 <img class="math" src="../../_images/math/4dc4789b8e2f448615b3e2c2bdc22fb9267f7cd8.png" alt="\theta"/> axis, along the meridional plane.</p>
+</div></blockquote>
+<p><strong>clearance_factor</strong> : float, optional</p>
+<blockquote>
+<div><p>Fraction of the diameter to apply as clearance around the cutout.
+This clearance is partitoned and meshed separately from the rest of
+the cone / cylinder.</p>
+</div></blockquote>
+<p><strong>numel_radial_edge</strong> : int, optional</p>
+<blockquote class="last">
+<div><p>Number of elements along the radial edges about the cutout center.
+This parameter affects the aspect ratio of the elements inside the
+cutout area.</p>
 </div></blockquote>
 </td>
 </tr>
@@ -2567,14 +2931,426 @@ surface. A positive offset means a positive rotation about the
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">create</span></code>()</td>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">calc_amplitude</span></code>()</td>
 <td></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">rebuild</span></code>()</td>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">create</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">rebuild</span></code>()</td>
 <td></td>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-desicos.abaqus.imperfections.ppi">
+<span id="ply-piece-imperfection-desicos-abaqus-imperfections-ppi"></span><h3>Ply Piece Imperfection (<a class="reference internal" href="#module-desicos.abaqus.imperfections.ppi" title="desicos.abaqus.imperfections.ppi"><code class="xref py py-mod docutils literal"><span class="pre">desicos.abaqus.imperfections.ppi</span></code></a>)<a class="headerlink" href="#module-desicos.abaqus.imperfections.ppi" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="desicos.abaqus.imperfections.ppi.PPI">
+<em class="property">class </em><code class="descclassname">desicos.abaqus.imperfections.ppi.</code><code class="descname">PPI</code><span class="sig-paren">(</span><em>info</em>, <em>extra_height=0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/abaqus/imperfections/ppi.html#PPI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.imperfections.ppi.PPI" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ply Piece Imperfection</p>
+<p>Laminating a cone with a finite number of ply pieces causes deviations
+between the nominal fiber angle (e.g. 30 degrees) and the actual angle,
+which varies with the location on the cone. This imperfection can be used
+to include that effect in the simulation.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="29%" />
+<col width="71%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attributes</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">info</span></code></td>
+<td><p class="first"><code class="docutils literal"><span class="pre">list</span></code> with info about the layup of this cone.
+Length of the list should be at least equal to the
+number of plies. Each entry is a <code class="docutils literal"><span class="pre">dict</span></code>,
+containing:</p>
+<blockquote class="last">
+<div><ul>
+<li><p class="first"><code class="docutils literal"><span class="pre">starting_position</span></code>: <code class="docutils literal"><span class="pre">float</span></code>, Radius in the
+flattened cone ((s, phi)-coordinate system)
+where the origin line (L0) of the basic ply
+piece intersects the horizontal axis</p>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">max_width</span></code>: <code class="docutils literal"><span class="pre">float</span></code>, maximum width of a
+single ply piece.</p>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">rel_ang_offset</span></code>: <code class="docutils literal"><span class="pre">float</span></code>, optional, default
+is 0. Relative angular offset (0..1) to be used
+when positioning the pieces in this ply. Used to
+avoid overlapping of seams, when multiple plies
+have the same orientation.</p>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">eccentricity</span></code>: <code class="docutils literal"><span class="pre">float</span></code>, eccentricity param
+(range 0...1) that controls the positioning of
+the ply piece relative to the origin line.
+Optional, the default value is dependent on the
+nominal fiber angle:</p>
+<blockquote>
+<div><ol class="loweralpha simple">
+<li>0.5 if <code class="docutils literal"><span class="pre">cc.stack[i]</span> <span class="pre">==</span> <span class="pre">0</span></code></li>
+<li>0.0 if <code class="docutils literal"><span class="pre">cc.stack[i]</span> <span class="pre">&gt;</span> <span class="pre">0</span></code></li>
+<li>1.0 if <code class="docutils literal"><span class="pre">cc.stack[i]</span> <span class="pre">&lt;</span> <span class="pre">0</span></code></li>
+</ol>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">extra_height</span></code></td>
+<td><code class="docutils literal"><span class="pre">float</span></code>, extra height above and below the cone
+height (<img class="math" src="../../_images/math/b8d65d41c45d33bd8883577210c0d837bb2d7f1a.png" alt="cc.H"/>) to consider in the ply placement
+model.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>This imperfection only works for cones, not for cylinders.</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">calc_amplitude</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.imperfections.ppi.PPI.create" title="desicos.abaqus.imperfections.ppi.PPI.create"><code class="xref py py-obj docutils literal"><span class="pre">create</span></code></a>()</td>
+<td>Actually create the imperfection</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.imperfections.ppi.PPI.fiber_orientation" title="desicos.abaqus.imperfections.ppi.PPI.fiber_orientation"><code class="xref py py-obj docutils literal"><span class="pre">fiber_orientation</span></code></a>(ply_index,&nbsp;coords)</td>
+<td>Determine the local fiber orientation at a set of coordinates, given in the global Cartesian (x, y, z) coordinate system.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.imperfections.ppi.PPI.gcs_to_unfolded" title="desicos.abaqus.imperfections.ppi.PPI.gcs_to_unfolded"><code class="xref py py-obj docutils literal"><span class="pre">gcs_to_unfolded</span></code></a>(x,&nbsp;y,&nbsp;z)</td>
+<td>Convert global xyz coordinates to the unfolded (eta, zeta)-csys.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.imperfections.ppi.PPI.get_ply_lines" title="desicos.abaqus.imperfections.ppi.PPI.get_ply_lines"><code class="xref py py-obj docutils literal"><span class="pre">get_ply_lines</span></code></a>(ply_index[,&nbsp;center_theta_zero])</td>
+<td>Obtain a series of lines that can be used to draw all ply pieces.</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">rebuild</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.imperfections.ppi.PPI.unfolded_to_gcs" title="desicos.abaqus.imperfections.ppi.PPI.unfolded_to_gcs"><code class="xref py py-obj docutils literal"><span class="pre">unfolded_to_gcs</span></code></a>(eta,&nbsp;zeta[,&nbsp;approx_phi,&nbsp;...])</td>
+<td>Convert unfolded (eta, zeta)-coordinates to the global coordinate system.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="desicos.abaqus.imperfections.ppi.PPI.create">
+<code class="descname">create</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/abaqus/imperfections/ppi.html#PPI.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.imperfections.ppi.PPI.create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Actually create the imperfection</p>
+<p>This modifies all composite layups to replace their existing (constant)
+ply orientations with values that are defined by a discrete field.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Must be called from Abaqus.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="desicos.abaqus.imperfections.ppi.PPI.fiber_orientation">
+<code class="descname">fiber_orientation</code><span class="sig-paren">(</span><em>ply_index</em>, <em>coords</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/abaqus/imperfections/ppi.html#PPI.fiber_orientation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.imperfections.ppi.PPI.fiber_orientation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine the local fiber orientation at a set of coordinates,
+given in the global Cartesian (x, y, z) coordinate system. If points
+are not covered by any ply piece, NaN is returned for those</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>ply_index</strong> : int</p>
+<blockquote>
+<div><p>Index of the ply of interest</p>
+</div></blockquote>
+<p><strong>coords</strong> : numpy.array</p>
+<blockquote>
+<div><p>Two-dimensional array containing one row per point and the x-, y-
+and z-coordinates of each point as columns.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>thetas</strong> : numpy.array</p>
+<blockquote class="last">
+<div><p>Local fiber angle at each given point in the ply, in degrees.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="desicos.abaqus.imperfections.ppi.PPI.gcs_to_unfolded">
+<code class="descname">gcs_to_unfolded</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>z</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/abaqus/imperfections/ppi.html#PPI.gcs_to_unfolded"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.imperfections.ppi.PPI.gcs_to_unfolded" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert global xyz coordinates to the unfolded (eta, zeta)-csys.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>x</strong> : float or numpy array</p>
+<blockquote>
+<div><p>X-coordinates in global Cartesian coordinate system</p>
+</div></blockquote>
+<p><strong>y</strong> : float or numpy array</p>
+<blockquote>
+<div><p>Y-coordinates in global Cartesian coordinate system</p>
+</div></blockquote>
+<p><strong>z</strong> : float or numpy array</p>
+<blockquote>
+<div><p>Z-coordinates in global Cartesian coordinate system</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>out</strong> : tuple</p>
+<blockquote class="last">
+<div><p>A 2-tuple, where out[0] contains the eta-coordinate(s) and out[1]
+the zeta-coordinate(s) corresponding to the given point(s).</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Input coordinates should be on the surface of the cone.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="desicos.abaqus.imperfections.ppi.PPI.get_ply_lines">
+<code class="descname">get_ply_lines</code><span class="sig-paren">(</span><em>ply_index</em>, <em>center_theta_zero=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/abaqus/imperfections/ppi.html#PPI.get_ply_lines"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.imperfections.ppi.PPI.get_ply_lines" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtain a series of lines that can be used to draw all ply pieces.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>ply_index</strong> : int</p>
+<blockquote>
+<div><p>Index of ply to construct lines for.</p>
+</div></blockquote>
+<p><strong>center_theta_zero</strong> : bool</p>
+<blockquote>
+<div><p>Plot the ply pieces in the -pi...pi range, instead of 0..2pi</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>lines</strong> : list</p>
+<blockquote class="last">
+<div><p>List of lines. Each line is a 2-tuple (thetas, zs), containing
+a list of circumferential coordinates and a list of vertical
+coordinates of the points along the line.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="desicos.abaqus.imperfections.ppi.PPI.unfolded_to_gcs">
+<code class="descname">unfolded_to_gcs</code><span class="sig-paren">(</span><em>eta</em>, <em>zeta</em>, <em>approx_phi=0.0</em>, <em>cylindrical=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/abaqus/imperfections/ppi.html#PPI.unfolded_to_gcs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.imperfections.ppi.PPI.unfolded_to_gcs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert unfolded (eta, zeta)-coordinates to the global coordinate system.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>eta</strong> : float or numpy array</p>
+<blockquote>
+<div><p>Horizontal coordinates in the unfolded coordinate system.</p>
+</div></blockquote>
+<p><strong>zeta</strong> : float or numpy array</p>
+<blockquote>
+<div><p>Vertical coordinates in the unfolded coordinate system.</p>
+</div></blockquote>
+<p><strong>approx_phi</strong> : float, optional</p>
+<blockquote>
+<div><p>As an intermediate step, the (eta, zeta)-coordinates are converted
+to polar (s, phi)-coordinates. This transformation is multivalued,
+as (s, phi + 2pi) and such is also a valid result. Resolve this
+ambiguity by choosing the value of phi closest to approx_phi,
+so within the (approx_phi - pi, approx_phi + pi) range.</p>
+</div></blockquote>
+<p><strong>cylindrical</strong> : bool, optional</p>
+<blockquote>
+<div><p>Whether to return output values in a Cartesian (if <code class="docutils literal"><span class="pre">False</span></code>) or
+cylindrical (if <code class="docutils literal"><span class="pre">True</span></code>) coordinate system. Default is <code class="docutils literal"><span class="pre">False</span></code>.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>out</strong> : tuple</p>
+<blockquote class="last">
+<div><p>A 3-tuple, containing (depending on the parameter <code class="docutils literal"><span class="pre">cylindrical</span></code>)
+either (x, y, z) or (r, theta, z)-coordinates.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="fiber-fraction-imperfection-desicos-abaqus-imperfections-ffi">
+<h3>Fiber Fraction Imperfection (<a class="reference internal" href="#module-desicos.abaqus.imperfections.ffi" title="desicos.abaqus.imperfections.ffi"><code class="xref py py-mod docutils literal"><span class="pre">desicos.abaqus.imperfections.ffi</span></code></a>)<a class="headerlink" href="#fiber-fraction-imperfection-desicos-abaqus-imperfections-ffi" title="Permalink to this headline">¶</a></h3>
+<span class="target" id="module-desicos.abaqus.imperfections.ffi"></span><dl class="class">
+<dt id="desicos.abaqus.imperfections.ffi.FFI">
+<em class="property">class </em><code class="descclassname">desicos.abaqus.imperfections.ffi.</code><code class="descname">FFI</code><span class="sig-paren">(</span><em>nominal_vf</em>, <em>E_matrix</em>, <em>nu_matrix</em>, <em>use_ti</em>, <em>global_sf=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/abaqus/imperfections/ffi.html#FFI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.imperfections.ffi.FFI" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fiber Fraction Imperfection</p>
+<p>Thickness variations are generally caused by a varying amount of matrix,
+while the amount of fibers remains constant. Thus, the actual fiber volume
+fraction is higher in thinner sections of the material. This imperfection
+aims to include that effect in the model, by adjusting the material
+properties.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="30%" />
+<col width="70%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attributes</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>nominal_vf</td>
+<td><code class="docutils literal"><span class="pre">float</span></code>, nominal fiber volume fraction</td>
+</tr>
+<tr class="row-odd"><td>E_matrix</td>
+<td><code class="docutils literal"><span class="pre">float</span></code>, Young&#8217;s modulus of the matrix material</td>
+</tr>
+<tr class="row-even"><td>nu_matrix</td>
+<td><code class="docutils literal"><span class="pre">float</span></code>, Poisson&#8217;s ratio of the matrix material</td>
+</tr>
+<tr class="row-odd"><td>use_ti</td>
+<td><code class="docutils literal"><span class="pre">bool</span></code>, if <code class="docutils literal"><span class="pre">True</span></code>, create varying material
+properties according to the thickness imperfection
+data (if present).</td>
+</tr>
+<tr class="row-even"><td>global_sf</td>
+<td><code class="docutils literal"><span class="pre">float</span></code> or <code class="docutils literal"><span class="pre">None</span></code>, global scaling factor to
+apply to the material thickness. Set to <code class="docutils literal"><span class="pre">None</span></code>
+to disable. The global scaling may be overridden
+by a thickness imperfection, if <code class="docutils literal"><span class="pre">use_ti</span></code> (see
+above) is <code class="docutils literal"><span class="pre">True</span></code>.</td>
+</tr>
+<tr class="row-odd"><td>created</td>
+<td><code class="docutils literal"><span class="pre">bool</span></code>, <code class="docutils literal"><span class="pre">True</span></code> after the imperfection has been
+created.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.imperfections.ffi.FFI.calc_amplitude" title="desicos.abaqus.imperfections.ffi.FFI.calc_amplitude"><code class="xref py py-obj docutils literal"><span class="pre">calc_amplitude</span></code></a>()</td>
+<td>Calculates the imperfection amplitude</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.abaqus.imperfections.ffi.FFI.calc_scaled_laminaprop" title="desicos.abaqus.imperfections.ffi.FFI.calc_scaled_laminaprop"><code class="xref py py-obj docutils literal"><span class="pre">calc_scaled_laminaprop</span></code></a>(laminaprop,&nbsp;...)</td>
+<td>Calculate material properties of a lamina with a scaled thickness.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.imperfections.ffi.FFI.create" title="desicos.abaqus.imperfections.ffi.FFI.create"><code class="xref py py-obj docutils literal"><span class="pre">create</span></code></a>()</td>
+<td>Actually create the imperfection</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">rebuild</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.imperfections.ffi.FFI.update_after_tis" title="desicos.abaqus.imperfections.ffi.FFI.update_after_tis"><code class="xref py py-obj docutils literal"><span class="pre">update_after_tis</span></code></a>()</td>
+<td>Call this function after the thickness imperfection(s) are applied, to modify the material properties as well, if needed.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="desicos.abaqus.imperfections.ffi.FFI.calc_amplitude">
+<code class="descname">calc_amplitude</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/abaqus/imperfections/ffi.html#FFI.calc_amplitude"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.imperfections.ffi.FFI.calc_amplitude" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the imperfection amplitude</p>
+<p>Amplitude measured as the biggest thickness difference between
+the actual and nominal layup thickness of the Cone/Cylinder,
+considering only the layups that have this imperfection applied.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Must be called from Abaqus.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>max_amp</strong> : float</p>
+<blockquote class="last">
+<div><p>Maximum absolute imperfection amplitude.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="desicos.abaqus.imperfections.ffi.FFI.calc_scaled_laminaprop">
+<code class="descname">calc_scaled_laminaprop</code><span class="sig-paren">(</span><em>laminaprop</em>, <em>scaling_factor</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/abaqus/imperfections/ffi.html#FFI.calc_scaled_laminaprop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.imperfections.ffi.FFI.calc_scaled_laminaprop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate material properties of a lamina with a scaled thickness.</p>
+<p>Calculates the new lamina properties, if a given material (lamina)
+is scaled in thickness by a given factor. The new material properties
+are calculated from the properties of the fiber and the matrix, using
+the composition rule (for E11 and nu12) and the corrected composition
+rule (for E22, G12, G13 and G23).</p>
+<p>The matrix properties are to be supplied by the user. The fiber
+properties are calculated based on the original (nominal) lamina
+properties, using the inverse of the respective composition rule.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>laminaprop</strong> : tuple</p>
+<blockquote>
+<div><p>Material properties (E11, E12, nu12, G12, G13, G23) of the lamina
+at the nominal thickness</p>
+</div></blockquote>
+<p><strong>scaling_factor</strong> : float</p>
+<blockquote>
+<div><p>Scaling factor that is to be applied to the ply thickness. The
+total amount of fibers is assumed to remain constant, thus the
+actual fiber volume fraction is inversely proportional to this
+scaling factor.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>new_laminaprop</strong> : tuple</p>
+<blockquote class="last">
+<div><p>Lamina properties of the lamina with a scaled thickness</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="desicos.abaqus.imperfections.ffi.FFI.create">
+<code class="descname">create</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/abaqus/imperfections/ffi.html#FFI.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.imperfections.ffi.FFI.create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Actually create the imperfection</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Must be called from Abaqus.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="desicos.abaqus.imperfections.ffi.FFI.update_after_tis">
+<code class="descname">update_after_tis</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/abaqus/imperfections/ffi.html#FFI.update_after_tis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.imperfections.ffi.FFI.update_after_tis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call this function after the thickness imperfection(s) are applied,
+to modify the material properties as well, if needed.</p>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -3056,7 +3832,7 @@ are included in one <code class="docutils literal"><span class="pre">.cae</span>
 <tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">add_cc</span></code>(cc)</td>
 <td></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">add_cc_fromDB</span></code>(name)</td>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">add_cc_from_DB</span></code>(name)</td>
 <td></td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#desicos.abaqus.study.Study.apply_msis" title="desicos.abaqus.study.Study.apply_msis"><code class="xref py py-obj docutils literal"><span class="pre">apply_msis</span></code></a>()</td>
@@ -3242,6 +4018,39 @@ object.</p>
 </table>
 </dd></dl>
 
+<dl class="function">
+<dt id="desicos.abaqus.utils.utils.make_uniform_cells">
+<code class="descclassname">desicos.abaqus.utils.utils.</code><code class="descname">make_uniform_cells</code><span class="sig-paren">(</span><em>x1</em>, <em>x2</em>, <em>values</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/abaqus/utils/utils.html#make_uniform_cells"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.utils.utils.make_uniform_cells" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform a grid to have uniform cells when plotted.</p>
+<p>This is done by replacing each data point in the grid (assumed to be the
+element centroid) by four points, having the same value. These points are
+placed such that they would be near the element corners, so the element
+interior will have a uniform color in a contour plot.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>x1</strong> : numpy.array</p>
+<blockquote>
+<div><p>2D array containing the first coordinate (in whatever csys).</p>
+</div></blockquote>
+<p><strong>x2</strong> : numpy.array</p>
+<blockquote>
+<div><p>2D array containing the second coordinate (in whatever csys).</p>
+</div></blockquote>
+<p><strong>values</strong> : numpy.array</p>
+<blockquote class="last">
+<div><p>2D array containing the data values.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Input coordinates <code class="docutils literal"><span class="pre">x1</span></code> and <code class="docutils literal"><span class="pre">x2</span></code> are assumed to be regularly spaced.
+The type of coordinates (Cartesian, cylindrical, ...) does not matter.</p>
+</dd></dl>
+
 <span class="target" id="module-desicos.abaqus.utils.geom"></span><div class="section" id="geometries-desicos-abaqus-utils-geom">
 <h3>Geometries (<a class="reference internal" href="#module-desicos.abaqus.utils.geom" title="desicos.abaqus.utils.geom"><code class="xref py py-mod docutils literal"><span class="pre">desicos.abaqus.utils.geom</span></code></a>)<a class="headerlink" href="#geometries-desicos-abaqus-utils-geom" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
@@ -3425,6 +4234,40 @@ thickness imperfection in some cases.</p>
 <p><strong>insert</strong> : bool, optional</p>
 <blockquote class="last">
 <div><p>Insert the text instead of replacing it.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="desicos.abaqus.abaqus_functions.modify_composite_layup">
+<code class="descclassname">desicos.abaqus.abaqus_functions.</code><code class="descname">modify_composite_layup</code><span class="sig-paren">(</span><em>part</em>, <em>layup_name</em>, <em>modify_func</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/abaqus/abaqus_functions.html#modify_composite_layup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.abaqus_functions.modify_composite_layup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modify plies within a composite layup</p>
+<p>Directly modififying plies within a CompositeLayup is not possible, as
+the plies are read-only after creation. This function emulates modifying,
+by deleting and then re-creating plies, with modifications.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>part</strong> : an Abaqus part object</p>
+<blockquote>
+<div><p>The part that the to-be-modified layup is attached to.</p>
+</div></blockquote>
+<p><strong>layup_name</strong> : str</p>
+<blockquote>
+<div><p>Name of the layup that is to be modified.</p>
+</div></blockquote>
+<p><strong>modify_func</strong> : function</p>
+<blockquote class="last">
+<div><p>Function that will be called for each ply. It should take as arguments
+the ply index and a dictionary of keyword arguments. This dictionary
+contains all keyword arguments that would re-create the original ply,
+if passed to the <code class="docutils literal"><span class="pre">CompositePly</span></code>-constructor. This function should
+should make the necessary changes this dictionary and then return it.
+The returned dictionary will then be used to create the new ply.</p>
 </div></blockquote>
 </td>
 </tr>

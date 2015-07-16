@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>desicos.abaqus.imperfections.pload &mdash; DESICOS 2.3.0 documentation</title>
+    <title>desicos.abaqus.imperfections.pload &mdash; DESICOS 2.4.1 documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     '2.3.0',
+        VERSION:     '2.4.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../../_static/doctools.js"></script>
-    <link rel="top" title="DESICOS 2.3.0 documentation" href="../../../../index.html" />
+    <link rel="top" title="DESICOS 2.4.1 documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
    
   
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="../../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../index.html">DESICOS 2.3.0 documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">DESICOS 2.4.1 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../../../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
@@ -114,13 +114,25 @@
         <span class="n">cc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">conecyl</span>
         <span class="n">mod</span> <span class="o">=</span> <span class="n">mdb</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="n">cc</span><span class="o">.</span><span class="n">model_name</span><span class="p">]</span>
         <span class="n">nodes</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="n">cc</span><span class="o">.</span><span class="n">part_name_shell</span><span class="p">]</span><span class="o">.</span><span class="n">nodes</span>
-        <span class="n">xmin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="o">-</span><span class="mf">1.e-3</span>
-        <span class="n">xmax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="o">+</span><span class="mf">1.e-3</span>
-        <span class="n">ymin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="o">-</span><span class="mf">1.e-3</span>
-        <span class="n">ymax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="o">+</span><span class="mf">1.e-3</span>
-        <span class="n">zmin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span><span class="o">-</span><span class="mf">1.e-3</span>
-        <span class="n">zmax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span><span class="o">+</span><span class="mf">1.e-3</span>
-        <span class="n">node</span> <span class="o">=</span> <span class="n">nodes</span><span class="o">.</span><span class="n">getByBoundingBox</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">ymin</span><span class="p">,</span> <span class="n">zmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">ymax</span><span class="p">,</span> <span class="n">zmax</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c"># calculate unit normal vector w.r.t. the surface</span>
+        <span class="n">ux</span> <span class="o">=</span> <span class="n">cos</span><span class="p">(</span><span class="n">cc</span><span class="o">.</span><span class="n">alpharad</span><span class="p">)</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">thetadeg</span><span class="p">))</span>
+        <span class="n">uy</span> <span class="o">=</span> <span class="n">cos</span><span class="p">(</span><span class="n">cc</span><span class="o">.</span><span class="n">alpharad</span><span class="p">)</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">thetadeg</span><span class="p">))</span>
+        <span class="n">uz</span> <span class="o">=</span> <span class="n">sin</span><span class="p">(</span><span class="n">cc</span><span class="o">.</span><span class="n">alpharad</span><span class="p">)</span>
+         <span class="c"># It would be nicer to calculate this based on e.g. MSI amplitude</span>
+        <span class="n">max_imp</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="n">r_TOL</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="c"># Radius of cylinder to search</span>
+        <span class="n">pt1</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">max_imp</span><span class="o">*</span><span class="n">ux</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">max_imp</span><span class="o">*</span><span class="n">uy</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">+</span> <span class="n">max_imp</span><span class="o">*</span><span class="n">uz</span><span class="p">)</span>
+        <span class="n">pt2</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">max_imp</span><span class="o">*</span><span class="n">ux</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">max_imp</span><span class="o">*</span><span class="n">uy</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">-</span> <span class="n">max_imp</span><span class="o">*</span><span class="n">uz</span><span class="p">)</span>
+        <span class="c"># Search for our node in a cylinder normal to the surface, because</span>
+        <span class="c"># &#39;our&#39; node may be moved by a MSI</span>
+        <span class="n">nodes</span> <span class="o">=</span> <span class="n">nodes</span><span class="o">.</span><span class="n">getByBoundingCylinder</span><span class="p">(</span><span class="n">pt1</span><span class="p">,</span> <span class="n">pt2</span><span class="p">,</span> <span class="n">r_TOL</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">warn</span><span class="p">(</span><span class="s">&quot;Unable to locate node where perturbation load&quot;</span> <span class="o">+</span>
+                 <span class="s">&quot;&#39;{0}&#39; is applied. &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="o">+</span>
+                 <span class="s">&quot;Cannot calculate imperfection amplitude.&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">amplitude</span> <span class="o">=</span> <span class="mf">0.</span>
+            <span class="k">return</span> <span class="mf">0.</span>
 
         <span class="n">odb</span> <span class="o">=</span> <span class="n">cc</span><span class="o">.</span><span class="n">attach_results</span><span class="p">()</span>
         <span class="n">fo</span> <span class="o">=</span> <span class="n">odb</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="n">cc</span><span class="o">.</span><span class="n">step1Name</span><span class="p">]</span><span class="o">.</span><span class="n">frames</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">fieldOutputs</span>
@@ -128,7 +140,7 @@
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
                     <span class="s">&#39;Field output &#39;U&#39; not available to calculate amplitude&#39;</span><span class="p">)</span>
         <span class="c">#TODO not sure if this is robust: node.label-1</span>
-        <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">fo</span><span class="p">[</span><span class="s">&#39;U&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">label</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+        <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">fo</span><span class="p">[</span><span class="s">&#39;U&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">nodes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">label</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
         <span class="n">cc</span><span class="o">.</span><span class="n">detach_results</span><span class="p">(</span><span class="n">odb</span><span class="p">)</span>
 
         <span class="n">alpha</span> <span class="o">=</span> <span class="n">cc</span><span class="o">.</span><span class="n">alpharad</span>

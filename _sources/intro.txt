@@ -88,7 +88,8 @@ https://github.com/desicos/desicos/blob/master/doc/source/overview.rst
 Cone Ply Piece Optimization Tool (cppot)
 ========================================
 
-Developed by Florian Burau (flo.burau@gmail.com) this package offers a graphic
+Developed by Florian Burau (flo.burau@gmail.com) and greatly improved by
+Jasper Reichardt (jreichardt91@gmail.com) this package offers a graphic
 interface to help the analyst during the manufacturing process of conical
 structures by finding the optimal ply piece shapes that should be cut during
 the manufacture process.

@@ -1,0 +1,1643 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Cone Ply Piece Optimization Tool (desicos.cppot) &mdash; DESICOS 2.4.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '2.4.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="DESICOS 2.4.1 documentation" href="../../index.html" />
+    <link rel="up" title="Modules" href="../index.html" />
+    <link rel="prev" title="Cone / Cylinder DataBase (desicos.conecylDB)" href="../conecylDB/index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../np-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../conecylDB/index.html" title="Cone / Cylinder DataBase (desicos.conecylDB)"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">DESICOS 2.4.1 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Modules</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <span class="target" id="module-desicos.cppot"><span id="module-cppot"></span></span><div class="section" id="cone-ply-piece-optimization-tool-desicos-cppot">
+<h1>Cone Ply Piece Optimization Tool (<a class="reference internal" href="#module-desicos.cppot" title="desicos.cppot"><code class="xref py py-mod docutils literal"><span class="pre">desicos.cppot</span></code></a>)<a class="headerlink" href="#cone-ply-piece-optimization-tool-desicos-cppot" title="Permalink to this headline">¶</a></h1>
+<p>Please, refer to the <a class="reference internal" href="../../tutorials/cppot/index.html#cppot-tutorial"><span>CPPOT tutorial</span></a> for more details
+about how to use this module.</p>
+<span class="target" id="module-desicos.cppot.core"></span><div class="section" id="cone-virtual-material-model-desicos-cppot-core">
+<h2>Cone Virtual Material Model (<a class="reference internal" href="#module-desicos.cppot.core" title="desicos.cppot.core"><code class="xref py py-mod docutils literal"><span class="pre">desicos.cppot.core</span></code></a>)<a class="headerlink" href="#cone-virtual-material-model-desicos-cppot-core" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-desicos.cppot.core.geom"></span><div class="section" id="cppot-geometry-desicos-cppot-core-geom">
+<h3>CPPOT-geometry (<a class="reference internal" href="#module-desicos.cppot.core.geom" title="desicos.cppot.core.geom"><code class="xref py py-mod docutils literal"><span class="pre">desicos.cppot.core.geom</span></code></a>)<a class="headerlink" href="#cppot-geometry-desicos-cppot-core-geom" title="Permalink to this headline">¶</a></h3>
+<p>Classes and functions to help with 2D geometrical operations.</p>
+<dl class="class">
+<dt id="desicos.cppot.core.geom.ConeGeometry">
+<em class="property">class </em><code class="descclassname">desicos.cppot.core.geom.</code><code class="descname">ConeGeometry</code><span class="sig-paren">(</span><em>H</em>, <em>rbot</em>, <em>alpharad</em>, <em>extra_height</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/cppot/core/geom.html#ConeGeometry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.geom.ConeGeometry" title="Permalink to this definition">¶</a></dt>
+<dd><p>ConeGeometry object</p>
+<p>Carries all the information about the geometry of a cone, plus some
+read-only accessors to calculate often-needed cone properties. These are
+all calculated on-the-fly, so no rebuild()-ing is necessary.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="24%" />
+<col width="76%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">H</span></code></td>
+<td><code class="docutils literal"><span class="pre">float</span></code>, height of the free area of the cone.</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">rbot</span></code></td>
+<td><code class="docutils literal"><span class="pre">float</span></code>, bottom radius of the cone</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">alpharad</span></code></td>
+<td><code class="docutils literal"><span class="pre">float</span></code>, semi-vertex angle of the cone, in
+radians. Must be between 0 and pi/2.</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">extra_height</span></code></td>
+<td><code class="docutils literal"><span class="pre">float</span></code>, extra (support) height. A section with
+this height is added along both the top and bottom
+edge of the free cone. This represents the extra
+material that is present during manufacturing.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.cppot.core.geom.ConeGeometry.from_conecyl" title="desicos.cppot.core.geom.ConeGeometry.from_conecyl"><code class="xref py py-obj docutils literal"><span class="pre">from_conecyl</span></code></a>(cc,&nbsp;extra_height)</td>
+<td>Construct a ConeGeometry object based on an existing ConeCyl</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="desicos.cppot.core.geom.ConeGeometry.L">
+<code class="descname">L</code><a class="headerlink" href="#desicos.cppot.core.geom.ConeGeometry.L" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read-only property: Meridional length.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="desicos.cppot.core.geom.ConeGeometry.cone_area">
+<code class="descname">cone_area</code><a class="headerlink" href="#desicos.cppot.core.geom.ConeGeometry.cone_area" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read-only property: Surface area of the free cone (supports excluded).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="desicos.cppot.core.geom.ConeGeometry.cos_alpha">
+<code class="descname">cos_alpha</code><a class="headerlink" href="#desicos.cppot.core.geom.ConeGeometry.cos_alpha" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read-only property: Cosine of the semi-vertex angle.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="desicos.cppot.core.geom.ConeGeometry.from_conecyl">
+<em class="property">classmethod </em><code class="descname">from_conecyl</code><span class="sig-paren">(</span><em>cc</em>, <em>extra_height</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/cppot/core/geom.html#ConeGeometry.from_conecyl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.geom.ConeGeometry.from_conecyl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct a ConeGeometry object based on an existing ConeCyl</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>cc</strong> : <a class="reference internal" href="../abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl" title="desicos.abaqus.conecyl.conecyl.ConeCyl"><code class="xref py py-class docutils literal"><span class="pre">ConeCyl</span></code></a></p>
+<blockquote>
+<div><p>Existing cone to use. Must be a cone, i.e. alpha &gt; 0.</p>
+</div></blockquote>
+<p><strong>extra_height</strong> : float</p>
+<blockquote>
+<div><p>Extra support height for this model.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>cg</strong> : <a class="reference internal" href="#desicos.cppot.core.geom.ConeGeometry" title="desicos.cppot.core.geom.ConeGeometry"><code class="xref py py-class docutils literal"><span class="pre">ConeGeometry</span></code></a></p>
+<blockquote class="last">
+<div><p>The constructed ConeGeometry object</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="desicos.cppot.core.geom.ConeGeometry.rtop">
+<code class="descname">rtop</code><a class="headerlink" href="#desicos.cppot.core.geom.ConeGeometry.rtop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read-only property: Top radius of the cone.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="desicos.cppot.core.geom.ConeGeometry.s1">
+<code class="descname">s1</code><a class="headerlink" href="#desicos.cppot.core.geom.ConeGeometry.s1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read-only property: Radius of top (support) edge in unfolded coordinates.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="desicos.cppot.core.geom.ConeGeometry.s2">
+<code class="descname">s2</code><a class="headerlink" href="#desicos.cppot.core.geom.ConeGeometry.s2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read-only property: Radius of top edge of the free cone in unfolded coordinates.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="desicos.cppot.core.geom.ConeGeometry.s3">
+<code class="descname">s3</code><a class="headerlink" href="#desicos.cppot.core.geom.ConeGeometry.s3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read-only property: Radius of bottom edge of the free cone in unfolded coordinates.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="desicos.cppot.core.geom.ConeGeometry.s4">
+<code class="descname">s4</code><a class="headerlink" href="#desicos.cppot.core.geom.ConeGeometry.s4" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read-only property: Radius of bottom (support) edge in unfolded coordinates.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="desicos.cppot.core.geom.ConeGeometry.sin_alpha">
+<code class="descname">sin_alpha</code><a class="headerlink" href="#desicos.cppot.core.geom.ConeGeometry.sin_alpha" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read-only property: Sine of the semi-vertex angle.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="desicos.cppot.core.geom.ConeGeometry.tan_alpha">
+<code class="descname">tan_alpha</code><a class="headerlink" href="#desicos.cppot.core.geom.ConeGeometry.tan_alpha" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read-only property: Tangent of the semi-vertex angle.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="desicos.cppot.core.geom.Line2D">
+<em class="property">class </em><code class="descclassname">desicos.cppot.core.geom.</code><code class="descname">Line2D</code><a class="reference internal" href="../../_modules/desicos/cppot/core/geom.html#Line2D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.geom.Line2D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class representing a line on a two-dimensional plane
+It is based on <code class="docutils literal"><span class="pre">namedtuple</span></code>, which allows both named attribute access
+(line.a) and iteration / indexing. Line2D instances are immutable after
+construction.</p>
+<p>The line is defined based on two equations:
+a*x + b*y = c
+a**2 + b**2 = 1
+The latter normalization constraint is enforced in <code class="docutils literal"><span class="pre">__new__</span></code></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="13%" />
+<col width="87%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">a</span></code></td>
+<td><code class="docutils literal"><span class="pre">float</span></code>, Line parameter in equation (a*x + b*y = c)</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">b</span></code></td>
+<td><code class="docutils literal"><span class="pre">float</span></code>, Line parameter in equation (a*x + b*y = c)</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">c</span></code></td>
+<td><code class="docutils literal"><span class="pre">float</span></code>, Line parameter in equation (a*x + b*y = c)</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.cppot.core.geom.Line2D.all_intersections_circle" title="desicos.cppot.core.geom.Line2D.all_intersections_circle"><code class="xref py py-obj docutils literal"><span class="pre">all_intersections_circle</span></code></a>(radius)</td>
+<td>Get all intersection points of a line with a circle</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.cppot.core.geom.Line2D.angle" title="desicos.cppot.core.geom.Line2D.angle"><code class="xref py py-obj docutils literal"><span class="pre">angle</span></code></a>()</td>
+<td>Calculate the angle of this line with respect to the x-axis</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">count</span></code>(...)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.cppot.core.geom.Line2D.direction" title="desicos.cppot.core.geom.Line2D.direction"><code class="xref py py-obj docutils literal"><span class="pre">direction</span></code></a>()</td>
+<td>Obtain a point representing a unit direction vector parallel to the line.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.cppot.core.geom.Line2D.distance_point" title="desicos.cppot.core.geom.Line2D.distance_point"><code class="xref py py-obj docutils literal"><span class="pre">distance_point</span></code></a>(point)</td>
+<td>Get the shortest Euclidean distance between this line and a point</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.cppot.core.geom.Line2D.from_point_angle" title="desicos.cppot.core.geom.Line2D.from_point_angle"><code class="xref py py-obj docutils literal"><span class="pre">from_point_angle</span></code></a>(point,&nbsp;angle)</td>
+<td>Class method, constructs a line based on a point and an angle</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.cppot.core.geom.Line2D.from_points" title="desicos.cppot.core.geom.Line2D.from_points"><code class="xref py py-obj docutils literal"><span class="pre">from_points</span></code></a>(point1,&nbsp;point2)</td>
+<td>Class method, constructs a line based on two points</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">index</span></code>((value,&nbsp;[start,&nbsp;...)</td>
+<td>Raises ValueError if the value is not present.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.cppot.core.geom.Line2D.intersection_circle_near" title="desicos.cppot.core.geom.Line2D.intersection_circle_near"><code class="xref py py-obj docutils literal"><span class="pre">intersection_circle_near</span></code></a>(radius,&nbsp;near_point)</td>
+<td>Get the intersection of a line with a circle If there is more than one intersection point, it returns the intersection closest to near_point.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.cppot.core.geom.Line2D.intersection_line" title="desicos.cppot.core.geom.Line2D.intersection_line"><code class="xref py py-obj docutils literal"><span class="pre">intersection_line</span></code></a>(other)</td>
+<td>Get the intersection point of this line and another line</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.cppot.core.geom.Line2D.point_on_right" title="desicos.cppot.core.geom.Line2D.point_on_right"><code class="xref py py-obj docutils literal"><span class="pre">point_on_right</span></code></a>(point)</td>
+<td>Check on which side of this line a point lies</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.cppot.core.geom.Line2D.rotate" title="desicos.cppot.core.geom.Line2D.rotate"><code class="xref py py-obj docutils literal"><span class="pre">rotate</span></code></a>(angle)</td>
+<td>Created a new line, rotated with respect to the origin.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="desicos.cppot.core.geom.Line2D.all_intersections_circle">
+<code class="descname">all_intersections_circle</code><span class="sig-paren">(</span><em>radius</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/cppot/core/geom.html#Line2D.all_intersections_circle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.geom.Line2D.all_intersections_circle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all intersection points of a line with a circle
+The center of the circle is presumed to be at the origin</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>radius</strong> : float</p>
+<blockquote>
+<div><p>Radius of circle</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>intersection_points</strong> : list of <a class="reference internal" href="#desicos.cppot.core.geom.Point2D" title="desicos.cppot.core.geom.Point2D"><code class="xref py py-class docutils literal"><span class="pre">Point2D</span></code></a></p>
+<blockquote class="last">
+<div><p>List containing either 0, 1 or 2 intersection points</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>See also:
+<a class="reference external" href="http://en.wikipedia.org/wiki/Intersection_(Euclidean_geometry">http://en.wikipedia.org/wiki/Intersection_(Euclidean_geometry</a>)#A_line_and_a_circle</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="desicos.cppot.core.geom.Line2D.angle">
+<code class="descname">angle</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/cppot/core/geom.html#Line2D.angle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.geom.Line2D.angle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the angle of this line with respect to the x-axis</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>angle</strong> : float</p>
+<blockquote class="last">
+<div><p>The counterclockwise angle (in radians) from the positive x-axis</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="desicos.cppot.core.geom.Line2D.direction">
+<code class="descname">direction</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/cppot/core/geom.html#Line2D.direction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.geom.Line2D.direction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtain a point representing a unit direction vector parallel to the
+line.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>direction</strong> : <a class="reference internal" href="#desicos.cppot.core.geom.Point2D" title="desicos.cppot.core.geom.Point2D"><code class="xref py py-class docutils literal"><span class="pre">Point2D</span></code></a></p>
+<blockquote class="last">
+<div><p>The requested unit direction vector</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="desicos.cppot.core.geom.Line2D.distance_point">
+<code class="descname">distance_point</code><span class="sig-paren">(</span><em>point</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/cppot/core/geom.html#Line2D.distance_point"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.geom.Line2D.distance_point" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the shortest Euclidean distance between this line and a point</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>point</strong> : <a class="reference internal" href="#desicos.cppot.core.geom.Point2D" title="desicos.cppot.core.geom.Point2D"><code class="xref py py-class docutils literal"><span class="pre">Point2D</span></code></a></p>
+<blockquote>
+<div><p>Point to find the distance to</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>distance</strong> : float</p>
+<blockquote class="last">
+<div><p>The shortest distance from this line to the given point.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="desicos.cppot.core.geom.Line2D.from_point_angle">
+<em class="property">classmethod </em><code class="descname">from_point_angle</code><span class="sig-paren">(</span><em>point</em>, <em>angle</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/cppot/core/geom.html#Line2D.from_point_angle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.geom.Line2D.from_point_angle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class method, constructs a line based on a point and an angle</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>point</strong> : <a class="reference internal" href="#desicos.cppot.core.geom.Point2D" title="desicos.cppot.core.geom.Point2D"><code class="xref py py-class docutils literal"><span class="pre">Point2D</span></code></a></p>
+<blockquote>
+<div><p>Point that the line should go through</p>
+</div></blockquote>
+<p><strong>angle</strong> : float</p>
+<blockquote>
+<div><p>The counterclockwise angle (in radians) between the line and the positive x-axis</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>line</strong> : <a class="reference internal" href="#desicos.cppot.core.geom.Line2D" title="desicos.cppot.core.geom.Line2D"><code class="xref py py-class docutils literal"><span class="pre">Line2D</span></code></a></p>
+<blockquote class="last">
+<div><p>The constructed line</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="desicos.cppot.core.geom.Line2D.from_points">
+<em class="property">classmethod </em><code class="descname">from_points</code><span class="sig-paren">(</span><em>point1</em>, <em>point2</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/cppot/core/geom.html#Line2D.from_points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.geom.Line2D.from_points" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class method, constructs a line based on two points</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>point1</strong> : <a class="reference internal" href="#desicos.cppot.core.geom.Point2D" title="desicos.cppot.core.geom.Point2D"><code class="xref py py-class docutils literal"><span class="pre">Point2D</span></code></a></p>
+<blockquote>
+<div><p>First point that the line should go through</p>
+</div></blockquote>
+<p><strong>point2</strong> : <a class="reference internal" href="#desicos.cppot.core.geom.Point2D" title="desicos.cppot.core.geom.Point2D"><code class="xref py py-class docutils literal"><span class="pre">Point2D</span></code></a></p>
+<blockquote>
+<div><p>Second point that the line should go through</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>line</strong> : <a class="reference internal" href="#desicos.cppot.core.geom.Line2D" title="desicos.cppot.core.geom.Line2D"><code class="xref py py-class docutils literal"><span class="pre">Line2D</span></code></a></p>
+<blockquote class="last">
+<div><p>The constructed line</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>If no line can be constructed, a ValueError is raised.
+This happens when the points are identical.</p>
+<p>See also:
+<a class="reference external" href="http://math.stackexchange.com/questions/422602/convert-two-points-to-line-eq-ax-by-c-0">http://math.stackexchange.com/questions/422602/convert-two-points-to-line-eq-ax-by-c-0</a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="desicos.cppot.core.geom.Line2D.intersection_circle_near">
+<code class="descname">intersection_circle_near</code><span class="sig-paren">(</span><em>radius</em>, <em>near_point</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/cppot/core/geom.html#Line2D.intersection_circle_near"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.geom.Line2D.intersection_circle_near" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the intersection of a line with a circle
+If there is more than one intersection point, it returns the
+intersection closest to near_point. If there is no intersection,
+a ValueError is raised.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>radius</strong> : float</p>
+<blockquote>
+<div><p>Radius of circle</p>
+</div></blockquote>
+<p><strong>nearby_point</strong> : <a class="reference internal" href="#desicos.cppot.core.geom.Point2D" title="desicos.cppot.core.geom.Point2D"><code class="xref py py-class docutils literal"><span class="pre">Point2D</span></code></a></p>
+<blockquote>
+<div><p>The intersection nearest to this point will be returned</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>intersection_point</strong> : <a class="reference internal" href="#desicos.cppot.core.geom.Point2D" title="desicos.cppot.core.geom.Point2D"><code class="xref py py-class docutils literal"><span class="pre">Point2D</span></code></a></p>
+<blockquote class="last">
+<div><p>The found intersection point</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="desicos.cppot.core.geom.Line2D.intersection_line">
+<code class="descname">intersection_line</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/cppot/core/geom.html#Line2D.intersection_line"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.geom.Line2D.intersection_line" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the intersection point of this line and another line</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>other</strong> : <a class="reference internal" href="#desicos.cppot.core.geom.Line2D" title="desicos.cppot.core.geom.Line2D"><code class="xref py py-class docutils literal"><span class="pre">Line2D</span></code></a></p>
+<blockquote>
+<div><p>Other line to find intersection point with</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>intersection_point</strong> : <a class="reference internal" href="#desicos.cppot.core.geom.Point2D" title="desicos.cppot.core.geom.Point2D"><code class="xref py py-class docutils literal"><span class="pre">Point2D</span></code></a></p>
+<blockquote class="last">
+<div><p>The found intersection point</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>If no intersection point could be found, a ValueError is raised.
+This can happen when the lines are parallel.</p>
+<p>See also:
+<a class="reference external" href="http://en.wikipedia.org/wiki/Intersection_(Euclidean_geometry">http://en.wikipedia.org/wiki/Intersection_(Euclidean_geometry</a>)#Two_lines</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="desicos.cppot.core.geom.Line2D.point_on_right">
+<code class="descname">point_on_right</code><span class="sig-paren">(</span><em>point</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/cppot/core/geom.html#Line2D.point_on_right"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.geom.Line2D.point_on_right" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check on which side of this line a point lies</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>point</strong> : <a class="reference internal" href="#desicos.cppot.core.geom.Point2D" title="desicos.cppot.core.geom.Point2D"><code class="xref py py-class docutils literal"><span class="pre">Point2D</span></code></a></p>
+<blockquote>
+<div><p>Point to check</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>on_right_side</strong> : bool</p>
+<blockquote class="last">
+<div><p><code class="docutils literal"><span class="pre">True</span></code> if the point is on the right side of this line (looking
+into the direction of <code class="docutils literal"><span class="pre">self.direction()</span></code>), <code class="docutils literal"><span class="pre">False</span></code> otherwise.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="desicos.cppot.core.geom.Line2D.rotate">
+<code class="descname">rotate</code><span class="sig-paren">(</span><em>angle</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/cppot/core/geom.html#Line2D.rotate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.geom.Line2D.rotate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Created a new line, rotated with respect to the origin.
+The original line remains untouched.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>angle</strong> : float</p>
+<blockquote>
+<div><p>Angle (in radians) with which the line is to be rotated</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>new_line</strong> : <a class="reference internal" href="#desicos.cppot.core.geom.Line2D" title="desicos.cppot.core.geom.Line2D"><code class="xref py py-class docutils literal"><span class="pre">Line2D</span></code></a></p>
+<blockquote class="last">
+<div><p>The newly constructed rotated line</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="desicos.cppot.core.geom.Point2D">
+<em class="property">class </em><code class="descclassname">desicos.cppot.core.geom.</code><code class="descname">Point2D</code><a class="reference internal" href="../../_modules/desicos/cppot/core/geom.html#Point2D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.geom.Point2D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class representing a point on a two-dimensional plane
+It is based on <code class="docutils literal"><span class="pre">namedtuple</span></code>, which allows both named attribute access
+(point.x) and iteration / indexing. Point2D instances are immutable after
+construction. Addition / subtraction operators are overloaded, as wel as
+pre-multiplying by a scalar.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="13%" />
+<col width="87%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">x</span></code></td>
+<td><code class="docutils literal"><span class="pre">float</span></code>, Cartesian x-coordinate</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">y</span></code></td>
+<td><code class="docutils literal"><span class="pre">float</span></code>, Cartesian y-coordinate</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.cppot.core.geom.Point2D.angle" title="desicos.cppot.core.geom.Point2D.angle"><code class="xref py py-obj docutils literal"><span class="pre">angle</span></code></a>()</td>
+<td>Calculate the angle of this point in polar coordinates</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">count</span></code>(...)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.cppot.core.geom.Point2D.distance" title="desicos.cppot.core.geom.Point2D.distance"><code class="xref py py-obj docutils literal"><span class="pre">distance</span></code></a>(other)</td>
+<td>Calculate Euclidean distance between two points.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.cppot.core.geom.Point2D.from_polar" title="desicos.cppot.core.geom.Point2D.from_polar"><code class="xref py py-obj docutils literal"><span class="pre">from_polar</span></code></a>(norm,&nbsp;angle)</td>
+<td>Class method, creates a point from polar coordinates</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">index</span></code>((value,&nbsp;[start,&nbsp;...)</td>
+<td>Raises ValueError if the value is not present.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.cppot.core.geom.Point2D.norm" title="desicos.cppot.core.geom.Point2D.norm"><code class="xref py py-obj docutils literal"><span class="pre">norm</span></code></a>()</td>
+<td>Calculate distance of this point with respect to the origin.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.cppot.core.geom.Point2D.rotate" title="desicos.cppot.core.geom.Point2D.rotate"><code class="xref py py-obj docutils literal"><span class="pre">rotate</span></code></a>(angle)</td>
+<td>Created a new point, rotated with respect to the origin.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="desicos.cppot.core.geom.Point2D.angle">
+<code class="descname">angle</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/cppot/core/geom.html#Point2D.angle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.geom.Point2D.angle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the angle of this point in polar coordinates</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>angle</strong> : float</p>
+<blockquote class="last">
+<div><p>The counterclockwise angle (in radians) from the positive x-axis</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="desicos.cppot.core.geom.Point2D.distance">
+<code class="descname">distance</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/cppot/core/geom.html#Point2D.distance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.geom.Point2D.distance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate Euclidean distance between two points.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="desicos.cppot.core.geom.Point2D.from_polar">
+<em class="property">classmethod </em><code class="descname">from_polar</code><span class="sig-paren">(</span><em>norm</em>, <em>angle</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/cppot/core/geom.html#Point2D.from_polar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.geom.Point2D.from_polar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class method, creates a point from polar coordinates</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>norm</strong> : float</p>
+<blockquote>
+<div><p>Distance from the origin</p>
+</div></blockquote>
+<p><strong>angle</strong> : float</p>
+<blockquote>
+<div><p>The counterclockwise angle (in radians) from the positive x-axis</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>point</strong> : <a class="reference internal" href="#desicos.cppot.core.geom.Point2D" title="desicos.cppot.core.geom.Point2D"><code class="xref py py-class docutils literal"><span class="pre">Point2D</span></code></a></p>
+<blockquote class="last">
+<div><p>The newly constructed point</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="desicos.cppot.core.geom.Point2D.norm">
+<code class="descname">norm</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/cppot/core/geom.html#Point2D.norm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.geom.Point2D.norm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate distance of this point with respect to the origin.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="desicos.cppot.core.geom.Point2D.rotate">
+<code class="descname">rotate</code><span class="sig-paren">(</span><em>angle</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/cppot/core/geom.html#Point2D.rotate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.geom.Point2D.rotate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Created a new point, rotated with respect to the origin.
+The original point remains untouched.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>angle</strong> : float</p>
+<blockquote>
+<div><p>Angle (in radians) with which the point is to be rotated</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>new_point</strong> : <a class="reference internal" href="#desicos.cppot.core.geom.Point2D" title="desicos.cppot.core.geom.Point2D"><code class="xref py py-class docutils literal"><span class="pre">Point2D</span></code></a></p>
+<blockquote class="last">
+<div><p>The newly constructed rotated point</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="desicos.cppot.core.geom.Polygon2D">
+<em class="property">class </em><code class="descclassname">desicos.cppot.core.geom.</code><code class="descname">Polygon2D</code><a class="reference internal" href="../../_modules/desicos/cppot/core/geom.html#Polygon2D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.geom.Polygon2D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class representing a polygon on a two-dimensional plane.
+It is assumed that polygons do not self-intersect</p>
+<p>Pass an iterable of <code class="docutils literal"><span class="pre">Point2D</span></code>-objects to the constructor.
+Polygon2D instances are immutable after construction.</p>
+<p class="rubric">Notes</p>
+<p>Even though this object if (currently) a tuple of its points, it is
+recommended to not rely on this. This to allow possible future changes to
+the underlying implementation.</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.cppot.core.geom.Polygon2D.area" title="desicos.cppot.core.geom.Polygon2D.area"><code class="xref py py-obj docutils literal"><span class="pre">area</span></code></a>()</td>
+<td>Calculate the area enclosed by this polygon.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.cppot.core.geom.Polygon2D.contains_point" title="desicos.cppot.core.geom.Polygon2D.contains_point"><code class="xref py py-obj docutils literal"><span class="pre">contains_point</span></code></a>(point)</td>
+<td>Determine if a point is inside or outside the polygon</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">count</span></code>(...)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.cppot.core.geom.Polygon2D.get_closed_line" title="desicos.cppot.core.geom.Polygon2D.get_closed_line"><code class="xref py py-obj docutils literal"><span class="pre">get_closed_line</span></code></a>([num_points])</td>
+<td>Get a closed line that can be used to plot this polygon.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">index</span></code>((value,&nbsp;[start,&nbsp;...)</td>
+<td>Raises ValueError if the value is not present.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.cppot.core.geom.Polygon2D.points" title="desicos.cppot.core.geom.Polygon2D.points"><code class="xref py py-obj docutils literal"><span class="pre">points</span></code></a>()</td>
+<td>Get an iterator over all corner points in this polygon</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.cppot.core.geom.Polygon2D.rotate" title="desicos.cppot.core.geom.Polygon2D.rotate"><code class="xref py py-obj docutils literal"><span class="pre">rotate</span></code></a>(rotate_angle)</td>
+<td>Create a new polygon, idential to this one but rotated around the origin by a certain angle.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.cppot.core.geom.Polygon2D.slice_line" title="desicos.cppot.core.geom.Polygon2D.slice_line"><code class="xref py py-obj docutils literal"><span class="pre">slice_line</span></code></a>(line)</td>
+<td>Slice this polygon, returning only the section on the right side of the given line.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="desicos.cppot.core.geom.Polygon2D.area">
+<code class="descname">area</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/cppot/core/geom.html#Polygon2D.area"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.geom.Polygon2D.area" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the area enclosed by this polygon.</p>
+<p>See also:
+<a class="reference external" href="http://en.wikipedia.org/wiki/Shoelace_formula">http://en.wikipedia.org/wiki/Shoelace_formula</a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="desicos.cppot.core.geom.Polygon2D.contains_point">
+<code class="descname">contains_point</code><span class="sig-paren">(</span><em>point</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/cppot/core/geom.html#Polygon2D.contains_point"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.geom.Polygon2D.contains_point" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if a point is inside or outside the polygon</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>point</strong> : <a class="reference internal" href="#desicos.cppot.core.geom.Point2D" title="desicos.cppot.core.geom.Point2D"><code class="xref py py-class docutils literal"><span class="pre">Point2D</span></code></a></p>
+<blockquote>
+<div><p>Point to test</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>inside_polygon</strong> : bool</p>
+<blockquote class="last">
+<div><p><code class="docutils literal"><span class="pre">True</span></code> if the point is inside the polygon, <code class="docutils literal"><span class="pre">False</span></code> otherwise</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>The &#8216;Ray casting&#8217; algorithm is used, since the &#8216;interior angle&#8217;
+algorithm was found to be very slow.</p>
+<p>This method has not been verified to work correctly for special cases,
+such as the point being (almost) exactly on a vertex or line.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="desicos.cppot.core.geom.Polygon2D.get_closed_line">
+<code class="descname">get_closed_line</code><span class="sig-paren">(</span><em>num_points=1</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/cppot/core/geom.html#Polygon2D.get_closed_line"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.geom.Polygon2D.get_closed_line" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a closed line that can be used to plot this polygon.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>num_points</strong> : int</p>
+<blockquote>
+<div><p>The number of points to use per edge. Default value is 1.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>out</strong> : tuple</p>
+<blockquote class="last">
+<div><p>out[0] contains a numpy array of x-coordinates, out[1] an array
+of y-coordinates. The first point in the polygon is repeated, such
+that plot(x, y) results in a closed polygon.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="desicos.cppot.core.geom.Polygon2D.points">
+<code class="descname">points</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/cppot/core/geom.html#Polygon2D.points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.geom.Polygon2D.points" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get an iterator over all corner points in this polygon</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="desicos.cppot.core.geom.Polygon2D.rotate">
+<code class="descname">rotate</code><span class="sig-paren">(</span><em>rotate_angle</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/cppot/core/geom.html#Polygon2D.rotate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.geom.Polygon2D.rotate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new polygon, idential to this one but rotated around the
+origin by a certain angle.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>rotate_angle</strong> : float</p>
+<blockquote>
+<div><p>Rotation angle to use, in radians</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>new_poly</strong> : <a class="reference internal" href="#desicos.cppot.core.geom.Polygon2D" title="desicos.cppot.core.geom.Polygon2D"><code class="xref py py-class docutils literal"><span class="pre">Polygon2D</span></code></a></p>
+<blockquote class="last">
+<div><p>The (newly created) rotated polygon.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="desicos.cppot.core.geom.Polygon2D.slice_line">
+<code class="descname">slice_line</code><span class="sig-paren">(</span><em>line</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/cppot/core/geom.html#Polygon2D.slice_line"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.geom.Polygon2D.slice_line" title="Permalink to this definition">¶</a></dt>
+<dd><p>Slice this polygon, returning only the section on the right side
+of the given line.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>line</strong> : <a class="reference internal" href="#desicos.cppot.core.geom.Line2D" title="desicos.cppot.core.geom.Line2D"><code class="xref py py-class docutils literal"><span class="pre">Line2D</span></code></a></p>
+<blockquote>
+<div><p>Line to be used for slicing.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>new_poly</strong> : <a class="reference internal" href="#desicos.cppot.core.geom.Polygon2D" title="desicos.cppot.core.geom.Polygon2D"><code class="xref py py-class docutils literal"><span class="pre">Polygon2D</span></code></a></p>
+<blockquote class="last">
+<div><p>The (newly created) sliced polygon.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="desicos.cppot.core.geom.angle_in_range">
+<code class="descclassname">desicos.cppot.core.geom.</code><code class="descname">angle_in_range</code><span class="sig-paren">(</span><em>angle</em>, <em>angle_min</em>, <em>angle_max</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/cppot/core/geom.html#angle_in_range"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.geom.angle_in_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if an angle is within the specified range (min..max)
+While taking care of all the (mod 2pi)-issues.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>angle</strong> : float</p>
+<blockquote>
+<div><p>The angle to check</p>
+</div></blockquote>
+<p><strong>min_angle</strong> : float</p>
+<blockquote>
+<div><p>The lower limit of the range</p>
+</div></blockquote>
+<p><strong>max_angle</strong> : float</p>
+<blockquote>
+<div><p>The upper limit of the range</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>in_range</strong> : bool</p>
+<blockquote class="last">
+<div><p>True iff the given angle is in range min_angle...max_angle</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="desicos.cppot.core.geom.circle_segment_area">
+<code class="descclassname">desicos.cppot.core.geom.</code><code class="descname">circle_segment_area</code><span class="sig-paren">(</span><em>radius</em>, <em>angle</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/cppot/core/geom.html#circle_segment_area"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.geom.circle_segment_area" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the area of a circle segment, which is a region bound by
+an arc (less than 180 deg) and a straight line connecting the end points
+of that arc.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>radius</strong> : float</p>
+<blockquote>
+<div><p>Radius of the arc</p>
+</div></blockquote>
+<p><strong>angle</strong> : float</p>
+<blockquote>
+<div><p>Angle (in radians) of the arc</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>area</strong> : float</p>
+<blockquote class="last">
+<div><p>The calculated area</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>See <a class="reference external" href="http://en.wikipedia.org/wiki/Circular_segment">http://en.wikipedia.org/wiki/Circular_segment</a></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="desicos.cppot.core.geom.wrap_to_pi">
+<code class="descclassname">desicos.cppot.core.geom.</code><code class="descname">wrap_to_pi</code><span class="sig-paren">(</span><em>angle</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/cppot/core/geom.html#wrap_to_pi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.geom.wrap_to_pi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrap an angle to within the range [-pi, pi), by adding multiples of 2*pi</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>angle</strong> : float</p>
+<blockquote>
+<div><p>The angle to wrap</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>new_angle</strong> : float</p>
+<blockquote class="last">
+<div><p>Wrapped angle within the range [-pi, pi)</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<span class="target" id="module-desicos.cppot.core.ply_model"></span><div class="section" id="virtual-ply-model-desicos-cppot-core-ply-model">
+<h3>Virtual Ply Model (<a class="reference internal" href="#module-desicos.cppot.core.ply_model" title="desicos.cppot.core.ply_model"><code class="xref py py-mod docutils literal"><span class="pre">desicos.cppot.core.ply_model</span></code></a>)<a class="headerlink" href="#virtual-ply-model-desicos-cppot-core-ply-model" title="Permalink to this headline">¶</a></h3>
+<p>Classes to create a virtual model of the ply pieces on an actual cone.</p>
+<dl class="class">
+<dt id="desicos.cppot.core.ply_model.PlyPiece">
+<em class="property">class </em><code class="descclassname">desicos.cppot.core.ply_model.</code><code class="descname">PlyPiece</code><span class="sig-paren">(</span><em>polygon</em>, <em>phi_nom</em>, <em>phi_nom_min</em>, <em>phi_nom_max</em>, <em>phi_limit_min=None</em>, <em>phi_limit_max=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/cppot/core/ply_model.html#PlyPiece"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.ply_model.PlyPiece" title="Permalink to this definition">¶</a></dt>
+<dd><p>PlyPiece object</p>
+<p>Carries all the information about a single piece of ply in the layup of a
+cone, with a defined size and orientation.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="28%" />
+<col width="72%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attributes</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">polygon</span></code></td>
+<td><code class="docutils literal"><span class="pre">Polygon2D</span></code>, containing the geometry of the
+ply piece.</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">phi_nom</span></code></td>
+<td><code class="docutils literal"><span class="pre">float</span></code>, angle at which the origin line (L0) of
+the ply piece intersects the circle with radius
+<code class="docutils literal"><span class="pre">starting_position</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">phi_nom_min</span></code></td>
+<td><code class="docutils literal"><span class="pre">float</span></code>, smallest angle phi that is contained
+within this ply piece at radius <code class="docutils literal"><span class="pre">starting_position</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">phi_nom_max</span></code></td>
+<td><code class="docutils literal"><span class="pre">float</span></code>, largest angle phi that is contained
+within this ply piece at radius <code class="docutils literal"><span class="pre">starting_position</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">phi_limit_min</span></code></td>
+<td><code class="docutils literal"><span class="pre">float</span></code>, minimum value of phi for any of the
+points in <code class="docutils literal"><span class="pre">polygon</span></code>. Optional, will be calculated
+if not supplied to the constructor.</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">phi_limit_max</span></code></td>
+<td><code class="docutils literal"><span class="pre">float</span></code>, minimum value of phi for any of the
+points in <code class="docutils literal"><span class="pre">polygon</span></code>. Optional, will be calculated
+if not supplied to the constructor.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>On the nominal circle (radius <code class="docutils literal"><span class="pre">starting_position</span></code>), this ply piece occupies
+the range <code class="docutils literal"><span class="pre">phi_nom_min</span></code>...``phi_nom_max``.</p>
+<p>For all points in this ply piece, the inequality
+<code class="docutils literal"><span class="pre">phi_limit_min</span> <span class="pre">&lt;=</span> <span class="pre">phi</span> <span class="pre">&lt;=</span> <span class="pre">phi_limit_max</span></code> should hold.</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.cppot.core.ply_model.PlyPiece.angle_deviation" title="desicos.cppot.core.ply_model.PlyPiece.angle_deviation"><code class="xref py py-obj docutils literal"><span class="pre">angle_deviation</span></code></a>(point)</td>
+<td>Get the deviation between the local and nominal fiber angle at a certain point</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.cppot.core.ply_model.PlyPiece.contains_point" title="desicos.cppot.core.ply_model.PlyPiece.contains_point"><code class="xref py py-obj docutils literal"><span class="pre">contains_point</span></code></a>(point[,&nbsp;phi])</td>
+<td>Check if a point is contained in this ply piece</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.cppot.core.ply_model.PlyPiece.copy_rotated" title="desicos.cppot.core.ply_model.PlyPiece.copy_rotated"><code class="xref py py-obj docutils literal"><span class="pre">copy_rotated</span></code></a>(rotate_angle)</td>
+<td>Create a copy of this ply piece, which is rotated by a certain angle.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="desicos.cppot.core.ply_model.PlyPiece.angle_deviation">
+<code class="descname">angle_deviation</code><span class="sig-paren">(</span><em>point</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/cppot/core/ply_model.html#PlyPiece.angle_deviation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.ply_model.PlyPiece.angle_deviation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the deviation between the local and nominal fiber angle at a certain point</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>point</strong> : Point2D</p>
+<blockquote>
+<div><p>Cartesian coordinates of the point. These are in the coordinate
+system of the unfolded cone, so (eta, zeta) (as floats).</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>angle_diff</strong> : float</p>
+<blockquote class="last">
+<div><p>Local minus nominal fiber angle at this point, in degrees</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="desicos.cppot.core.ply_model.PlyPiece.contains_point">
+<code class="descname">contains_point</code><span class="sig-paren">(</span><em>point</em>, <em>phi=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/cppot/core/ply_model.html#PlyPiece.contains_point"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.ply_model.PlyPiece.contains_point" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if a point is contained in this ply piece</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>point</strong> : Point2D</p>
+<blockquote>
+<div><p>The point to check. This is in the coordinate
+system of the unfolded cone, so (eta, zeta).</p>
+</div></blockquote>
+<p><strong>phi</strong> : float</p>
+<blockquote>
+<div><p>Angle corresponding to <code class="docutils literal"><span class="pre">point</span></code>. Parameter is optional, but
+passing it from the caller can help performance.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>cointains_point</strong> : bool</p>
+<blockquote class="last">
+<div><p>True if the point is in this ply piece, false otherwise. For
+points exactly on the edge of the ply piece, resuls are undefined.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="desicos.cppot.core.ply_model.PlyPiece.copy_rotated">
+<code class="descname">copy_rotated</code><span class="sig-paren">(</span><em>rotate_angle</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/cppot/core/ply_model.html#PlyPiece.copy_rotated"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.ply_model.PlyPiece.copy_rotated" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a copy of this ply piece, which is rotated by a certain angle.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>rotate_angle</strong> : float</p>
+<blockquote>
+<div><p>Angle of new ply piece with respect to this one, in radians</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>new_piece</strong> : <a class="reference internal" href="#desicos.cppot.core.ply_model.PlyPiece" title="desicos.cppot.core.ply_model.PlyPiece"><code class="xref py py-class docutils literal"><span class="pre">PlyPiece</span></code></a></p>
+<blockquote class="last">
+<div><p>Rotated ply piece</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="desicos.cppot.core.ply_model.PlyPieceModel">
+<em class="property">class </em><code class="descclassname">desicos.cppot.core.ply_model.</code><code class="descname">PlyPieceModel</code><span class="sig-paren">(</span><em>cg</em>, <em>fiber_angle</em>, <em>starting_position</em>, <em>max_width</em>, <em>rel_ang_offset=0.0</em>, <em>eccentricity=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/cppot/core/ply_model.html#PlyPieceModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.ply_model.PlyPieceModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract base class for all ply piece models</p>
+<p>This class encapsulates all functionality to create a virtual ply model
+based on the given parameters. Various methods are available to
+subsequently extract information about this virtual ply model.</p>
+<p>For the different ply piece shapes, subclasses should be made that define
+at least the method <code class="docutils literal"><span class="pre">construct_single_ply_piece</span></code> and possibly others.</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.cppot.core.ply_model.PlyPieceModel.all_local_orientations" title="desicos.cppot.core.ply_model.PlyPieceModel.all_local_orientations"><code class="xref py py-obj docutils literal"><span class="pre">all_local_orientations</span></code></a>(eta,&nbsp;zeta)</td>
+<td>Determine the local fiber orientations of all plies at a point.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.cppot.core.ply_model.PlyPieceModel.construct_single_ply_piece" title="desicos.cppot.core.ply_model.PlyPieceModel.construct_single_ply_piece"><code class="xref py py-obj docutils literal"><span class="pre">construct_single_ply_piece</span></code></a>([fraction])</td>
+<td>Construct a single ply piece.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.cppot.core.ply_model.PlyPieceModel.corner_orientations" title="desicos.cppot.core.ply_model.PlyPieceModel.corner_orientations"><code class="xref py py-obj docutils literal"><span class="pre">corner_orientations</span></code></a>()</td>
+<td>Get the fiber orientations at all corners of the useful area, which is the area between radii s2 and s3.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.cppot.core.ply_model.PlyPieceModel.edge_lengths" title="desicos.cppot.core.ply_model.PlyPieceModel.edge_lengths"><code class="xref py py-obj docutils literal"><span class="pre">edge_lengths</span></code></a>()</td>
+<td>Get the lengths of the edges of the (base) ply piece.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.cppot.core.ply_model.PlyPieceModel.effective_area" title="desicos.cppot.core.ply_model.PlyPieceModel.effective_area"><code class="xref py py-obj docutils literal"><span class="pre">effective_area</span></code></a>([ply_piece,&nbsp;max_angle_dev])</td>
+<td>Get the effective area of a single ply piece.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.cppot.core.ply_model.PlyPieceModel.local_num_pieces" title="desicos.cppot.core.ply_model.PlyPieceModel.local_num_pieces"><code class="xref py py-obj docutils literal"><span class="pre">local_num_pieces</span></code></a>(eta,&nbsp;zeta)</td>
+<td>Determine the local number of overlapping pieces at a given point.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.cppot.core.ply_model.PlyPieceModel.local_orientation" title="desicos.cppot.core.ply_model.PlyPieceModel.local_orientation"><code class="xref py py-obj docutils literal"><span class="pre">local_orientation</span></code></a>(eta,&nbsp;zeta)</td>
+<td>Determine the local fiber orientation at a given point.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.cppot.core.ply_model.PlyPieceModel.num_pieces" title="desicos.cppot.core.ply_model.PlyPieceModel.num_pieces"><code class="xref py py-obj docutils literal"><span class="pre">num_pieces</span></code></a>()</td>
+<td>Determine the total number of pieces needed to fully cover the cone.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.cppot.core.ply_model.PlyPieceModel.ply_piece_area" title="desicos.cppot.core.ply_model.PlyPieceModel.ply_piece_area"><code class="xref py py-obj docutils literal"><span class="pre">ply_piece_area</span></code></a>()</td>
+<td>Get the area of a single ply piece that is on the free cone area, i.e.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.cppot.core.ply_model.PlyPieceModel.ratio_continuous_fibers" title="desicos.cppot.core.ply_model.PlyPieceModel.ratio_continuous_fibers"><code class="xref py py-obj docutils literal"><span class="pre">ratio_continuous_fibers</span></code></a>()</td>
+<td>Get the ratio of continuous fibers, i.e.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.cppot.core.ply_model.PlyPieceModel.rebuild" title="desicos.cppot.core.ply_model.PlyPieceModel.rebuild"><code class="xref py py-obj docutils literal"><span class="pre">rebuild</span></code></a>()</td>
+<td>Rebuild the model, actually constructing all ply pieces</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="desicos.cppot.core.ply_model.PlyPieceModel.all_local_orientations">
+<code class="descname">all_local_orientations</code><span class="sig-paren">(</span><em>eta</em>, <em>zeta</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/cppot/core/ply_model.html#PlyPieceModel.all_local_orientations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.ply_model.PlyPieceModel.all_local_orientations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine the local fiber orientations of all plies at a point.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>eta</strong> : float</p>
+<blockquote>
+<div><p>Horizontal coordinate of point, in the coordinate system of the
+unfolded cone.</p>
+</div></blockquote>
+<p><strong>zeta</strong> : float</p>
+<blockquote>
+<div><p>Vertical coordinate of point, in the coordinate system of the
+unfolded cone.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>local_angles</strong> : list</p>
+<blockquote class="last">
+<div><p>Lists of floats representing the local fiber angle of each
+(possibly overlapping) ply piece at this point, in degrees.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="desicos.cppot.core.ply_model.PlyPieceModel.construct_single_ply_piece">
+<code class="descname">construct_single_ply_piece</code><span class="sig-paren">(</span><em>fraction=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/cppot/core/ply_model.html#PlyPieceModel.construct_single_ply_piece"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.ply_model.PlyPieceModel.construct_single_ply_piece" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct a single ply piece.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>fraction</strong> : float</p>
+<blockquote>
+<div><p>Optional, range (0, 1], default is 1.
+The newly constructed ply piece will normally span an angle
+<code class="docutils literal"><span class="pre">delta_phi</span></code> on the nominal circle (radius <code class="docutils literal"><span class="pre">s_theta_nom</span></code>) from
+<code class="docutils literal"><span class="pre">phi_nom_min</span></code> to <code class="docutils literal"><span class="pre">phi_nom_max</span></code>. When this parameter is set
+unequal to 1, <code class="docutils literal"><span class="pre">delta_phi</span></code> of the resulting ply piece will be the
+indicated fraction of the value it would normally have. This
+functionality is used to construct rest-pieces.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>ply_piece</strong> : <a class="reference internal" href="#desicos.cppot.core.ply_model.PlyPiece" title="desicos.cppot.core.ply_model.PlyPiece"><code class="xref py py-class docutils literal"><span class="pre">PlyPiece</span></code></a></p>
+<blockquote class="last">
+<div><p>The newly constructed ply piece.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>This method is just to define the interface, implementation should be
+provided by a derived class.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="desicos.cppot.core.ply_model.PlyPieceModel.corner_orientations">
+<code class="descname">corner_orientations</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/cppot/core/ply_model.html#PlyPieceModel.corner_orientations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.ply_model.PlyPieceModel.corner_orientations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the fiber orientations at all corners of the useful area,
+which is the area between radii s2 and s3.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>corner_orientations</strong> : list</p>
+<blockquote class="last">
+<div><p>Fiber angles (in degrees) at the four useful corner points of
+the base ply piece. The order of values matches P1, P2, P3, P4.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="desicos.cppot.core.ply_model.PlyPieceModel.edge_lengths">
+<code class="descname">edge_lengths</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/cppot/core/ply_model.html#PlyPieceModel.edge_lengths"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.ply_model.PlyPieceModel.edge_lengths" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the lengths of the edges of the (base) ply piece.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>edge_lengths</strong> : list</p>
+<blockquote class="last">
+<div><p>List of edge lengths (L1 to L4)</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="desicos.cppot.core.ply_model.PlyPieceModel.effective_area">
+<code class="descname">effective_area</code><span class="sig-paren">(</span><em>ply_piece=None</em>, <em>max_angle_dev=2.0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/cppot/core/ply_model.html#PlyPieceModel.effective_area"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.ply_model.PlyPieceModel.effective_area" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the effective area of a single ply piece. This is the area on
+useful section of the cone, where the deviation of the fiber angle
+is less than a given maximum.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>ply_piece</strong> : <a class="reference internal" href="#desicos.cppot.core.ply_model.PlyPiece" title="desicos.cppot.core.ply_model.PlyPiece"><code class="xref py py-class docutils literal"><span class="pre">PlyPiece</span></code></a>, optional</p>
+<blockquote>
+<div><p>Ply piece to get the effective area for. If not set, the base
+piece is used.</p>
+</div></blockquote>
+<p><strong>max_angle_dev</strong> : float, optional</p>
+<blockquote>
+<div><p>Maximum deviation from the nominal fiber angle to consider
+the material &#8216;effective&#8217;. In degrees.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>out</strong> : tuple</p>
+<blockquote class="last">
+<div><p>2-tuple, where <code class="docutils literal"><span class="pre">out[0]</span></code> is the effective surface area and
+<code class="docutils literal"><span class="pre">out[1]</span></code> is the corresponding polygon.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Note that the polygon has straight edges, while the calculation of
+the effective area takes into account that some edges of the effective
+area may be arc sections.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="desicos.cppot.core.ply_model.PlyPieceModel.local_num_pieces">
+<code class="descname">local_num_pieces</code><span class="sig-paren">(</span><em>eta</em>, <em>zeta</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/cppot/core/ply_model.html#PlyPieceModel.local_num_pieces"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.ply_model.PlyPieceModel.local_num_pieces" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine the local number of overlapping pieces at a given point.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>eta</strong> : float</p>
+<blockquote>
+<div><p>Horizontal coordinate of point, in the coordinate system of the
+unfolded cone.</p>
+</div></blockquote>
+<p><strong>zeta</strong> : float</p>
+<blockquote>
+<div><p>Vertical coordinate of point, in the coordinate system of the
+unfolded cone.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>num_pieces</strong> : int</p>
+<blockquote class="last">
+<div><p>Number of overlapping pieces at the given point in the ply</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="desicos.cppot.core.ply_model.PlyPieceModel.local_orientation">
+<code class="descname">local_orientation</code><span class="sig-paren">(</span><em>eta</em>, <em>zeta</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/cppot/core/ply_model.html#PlyPieceModel.local_orientation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.ply_model.PlyPieceModel.local_orientation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine the local fiber orientation at a given point. If the
+given point is not inside any ply piece, NaN is returned. If there are
+multiple overlapping ply pieces, the orientation belonging to one of
+them (the first in the ply piece list) is returned.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>eta</strong> : float</p>
+<blockquote>
+<div><p>Horizontal coordinate of point, in the coordinate system of the
+unfolded cone.</p>
+</div></blockquote>
+<p><strong>zeta</strong> : float</p>
+<blockquote>
+<div><p>Vertical coordinate of point, in the coordinate system of the
+unfolded cone.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>local_angle</strong> : float</p>
+<blockquote class="last">
+<div><p>Local fiber angle at the given point in the given ply, in degrees.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="desicos.cppot.core.ply_model.PlyPieceModel.num_pieces">
+<code class="descname">num_pieces</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/cppot/core/ply_model.html#PlyPieceModel.num_pieces"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.ply_model.PlyPieceModel.num_pieces" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine the total number of pieces needed to fully cover the cone.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>num_pieces</strong> : float</p>
+<blockquote class="last">
+<div><p>The number of needed pieces, as a float. The fractional part
+indicates the size of the &#8216;rest piece&#8217; that is needed.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="desicos.cppot.core.ply_model.PlyPieceModel.ply_piece_area">
+<code class="descname">ply_piece_area</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/cppot/core/ply_model.html#PlyPieceModel.ply_piece_area"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.ply_model.PlyPieceModel.ply_piece_area" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the area of a single ply piece that is on the free cone area,
+i.e. between radii s2 and s3.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>area</strong> : float</p>
+<blockquote class="last">
+<div><p>The aforementioned area</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="desicos.cppot.core.ply_model.PlyPieceModel.ratio_continuous_fibers">
+<code class="descname">ratio_continuous_fibers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/cppot/core/ply_model.html#PlyPieceModel.ratio_continuous_fibers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.ply_model.PlyPieceModel.ratio_continuous_fibers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the ratio of continuous fibers, i.e. the fraction of the fibers
+at the bottom edge (radius s3) that reach the top edge (radius s2).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>ratio</strong> : float</p>
+<blockquote class="last">
+<div><p>The ratio of continuous fibers</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="desicos.cppot.core.ply_model.PlyPieceModel.rebuild">
+<code class="descname">rebuild</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/cppot/core/ply_model.html#PlyPieceModel.rebuild"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.ply_model.PlyPieceModel.rebuild" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rebuild the model, actually constructing all ply pieces</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="desicos.cppot.core.ply_model.RectPlyPieceModel">
+<em class="property">class </em><code class="descclassname">desicos.cppot.core.ply_model.</code><code class="descname">RectPlyPieceModel</code><span class="sig-paren">(</span><em>cg</em>, <em>fiber_angle</em>, <em>starting_position</em>, <em>max_width</em>, <em>rel_ang_offset=0.0</em>, <em>eccentricity=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/cppot/core/ply_model.html#RectPlyPieceModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.ply_model.RectPlyPieceModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sub-class of <code class="docutils literal"><span class="pre">PlyPieceModel</span></code>, for shape C (rectangle)</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">all_local_orientations</span></code>(eta,&nbsp;zeta)</td>
+<td>Determine the local fiber orientations of all plies at a point.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.cppot.core.ply_model.RectPlyPieceModel.construct_single_ply_piece" title="desicos.cppot.core.ply_model.RectPlyPieceModel.construct_single_ply_piece"><code class="xref py py-obj docutils literal"><span class="pre">construct_single_ply_piece</span></code></a>([fraction])</td>
+<td>Construct a ply piece for shape C (rectangle)</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">corner_orientations</span></code>()</td>
+<td>Get the fiber orientations at all corners of the useful area, which is the area between radii s2 and s3.</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">edge_lengths</span></code>()</td>
+<td>Get the lengths of the edges of the (base) ply piece.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">effective_area</span></code>([ply_piece,&nbsp;max_angle_dev])</td>
+<td>Get the effective area of a single ply piece.</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">local_num_pieces</span></code>(eta,&nbsp;zeta)</td>
+<td>Determine the local number of overlapping pieces at a given point.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">local_orientation</span></code>(eta,&nbsp;zeta)</td>
+<td>Determine the local fiber orientation at a given point.</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">num_pieces</span></code>()</td>
+<td>Determine the total number of pieces needed to fully cover the cone.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">ply_piece_area</span></code>()</td>
+<td>Get the area of a single ply piece that is on the free cone area, i.e.</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">ratio_continuous_fibers</span></code>()</td>
+<td>Get the ratio of continuous fibers, i.e.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">rebuild</span></code>()</td>
+<td>Rebuild the model, actually constructing all ply pieces</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="desicos.cppot.core.ply_model.RectPlyPieceModel.construct_single_ply_piece">
+<code class="descname">construct_single_ply_piece</code><span class="sig-paren">(</span><em>fraction=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/cppot/core/ply_model.html#RectPlyPieceModel.construct_single_ply_piece"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.ply_model.RectPlyPieceModel.construct_single_ply_piece" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct a ply piece for shape C (rectangle)</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="desicos.cppot.core.ply_model.Trapez2PlyPieceModel">
+<em class="property">class </em><code class="descclassname">desicos.cppot.core.ply_model.</code><code class="descname">Trapez2PlyPieceModel</code><span class="sig-paren">(</span><em>cg</em>, <em>fiber_angle</em>, <em>starting_position</em>, <em>max_width</em>, <em>rel_ang_offset=0.0</em>, <em>eccentricity=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/cppot/core/ply_model.html#Trapez2PlyPieceModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.ply_model.Trapez2PlyPieceModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sub-class of <code class="docutils literal"><span class="pre">PlyPieceModel</span></code>, for shape B (trapezium with one overlap)</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">all_local_orientations</span></code>(eta,&nbsp;zeta)</td>
+<td>Determine the local fiber orientations of all plies at a point.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.cppot.core.ply_model.Trapez2PlyPieceModel.construct_single_ply_piece" title="desicos.cppot.core.ply_model.Trapez2PlyPieceModel.construct_single_ply_piece"><code class="xref py py-obj docutils literal"><span class="pre">construct_single_ply_piece</span></code></a>([fraction])</td>
+<td>Construct a ply piece for shape A (trapezium)</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">corner_orientations</span></code>()</td>
+<td>Get the fiber orientations at all corners of the useful area, which is the area between radii s2 and s3.</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">edge_lengths</span></code>()</td>
+<td>Get the lengths of the edges of the (base) ply piece.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">effective_area</span></code>([ply_piece,&nbsp;max_angle_dev])</td>
+<td>Get the effective area of a single ply piece.</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">local_num_pieces</span></code>(eta,&nbsp;zeta)</td>
+<td>Determine the local number of overlapping pieces at a given point.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">local_orientation</span></code>(eta,&nbsp;zeta)</td>
+<td>Determine the local fiber orientation at a given point.</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">num_pieces</span></code>()</td>
+<td>Determine the total number of pieces needed to fully cover the cone.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">ply_piece_area</span></code>()</td>
+<td>Get the area of a single ply piece that is on the free cone area, i.e.</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">ratio_continuous_fibers</span></code>()</td>
+<td>Get the ratio of continuous fibers, i.e.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">rebuild</span></code>()</td>
+<td>Rebuild the model, actually constructing all ply pieces</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="desicos.cppot.core.ply_model.Trapez2PlyPieceModel.construct_single_ply_piece">
+<code class="descname">construct_single_ply_piece</code><span class="sig-paren">(</span><em>fraction=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/cppot/core/ply_model.html#Trapez2PlyPieceModel.construct_single_ply_piece"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.ply_model.Trapez2PlyPieceModel.construct_single_ply_piece" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct a ply piece for shape A (trapezium)</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="desicos.cppot.core.ply_model.TrapezPlyPieceModel">
+<em class="property">class </em><code class="descclassname">desicos.cppot.core.ply_model.</code><code class="descname">TrapezPlyPieceModel</code><span class="sig-paren">(</span><em>cg</em>, <em>fiber_angle</em>, <em>starting_position</em>, <em>max_width</em>, <em>rel_ang_offset=0.0</em>, <em>eccentricity=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/cppot/core/ply_model.html#TrapezPlyPieceModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.ply_model.TrapezPlyPieceModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sub-class of <code class="docutils literal"><span class="pre">PlyPieceModel</span></code>, for shape A (trapezium)</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">all_local_orientations</span></code>(eta,&nbsp;zeta)</td>
+<td>Determine the local fiber orientations of all plies at a point.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.cppot.core.ply_model.TrapezPlyPieceModel.construct_single_ply_piece" title="desicos.cppot.core.ply_model.TrapezPlyPieceModel.construct_single_ply_piece"><code class="xref py py-obj docutils literal"><span class="pre">construct_single_ply_piece</span></code></a>([fraction])</td>
+<td>Construct a ply piece for shape A (trapezium)</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">corner_orientations</span></code>()</td>
+<td>Get the fiber orientations at all corners of the useful area, which is the area between radii s2 and s3.</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">edge_lengths</span></code>()</td>
+<td>Get the lengths of the edges of the (base) ply piece.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">effective_area</span></code>([ply_piece,&nbsp;max_angle_dev])</td>
+<td>Get the effective area of a single ply piece.</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">local_num_pieces</span></code>(eta,&nbsp;zeta)</td>
+<td>Determine the local number of overlapping pieces at a given point.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">local_orientation</span></code>(eta,&nbsp;zeta)</td>
+<td>Determine the local fiber orientation at a given point.</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">num_pieces</span></code>()</td>
+<td>Determine the total number of pieces needed to fully cover the cone.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">ply_piece_area</span></code>()</td>
+<td>Get the area of a single ply piece that is on the free cone area, i.e.</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">ratio_continuous_fibers</span></code>()</td>
+<td>Get the ratio of continuous fibers, i.e.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">rebuild</span></code>()</td>
+<td>Rebuild the model, actually constructing all ply pieces</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="desicos.cppot.core.ply_model.TrapezPlyPieceModel.construct_single_ply_piece">
+<code class="descname">construct_single_ply_piece</code><span class="sig-paren">(</span><em>fraction=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/cppot/core/ply_model.html#TrapezPlyPieceModel.construct_single_ply_piece"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.cppot.core.ply_model.TrapezPlyPieceModel.construct_single_ply_piece" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct a ply piece for shape A (trapezium)</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+<span class="target" id="module-desicos.cppot.gui"></span><div class="section" id="cppot-gui-desicos-cppot-gui">
+<h2>CPPOT GUI (<a class="reference internal" href="#module-desicos.cppot.gui" title="desicos.cppot.gui"><code class="xref py py-mod docutils literal"><span class="pre">desicos.cppot.gui</span></code></a>)<a class="headerlink" href="#cppot-gui-desicos-cppot-gui" title="Permalink to this headline">¶</a></h2>
+<p>All the functionalities of the Graphic User Interface will be started by
+clicking on the <code class="docutils literal"><span class="pre">Click_me.pyw</span></code> file.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../index.html">
+    <img class="logo" src="../../_static/desicos.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+</ul>
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2012-2015 Desicos Improved Software Team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.2</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

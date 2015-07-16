@@ -1,5 +1,5 @@
-Virtual Material Model Tool (VMMT)
-==================================
+Virtual Material Model (VMM)
+============================
 
 Introduction
 ------------
@@ -26,378 +26,538 @@ formula for this program.
 
 .. figure:: ../../../../figures/modules/cppot/vmmt/fig_01.png
     :width: 700
+    :align: center
 
     Figure 1: Path of Fiber on Cone
 
 The objective of this tool is to calculate the local fiber angle and thickness
 of any given point on a laminated cone. To do this the laminate will be
-rebuild as a virtual model. Each ply (i) consist of a finite number of parts
+rebuilt as a virtual model. Each ply (i) consists of a finite number of pieces
 (j) with a certain ply angle `\Theta_i` and offset angle `\phi_{i,j}`. These
-are called ply-parts. After building the model another algorithm determines in
-which ply-parts a given point lies and calculates the local fiber angles and
-thickness.
+are called ply pieces. After building the model, another algorithm determines
+in which ply piece(s) a given point lies and calculates the local fiber angles
+and thickness.
 
-This manual is supposed to explain the VMM-program and every function it
-contains. In the ALPHA-Version the program has no GUI and the connection to
-ABAQUS is not yet safe.
+This manual is supposed to explain the VMM. The corresponding code is located
+in :mod:`desicos.cppot.core`. This material model is used by both the
+Abaqus-plugin (:class:`desicos.abaqus.imperfections.ppi.PPI`)
+and in the separate Cone Ply Piece Optimization Tool (CPPOT).
 
 Coordinate systems
 ------------------
 
-This program works with three different coordinate systems:
-3D-Cartesian: 		Used for the model generation in ABAQUS
+This program works with several different coordinate systems:
+
+* **3D-Cartesian**: Used for the model generation in ABAQUS
 
 .. math::
-    X,Y,Z \in [-\infty, +\infty]
-2D-Cartesian: 	Used for working in the plane od the unwound cone (Definition
-of Lines, Calculation of crossings,...)
+    x,y,z \in [-\infty, +\infty]
+
+
+.. figure:: ../../../../figures/modules/cppot/vmmt/fig_global_cart_csys.png
+    :width: 500
+    :align: center
+
+    Figure 2: Global 3D-Cartesian coordinate system
+
+* **3D-cylindrical**: This often allows considerable simplification in
+  axisymmetric cases, such as cones. Note that the symbol `\psi` is used here
+  for the circumferential coordinate instead of `\theta`, because the latter
+  will be used for the fiber angle.
 
 .. math::
-    x,y \in [-\infty,+\infty]
+    r &\in [0, +\infty] \\
+    \psi &\in [0, 2\pi) \\
+    z &\in [-\infty, +\infty]
 
-2D-polar:	Used for working in the plane of the unwound cone (Rotation of
-points, Calculation of angles).
+.. figure:: ../../../../figures/modules/cppot/vmmt/fig_global_cyl_csys.png
+    :width: 500
+    :align: center
+
+    Figure 3: Global 3D-cylindrical coordinate system
+
+The coordinate transformation between Cartesian and cylindrical coordinates
+and vice versa is done as follows:
 
 .. math::
-	\phi \in [0^{\circ}, 360^{\circ}],r \in [0,+\infty]
+    (x, y, z) &= (r\cos\psi, r\sin\psi, z) \\
+    (r, \psi, z) &= (\sqrt{x^2 + y^2}, {\rm atan2}{(y, x)}, z)
 
-.. figure:: ../../../../figures/modules/cppot/vmmt/fig_02.png
-    :width: 350
+**Unfolded coordinates**
 
-    Figure 2: 2D-Polar and Cartesian CSYS
+The cone surface is a two-dimensional surface within the three-dimensional
+space. Points on the cone have to satisfy the following equation:
 
-.. figure:: ../../../../figures/modules/cppot/vmmt/fig_03.png
+.. math::
+    r = r_{bot} - z \tan\alpha
+
+Points that satisfy this equation can be described using a two-dimensional
+coordinate system. For this purpose, an imaginary cut is made through the cone
+at `\psi = 0`, see the above figure. The apex of the cone is placed at the
+origin of the new coordinate system. The edge in the direction `\psi > 0`
+(right edge in the figure) is mapped to the horizontal axis. This results
+in the layout shown below:
+
+
+.. figure:: ../../../../figures/modules/cppot/vmmt/fig_unfolded_csys.png
     :width: 700
+    :align: center
 
-    Figure 3: Relationship between cone and unwound projection
+    Figure 4: Unfolded coordinate systems (polar and Cartesian)
 
-Building the VMM
-----------------
+These unfolded coordinates can be described using two coordinate systems:
 
-The VMM is the virtual model of the lay-up of the laminated cone. Every ply is
-built out of a finite number of parts. Between the parts are no gaps. In the
-ALPHA-Version only two different part shapes are available: rectangular and
-trapezoidal. When using the rectangular shape the parts overlap each other, by
-using the trapezoidal shape this can be avoided.
-
-The VMM calculates the vertices of every ply-part and groups their
-2D-cartesian coordinates in lists. After building this model it is possible to
-determine on which parts a certain point lies and calculate the local fiber
-angle and thickness.
-
-The basic process flow for building the VMM is:
-- (1) Get Lay-up Information
-  For every ply:
-  - (2) Build a prototype part
-    For every ply-part:
-    - (3) Copy and rotate the prototype part
-      Save Layer part to VMM
-
-The three highlighted  tasks are the main tasks of building the VMM:
-
-1. Get Lay-up Information
-.........................
-
-This is done by defining a number of variables:
+* **2D-polar**: This is the most natural description:
 
 .. math::
-    \begin{tabular}{l c r}
-        Variable  & Definition & Format \\
-        \hline
-        E           & Material Paramters, List of floats                 & [E11,E22,G12,nu12,nu21] \\
-        $n_{ply}$   & Number of plies, int                               & $i$ \\
-        Theta       & Nominal fiber angle of each ply, List of floats    & [$\Theta_1,\Theta_2,\dots,\Theta_i$] \\
-        Thick       & Thickness of each ply, List of floats              & [$t_1,t_2,\dots,t_i$] \\
-        $phi_{off}$ & Offset-Angle for each ply, List of floats          & [$\phi_{off,1},\phi_{off,2},\dots,\phi_{off,i}$] \\
-        Shape       & Defining the part shape of each ply, List of ints  & [$S_1,S_2,\dots,S_i$] \\
-        $N_{parts}$ & Number of parts per ply for each ply, List of ints & [$n_1,n_2,\dots,n_i$]
-    \end{tabular}
+    s &\in [0, +\infty] \\
+    \phi &\in [0, \phi_{max})
 
-Example::
+The relation between the 2D-polar coordinates `(s, \phi)` and 3D-cylindrical
+coordinates is as follows, valid only for points on the cone surface:
 
-    E       = [150, 9.08, 5.39, 0.32, 0.02]
-    n_ply   = 6
-    Theta   = [0.0, 0.0, 60.0, -60.0, 45.0,-45.0]
-    Thick   = [1, 1, 1, 1, 1, 1]
-    phi_off = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-    Shape   = [1, 1, 1, 1, 1, 1]
-    N_parts = [10, 10, 10, 10, 10, 10]
+.. math::
+    (s, \phi) &= \left(\frac{r}{\sin\alpha}, \psi\sin\alpha\right) \\
+    (r, \psi, z) &= \left(s\sin\alpha, \frac{\phi}{\sin\alpha},
+    \frac{r_{bot}}{\tan\alpha} - s\cos\alpha\right)
 
-2. Build the prototype-part
-...........................
+Using the above coordinate transformation, the maximum value for the
+`\phi`-coordinate (labeled `phi_{max}`) can be calculated, as well as the
+radial limits `s_{bot}` and `s_{top}`:
 
-Instead of calculating each part of a layer independently only one prototype
-part is created and afterwards its vertices are saved, copied and rotated. The
-exact shape of the prototype part depends mainly on the size of the cone
-`(s_0, s_1, s_2, \alpha)`., the nominal fiber angle of the ply (`\Theta`), the
-number of parts per ply (N) and the chosen shape (rectangular, trapezoidal).
+.. math::
+    \phi_{max} &= 2\pi\sin\alpha \\
+    s_{bot} &= \frac{r_{bot}}{\sin\alpha} \\
+    s_{top} &= \frac{s_{top}}{\sin\alpha} =
+    \frac{r_{bot} - H\tan\alpha}{\sin\alpha} =
+    \frac{r_{bot}}{\sin\alpha} - \frac{H}{\cos\alpha}
 
-The prototype-part is built by the following function::
+* **2D-Cartesian**: Used for geometrical operations on the unfolded cone
+  (defining lines, calculating intersection points, ...):
 
-    Bpart.PPr(Theta, N, S, s0, s1, s2, alpha)
+.. math::
+    \eta, \zeta \in [-\infty,+\infty]
 
-    Theta  nominal fiber angle of ply, float
-    N      number of ply parts, int
-    S      shape of ply parts, only ‘1’ and ‘2’ are valid
-    s0     s-coordinate of upper cone edge
-    s1     s-coordinate of starting point of ply part
-    s2     s-coordinate of lower cone edge
-    alpha  half cone angle
+The transformation rules are fairly straightforward:
 
-For further explanation of `s_0`, `s_1` and `s_2` see Figure 4.
+.. math::
+    (\eta, \zeta) &= (s\cos\phi, s\sin\phi) \\
+    (s, \phi) &= \left(\sqrt{\eta^2 + \zeta^2},
+    {\rm atan2}{(\zeta, \eta)}\right)
 
-.. figure:: ../../../../figures/modules/cppot/vmmt/fig_04.png
+* **Laminate coordinates** To describe the orientation of fibers and plies,
+  a laminate coordinate system is used in Abaqus, as is shown in the figure
+  below. This is a local coordinate system that defines three directions at
+  each point on the cone. The 1-direction is obtained by projecting the
+  z-axis onto the cone surface, i.e. it is always pointing towards the
+  apex of the cone. The n-direction is normal to the surface and always
+  pointing outward. The 2-direction is obtained by rotating the 1-direction
+  `90^\circ` around the normal vector, using the right-hand rule. The angle
+  `\theta` is used to define the orientation of a fiber or ply. It is defined
+  as being 0 for fibers parallel to the 1-direction and increases when
+  rotating from the 1- to 2-direction, as shown in the figure.
+
+.. figure:: ../../../../figures/modules/cppot/vmmt/fig_laminate_csys.png
+    :width: 500
+    :align: center
+
+    Figure 5: Laminate coordinate system, shown relative to both global (top)
+    and unfolded (bottom) coordinates.
+
+
+Detailed cone geometry
+----------------------
+The cone geometry used in the DESICOS project is slightly more complex than the
+elementary truncated cone discussed in the previous chapter. Apart from the
+free cone area, additional support parts are present along both edges, as shown
+in the figure below. The support areas will be partially cut away (to obtain
+straight, clean edges) after laminating and the rest will be molded in resin.
+These areas do need to be considered when discussing the ply placement process,
+however.
+
+.. figure:: ../../../../figures/modules/cppot/vmmt/fig_cone_geom.png
+    :width: 500
+    :align: center
+
+    Figure 6: Example of cone geometry.
+
+Translating this geometry to the unfolded cone results in the figure below.
+There are four relevant radii, labelled s1 to s4. These correspond to the edges
+numbered 1 to 4 in figure 6. The total area between the dotted arcs (s1 and s4)
+will need to be covered with ply pieces. However, only the area between the
+solid arcs (s2 and s3) will be relevant when determining the local fiber
+orientation at a later stage.
+
+.. figure:: ../../../../figures/modules/cppot/vmmt/fig_s_radii.png
+    :width: 500
+    :align: center
+
+    Figure 7: Radii used in unfolded cone.
+
+In the code, the geometry of the cone is encapsulated in the
+:class:`desicos.cppot.core.geom.ConeGeometry` class. This class is constructed
+based on a few input parameters, listed below. All other parameters
+(``s1`` .. ``s4``, ``rtop``, ...) are then easily retrieved upon request.
+
+    * The bottom radius of the free cone `r_{bot}` (400 mm in figure 6)
+    * The semi-vertex angle `\alpha` (`35^\circ` in figure 6)
+    * The free cone height `H` (300 mm in figure 6)
+    * The support height ``extra_height`` (70 mm in figure 6)
+
+Building the Ply model
+----------------------
+
+The VMM is the virtual model of the lay-up of the laminated cone. Every ply
+consists of a finite number of pieces. Between the parts are no gaps, depending
+on the ply piece geometry there may be overlaps. In the Abaqus-plugin only one
+type of ply piece is available:
+
+* Type A: Trapezoidal ply pieces without overlaps
+
+Two additional shapes are accessible through the CPPOT-program:
+
+* Type B: Trapezoidal ply pieces with one overlap
+* Type C: Rectangular ply pieces with many overlaps.
+
+In this document, only shape A will be discussed, because it is the only one
+that has actually been used in the manufacturing of cones.
+
+The basic process flow for building the model for a single ply is:
+
+- (1) Construct a prototype piece
+- (2) Copy and rotate the prototype piece to fill the entire cone
+- (3) Calculate the local fiber orientation at the desired points
+
+The three numbered steps will now be discussed sequentially:
+
+1. Constructing the prototype piece
+-----------------------------------
+
+The construction of a single ply piece will now be described step-by-step.
+Objective is mainly to describe the procedure, not to bother the reader with
+implementation details (e.g. "How to find the intersection of two lines?"). For
+the latter, consult the relevant pieces of code. The implementation of the
+procedure described here is contained in the method
+:func:`desicos.cppot.core.ply_model.TrapezPlyPieceModel.construct_single_ply_piece`.
+
+The constructed ply pieces will be trapezoidal in shape, as shown in the
+figure below. These trapezoidal pieces will be constructed such the angle that
+is spanned or “covered” by each ply piece is a constant `\Delta\phi`,
+independent of `s`. This property is important to allow covering the entire
+cone with similarly-shaped pieces, without having gaps or overlaps.
+
+.. figure:: ../../../../figures/modules/cppot/vmmt/fig_single_ply_piece.png
+    :width: 400
+    :align: center
+
+    Figure 8: View of single ply piece
+
+**Step 1: Origin line `L_0`**
+
+The first step is to construct the *origin line* `L_0`. All fibers in the ply
+piece will be parallel to this line. It is defined based on three parameters:
+
+* The nominal fiber angle `\theta_{nom}`, which is the same for all ply pieces
+  in a ply.
+* The nominal ply piece angle `\phi_{nom}`. Note that this is a property of the
+  individual ply piece, not a property of the ply.
+* The starting position `s_{\theta nom}`, which is the radius at which
+  (at the nominal ply piece angle `\phi_{nom}`) the actual fiber angle equals
+  the nominal fiber angle.
+
+The line `L_0` is then defined as the line going through the point
+`(s, \phi) = (s_{\theta nom}, \phi_{nom})` at an angle
+(`\theta_{nom} + \phi_{nom}`) with respect to the `\eta`-axis. See figure 9:
+
+.. figure:: ../../../../figures/modules/cppot/vmmt/fig_origin_line.png
+    :width: 400
+    :align: center
+
+    Figure 9: Construction of origin line `L_0`
+
+**Step 2: Base line `L_2`**
+
+The *base line* `L_2` is the line along which the width of the ply piece will
+be measured. `L_2` is defined as the line perpendicular to `L_0` and tangent to
+the circle with radius `s_4`. Point `P_0` is then defined as the intersection
+point of `L_0` and `L_2`. See Figure 10:
+
+.. figure:: ../../../../figures/modules/cppot/vmmt/fig_base_line.png
+    :width: 400
+    :align: center
+
+    Figure 10: Construction of base line `L_2`
+
+**Step 3:  Corners at outer edge**
+
+The outer edge of the polygon is formed by the line `L_2`. The position of the
+corner points `P_2` and `P_3` along this line is determined by two parameters:
+
+* The maximum ply piece width `w_{max}` is equal to the distance between the
+  two points `P_2` and `P_3`.
+* The *eccentricity parameter* `a_{ecc}` (also known as *width variation*)
+  determines the placement of the two points relative to `P_0`. `a_{ecc}` is
+  defined as the distance from `P_0` to `P_2`, divided by `w_{max}`. So for
+  `a_{ecc} = 0`, `P_2` and `P_0` coincide and for `a_{ecc} = 1`, `P_3` and
+  `P_0` coincide.
+
+This is also shown in figure 11. So `P_2` is defined as the point on `L_2` at a
+distance (`a_{ecc}\cdot w_{max}`) from `L_0`, while `P_3` is defined as the
+point on `L_2` at a distance (`(1 - a_{ecc})\cdot w_{max}`) from `L_0`.
+For completeness, it should be mentioned that `P_2` is to be placed in the
+counter-clockwise direction relative to `P_0` and `P_3` in the clockwise
+direction relative to `L_0`, as is evident in the figure below.
+
+.. figure:: ../../../../figures/modules/cppot/vmmt/fig_P2_P3.png
+    :width: 300
+    :align: center
+
+    Figure 11: Construction of `P_2` and `P_3`
+
+**Step 4:  Calculating the spanned angle**
+
+Now it is necessary to calculate the angle `\Delta\phi` that is spanned by the
+ply piece. This angle is determined by the position of points `P_2` and `P_3`.
+However, it would be wrong to take the angular coordinates of `P_2` and `P_3`
+and subtract them (`\Delta\phi \neq \phi_{P2} - \phi_{P3}`), because the radii
+`s_{P2}` and `s_{P3}` of these points are not the same.
+
+Therefore, the points `T_2` and `T_3` are constructed first. Point `T_i` is
+defined as the point lying on `L_0` at a distance `s_{Pi}` from the origin.
+Now the two constituent parts of `\Delta\phi` can be calculated. One part is
+the difference in angular coordinate between `P_2` and `T_2`, the other between
+`T_3` and `P_3`. This is shown more clearly in figure 12 below.
+
+.. math::
+    \Delta\phi_1 &= \phi_{P2} - \phi_{T2} \\
+    \Delta\phi_2 &= \phi_{T3} - \phi_{P3} \\
+    \Delta\phi &= \Delta\phi_1 + \Delta\phi_2
+
+.. figure:: ../../../../figures/modules/cppot/vmmt/fig_spanned_angle.png
+    :width: 300
+    :align: center
+
+    Figure 12: Angle `\Delta\phi` spanned by ply piece
+
+**Step 5:  Constructing the side lines**
+
+Now the side lines `L_1` and `L_3` can be constructed by rotating `L_0` around
+the origin. `L_1` is constructed by rotating `L_0` counter-clockwise with angle
+`\Delta\phi_1`, `L_3` is constructed by rotating `L_0` clockwise around angle
+`\Delta\phi_2` .The intersection point between `L_1` and circle `s_1` is
+denoted as `P_{1a}`, the intersection point between `L_3` and circle `s_1` is
+denoted as `P_{4a}`. All of this is shown in figure 13:
+
+.. figure:: ../../../../figures/modules/cppot/vmmt/fig_side_lines.png
+    :width: 400
+    :align: center
+
+    Figure 13: Constructing the side lines `L_1` and `L_3`
+
+
+**Step 6:  Corners at the inner edge**
+
+Now the inner edge of the polygon is to be defined. First, it is examined which
+point is further from `L_2`, either `P_{1a}` or `P_{4a}`. See figure 14, in
+the shown example case the point `P_{4a}` is the furthest from `L_2`. The line
+`L_4` is then defined to be parallel to `L_2` and through this furthest point.
+Then points `P_{1b}` and `P_{4b}` are defined as the intersection points of `L_4` with,
+respectively, `L_1` and `L_3`.
+
+.. figure:: ../../../../figures/modules/cppot/vmmt/fig_constr_L4.png
+    :width: 400
+    :align: center
+
+    Figure 14: Constructing `L_4`
+
+There is a special case, which is shown in figure 15. Namely, for some
+combinations of parameters, the previous procedure may lead to polygons
+(`P_{1b}`, `P_{2}`, `P_{3}`, `P_{4b}`) that are self-intersecting. In this
+case, both `P_1` and `P_4` are defined to be equal to the intersection point of
+`L_1` and `L_3` and the ply piece becomes a triangle. This results in some very
+small areas along circle `s_1` being not covered with any ply piece. This is
+deemed acceptable, because the area between `s_1` and `s_2` is not relevant for
+the finite element model.
+
+In the normal case of figure 14, where the polygon is not self-intersecting,
+the final locations of `P_1` and `P_4` are equal to `P_{1b}` and `P_{4b}`,
+respectively.
+
+.. figure:: ../../../../figures/modules/cppot/vmmt/fig_triangular_piece.png
+    :width: 250
+    :align: center
+
+    Figure 15: Special case for triangular ply piece
+
+**Step 7: Final ply piece**
+
+The final shape of the ply piece is shown in figure 16 below. Its shape is
+defined by the four corner points `P_i (i = 1...4)`. On the circle with radius
+`s_{\theta nom}` (the starting position), the ply piece spans an angle from
+`\phi_{nom, min}` to `\phi_{nom, max}`. These angles can be calculated by:
+
+.. math::
+    \phi_{nom, min} &= \phi_{nom} - \Delta\phi_2 \\
+    \phi_{nom, max} &= \phi_{nom} + \Delta\phi_1
+
+Additionally, the *limit angles* of the ply piece are defined as the minimal
+and maximum value of the angular coordinate. Since the extreme values are
+always located at the corner points, these can be calculated by:
+
+.. math::
+    \phi_{limit, min} &= \min_i(\phi_{Pi}) \\
+    \phi_{limit, max} &= \max_i(\phi_{Pi})
+
+.. figure:: ../../../../figures/modules/cppot/vmmt/fig_final_piece.png
+    :width: 500
+    :align: center
+
+    Figure 16: Final ply piece
+
+
+2. Constructing all ply pieces
+------------------------------
+
+Based on the prototype ply piece discussed in the previous section, the
+complete set of ply pieces can be constructed. In the code, this is implemented
+mainly in the method
+:func:`desicos.cppot.core.ply_model.PlyPieceModel.rebuild`.
+
+First the required number of ply pieces is determined:
+
+.. math::
+    n_{pieces} = \frac{\phi_{max}}{\Delta\phi}
+
+.. figure:: ../../../../figures/modules/cppot/vmmt/fig_continuity.png
+    :width: 600
+    :align: center
+
+    Figure 17: Continuity problem
+
+Generally, `n_{pieces}` is not an integer, so covering the entire cone with
+similar pieces would result in a discontinuous model, as shown in figure 17.
+To remedy this problem, a smaller *rest* piece is added. This rest piece should
+span an angle: (with `\lfloor x\rfloor` denoting the floor function)
+
+.. math::
+    \Delta\phi_{rest} &= \phi_{max} - \lfloor n_{pieces}\rfloor\Delta\phi \\
+    &= n_{pieces}\Delta\phi - \lfloor n_{pieces}\rfloor\Delta\phi \\
+    &= \left(n_{pieces} - \lfloor n_{pieces}\rfloor\right)\Delta\phi \\
+    &= f_{rest}\Delta\phi
+
+with
+
+.. math::
+    f_{rest} = \frac{\Delta\phi_{rest}}{\Delta\phi}
+    = n_{pieces} - \lfloor n_{pieces} \rfloor
+
+So in words, `f_{rest}` is the fractional part of `n_{pieces}`. To construct
+the rest piece, the same procedure is followed as for a normal ply piece.
+However, during step 4, the calculated values of `\Delta\phi_1` and
+`\Delta\phi_2` are multiplied by `f_{rest}` as stated below. This results in
+a ply piece whose angular span `\Delta\phi_{rest}` satisfies the above
+equations. The positions of points `P_2` and `P_3` (and, of course, the
+calculations in subsequent steps) are adjusted accordingly.
+
+.. math::
+    \Delta\phi_{rest,1} &= f_{rest}\Delta\phi_1 \\
+    \Delta\phi_{rest,2} &= f_{rest}\Delta\phi_2 \\
+    \Delta\phi_{rest} &= \Delta\phi_{rest,1} + \Delta\phi_{rest,2}
+    = f_{rest}\Delta\phi
+
+Now the procedure to cover the entire cone with ply pieces is as follows. The
+first piece is placed at a nominal angle `\phi_{nom}` equal to `\phi_{offset}`.
+This is done to allow offsettnig multiple plies with the same nominal fiber
+orientation with respect to each other. This avoids that the ply piece
+edges in multiple plies coincide, which would (unnecessarily) cause weak spots
+in the actual cone. The offset parameter is specified in relative terms
+(0...1), based on this value `\phi_{offset}` is calculated as follows:
+
+.. math::
+    \phi_{offset} = f_{rel,offset}\Delta\phi \\
+    {\rm with}\qquad f_{rel,offset} \in [0, 1)
+
+Ply pieces are then placed in both directions at angular increments of
+`\pm\Delta\phi`. Pieces are added as long as they cover some area in the
+angular range `[0, \phi_{max}]`, which is the case if both below-stated
+inequalities are satisfied.
+
+.. math::
+    \phi_{limit,min} &\leq \phi_{max} \\
+    \phi_{limit,max} &\geq 0
+
+The possible result of this operation is shown in figure 18. Here the unfolded
+cone is drawn in red, the first ply piece in blue, the other ply pieces in
+green and the nominal angle of each ply piece as a dashed black line. The rest
+piece is inserted right after (in counter-clockwise direction) the first piece
+for which `\phi_{limit,min} > 0`. This prevents the rest piece from overlapping
+the “cut” in the model, which would add additional complexity to the model.
+Some special handling is needed to set the angular offsets between the rest
+piece and its neighboring pieces. If the nominal angles of the rest piece,
+the previous piece and the next piece are named `\phi_{nom,rest}`,
+`\phi_{nom,prev}` and `\phi_{nom,next}`, respectively, their mutual relations
+are as stated below. Refer also to the figure.
+
+.. math::
+    \phi_{nom,rest} - \phi_{nom,prev} &= \Delta\phi_1 + \Delta\phi_{rest,2} \\
+    \phi_{nom,next} - \phi_{nom,rest} &= \Delta\phi_{1,rest} + \Delta\phi_2
+
+.. figure:: ../../../../figures/modules/cppot/vmmt/fig_all_pieces.png
     :width: 700
+    :align: center
 
-    Figure 4: Definition `s_0`, `s_1` and `s_2`
+    Figure 18: Covering the cone
 
-Basically the function creates four lines (L1, L2, L3, L4) in the two
-dimensional plane of the unwound cone. Each line is defined by their
-functions:
+Note that the model contains a few more ply pieces than the actual cone,
+because the pieces that intersect the cut (`\phi = 0` and `\phi = \phi_{max}`)
+are represented twice. This is done because it simplifies the implementation,
+while not affecting the results in any way.
 
-.. math::
-    :label: Equation 1
+3. Calculating the local orientation
+------------------------------------
 
-    y=m_i \cdot x+b_i
+To calculate what the local fiber angle is at any point on the cone, several
+steps are needed.
 
-Where m is the gradient and b the intercept of the function. The gradient of
-the L1 is calculated by the nominal fiber angle of the ply `\Theta`:
+**Step 1:  Change coordinate system**
 
-.. math::
-    m_1=tan(\Theta)
+First, the coordinates in the global coordinate system have to be transformed
+to the coordinates of the unfolded cone, i.e. `(\eta, \zeta)` and/or
+`(s, \phi)`. These coordinate transformations have been discussed in a
+previous chapter on this page and will not be repeated.
 
-Than a first point is defined on L1:
+**Step 2:  Find the correct ply piece**
 
-.. math::
+Next, it is necessary to find the ply piece(s) located at the given
+coordinates. This is done by iterating over all ply pieces and then,for each
+ply piece:
 
-    P_0:  (x_0=s_1, y_0=0)
+* Quickly check whether `\phi_{limit,min} \leq \phi \leq \phi_{limit,max}`.
+  If not, continue.
+* Perform the (computationally more expensive) test whether the point is inside
+  the polygon that defines this ply piece. In earlier versions the
+  “interior angle”-algorithm was used, but for performance reasons this was
+  changed to the “ray casting”-algorithm. Both algorithms are widely used and
+  extensively documented in other sources. If this check returns a positive
+  result, stop iteration and return this ply piece. If not, continue.
+* If iteration completes without having found a ply piece, the point is not on
+  the cone at all and ``NaN`` is returned.
 
-So the intercept of L1 can be calculated by transforming the upper function:
-
-.. math::
-    b_1=y_0-m_1 \cdot x_0
-    \\
-    b_1=0-tan(\Theta) \cdot s_1
-
-The function L1 is shown in Figure 5.
-
-.. figure:: ../../../../figures/modules/cppot/vmmt/fig_05.png
-    :width: 350
-
-    Figure 5: Definition of L1
-
-In the next step the crossing between L1 and the circles with radius of `s_0`
-and `s_2` are calculated. A circle can be defined by:
-
-.. math::
-    R^2=x^2 + y^2
-
-For a crossing of a Line the following formula has to be valid:
+**Step 3:  Find the local angle**
+A relation for the local fiber angle can be found, based on the principle that
+the sum of all angles inside a triangle is always equal to `180^\circ`. This
+results in the following equation:
 
 .. math::
-    0=x^2+y^2-R^2
+    \theta_{local} = \theta_{nom} - (\phi - \phi_{nom})
 
-Now one can insert the function for L1:
+An example plot of the local fiber angle is shown in the figure below. Note
+that all points within the same ply piece have a constant fiber angle along
+radial lines (`\phi = {\rm const}`) and that there are significant
+discontinuities between adjacent plies.
 
-.. math::
-    0=x^2+(m_1 \cdot x + b_1 )^2-R^2
-    \\
-    0=(1+m_1^2 ) \cdot x^2 + (2\cdot m_1 \cdot b_1 )\cdot x+(b_1^2-R^2)
+.. figure:: ../../../../figures/modules/cppot/vmmt/fig_orientation.png
+    :width: 750
+    :align: center
 
-Which is basically a quadratic function and can be solved for
-`x_{1\backslash2}` by:
-
-.. math::
-    :label: Equation 2
-
-    x_{1\backslash2} = \frac{-B \pm \sqrt{B^2 - 4AC}}{2A}
-
-In this case the three variables are defined as:
-
-.. math::
-    A = 1 + m_1^2
-    \\
-    B = 2 \cdot m_1 \cdot b_1
-    \\
-    C = b_1^2 - R^2
-
-Naturally there are three different types of solutions for this equation. They
-can be easily distinguished by the value of the root argument:
-
-- (1) `B^2-4AC<0`: The solution is complex and the line does not touch or cut
-  the circle
-- (2) `B^2-4AC=0`: The solution is one real number and the line touches the
-  circle at one point
-- (3) `B^2-4AC>0`: The solution consists out of two real numbers and the line
-  cuts the circle at two different points
-
-For the first line and the outer radius `s_2` there must be two solutions,
-because `s_1` is smaller than `s_2`. For some combinations of `s_1`, `s_0` and
-`\Theta` it is possible that the L1 is not cutting the inner circle of `s_0`.
-The Prototype-function uses for the construction of the first Line and Points
-only the positive Solution of :ref:`Equation 2`.
-
-P1 and P2 are the crossing point of L1 and the circle `s_0` respectively s_2,
-see Figure 6.
-
-.. figure:: ../../../../figures/modules/cppot/vmmt/fig_06.png
-    :width: 350
-
-    Figure 6: Definition of P0, P1 and P2
-
-The next step is to calculate the point P3. Therefore the angle of a single
-ply part is calculated by:
-
-.. math::
-    \phi_{ply-part} = \frac{\phi_{cone}}{N}
-    \\
-    \phi_{cone} = 360° \cdot sin(\alpha)
-
-In which N is the number of ply-parts in this ply and \alpha the half-cone
-angle.  Then the coordinates of P2 are transformed to a polar form:
-
-.. math::
-    P2 : (x_2, y_2) \rightarrow (r_2, \phi_2)
-
-And add the angle `\phi_{ply-part}` to `\phi_2` then transformed backwards, see
-also Figure 7.
-
-.. math::
-    P3 : (r_2, \phi_2 + \phi_{ply-part}) \ rightarrow (x_3, y_3)
-
-.. figure:: ../../../../figures/modules/cppot/vmmt/fig_07.png
-    :width: 350
-
-    Figure 7: Creation of P3
-
-The gradient of L3 and also the position of P4 depends on the chosen shape of
-the ply part. For a rectangular the gradient m_3 is equal to m_1 and so L3 is
-defined as:
-
-.. math::
-    y = m_1 \cdot x + (y_3 - m_1 \cdot x_3)
-
-And P4 is the crossing point of L3 and the circle `s_0`.
-
-If the shape is trapezoidal the point P4 is calculated by rotating P1 by
-`\phi_{ply-part}` analogous to the creation of P3.
-
-By now we have two points on each circle, but the connection line between P2
-and P3 lies inside the circle `s_2`. To correct this error P2 and P3 have to
-be moved. This is done by defining that L2 must be orthogonally to L1:
-
-.. math::
-    m_2 = tan(\Theta+90^{\circ})
-
-The intercept `b_2` is then changed until L2 does not cut or touch the circle
-`s_2`. The procedure for P1, P4 and L4 is equivalent, see Figure 8.
-
-
-.. figure:: ../../../../figures/modules/cppot/vmmt/fig_08.png
-    :width: 350
-
-    Figure 8: Definition of L2 and L4
-
-In the end the prototype is defined by the points P1, P2, P3, P4 and the
-function ``Bpart.PPr()`` returns these points in the following shape::
-
-    PPr = [x1, y1, x2, y2, x3, y3, x4, y4]
-
-In Figure 9 one can see the finished prototype part.
-
-.. figure:: ../../../../figures/modules/cppot/vmmt/fig_09.png
-    :width: 350
-
-    Figure 9: Prototype-part
-
-Copy and rotate the prototype-part
-----------------------------------
-
-After the prototype-part is finished the vertices P1 to P4 are rotated around
-the origin of the CSYS to achieve a full coverage of the area of the unwound
-cone. This is achieved by the function ``Bpart.Pro()``::
-
-    Bpart.PRo(PPr, phi_off, Theta, N, alpha)
-
-The function needs different inputs::
-
-    PPr      Cartesian Coordinates of the Prototype Part, List of 8 floats
-    phi_off  Offset angle of ply in degree, float
-    Theta    Nominal fiber angle of ply in degree, float
-    N        Number of ply-parts, int
-    Alpha    Half cone angle in degree, float
-
-The first ply part is placed by converting the coordinates of the prototype
-points from Cartesian to polar form and add each to the angle of the point
-phi_off:
-
-.. math::
-    \phi_{1,1}=\phi_{Prototype,P1}+\phi_{off}
-    \\
-    \phi_{1,2}=\phi_{Prototype,P2}+\phi_{off}
-    \\
-    \phi_{1,3}=\phi_{Prototype,P3}+\phi_{off}
-    \\
-    \phi_{1,4}=\phi_{Prototype,P4}+\phi_{off}
-
-In Figure 10 is an example shown. The red trapez is the first part of the
-ply-parts.
-
-The points of the other ply-parts are calculated by adding `k \cdot
-\phi_{ply-part}` to `\phi_{1,1}`, `\phi_{1,2}`, `\phi_{1,3}` and `\phi_{1,4}`.
-K is the running number of the ply parts.
-
-.. math::
-    \phi_{k+1,1}=\phi_{1,1}+k \cdot \phi_{ply-part}
-    \\
-    \phi_{k+1,2}=\phi_{1,2}+k \cdot \phi_{ply-part}
-    \\
-    \phi_{k+1,3}=\phi_{1,3}+k \cdot \phi_{ply-part}
-    \\
-    \phi_{k+1,4}=\phi_{1,4}+k \cdot \phi_{ply-part}
-
-In Figure 10 this shown by the blue trapez.
-
-.. figure:: ../../../../figures/modules/cppot/vmmt/fig_10.png
-    :width: 700
-
-    Figure 10: Definition of `\phi_{off}` and `\phi_{ply-part}`
-
-This procedure will go on until the whole area of the unwound cone is covered. This is checked by two simple if-statements:
-- if: `\phi_{k,n} > \phi_{cone}`,for all `n \in [0,4],k \in [0,N]`
-- if: `\phi_{k,n} < 0^{\circ}`,for all `n \in [0,4],k \in [0,N]`
-
-.. figure:: ../../../../figures/modules/cppot/vmmt/fig_11.png
-    :width: 700
-
-    Figure 11: Complete ply
-
-In Figure 11 is the complete ply shown.
-
-For the other plies the steps (2.) and (3.) are repeated.
-
-Finding the local fiber angle and thickness
--------------------------------------------
-
-To investigate the effects of the changing fiber angle and thickness one has
-to find a method to find out in which parts a certain point lies. This problem
-is known as the point in polygon problem. There are several different
-approaches to solve this problem. This program uses a simple algorithm known
-as the Angle Summation Method. If a point lies inside of a convex polygon the
-sum of the inner angles between connecting lines of the vertices and the point
-is equal to 360°. If the point lies on one of the edges of the polygon the sum
-is equal to 180° and if it is outside of the polygon the sum is 0°. For a
-better explanation see Figure (TODO)
-
-Basically one has to calculate the angle of triangle defined by three points
-or between two vectors connecting the given point and two neighboring vertices
-of the polygon. It is known that:
-
-.. math::
-    \vec{a} \cdot \vec{b} = \|\vec{a}\|\|\vec{b}\|cos(\angle(\vec{a},\vec{b}))
-    \\
-    \angle(\vec{a}, \vec{b})=arccos \left(
-        \frac{\vec{a} \cdot \vec{b}}{\|\vec{a}\|\|\vec{b}\|} \right)
-
-The complicated part of this function was to make sure the angles are
-correctly summed up and are using the same direction.
+    Figure 18: Example of local fiber orientation throughout the cone

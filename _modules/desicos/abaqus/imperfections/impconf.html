@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>desicos.abaqus.imperfections.impconf &mdash; DESICOS 2.3.0 documentation</title>
+    <title>desicos.abaqus.imperfections.impconf &mdash; DESICOS 2.4.1 documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     '2.3.0',
+        VERSION:     '2.4.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../../_static/doctools.js"></script>
-    <link rel="top" title="DESICOS 2.3.0 documentation" href="../../../../index.html" />
+    <link rel="top" title="DESICOS 2.4.1 documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
    
   
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="../../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../index.html">DESICOS 2.3.0 documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">DESICOS 2.4.1 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../../../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
@@ -67,6 +67,8 @@
 <span class="kn">from</span> <span class="nn">msi</span> <span class="kn">import</span> <span class="n">MSI</span>
 <span class="kn">from</span> <span class="nn">ti</span> <span class="kn">import</span> <span class="n">TI</span>
 <span class="kn">from</span> <span class="nn">cutout</span> <span class="kn">import</span> <span class="n">Cutout</span>
+<span class="kn">from</span> <span class="nn">ppi</span> <span class="kn">import</span> <span class="n">PPI</span>
+<span class="kn">from</span> <span class="nn">ffi</span> <span class="kn">import</span> <span class="n">FFI</span>
 
 
 <div class="viewcode-block" id="ImpConf"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.impconf.ImpConf">[docs]</a><span class="k">class</span> <span class="nc">ImpConf</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -104,6 +106,10 @@
 <span class="sd">    msis               ``list`` of :class:`.MSI` (Mid-Surface Imperfection)</span>
 <span class="sd">                       objects</span>
 <span class="sd">    cutouts            ``list`` of :class:`.Cutout` objects</span>
+<span class="sd">    ppi                :class:`.PPI` (Ply Piece Imperfection) object or</span>
+<span class="sd">                       ``None`` if not set</span>
+<span class="sd">    ffi                :class:`.FFI` (Fiber Fraction Imperfection) object or</span>
+<span class="sd">                       ``None`` if not set</span>
 <span class="sd">    ================== ======================================================</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -120,6 +126,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">msis</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tis</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cutouts</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ppi</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ffi</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rename</span> <span class="o">=</span> <span class="bp">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">conecyl</span> <span class="o">=</span> <span class="bp">None</span>
@@ -463,7 +471,8 @@
         <span class="k">return</span> <span class="n">ti</span>
 
 </div>
-<div class="viewcode-block" id="ImpConf.add_cutout"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.impconf.ImpConf.add_cutout">[docs]</a>    <span class="k">def</span> <span class="nf">add_cutout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thetadeg</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">drill_offset_deg</span><span class="o">=</span><span class="mf">0.</span><span class="p">):</span>
+<div class="viewcode-block" id="ImpConf.add_cutout"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.impconf.ImpConf.add_cutout">[docs]</a>    <span class="k">def</span> <span class="nf">add_cutout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thetadeg</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">drill_offset_deg</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span>
+                   <span class="n">clearance_factor</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span> <span class="n">numel_radial_edge</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
         <span class="sd">r&quot;&quot;&quot;Add a cutout</span>
 
 <span class="sd">        Parameters</span>
@@ -474,23 +483,93 @@
 <span class="sd">            Normalized meridional position.</span>
 <span class="sd">        d : float</span>
 <span class="sd">            Diameter of the drilling machine.</span>
-<span class="sd">        drill_offset_deg : float</span>
+<span class="sd">        drill_offset_deg : float, optional</span>
 <span class="sd">            Angular offset when the drilling is not normal to the shell</span>
 <span class="sd">            surface. A positive offset means a positive rotation about the</span>
 <span class="sd">            `\theta` axis, along the meridional plane.</span>
+<span class="sd">        clearance_factor : float, optional</span>
+<span class="sd">            Fraction of the diameter to apply as clearance around the cutout.</span>
+<span class="sd">            This clearance is partitoned and meshed separately from the rest of</span>
+<span class="sd">            the cone / cylinder.</span>
+<span class="sd">        numel_radial_edge : int, optional</span>
+<span class="sd">            Number of elements along the radial edges about the cutout center.</span>
+<span class="sd">            This parameter affects the aspect ratio of the elements inside the</span>
+<span class="sd">            cutout area.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        cutout : :class:`.Cutout` object.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">cutout</span> <span class="o">=</span> <span class="n">Cutout</span><span class="p">(</span><span class="n">thetadeg</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">drill_offset_deg</span><span class="p">)</span>
+        <span class="n">cutout</span> <span class="o">=</span> <span class="n">Cutout</span><span class="p">(</span><span class="n">thetadeg</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">drill_offset_deg</span><span class="p">,</span> <span class="n">clearance_factor</span><span class="p">,</span>
+                <span class="n">numel_radial_edge</span><span class="p">)</span>
         <span class="n">cutout</span><span class="o">.</span><span class="n">impconf</span> <span class="o">=</span> <span class="bp">self</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cutouts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cutout</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">cutout</span>
 
 </div>
+<div class="viewcode-block" id="ImpConf.add_ppi"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.impconf.ImpConf.add_ppi">[docs]</a>    <span class="k">def</span> <span class="nf">add_ppi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">extra_height</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Adds Ply Piece Imperfection (PPI)</span>
+
+<span class="sd">        There can be only one of these, so calling this function overrides the</span>
+<span class="sd">        previous imperfection, if any.</span>
+<span class="sd">        Note: Applicable for cones only!</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        info : list</span>
+<span class="sd">            List of dictionaries with info about the layup of this cone.</span>
+<span class="sd">            See :class:`.PPI` for more details</span>
+<span class="sd">        extra_height : float</span>
+<span class="sd">            Extra height above and below the cone height (`cc.H`) to consider</span>
+<span class="sd">            in the ply placement model.</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ppi : :class:`.PPI` object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ppi</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">warn</span><span class="p">(</span><span class="s">&#39;PPI object already set, overriding...&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ppi</span> <span class="o">=</span> <span class="n">PPI</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">extra_height</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ppi</span><span class="o">.</span><span class="n">impconf</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ppi</span>
+
+</div>
+<div class="viewcode-block" id="ImpConf.add_ffi"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.impconf.ImpConf.add_ffi">[docs]</a>    <span class="k">def</span> <span class="nf">add_ffi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nominal_vf</span><span class="p">,</span> <span class="n">E_matrix</span><span class="p">,</span> <span class="n">nu_matrix</span><span class="p">,</span> <span class="n">use_ti</span><span class="p">,</span> <span class="n">global_sf</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Adds Fiber Fraction Imperfection (FFI)</span>
+
+<span class="sd">        There can be only one of these, so calling this function overrides the</span>
+<span class="sd">        previous imperfection, if any.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        nominal_vf : float</span>
+<span class="sd">            Nominal fiber volume fraction of the material</span>
+<span class="sd">        E_matrix : float</span>
+<span class="sd">            Young&#39;s modulus of the matrix material</span>
+<span class="sd">        nu_matrix : float</span>
+<span class="sd">            Poisson&#39;s ratio of the matrix material</span>
+<span class="sd">        use_ti : bool</span>
+<span class="sd">            If ``True``, create varying material properties according to the</span>
+<span class="sd">            thickness imperfection data (if present).</span>
+<span class="sd">        global_sf : float or ``None``</span>
+<span class="sd">            Global scaling factor to apply to the material thickness.</span>
+<span class="sd">            Set to ``None`` to disable. The global scaling may be overridden</span>
+<span class="sd">            by a thickness imperfection, if ``use_ti`` (see above) is ``True``.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ffi : :class:`.FFI` object.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ffi</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">warn</span><span class="p">(</span><span class="s">&#39;FFI object already set, overriding...&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ffi</span> <span class="o">=</span> <span class="n">FFI</span><span class="p">(</span><span class="n">nominal_vf</span><span class="p">,</span> <span class="n">E_matrix</span><span class="p">,</span> <span class="n">nu_matrix</span><span class="p">,</span> <span class="n">use_ti</span><span class="p">,</span> <span class="n">global_sf</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ffi</span><span class="o">.</span><span class="n">impconf</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ffi</span>
+
+</div>
     <span class="k">def</span> <span class="nf">rebuild</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c"># TODO: Reduce the amount of code duplication?</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">imperfections</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
         <span class="c"># uneven bottom edge</span>
@@ -529,24 +608,36 @@
             <span class="n">lbmi</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">i</span>
             <span class="n">lbmi</span><span class="o">.</span><span class="n">rebuild</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">imperfections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lbmi</span><span class="p">)</span>
-        <span class="c"># mid-surface imperfection (MSI)</span>
-        <span class="k">for</span> <span class="n">msi</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">msis</span><span class="p">:</span>
-            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="n">msi</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">i</span>
-            <span class="n">msi</span><span class="o">.</span><span class="n">rebuild</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">imperfections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">msi</span><span class="p">)</span>
-        <span class="c"># thickness imperfection (TI)</span>
-        <span class="k">for</span> <span class="n">ti</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tis</span><span class="p">:</span>
-            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="n">ti</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">i</span>
-            <span class="n">ti</span><span class="o">.</span><span class="n">rebuild</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">imperfections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ti</span><span class="p">)</span>
         <span class="c"># cutout</span>
         <span class="k">for</span> <span class="n">cutout</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cutouts</span><span class="p">:</span>
             <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="n">cutout</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">i</span>
             <span class="n">cutout</span><span class="o">.</span><span class="n">rebuild</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">imperfections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cutout</span><span class="p">)</span>
+        <span class="c"># ply piece imperfection</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ppi</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ppi</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">i</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ppi</span><span class="o">.</span><span class="n">rebuild</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">imperfections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ppi</span><span class="p">)</span>
+        <span class="c"># fiber fraction imperfection</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ffi</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ffi</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">i</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ffi</span><span class="o">.</span><span class="n">rebuild</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">imperfections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ffi</span><span class="p">)</span>
+        <span class="c"># thickness imperfection (TI)</span>
+        <span class="k">for</span> <span class="n">ti</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tis</span><span class="p">:</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">ti</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">i</span>
+            <span class="n">ti</span><span class="o">.</span><span class="n">rebuild</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">imperfections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ti</span><span class="p">)</span>
+        <span class="c"># mid-surface imperfection (MSI)</span>
+        <span class="k">for</span> <span class="n">msi</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">msis</span><span class="p">:</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">msi</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">i</span>
+            <span class="n">msi</span><span class="o">.</span><span class="n">rebuild</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">imperfections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">msi</span><span class="p">)</span>
         <span class="c"># name</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rename</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;PLs_</span><span class="si">%02d</span><span class="s">_dimples_</span><span class="si">%02d</span><span class="s">_axisym_</span><span class="si">%02d</span><span class="s">&#39;</span> <span class="o">+</span>\
@@ -557,12 +648,6 @@
 
 
     <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">imp</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tis</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">imp</span><span class="p">:</span>
-                <span class="n">imp</span><span class="o">.</span><span class="n">create</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">imp</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">msis</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">imp</span><span class="p">:</span>
-                <span class="n">imp</span><span class="o">.</span><span class="n">create</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">imp</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">imperfections</span><span class="p">:</span>
             <span class="n">valid</span> <span class="o">=</span> <span class="bp">True</span>
             <span class="k">for</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">imp</span><span class="o">.</span><span class="n">pts</span><span class="p">:</span>
