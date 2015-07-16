@@ -1,12 +1,12 @@
 import csv
 import os
-import xlwt
 
 from PyQt4 import QtGui, QtCore
 
 import GUIHandle
 import GUIPrint
 from desicos.constants import TOL
+from desicos import xlwt
 
 class EvalTool(QtGui.QMainWindow):
     AXES = [('angle', 'Fiber Angle'),
