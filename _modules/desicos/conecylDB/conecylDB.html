@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>desicos.conecylDB.conecylDB &mdash; DESICOS 2.4.1 documentation</title>
+    <title>desicos.conecylDB.conecylDB &mdash; DESICOS 2.4.2 documentation</title>
     
     <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.4.1',
+        VERSION:     '2.4.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <link rel="top" title="DESICOS 2.4.1 documentation" href="../../../index.html" />
+    <link rel="top" title="DESICOS 2.4.2 documentation" href="../../../index.html" />
     <link rel="up" title="Module code" href="../../index.html" />
    
   
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">DESICOS 2.4.1 documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">DESICOS 2.4.2 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
@@ -85,6 +85,7 @@
               <span class="s">&#39;laminaprops&#39;</span><span class="p">:</span> <span class="n">local_laminaprops_path</span><span class="p">,</span>
               <span class="s">&#39;allowables&#39;</span><span class="p">:</span> <span class="n">local_allowables_path</span><span class="p">}</span>
 
+
 <span class="k">def</span> <span class="nf">_myload</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
@@ -97,6 +98,7 @@
         <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
     <span class="c"># Tuples are converted to lists during saving, fix that</span>
     <span class="k">return</span> <span class="nb">dict</span><span class="p">((</span><span class="n">k</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">iteritems</span><span class="p">())</span>
+
 
 <span class="k">def</span> <span class="nf">_mydump</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
@@ -115,6 +117,7 @@
         <span class="n">_mydump</span><span class="p">({},</span> <span class="n">local_allowables_path</span><span class="p">)</span>
     <span class="k">except</span><span class="p">:</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="n">error</span><span class="p">(</span><span class="s">&#39;localDB not found and not created!&#39;</span><span class="p">)</span>
+
 
 <div class="viewcode-block" id="fetch"><a class="viewcode-back" href="../../../modules/conecylDB/index.html#desicos.conecylDB.conecylDB.fetch">[docs]</a><span class="k">def</span> <span class="nf">fetch</span><span class="p">(</span><span class="n">which</span><span class="p">,</span> <span class="n">local_only</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Fetches a dictionary from the database</span>
@@ -222,6 +225,7 @@
             <span class="n">H_measured</span><span class="p">[</span><span class="n">imp</span><span class="p">]</span> <span class="o">=</span> <span class="n">cc</span><span class="p">[</span><span class="s">&#39;H&#39;</span><span class="p">]</span>
 
     <span class="k">return</span> <span class="n">imps</span><span class="p">,</span> <span class="n">imps_theta_z</span><span class="p">,</span> <span class="n">t_measured</span><span class="p">,</span> <span class="n">R_best_fit</span><span class="p">,</span> <span class="n">H_measured</span>
+
 </div>
 <div class="viewcode-block" id="save"><a class="viewcode-back" href="../../../modules/conecylDB/index.html#desicos.conecylDB.conecylDB.save">[docs]</a><span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="n">which</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Save an entry to the dynamic database.</span>
@@ -254,6 +258,7 @@
                   <span class="n">which</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
             <span class="n">msg</span> <span class="o">=</span> <span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">msg</span>
+
 </div>
 <div class="viewcode-block" id="delete"><a class="viewcode-back" href="../../../modules/conecylDB/index.html#desicos.conecylDB.conecylDB.delete">[docs]</a><span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="n">which</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Delete an entry to the dynamic database.</span>
