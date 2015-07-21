@@ -29,6 +29,7 @@ which_path = {'ccs': local_ccs_path,
               'laminaprops': local_laminaprops_path,
               'allowables': local_allowables_path}
 
+
 def _myload(path):
     if not os.path.isfile(path):
         try:
@@ -41,6 +42,7 @@ def _myload(path):
         data = json.load(f)
     # Tuples are converted to lists during saving, fix that
     return dict((k, tuple(v) if isinstance(v, list) else v) for k,v in data.iteritems())
+
 
 def _mydump(obj, path):
     try:
@@ -59,6 +61,7 @@ if not os.path.isdir(localDB_path):
         _mydump({}, local_allowables_path)
     except:
         msg = error('localDB not found and not created!')
+
 
 def fetch(which, local_only=False):
     """Fetches a dictionary from the database
@@ -167,6 +170,7 @@ def update_imps():
 
     return imps, imps_theta_z, t_measured, R_best_fit, H_measured
 
+
 def save(which, name, value):
     """Save an entry to the dynamic database.
 
@@ -198,6 +202,7 @@ def save(which, name, value):
                   which, name)
             msg = error(msg)
         return msg
+
 
 def delete(which, name):
     """Delete an entry to the dynamic database.
