@@ -665,18 +665,18 @@ class TestDB(AFXDataDialog):
         FXCheckButton(impVF, 'Use the "theta z imperfection" format', form.imp_ms_theta_z_formatKw)
         FXLabel(impVF, '')
         FXLabel(impVF, '')
-        self.imp_ms_db = AFXComboBox(impVF, 0, 15, 'Select from database:', form.imp_msKw)
+        self.imp_msi_db = AFXComboBox(impVF, 0, 15, 'Select from database:', form.imp_msKw)
 
         reload(conecylDB)
         if form.imp_ms_theta_z_formatKw.getValue():
             imps = conecylDB.imps_theta_z
         else:
             imps = conecylDB.imps
-        keys = map(str, imps.keys())
+        keys = map(str, [k for k in imps.keys() if 'msi' in imps[k].keys()])
         keys.sort()
-        self.imp_ms_db.appendItem('')
+        self.imp_msi_db.appendItem('')
         for k in keys:
-            self.imp_ms_db.appendItem(k)
+            self.imp_msi_db.appendItem(k)
 
         FXCheckButton(impVF,    'Strech H_points to H_measured', form.imp_ms_stretch_HKw)
         impVA = AFXVerticalAligner(impVF)
@@ -729,18 +729,18 @@ class TestDB(AFXDataDialog):
         FXCheckButton(impVF, 'Use the "theta z thickness" format', form.imp_t_theta_z_formatKw)
         FXLabel(impVF, '')
         FXLabel(impVF, '')
-        self.imp_t_db = AFXComboBox(impVF, 0, 15, 'Select from database:', form.imp_thickKw)
+        self.imp_ti_db = AFXComboBox(impVF, 0, 15, 'Select from database:', form.imp_thickKw)
 
         reload(conecylDB)
         if form.imp_t_theta_z_formatKw.getValue():
             imps = conecylDB.imps_theta_z
         else:
             imps = conecylDB.imps
-        keys = map(str, imps.keys())
+        keys = map(str, [k for k in imps.keys() if 'ti' in imps[k].keys()])
         keys.sort()
-        self.imp_t_db.appendItem('')
+        self.imp_ti_db.appendItem('')
         for k in keys:
-            self.imp_t_db.appendItem(k)
+            self.imp_ti_db.appendItem(k)
 
         FXCheckButton(impVF,    'Strech H_points to H_measured', form.imp_t_stretch_HKw)
         impVA = AFXVerticalAligner(impVF)
