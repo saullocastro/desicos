@@ -436,7 +436,7 @@ class UnevenTopEdge(object):
 
         - for a given `\theta` coordinate the uneven displacement is the same
           for all the shell and resin ring nodes, but the load asymmetry angle
-          ``cc.betadeg`` may change this equality. The contribution due to
+          ``self.betadeg`` may change this equality. The contribution due to
           `\beta` is given by:
 
           .. math::
@@ -477,8 +477,8 @@ class UnevenTopEdge(object):
                               measured_u3s[1, :], period=360)
 
             # applying load asymmetry according to cc.betarad and omega
-            betarad = deg2rad(cc.betadeg)
-            omegarad = deg2rad(cc.omegadeg)
+            betarad = deg2rad(self.betadeg)
+            omegarad = deg2rad(self.omegadeg)
             u3_nodes -= cc.rtop*np.tan(betarad)*np.cos(theta_nodes-omegarad)
 
             # contributions from shims
