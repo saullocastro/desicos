@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>desicos.abaqus.imperfections.uneven_edges &mdash; DESICOS 2.4.2 documentation</title>
+    <title>desicos.abaqus.imperfections.uneven_edges &mdash; DESICOS 2.4.3 documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     '2.4.2',
+        VERSION:     '2.4.3',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../../_static/doctools.js"></script>
-    <link rel="top" title="DESICOS 2.4.2 documentation" href="../../../../index.html" />
+    <link rel="top" title="DESICOS 2.4.3 documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
    
   
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="../../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../index.html">DESICOS 2.4.2 documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">DESICOS 2.4.3 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../../../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
@@ -492,7 +492,7 @@
 
 <span class="sd">        - for a given `\theta` coordinate the uneven displacement is the same</span>
 <span class="sd">          for all the shell and resin ring nodes, but the load asymmetry angle</span>
-<span class="sd">          ``cc.betadeg`` may change this equality. The contribution due to</span>
+<span class="sd">          ``self.betadeg`` may change this equality. The contribution due to</span>
 <span class="sd">          `\beta` is given by:</span>
 
 <span class="sd">          .. math::</span>
@@ -533,8 +533,8 @@
                               <span class="n">measured_u3s</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:],</span> <span class="n">period</span><span class="o">=</span><span class="mi">360</span><span class="p">)</span>
 
             <span class="c"># applying load asymmetry according to cc.betarad and omega</span>
-            <span class="n">betarad</span> <span class="o">=</span> <span class="n">deg2rad</span><span class="p">(</span><span class="n">cc</span><span class="o">.</span><span class="n">betadeg</span><span class="p">)</span>
-            <span class="n">omegarad</span> <span class="o">=</span> <span class="n">deg2rad</span><span class="p">(</span><span class="n">cc</span><span class="o">.</span><span class="n">omegadeg</span><span class="p">)</span>
+            <span class="n">betarad</span> <span class="o">=</span> <span class="n">deg2rad</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">betadeg</span><span class="p">)</span>
+            <span class="n">omegarad</span> <span class="o">=</span> <span class="n">deg2rad</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">omegadeg</span><span class="p">)</span>
             <span class="n">u3_nodes</span> <span class="o">-=</span> <span class="n">cc</span><span class="o">.</span><span class="n">rtop</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">betarad</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta_nodes</span><span class="o">-</span><span class="n">omegarad</span><span class="p">)</span>
 
             <span class="c"># contributions from shims</span>
