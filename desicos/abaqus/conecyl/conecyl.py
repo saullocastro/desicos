@@ -1301,8 +1301,8 @@ class ConeCyl(object):
         positions ``pts`` where partitions should be created. These two lists
         will be used in the routines to create an Abaqus model.
 
-        Parameter
-        ---------
+        Parameters
+        ----------
         thetadegs : list or None, optional
             Additional positions where circumferential partitions are desired
         pts : list or None, optional
