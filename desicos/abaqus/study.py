@@ -130,8 +130,10 @@ class Study(object):
             self.ccs[0].impconf.conecyl = self.ccs[0]
         for cc in self.ccs:
             cc.create_model()
-        if apply_msis: self.apply_msis()
-        if apply_tis:  self.apply_tis()
+        if apply_msis:
+            self.apply_msis()
+        if apply_tis:
+            self.apply_tis()
         if write_input_files:
             for cc in self.ccs:
                 cc.write_job(submit = False)
