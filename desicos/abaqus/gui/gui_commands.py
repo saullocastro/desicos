@@ -325,9 +325,6 @@ def create_study(**kwargs):
                                    global_sf=global_sf)
         std.add_cc(cc)
     std.create_models(write_input_files=False)
-    #for i in range(pload_num):
-    #    num_models = max(len(pl_table),len(d_table),len(cut_table))
-    return
 
 
 def run_study(std_name, ncpus, use_job_stopper):
