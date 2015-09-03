@@ -1293,7 +1293,7 @@ class ConeCyl(object):
         return self.nasaKDF
 
 
-    def calc_partitions(self, thetadegs=[], pts=[]):
+    def calc_partitions(self, thetadegs=None, pts=None):
         """Updates all circumferential and axial positions to partition
 
         This method reads all the imperfections and collects the
@@ -1303,17 +1303,20 @@ class ConeCyl(object):
 
         Parameter
         ---------
-        thetadegs : list, optional
+        thetadegs : list or None, optional
             Additional positions where circumferential partitions are desired
-        pts : list, optional
+        pts : list or None, optional
             Additional positions where meridional partitions are desired
 
         """
-        thetadegs += [0]
+        if thetadegs is None:
+            thetadegs = [0]
+        if pts is None:
+            pts = []
         for imp in self.impconf.imperfections:
             valid = True
             for pt in imp.pts:
-                if pt<0 or pt>1.:
+                if pt < 0. or pt > 1.:
                     error('Invalid imperfection: {0}, {1}'.format(imp.index,
                           imp.name))
                     warn('Ignored imperfection: {0}, {1}'.format(imp.index,
