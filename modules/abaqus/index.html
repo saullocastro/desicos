@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Abaqus Plug-In (desicos.abaqus) &mdash; DESICOS 2.4.3 documentation</title>
+    <title>Abaqus Plug-In (desicos.abaqus) &mdash; DESICOS 2.4.5 documentation</title>
     
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.4.3',
+        VERSION:     '2.4.5',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <link rel="top" title="DESICOS 2.4.3 documentation" href="../../index.html" />
+    <link rel="top" title="DESICOS 2.4.5 documentation" href="../../index.html" />
     <link rel="up" title="Modules" href="../index.html" />
     <link rel="prev" title="Modules" href="../index.html" />
    
@@ -47,7 +47,7 @@
         <li class="right" >
           <a href="../index.html" title="Modules"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">DESICOS 2.4.3 documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">DESICOS 2.4.5 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Modules</a> &raquo;</li> 
       </ul>
     </div>  
@@ -732,12 +732,28 @@ formulae.</p>
 
 <dl class="method">
 <dt id="desicos.abaqus.conecyl.conecyl.ConeCyl.calc_partitions">
-<code class="descname">calc_partitions</code><span class="sig-paren">(</span><em>thetadegs=[]</em>, <em>pts=[]</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/abaqus/conecyl/conecyl.html#ConeCyl.calc_partitions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.calc_partitions" title="Permalink to this definition">¶</a></dt>
+<code class="descname">calc_partitions</code><span class="sig-paren">(</span><em>thetadegs=None</em>, <em>pts=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/abaqus/conecyl/conecyl.html#ConeCyl.calc_partitions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.conecyl.conecyl.ConeCyl.calc_partitions" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updates all circumferential and axial positions to partition</p>
 <p>This method reads all the imperfections and collects the
 circumferential positions <code class="docutils literal"><span class="pre">thetadegs</span></code> and the normalized meridional
 positions <code class="docutils literal"><span class="pre">pts</span></code> where partitions should be created. These two lists
 will be used in the routines to create an Abaqus model.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>thetadegs</strong> : list or None, optional</p>
+<blockquote>
+<div><p>Additional positions where circumferential partitions are desired</p>
+</div></blockquote>
+<p><strong>pts</strong> : list or None, optional</p>
+<blockquote class="last">
+<div><p>Additional positions where meridional partitions are desired</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">

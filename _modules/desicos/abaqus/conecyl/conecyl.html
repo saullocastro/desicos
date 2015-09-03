@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>desicos.abaqus.conecyl.conecyl &mdash; DESICOS 2.4.3 documentation</title>
+    <title>desicos.abaqus.conecyl.conecyl &mdash; DESICOS 2.4.5 documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     '2.4.3',
+        VERSION:     '2.4.5',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../../_static/doctools.js"></script>
-    <link rel="top" title="DESICOS 2.4.3 documentation" href="../../../../index.html" />
+    <link rel="top" title="DESICOS 2.4.5 documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
    
   
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="../../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../index.html">DESICOS 2.4.3 documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">DESICOS 2.4.5 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../../../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
@@ -1349,7 +1349,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nasaKDF</span>
 
 </div>
-<div class="viewcode-block" id="ConeCyl.calc_partitions"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl.calc_partitions">[docs]</a>    <span class="k">def</span> <span class="nf">calc_partitions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thetadegs</span><span class="o">=</span><span class="p">[],</span> <span class="n">pts</span><span class="o">=</span><span class="p">[]):</span>
+<div class="viewcode-block" id="ConeCyl.calc_partitions"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl.calc_partitions">[docs]</a>    <span class="k">def</span> <span class="nf">calc_partitions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thetadegs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">pts</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Updates all circumferential and axial positions to partition</span>
 
 <span class="sd">        This method reads all the imperfections and collects the</span>
@@ -1357,19 +1357,22 @@
 <span class="sd">        positions ``pts`` where partitions should be created. These two lists</span>
 <span class="sd">        will be used in the routines to create an Abaqus model.</span>
 
-<span class="sd">        Parameter</span>
-<span class="sd">        ---------</span>
-<span class="sd">        thetadegs : list, optional</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        thetadegs : list or None, optional</span>
 <span class="sd">            Additional positions where circumferential partitions are desired</span>
-<span class="sd">        pts : list, optional</span>
+<span class="sd">        pts : list or None, optional</span>
 <span class="sd">            Additional positions where meridional partitions are desired</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">thetadegs</span> <span class="o">+=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">thetadegs</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">thetadegs</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">pts</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">pts</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">imp</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">imperfections</span><span class="p">:</span>
             <span class="n">valid</span> <span class="o">=</span> <span class="bp">True</span>
             <span class="k">for</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">imp</span><span class="o">.</span><span class="n">pts</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">pt</span><span class="o">&lt;</span><span class="mi">0</span> <span class="ow">or</span> <span class="n">pt</span><span class="o">&gt;</span><span class="mf">1.</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">pt</span> <span class="o">&lt;</span> <span class="mf">0.</span> <span class="ow">or</span> <span class="n">pt</span> <span class="o">&gt;</span> <span class="mf">1.</span><span class="p">:</span>
                     <span class="n">error</span><span class="p">(</span><span class="s">&#39;Invalid imperfection: {0}, {1}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">imp</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
                           <span class="n">imp</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
                     <span class="n">warn</span><span class="p">(</span><span class="s">&#39;Ignored imperfection: {0}, {1}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">imp</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
