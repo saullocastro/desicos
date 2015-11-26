@@ -1,8 +1,11 @@
 import numpy as np
 from numpy import sin, cos
 
+from abaqusConstants import *
+
 from desicos.abaqus.utils import cyl2rec
 from desicos.logger import warn
+from desicos.abaqus import abaqus_functions
 
 
 class Cutout(object):
@@ -28,10 +31,30 @@ class Cutout(object):
         Number of elements along the radial edges about the cutout center.
         This parameter affects the aspect ratio of the elements inside the
         cutout area.
+    prop_around_hole : dict, optional
+        Dictionary with keys:
+
+        - radius : float
+        - 'stack': list of floats
+        - 'plyts': list of floats
+        - 'mat_names': list of strings
+
+        Example::
+
+            prop_around_holes = {
+                'radius': 10.,
+                'stack': [0, 90, 0],
+                'plyts': [0.125, 0.125, 0.125],
+                'mat_names': ['Alum', 'Alum', 'Alum'],
+            }
+
+        .. note:: `mat_names` must be a list of materials already created in
+                  the current model in Abaqus
 
     """
     def __init__(self, thetadeg, pt, d, drill_offset_deg=0.,
-                 clearance_factor=0.75, numel_radial_edge=4):
+                 clearance_factor=0.75, numel_radial_edge=4,
+                 prop_around_hole=None):
         self.thetadeg = thetadeg
         self.pt = pt
         self.d = d
@@ -39,6 +62,7 @@ class Cutout(object):
         self.drill_offset_deg = drill_offset_deg
         self.clearance_factor = clearance_factor
         self.numel_radial_edge = numel_radial_edge
+        self.prop_around_hole = prop_around_hole
         self.impconf = None
         self.name = ''
         self.thetadeg1 = None
@@ -90,6 +114,7 @@ class Cutout(object):
         p = mod.parts[cc.part_name_shell]
         ra = mod.rootAssembly
         datums = p.datums
+        self.part = p
         d = self.d
         r, z = cc.r_z_from_pt(self.pt)
         x, y, z = self.x, self.y, self.z
@@ -107,19 +132,20 @@ class Cutout(object):
                                       point2=datums[_p2.id])
 
         # line defining the cutting axis
-        p1coord = np.array((x, y, z))
+        self.p1coord = np.array((x, y, z))
         dx = d*cos(alpharad - drill_offset_rad)*cos(thetarad)
         dy = d*cos(alpharad - drill_offset_rad)*sin(thetarad)
         dz = d*sin(alpharad - drill_offset_rad)
-        p2coord = np.array((x+dx, y+dy, z+dz))
-        p1 = p.DatumPointByCoordinate(coords=p1coord)
-        p2 = p.DatumPointByCoordinate(coords=p2coord)
+        self.p0coord = np.array((x-dx, y-dy, z-dz))
+        self.p2coord = np.array((x+dx, y+dy, z+dz))
+        p1 = p.DatumPointByCoordinate(coords=self.p1coord)
+        p2 = p.DatumPointByCoordinate(coords=self.p2coord)
         drillaxis = p.DatumAxisByTwoPoint(point1=datums[p1.id],
                                           point2=datums[p2.id])
 
         #TODO get vertices where to pass the cutting plane
-        plow = p1coord.copy()
-        pup = p1coord.copy()
+        plow = self.p1coord.copy()
+        pup = self.p1coord.copy()
         rlow, zlow = cc.r_z_from_pt(self.ptlow)
         plow[2] = zlow
         rup, zup = cc.r_z_from_pt(self.ptup)
@@ -191,7 +217,7 @@ class Cutout(object):
                             sketchPlane=datums[sketchplane.id],
                             sketchUpEdge=datums[zaxis.id],
                             sketchPlaneSide=SIDE1,
-                            origin=p2coord)
+                            origin=self.p2coord)
 
         sketch = mod.ConstrainedSketch(name='__profile__',
             sheetSize=10.*d, gridSpacing=d/10., transform=sketchstrans)
@@ -275,6 +301,43 @@ class Cutout(object):
                 index = inst_shell.vertices.index(new_vertex)
                 region = Region(vertices=inst_shell.vertices[index:index+1])
                 mod.loads[pload.name].setValues(region=region)
+
+    def create_prop_around_hole(self):
+        if self.prop_around_hole is not None:
+            if not isinstance(self.prop_around_hole, dict):
+                raise ValueError('prop_around_hole must be a dictionary')
+            radius = self.prop_around_hole['radius']
+            stack = self.prop_around_hole['stack']
+            plyts = self.prop_around_hole['plyts']
+            mat_names = self.prop_around_hole['mat_names']
+
+            p = self.part
+            print self.p0coord
+            print self.p2coord
+            print radius
+            elem_set = p.Set(name='elems_around_cutout_%02d' % self.index,
+                             elements=p.elements.getByBoundingCylinder(
+                             center1=self.p0coord,
+                             center2=self.p2coord, radius=radius))
+
+            #TODO could get the Csys that already exists...
+            part_csys = p.DatumCsysByThreePoints(name='part_cyl_csys',
+                                                 coordSysType=CYLINDRICAL,
+                                                 origin=(0.0, 0.0, 0.0),
+                                                 point1=(1.0, 0.0, 0.0),
+                                                 point2=(0.0, 1.0, 0.0))
+            part_csys = p.datums[part_csys.id]
+            #FIXME create a circular boundary region around the cutout to
+            #      guarantee a better mesh for these cases with a new property
+            #      around the cutout
+            abaqus_functions.create_composite_layup(
+                    name='prop_around_cutout_%02d' % self.index,
+                    stack=stack, plyts=plyts, mat_names=mat_names,
+                    part=p, part_csys=part_csys,
+                    region=elem_set)
+        else:
+            raise RuntimeError('prop_around_hole not defined!')
+
 
 if __name__ == '__main__':
     from desicos.abaqus.conecyl import ConeCyl

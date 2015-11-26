@@ -416,7 +416,8 @@ class ImpConf(object):
 
 
     def add_cutout(self, thetadeg, pt, d, drill_offset_deg=0.,
-                   clearance_factor=0.75, numel_radial_edge=4):
+                   clearance_factor=0.75, numel_radial_edge=4,
+                   prop_around_hole=None):
         r"""Add a cutout
 
         Parameters
@@ -439,6 +440,25 @@ class ImpConf(object):
             Number of elements along the radial edges about the cutout center.
             This parameter affects the aspect ratio of the elements inside the
             cutout area.
+        prop_around_hole : dict, optional
+            Dictionary with keys:
+
+            - radius : float
+            - 'stack': list of floats
+            - 'plyts': list of floats
+            - 'mat_names': list of strings
+
+            Example::
+
+                prop_around_holes = {
+                    'radius': 10.,
+                    'stack': [0, 90, 0],
+                    'plyts': [0.125, 0.125, 0.125],
+                    'mat_names': ['Alum', 'Alum', 'Alum'],
+                }
+
+            .. note:: `mat_names` must be a list of materials already created in
+                      the current model in Abaqus
 
         Returns
         -------
@@ -446,7 +466,7 @@ class ImpConf(object):
 
         """
         cutout = Cutout(thetadeg, pt, d, drill_offset_deg, clearance_factor,
-                numel_radial_edge)
+                numel_radial_edge, prop_around_hole)
         cutout.impconf = self
         self.cutouts.append(cutout)
         return cutout
