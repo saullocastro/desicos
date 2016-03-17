@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Processing Geometric Imperfection Data &mdash; DESICOS 2.4.5 documentation</title>
+    <title>Processing Geometric Imperfection Data &mdash; DESICOS 2.4.6 documentation</title>
     
     <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.4.5',
+        VERSION:     '2.4.6',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <link rel="top" title="DESICOS 2.4.5 documentation" href="../../../index.html" />
+    <link rel="top" title="DESICOS 2.4.6 documentation" href="../../../index.html" />
     <link rel="up" title="Cone / Cylinder DataBase (desicos.conecylDB)" href="../index.html" />
     <link rel="next" title="Adding New Imperfection Files" href="../add_file.html" />
     <link rel="prev" title="Dynamic Database" href="../dynamic.html" />
@@ -51,7 +51,7 @@
         <li class="right" >
           <a href="../dynamic.html" title="Dynamic Database"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">DESICOS 2.4.5 documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">DESICOS 2.4.6 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Tutorials</a> &raquo;</li>
           <li class="nav-item nav-item-2"><a href="../index.html" accesskey="U">Cone / Cylinder DataBase (<code class="docutils literal"><span class="pre">desicos.conecylDB</span></code>)</a> &raquo;</li> 
       </ul>
@@ -138,8 +138,8 @@ be executed before.</p>
 <div class="figure">
 <img alt="../../../_images/plot_sample_3d.png" src="../../../_images/plot_sample_3d.png" />
 </div>
-<p>In order to transform the raw data to the <a class="reference internal" href="../../../modules/abaqus/index.html#figure-conecyl"><span>finite element coordinate
-system</span></a>, the recommended procedure is the function
+<p>In order to transform the raw data to the <span class="xref std std-ref">finite element coordinate
+system</span>, the recommended procedure is the function
 <a class="reference internal" href="../../../modules/conecylDB/index.html#desicos.conecylDB.read_write.xyz2thetazimp" title="desicos.conecylDB.read_write.xyz2thetazimp"><code class="xref py py-func docutils literal"><span class="pre">xyz2thetazimp()</span></code></a>, exemplified below. This function converts the &#8220;<img class="math" src="../../../_images/math/fcbaa2ea1c6a047f151a45849927929823fc5d88.png" alt="x"/> <img class="math" src="../../../_images/math/5a1161c9b9bf6a6addc18ade0f7fe8bb5ce0ba95.png" alt="y"/>
 <img class="math" src="../../../_images/math/eb4fcf2ea15c365948abb172ed3693fbc10b3b4a.png" alt="z"/>&#8221; data to a to convert them to a &#8220;<img class="math" src="../../../_images/math/4dc4789b8e2f448615b3e2c2bdc22fb9267f7cd8.png" alt="\theta"/> <img class="math" src="../../../_images/math/eb4fcf2ea15c365948abb172ed3693fbc10b3b4a.png" alt="z"/> <img class="math" src="../../../_images/math/a359fcc67d4efbcaef5bda404120efef7de1ada3.png" alt="imp"/>&#8221; format. This function
 is a wrapper that calls funcion <a class="reference internal" href="../../../modules/conecylDB/index.html#desicos.conecylDB.fit_data.best_fit_cylinder" title="desicos.conecylDB.fit_data.best_fit_cylinder"><code class="xref py py-func docutils literal"><span class="pre">best_fit_cylinder()</span></code></a> or
@@ -579,8 +579,8 @@ x2 y2 z2 thick2
 xn yn zn thickn
 </pre></div>
 </div>
-<p>The recommended procedure to transform the raw data to the <a class="reference internal" href="../../../modules/abaqus/index.html#figure-conecyl"><span>finite
-element coordinate system</span></a> is the function
+<p>The recommended procedure to transform the raw data to the <span class="xref std std-ref">finite
+element coordinate system</span> is the function
 <a class="reference internal" href="../../../modules/conecylDB/index.html#desicos.conecylDB.read_write.xyzthick2thetazthick" title="desicos.conecylDB.read_write.xyzthick2thetazthick"><code class="xref py py-func docutils literal"><span class="pre">xyzthick2thetazthick()</span></code></a>, that also calls internally the
 <a class="reference internal" href="../../../modules/conecylDB/index.html#desicos.conecylDB.fit_data.best_fit_cylinder" title="desicos.conecylDB.fit_data.best_fit_cylinder"><code class="xref py py-func docutils literal"><span class="pre">best_fit_cylinder()</span></code></a> or the <a class="reference internal" href="../../../modules/conecylDB/index.html#desicos.conecylDB.fit_data.best_fit_cone" title="desicos.conecylDB.fit_data.best_fit_cone"><code class="xref py py-func docutils literal"><span class="pre">best_fit_cone()</span></code></a> routines:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">desicos.conecylDB.read_write</span> <span class="kn">import</span> <span class="n">xyzthick2thetazthick</span>
