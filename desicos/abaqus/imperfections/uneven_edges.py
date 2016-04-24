@@ -477,8 +477,10 @@ class UnevenTopEdge(object):
                               measured_u3s[1, :], period=360)
 
             # applying load asymmetry according to cc.betarad and omega
-            betarad = deg2rad(self.betadeg)
-            omegarad = deg2rad(self.omegadeg)
+            betadeg = self.betadeg if self.betadeg is not None else 0.
+            betarad = deg2rad(betadeg)
+            omegadeg = self.omegadeg if self.omegadeg is not None else 0.
+            omegarad = deg2rad(omegadeg)
             u3_nodes -= cc.rtop*np.tan(betarad)*np.cos(theta_nodes-omegarad)
 
             # contributions from shims

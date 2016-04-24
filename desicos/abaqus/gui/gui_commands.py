@@ -10,9 +10,7 @@ import numpy as np
 import desicos.abaqus.abaqus_functions as abaqus_functions
 import desicos.conecylDB as conecylDB
 import desicos.abaqus.conecyl as conecyl
-#New
 #import desicos.abaqus.stringers as stringers
-#End new
 import desicos.abaqus.study as study
 from desicos.abaqus.constants import TMP_DIR
 from desicos.conecylDB import fetch, save
@@ -35,13 +33,11 @@ ccattrs = ['rbot','H','alphadeg','plyts',
 'resin_bot_h', 'resin_bir_w1', 'resin_bir_w2', 'resin_bor_w1', 'resin_bor_w2',
 'resin_top_h', 'resin_tir_w1', 'resin_tir_w2', 'resin_tor_w1', 'resin_tor_w2',
 'laminapropKeys', 'allowables', 'timeInterval', 'stress_output',
-#New stuff
 'str_NUM','numel_str',
 'geo_STR_CB','geo_w_str','geo_w_str_RB','geo_I_str',
-'geo_i_str_RB','geo_Z_str','geo_z_str_RB','geo_cs_RB', 
+'geo_i_str_RB','geo_Z_str','geo_z_str_RB','geo_cs_RB',
 'geo_cs','geo_ort_RB','geo_ortho','geo_ccs_RB','geo_ccs',
 'geo_F_CB','F_NUM','geo_w_F_RB','geo_w_F','geo_c_F_RB','geo_c_F']
-#End new
 
 def find_std_name(std_name):
     #
@@ -183,7 +179,7 @@ def create_study(**kwargs):
     ort_geo=kwargs.get('geo_ortho')
     #Corrugated core sanwich
     ccs_st=kwargs.get('geo_ccs_RB')
-    ccs_geo=kwargs.get('geo_ccs')  
+    ccs_geo=kwargs.get('geo_ccs')
     #Frames
     F_G_st=kwargs.get('geo_F_CB')
     #Web frame

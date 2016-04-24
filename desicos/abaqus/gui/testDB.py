@@ -192,13 +192,13 @@ class TestDB(AFXDataDialog):
         self.geo_STR_CB.setCheck(state=False)
         self.str_NUM=AFXTextField(str_G_Box, 8, 'Number of stringers ', form.str_NUMKw, opts=AFXTEXTFIELD_INTEGER)
         self.str_NUM.disable()
-        
+
         self.geo_w_str_RB=FXRadioButton(str_G_Box,'Web stringer selected',form.geo_w_str_RBKw)
-        str1_frame=FXGroupBox(str_G_Box, 'Web stringer', FRAME_GROOVE ) 
+        str1_frame=FXGroupBox(str_G_Box, 'Web stringer', FRAME_GROOVE )
         str1_GF=FXHorizontalFrame(str1_frame)
         str1_VF=FXVerticalFrame(str1_GF)
         str1_VA = AFXVerticalAligner(str1_VF)
-        
+
         self.W_w=AFXTextField(str1_VA, 8, 'w ', form.geo_w_strKw,1, opts=AFXTEXTFIELD_FLOAT)
         self.W_w.disable()
         self.W_h=AFXTextField(str1_VA, 8, 'h ', form.geo_w_strKw,2, opts=AFXTEXTFIELD_FLOAT)
@@ -207,7 +207,7 @@ class TestDB(AFXDataDialog):
         self.W_t1.disable()
         self.W_t2=AFXTextField(str1_VA, 8, 't2', form.geo_w_strKw,4, opts=AFXTEXTFIELD_FLOAT)
         self.W_t2.disable()
-        self.L_str_W=[self.W_w,self.W_h,self.W_t1,self.W_t2]   
+        self.L_str_W=[self.W_w,self.W_h,self.W_t1,self.W_t2]
         str1_VF1=FXVerticalFrame(str1_GF)
         str1path = os.path.join(DAHOME, 'gui', 'icons', 'web_str.png')
         icon1 = afxCreatePNGIcon(str1path)
@@ -217,7 +217,7 @@ class TestDB(AFXDataDialog):
         str2_frame=FXGroupBox(str_G_Box, 'I stringer', FRAME_GROOVE )
 
         #self.geo_i_str_RB=FXCheckButton(str2_frame, 'I stringer selector' ,form.geo_i_RBKw)
- 
+
         str2_GF=FXHorizontalFrame(str2_frame)
         str2_VF=FXVerticalFrame(str2_GF)
         str2_VA = AFXVerticalAligner(str2_VF)
@@ -246,15 +246,15 @@ class TestDB(AFXDataDialog):
         str3_VF=FXVerticalFrame(str3_GF)
         str3_VA = AFXVerticalAligner(str3_VF)
         self.Z_w1=AFXTextField(str3_VA, 8, 'w1',form.geo_Z_strKw,1, opts=AFXTEXTFIELD_FLOAT)
-        self.Z_w1.disable()                                                                 
+        self.Z_w1.disable()
         self.Z_w2=AFXTextField(str3_VA, 8, 'w2',form.geo_Z_strKw,2, opts=AFXTEXTFIELD_FLOAT)
-        self.Z_w2.disable()                                                                 
+        self.Z_w2.disable()
         self.Z_h=AFXTextField(str3_VA, 8, 'h',form.geo_Z_strKw,3,  opts=AFXTEXTFIELD_FLOAT)
-        self.Z_h.disable()                                                                  
+        self.Z_h.disable()
         self.Z_t1=AFXTextField(str3_VA, 8, 't1',form.geo_Z_strKw,4, opts=AFXTEXTFIELD_FLOAT)
-        self.Z_t1.disable()                                                                 
+        self.Z_t1.disable()
         self.Z_t2=AFXTextField(str3_VA, 8, 't2',form.geo_Z_strKw,5, opts=AFXTEXTFIELD_FLOAT)
-        self.Z_t2.disable()                                                                 
+        self.Z_t2.disable()
         self.Z_t3=AFXTextField(str3_VA, 8, 't3',form.geo_Z_strKw,6, opts=AFXTEXTFIELD_FLOAT)
         self.Z_t3.disable()
         self.L_str_Z=[self.Z_w1,self.Z_w2,self.Z_h,self.Z_t1,self.Z_t2,self.Z_t3]
@@ -262,7 +262,7 @@ class TestDB(AFXDataDialog):
         str3path = os.path.join(DAHOME, 'gui', 'icons', 'z_str.png')
         icon3 = afxCreatePNGIcon(str3path)
         FXLabel(str3_VF1, '', icon3)
-########Corrugation  
+########Corrugation
         CS_Tab=FXTabItem(stf_Book,'Corrugation' , None, TAB_LEFT)
         CS_GF=FXVerticalFrame(stf_Book)
         self.geo_cs_RB=FXCheckButton(CS_GF, 'Corrgation stringer selector' ,form.geo_cs_RBKw)
@@ -395,7 +395,7 @@ class TestDB(AFXDataDialog):
         #self.geo_w_F_RB=FXRadioButton(str_G_Box,'Web frame selected',form.geo_w_F_RBKw)
         self.geo_w_F_RB=FXRadioButton(str_G_Box, 'Web frame selector' ,form.geo_w_F_RBKw)
         F1_frame=FXGroupBox(str_G_Box, 'Web frame', FRAME_GROOVE )
- 
+
         F1_GF=FXVerticalFrame(F1_frame)
         F1_Box=FXGroupBox(F1_GF, ' ' )
         F1_HF=FXHorizontalFrame(F1_Box)
@@ -407,7 +407,7 @@ class TestDB(AFXDataDialog):
         self.F_W_t1.disable()
         self.F_W_t2=AFXTextField(F1_HF, 8, 't2', form.geo_w_FKw,4, opts=AFXTEXTFIELD_FLOAT)
         self.F_W_t2.disable()
-        self.L_w_F=[self.F_W_w,self.F_W_h,self.F_W_t1,self.F_W_t2]   
+        self.L_w_F=[self.F_W_w,self.F_W_h,self.F_W_t1,self.F_W_t2]
         F1_Box1=FXGroupBox(F1_GF, ' ' )
         F1_HF1=FXHorizontalFrame(F1_Box1)
         F1path = os.path.join(DAHOME, 'gui', 'icons', 'Web_profile.png')
@@ -418,7 +418,7 @@ class TestDB(AFXDataDialog):
         F2_frame=FXGroupBox(str_G_Box, 'C Frame', FRAME_GROOVE )
 
         #self.geo_c_F_RB=FXCheckButton(F2_frame, 'C frame selector' ,form.geo_c_F_RBKw)
- 
+
         F2_GF=FXVerticalFrame(F2_frame)
         F2_VF=FXVerticalFrame(F2_GF)
         F2_Box=FXGroupBox(F2_GF, ' ' )
@@ -1162,7 +1162,7 @@ class TestDB(AFXDataDialog):
         self.post_MEA_button_1 = FXButton(postHF1, 'Plot MEA curves')
         self.post_MEA_button_2 = FXButton(postHF1, 'Plot RF1 vs. U3')
         FXCheckButton(postVF2, 'Put plots in Excel', form.post_put_in_ExcelKw)
-        FXCheckButton(postVF2, 'Open Excel', form.post_open_ExcelKw)        
+        FXCheckButton(postVF2, 'Open Excel', form.post_open_ExcelKw)
         #
         # Tabs / Post-processing / Knock-down curve
         #
@@ -1448,31 +1448,31 @@ class TestDB(AFXDataDialog):
 
 #Web frame
             if self.geo_w_F_RB.getCheck()==True  :#& self.geo_ccs_RB.getCheck()!=True & self.geo_ort_RB.getCheck()!=True :
-            
+
                 self.geo_ccs_RB.setCheck(state=False)
                 self.geo_ort_RB.setCheck(state=False)
                 for xi in range(0,len(self.L_w_F)):
                     self.L_w_F[xi].enable()
             else:
-            
+
                 for xi in range(0,len(self.L_w_F)):
                     self.L_w_F[xi].setText('')
                     self.L_w_F[xi].disable()
-#Web C      
+#Web C
             if self.geo_c_F_RB.getCheck()==True:#& self.geo_ccs_RB.getCheck()!=True & self.geo_ort_RB.getCheck()!=True:
-            
+
                 self.geo_ccs_RB.setCheck(state=False)
                 self.geo_ort_RB.setCheck(state=False)
                 for xi in range(0,len(self.L_c_F)):
                     self.L_c_F[xi].enable()
             else:
-            
+
                 for xi in range(0,len(self.L_c_F)):
                     self.L_c_F[xi].disable()
         else:
             self.F_NUM.disable()
 
-#        if self.cs_nc.getText()!=None and self.cs_alpha.getText()!=None and self.cs_ratio.getText()!=None and self.Rbot.getText()!=None: 
+#        if self.cs_nc.getText()!=None and self.cs_alpha.getText()!=None and self.cs_ratio.getText()!=None and self.Rbot.getText()!=None:
 #
 #            self.cor_A=cor_shell.A_cor
 #            self.cor_B=cor_shell.B_cor

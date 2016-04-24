@@ -347,6 +347,7 @@ class ImpConf(object):
         self.ploads.append(pload)
         return pload
 
+
     def add_cb(self, thetadeg, pt, cbtotal, step=1):
 
         """Add a Perturbation Load
@@ -649,7 +650,6 @@ class ImpConf(object):
 
     def create(self):
         for imp in self.imperfections:
-
             valid = True
             for pt in imp.pts:
                 if pt<0 or pt>1.:

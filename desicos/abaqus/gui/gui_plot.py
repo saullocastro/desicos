@@ -5,7 +5,6 @@ reload(gui_commands)
 
 
 def plot_ls_curve(std_name, put_in_Excel, open_Excel):
-  
     cmdstr  = 'import __main__\n'
     cmdstr += 'std = __main__.stds[ "%s" ]\n' % std_name
     cmdstr += 'std.plot_forces(put_in_Excel = %s,\n' % str(put_in_Excel) +\
@@ -14,8 +13,8 @@ def plot_ls_curve(std_name, put_in_Excel, open_Excel):
     sendCommand(cmdstr)
     return True
 
+
 def plot_MEA_curve(std_name, put_in_Excel, open_Excel):
-    
     cmdstr  = 'import __main__\n'
     cmdstr += 'std = __main__.stds[ "%s" ]\n' % std_name
     cmdstr += 'std.plot_R1_forces(put_in_Excel = %s,\n' % str(put_in_Excel) +\
@@ -24,8 +23,8 @@ def plot_MEA_curve(std_name, put_in_Excel, open_Excel):
     sendCommand(cmdstr)
     return True
 
+
 def plot_RF1U3_curve(std_name, put_in_Excel, open_Excel):
-  
     cmdstr  = 'import __main__\n'
     cmdstr += 'std = __main__.stds[ "%s" ]\n' % std_name
     cmdstr += 'std.plot_RF1U3_forces(put_in_Excel = %s,\n' % str(put_in_Excel) +\

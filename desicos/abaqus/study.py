@@ -199,7 +199,6 @@ class Study(object):
         for curve_num in range(2):
             curves = []
             names = []
-
             for cc in self.ccs:
                 ok = cc.read_outputs()
                 if not ok:
@@ -222,9 +221,10 @@ class Study(object):
         if put_in_Excel and open_Excel:
             self.open_excel()
 
+
     def plot_R1_forces(self, gui=False, put_in_Excel=True, open_Excel=False):
         import desicos.abaqus.utils as utils
-       
+
         sheet_names = ['R1_curves','R1_curves_norm']
         x_labels = ['STH, mm', 'End-Shortening']
         y_labels = ['Reaction Load, kN' , 'Radial Reaction Load']
@@ -256,9 +256,10 @@ class Study(object):
         if put_in_Excel and open_Excel:
             self.open_excel()
 
+
     def plot_RF1U3_forces(self, gui=False, put_in_Excel=True, open_Excel=False):
         import desicos.abaqus.utils as utils
-        
+
         sheet_names = ['RF1U3_curves','RF1U3_curves_norm']
         x_labels = ['STH, mm', 'End-Shortening']
         y_labels = ['Reaction Load, kN' , 'Radial Reaction Load']
@@ -289,6 +290,7 @@ class Study(object):
                 del book
         if put_in_Excel and open_Excel:
             self.open_excel()
+
 
     def plot(self,
               configure_session = False,

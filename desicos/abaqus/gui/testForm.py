@@ -64,14 +64,11 @@ params = ['rbot', 'H', 'alphadeg','betadeg','omegadeg',
 'imp_ms_num_sec_z', 'imp_t_num_sec_z',
 'imp_ms_rotatedeg', 'imp_t_rotatedeg',
 'imp_num_sets',
-#New stuff
 'str_NUM','numel_str',
 'geo_STR_CB','geo_w_str','geo_w_str_RB','geo_I_str',
-'geo_i_str_RB','geo_Z_str','geo_z_str_RB','geo_cs_RB', 
+'geo_i_str_RB','geo_Z_str','geo_z_str_RB','geo_cs_RB',
 'geo_cs','geo_ort_RB','geo_ortho','geo_ccs_RB','geo_ccs',
 'geo_F_CB','F_NUM','geo_w_F_RB','geo_w_F','geo_c_F_RB','geo_c_F']
-#End new
-
 
 
 class TestForm(AFXForm):
@@ -326,7 +323,6 @@ class TestForm(AFXForm):
                 else:
                     v2 = gui_defaults.defaults['numel_r_linear']
                 getattr(self, 'numel_rKw').setDefaultValue(v2)
-                
                 if update_values:
                     getattr(self, 'numel_rKw').setValueToDefault()
             else:
