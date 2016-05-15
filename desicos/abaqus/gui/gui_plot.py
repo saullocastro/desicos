@@ -14,6 +14,26 @@ def plot_ls_curve(std_name, put_in_Excel, open_Excel):
     return True
 
 
+def plot_MEA_curve(std_name, put_in_Excel, open_Excel):
+    cmdstr  = 'import __main__\n'
+    cmdstr += 'std = __main__.stds[ "%s" ]\n' % std_name
+    cmdstr += 'std.plot_R1_forces(put_in_Excel = %s,\n' % str(put_in_Excel) +\
+              '                open_Excel = %s,\n' % str(open_Excel) +\
+              '                gui = True)\n'
+    sendCommand(cmdstr)
+    return True
+
+
+def plot_RF1U3_curve(std_name, put_in_Excel, open_Excel):
+    cmdstr  = 'import __main__\n'
+    cmdstr += 'std = __main__.stds[ "%s" ]\n' % std_name
+    cmdstr += 'std.plot_RF1U3_forces(put_in_Excel = %s,\n' % str(put_in_Excel) +\
+              '                open_Excel = %s,\n' % str(open_Excel) +\
+              '                gui = True)\n'
+    sendCommand(cmdstr)
+    return True
+
+
 def plot_kdf_curve(std_name, put_in_Excel, open_Excel,
                    configure_session=False):
     cmdstr  = 'import __main__\n'

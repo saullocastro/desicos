@@ -65,6 +65,7 @@ defaults = {
             'numel_r_parabolic': 120,
             'timeInterval': 0.1,
             'pl_num': 0,
+            'cb_num': 0,
             'd_num': 0,
             'ax_num': 0,
             'lbmi_num': 0,

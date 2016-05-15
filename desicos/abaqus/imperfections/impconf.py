@@ -7,6 +7,7 @@ from uneven_edges import Shim, UnevenBottomEdge, UnevenTopEdge
 from axisymmetric import Axisymmetric
 from dimple import Dimple
 from pload import PLoad
+from cb import CBamp
 from lbmi import LBMI
 from msi import MSI
 from ti import TI
@@ -64,6 +65,7 @@ class ImpConf(object):
         self.uneven_top_edge.impconf = self
         self.imperfections = []
         self.ploads = []
+        self.cb = []
         self.dimples = []
         self.axisymmetrics = []
         self.lbmis = []
@@ -346,6 +348,35 @@ class ImpConf(object):
         return pload
 
 
+    def add_cb(self, thetadeg, pt, cbtotal, step=1):
+
+        """Add a Perturbation Load
+
+        Parameters
+        ----------
+        thetadeg : float
+            Circumferential position.
+        pt : float
+            Normalized meridional position.
+        cbtotal : float
+            The magnitude of the constant buckle (it is always applied
+            normally to the shell surface).
+        step : int
+            The step in which the perturbation load will be included. In
+            ``step=1`` the load is constant along the analysis while in
+            ``step=2`` the load is incremented.
+
+        Returns
+        -------
+        pload : :class:`.PLoad` object.
+
+        """
+        cb = CBamp(thetadeg, pt, cbtotal, step)
+        cb.impconf = self
+        self.cb.append(cb)
+        return cb
+
+
     def add_shim_bottom_edge(self, thetadeg, thick, width):
         """Add a Shim to the bottom edge
 
@@ -554,6 +585,12 @@ class ImpConf(object):
             pload.index = i
             pload.rebuild()
             self.imperfections.append(pload)
+        # CSBI
+        for cb in self.cb:
+            i += 1
+            cb.index = i
+            cb.rebuild()
+            self.imperfections.append(cb)
         # dimples
         for sb in self.dimples:
             i += 1

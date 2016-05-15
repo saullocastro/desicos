@@ -13,6 +13,7 @@ import desicos.conecylDB as conecylDB
 from desicos.conecylDB import fetch
 from desicos.abaqus.utils import remove_special_characters as rsc
 from desicos.abaqus.constants import *
+from desicos.abaqus.conecyl.cor_shell import *
 
 NUM_PLIES = 40
 MAX_MODELS = 40
@@ -162,20 +163,282 @@ class TestDB(AFXDataDialog):
         # Tabs / Geometry
         #
         FXTabItem(mainTabBook, 'Geometry')
-        geomFrame = FXHorizontalFrame(mainTabBook, FRAME_RAISED|FRAME_SUNKEN)
+        #
+        geomFrame = FXHorizontalFrame(mainTabBook)
+        geomFrame1=FXGroupBox(geomFrame, 'Shell Geometry', FRAME_GROOVE )
         pngpath = os.path.join(DAHOME, 'gui', 'icons', 'geometry.png')
         icon = afxCreatePNGIcon(pngpath)
-        FXLabel(geomFrame, '', icon)
-        geomVF = FXVerticalFrame(geomFrame)
+        FXLabel(geomFrame1, '', icon)
+        geomVF = FXVerticalFrame(geomFrame1)
         geomVA = AFXVerticalAligner(geomVF)
         FXLabel(geomVA, 'Define geometry:')
-        AFXTextField(geomVA, 8, 'R:', form.rbotKw, opts=AFXTEXTFIELD_FLOAT)
+        self.Rbot=AFXTextField(geomVA, 8, 'R:', form.rbotKw, opts=AFXTEXTFIELD_FLOAT)
         AFXTextField(geomVA, 8, 'H:', form.HKw, opts=AFXTEXTFIELD_FLOAT)
         AFXTextField(geomVA, 8, 'alpha in degrees:',
                      form.alphadegKw, opts=AFXTEXTFIELD_FLOAT)
         FXLabel(geomVF, 'OBS:')
         FXLabel(geomVF, '       - For cylinders keep alpha = 0')
         FXLabel(geomVF, '       - H includes the resin rings')
+        #Stiffening paterns
+        geomVF2 = FXHorizontalFrame(geomFrame)
+        stf_frame=FXGroupBox(geomVF2, 'Stiffening definition', FRAME_GROOVE )
+        stf_Book = FXTabBook(stf_frame, None, 0,
+                              TABBOOK_LEFTTABS|LAYOUT_FILL_X)
+        FXTabItem(stf_Book, 'Stringers', None, TAB_LEFT)
+        str_F_Frame = FXVerticalFrame(stf_Book, LAYOUT_FILL_X|LAYOUT_FILL_Y)
+        str_G_Box=FXGroupBox(str_F_Frame, ' ' )
+########Stringers definitions
+        self.geo_STR_CB=FXCheckButton(str_G_Box, 'Stringer selector' ,form.geo_STR_CBKw)
+        self.geo_STR_CB.setCheck(state=False)
+        self.str_NUM=AFXTextField(str_G_Box, 8, 'Number of stringers ', form.str_NUMKw, opts=AFXTEXTFIELD_INTEGER)
+        self.str_NUM.disable()
+
+        self.geo_w_str_RB=FXRadioButton(str_G_Box,'Web stringer selected',form.geo_w_str_RBKw)
+        str1_frame=FXGroupBox(str_G_Box, 'Web stringer', FRAME_GROOVE )
+        str1_GF=FXHorizontalFrame(str1_frame)
+        str1_VF=FXVerticalFrame(str1_GF)
+        str1_VA = AFXVerticalAligner(str1_VF)
+
+        self.W_w=AFXTextField(str1_VA, 8, 'w ', form.geo_w_strKw,1, opts=AFXTEXTFIELD_FLOAT)
+        self.W_w.disable()
+        self.W_h=AFXTextField(str1_VA, 8, 'h ', form.geo_w_strKw,2, opts=AFXTEXTFIELD_FLOAT)
+        self.W_h.disable()
+        self.W_t1=AFXTextField(str1_VA, 8, 't1', form.geo_w_strKw,3, opts=AFXTEXTFIELD_FLOAT)
+        self.W_t1.disable()
+        self.W_t2=AFXTextField(str1_VA, 8, 't2', form.geo_w_strKw,4, opts=AFXTEXTFIELD_FLOAT)
+        self.W_t2.disable()
+        self.L_str_W=[self.W_w,self.W_h,self.W_t1,self.W_t2]
+        str1_VF1=FXVerticalFrame(str1_GF)
+        str1path = os.path.join(DAHOME, 'gui', 'icons', 'web_str.png')
+        icon1 = afxCreatePNGIcon(str1path)
+        FXLabel(str1_VF1, '', icon1)
+########################################################################
+        self.geo_i_str_RB=FXRadioButton(str_G_Box, 'I stringer selected',form.geo_i_str_RBKw)
+        str2_frame=FXGroupBox(str_G_Box, 'I stringer', FRAME_GROOVE )
+
+        #self.geo_i_str_RB=FXCheckButton(str2_frame, 'I stringer selector' ,form.geo_i_RBKw)
+
+        str2_GF=FXHorizontalFrame(str2_frame)
+        str2_VF=FXVerticalFrame(str2_GF)
+        str2_VA = AFXVerticalAligner(str2_VF)
+        self.I_w1=AFXTextField(str2_VA, 8, 'w1',form.geo_I_strKw,1, opts=AFXTEXTFIELD_FLOAT)
+        self.I_w1.disable()
+        self.I_w2=AFXTextField(str2_VA, 8, 'w2',form.geo_I_strKw,2, opts=AFXTEXTFIELD_FLOAT)
+        self.I_w2.disable()
+        self.I_h=AFXTextField(str2_VA, 8, 'h',form.geo_I_strKw,3,  opts=AFXTEXTFIELD_FLOAT)
+        self.I_h.disable()
+        self.I_t1=AFXTextField(str2_VA, 8, 't1',form.geo_I_strKw,4, opts=AFXTEXTFIELD_FLOAT)
+        self.I_t1.disable()
+        self.I_t2=AFXTextField(str2_VA, 8, 't2',form.geo_I_strKw,5, opts=AFXTEXTFIELD_FLOAT)
+        self.I_t2.disable()
+        self.I_t3=AFXTextField(str2_VA, 8, 't3',form.geo_I_strKw,6, opts=AFXTEXTFIELD_FLOAT)
+        self.I_t3.disable()
+        self.L_str_I=[self.I_w1,self.I_w2,self.I_h,self.I_t1,self.I_t2,self.I_t3]
+        str2_VF1=FXVerticalFrame(str2_GF)
+        str2path = os.path.join(DAHOME, 'gui', 'icons', 'i_str.png')
+        icon2 = afxCreatePNGIcon(str2path)
+        FXLabel(str2_VF1, '', icon2)
+#######################################################################
+        self.geo_z_str_RB=FXRadioButton(str_G_Box, 'Z stringer selected',form.geo_z_str_RBKw)
+        str3_frame=FXGroupBox(str_G_Box, 'Z stringer', FRAME_GROOVE )
+        #self.geo_z_str_RB=FXCheckButton(str3_frame, 'Z stringer selector' ,form.geo_z_RBKw)
+        str3_GF=FXHorizontalFrame(str3_frame)
+        str3_VF=FXVerticalFrame(str3_GF)
+        str3_VA = AFXVerticalAligner(str3_VF)
+        self.Z_w1=AFXTextField(str3_VA, 8, 'w1',form.geo_Z_strKw,1, opts=AFXTEXTFIELD_FLOAT)
+        self.Z_w1.disable()
+        self.Z_w2=AFXTextField(str3_VA, 8, 'w2',form.geo_Z_strKw,2, opts=AFXTEXTFIELD_FLOAT)
+        self.Z_w2.disable()
+        self.Z_h=AFXTextField(str3_VA, 8, 'h',form.geo_Z_strKw,3,  opts=AFXTEXTFIELD_FLOAT)
+        self.Z_h.disable()
+        self.Z_t1=AFXTextField(str3_VA, 8, 't1',form.geo_Z_strKw,4, opts=AFXTEXTFIELD_FLOAT)
+        self.Z_t1.disable()
+        self.Z_t2=AFXTextField(str3_VA, 8, 't2',form.geo_Z_strKw,5, opts=AFXTEXTFIELD_FLOAT)
+        self.Z_t2.disable()
+        self.Z_t3=AFXTextField(str3_VA, 8, 't3',form.geo_Z_strKw,6, opts=AFXTEXTFIELD_FLOAT)
+        self.Z_t3.disable()
+        self.L_str_Z=[self.Z_w1,self.Z_w2,self.Z_h,self.Z_t1,self.Z_t2,self.Z_t3]
+        str3_VF1=FXVerticalFrame(str3_GF)
+        str3path = os.path.join(DAHOME, 'gui', 'icons', 'z_str.png')
+        icon3 = afxCreatePNGIcon(str3path)
+        FXLabel(str3_VF1, '', icon3)
+########Corrugation
+        CS_Tab=FXTabItem(stf_Book,'Corrugation' , None, TAB_LEFT)
+        CS_GF=FXVerticalFrame(stf_Book)
+        self.geo_cs_RB=FXCheckButton(CS_GF, 'Corrgation stringer selector' ,form.geo_cs_RBKw)
+        self.geo_cs_RB.setCheck(state=False)
+        CS_Box=FXGroupBox(CS_GF, ' ' )
+        CS_HF=FXHorizontalFrame(CS_Box)
+        CS_VF=FXVerticalFrame(CS_HF)
+        CS_VA = AFXVerticalAligner(CS_VF)
+        self.cs_nc=AFXTextField(CS_VA, 8, 'Number of corrugations',form.geo_csKw,1, opts=AFXTEXTFIELD_FLOAT)
+        self.cs_nc.disable()
+        self.cs_alpha=AFXTextField(CS_VA, 8, 'Alpha',form.geo_csKw,2, opts=AFXTEXTFIELD_FLOAT)
+        self.cs_alpha.disable()
+        self.cs_ratio=AFXTextField(CS_VA, 8, 'a to b ratio',form.geo_csKw,3, opts=AFXTEXTFIELD_FLOAT)
+        self.cs_ratio.disable()
+        self.L_cs=[self.cs_nc,self.cs_alpha,self.cs_ratio]
+        CS_Box1=FXGroupBox(CS_GF, ' ' )
+        CS_HF1=FXHorizontalFrame(CS_Box1)
+        str4path = os.path.join(DAHOME, 'gui', 'icons', 'Corr.png')
+        icon1 = afxCreatePNGIcon(str4path)
+        FXLabel(CS_HF1, '', icon1)
+        CS_VF1=FXVerticalFrame(CS_GF)
+        FXLabel(CS_VF1, 'OBS:')
+        FXLabel(CS_VF1, '   - alpha should be introduced in degrees')
+        FXLabel(CS_VF1, '')
+        FXLabel(CS_VF1, '   - The number of corrugations depends on the reinforcement')
+        FXLabel(CS_VF1, 'geometry and shell radious')
+        CS_HF2=FXVerticalFrame(CS_GF)
+        #self.cs_a_corr=AFXTextField(CS_HF2, 8, 'a :',form.geo_csKw,4, opts=AFXTEXTFIELD_FLOAT)
+        #self.cs_a_corr.setEditable(edit=False)
+        #self.cs_b_corr=AFXTextField(CS_HF2, 8, 'b :',form.geo_csKw,5, opts=AFXTEXTFIELD_FLOAT)
+        #self.cs_b_corr.setEditable(edit=False)
+        #setReadOnlyState(readonly=True)
+        #setText(text)
+########Orthogrid
+        ort_Tab=FXTabItem(stf_Book, 'Orthogrid', None, TAB_LEFT)
+        ort_Frame=FXGroupBox(stf_Book, ' ')
+
+        self.geo_ort_RB=FXCheckButton(ort_Frame, 'Orthogrid stringer selector' ,form.geo_ort_RBKw)
+        self.geo_ort_RB.setCheck(state=False)
+        ort_GF=FXHorizontalFrame(ort_Frame)
+        ort_VF=FXVerticalFrame(ort_GF)
+        ort_VA = AFXVerticalAligner(ort_VF)
+        self.ort_n1=AFXTextField(ort_VA, 8, 'n1',form.geo_orthoKw,1,  opts=AFXTEXTFIELD_FLOAT)
+        self.ort_n1.disable()
+        self.ort_n2=AFXTextField(ort_VA, 8, 'n2',form.geo_orthoKw,2,  opts=AFXTEXTFIELD_FLOAT)
+        self.ort_n2.disable()
+        self.ort_h=AFXTextField(ort_VA, 8, 'h' ,form.geo_orthoKw,3,  opts=AFXTEXTFIELD_FLOAT)
+        self.ort_h.disable()
+        #self.ort_t1=AFXTextField(ort_VA, 8, 't1',form.geo_orthoKw,4,  opts=AFXTEXTFIELD_FLOAT)
+        #self.ort_t1.disable()
+        self.ort_t1=AFXTextField(ort_VA, 8, 't1',form.geo_orthoKw,4,  opts=AFXTEXTFIELD_FLOAT)
+        self.ort_t1.disable()
+        self.ort_t2=AFXTextField(ort_VA, 8, 't2',form.geo_orthoKw,5,  opts=AFXTEXTFIELD_FLOAT)
+        self.ort_t2.disable()
+        self.L_ort=[self.ort_n1,self.ort_n2,self.ort_h,self.ort_t1,self.ort_t2]
+        ort_VF1=FXVerticalFrame(ort_GF)
+        str3path = os.path.join(DAHOME, 'gui', 'icons', 'orthogrid.png')
+        icon3 = afxCreatePNGIcon(str3path)
+        FXLabel(ort_VF1, '', icon3)
+        ort_VF1=FXVerticalFrame(ort_Frame)
+        FXLabel(ort_VF1, 'OBS:')
+        FXLabel(ort_VF1, '   - n1 corresponds with the number of stiffeners')
+        FXLabel(ort_VF1, 'in the axial direction.')
+        FXLabel(ort_VF1, '   - n2 corresponds with the number of stiffeners')
+        FXLabel(ort_VF1, 'in the circumferential direction.')
+########An-isogrid
+        An_iso_Tab=FXTabItem(stf_Book, 'Anisogrid', None, TAB_LEFT)
+        An_iso_Frame=FXGroupBox(stf_Book, ' ')
+        An_iso_GF=FXHorizontalFrame(An_iso_Frame)
+        An_iso_VF=FXVerticalFrame(An_iso_GF)
+        An_iso_VA = AFXVerticalAligner(An_iso_VF)
+        AFXTextField(An_iso_VA, 8, 'TBD', opts=AFXTEXTFIELD_FLOAT)
+        AFXTextField(An_iso_VA, 8, 'TBD', opts=AFXTEXTFIELD_FLOAT)
+        AFXTextField(An_iso_VA, 8, 'TBD', opts=AFXTEXTFIELD_FLOAT)
+        AFXTextField(An_iso_VA, 8, 'TBD', opts=AFXTEXTFIELD_FLOAT)
+        AFXTextField(An_iso_VA, 8, 'TBD', opts=AFXTEXTFIELD_FLOAT)
+        AFXTextField(An_iso_VA, 8, 'TBD', opts=AFXTEXTFIELD_FLOAT)
+        An_iso_VF1=FXVerticalFrame(An_iso_GF)
+        str4path = os.path.join(DAHOME, 'gui', 'icons', 'UC.png')
+        icon1 = afxCreatePNGIcon(str4path)
+        FXLabel(An_iso_VF1, '', icon1)
+        An_iso_VF1=FXVerticalFrame(An_iso_Frame)
+        FXLabel(An_iso_VF1, 'OBS:')
+        FXLabel(An_iso_VF1, '   - w1 corresponds with the spacing of the stiffening pattern')
+        FXLabel(An_iso_VF1, 'in the axial direction.')
+        FXLabel(An_iso_VF1, '   - w2 corresponds with the spacing of the stiffening pattern')
+        FXLabel(An_iso_VF1, 'in the circumferential direction.')
+########CCS
+        CCS_Tab=FXTabItem(stf_Book,'Corrugated core sandwich' , None, TAB_LEFT)
+        CCS_GF=FXVerticalFrame(stf_Book)
+
+        self.geo_ccs_RB=FXCheckButton(CCS_GF, 'Corrugated core sandwich selector' ,form.geo_ccs_RBKw)
+        self.geo_ccs_RB.setCheck(state=False)
+        CCS_Box=FXGroupBox(CCS_GF, ' ' )
+        CCS_HF=FXHorizontalFrame(CCS_Box)
+        CCS_VF=FXVerticalFrame(CCS_HF)
+        CCS_VA = AFXVerticalAligner(CCS_VF)
+        self.ccs_a=AFXTextField(CCS_HF, 8, 'a',form.geo_ccsKw,1, opts=AFXTEXTFIELD_FLOAT)
+        self.ccs_a.disable()
+        self.ccs_b=AFXTextField(CCS_HF, 8, 'b',form.geo_ccsKw,2, opts=AFXTEXTFIELD_FLOAT)
+        self.ccs_b.disable()
+        self.ccs_alpha=AFXTextField(CCS_HF, 8, 'alpha',form.geo_ccsKw,3, opts=AFXTEXTFIELD_FLOAT)
+        self.ccs_alpha.disable()
+        self.L_ccs=[self.ccs_a, self.ccs_b,self.ccs_alpha]
+        CCS_Box1=FXGroupBox(CCS_GF, ' ' )
+        CCS_HF1=FXHorizontalFrame(CCS_Box1)
+        str4path = os.path.join(DAHOME, 'gui', 'icons', 'CCS.png')
+        icon1 = afxCreatePNGIcon(str4path)
+        FXLabel(CCS_HF1, '', icon1)
+        CCS_VF1=FXVerticalFrame(CCS_GF)
+        FXLabel(CCS_VF1, 'OBS:')
+        FXLabel(CCS_VF1, '   - alpha should be introduced in degrees')
+        FXLabel(CCS_VF1, '')
+        FXLabel(CCS_VF1, '   - The number of corrugations depends on the reinforcement')
+        FXLabel(CCS_VF1, 'geometry and shell radious')
+        CCS_HF2=FXVerticalFrame(CCS_GF)
+        self.ccs_Nc=AFXTextField(CCS_HF2, 8, 'Number of corrugations :',form.geo_csKw,4, opts=AFXTEXTFIELD_FLOAT)
+        self.ccs_Nc.setEditable(edit=False)
+        #setReadOnlyState(readonly=True)
+        #setText(text)
+########Frames
+        FXTabItem(stf_Book, 'Frames', None, TAB_LEFT)
+        str_F_Frame = FXVerticalFrame(stf_Book, LAYOUT_FILL_X|LAYOUT_FILL_Y)
+        str_G_Box=FXGroupBox(str_F_Frame, ' ' )
+########Frames definitions
+        self.geo_F_CB=FXCheckButton(str_G_Box, 'Frame selector' ,form.geo_F_CBKw)
+        self.geo_F_CB.setCheck(state=False)
+        self.F_NUM=AFXTextField(str_G_Box, 8, 'Number of frames ', form.F_NUMKw, opts=AFXTEXTFIELD_INTEGER)
+        self.F_NUM.disable()
+        #self.geo_w_F_RB=FXRadioButton(str_G_Box,'Web frame selected',form.geo_w_F_RBKw)
+        self.geo_w_F_RB=FXRadioButton(str_G_Box, 'Web frame selector' ,form.geo_w_F_RBKw)
+        F1_frame=FXGroupBox(str_G_Box, 'Web frame', FRAME_GROOVE )
+
+        F1_GF=FXVerticalFrame(F1_frame)
+        F1_Box=FXGroupBox(F1_GF, ' ' )
+        F1_HF=FXHorizontalFrame(F1_Box)
+        self.F_W_w=AFXTextField(F1_HF, 8, 'w ', form.geo_w_FKw,1, opts=AFXTEXTFIELD_FLOAT)
+        self.F_W_w.disable()
+        self.F_W_h=AFXTextField(F1_HF, 8, 'h ', form.geo_w_FKw,2, opts=AFXTEXTFIELD_FLOAT)
+        self.F_W_h.disable()
+        self.F_W_t1=AFXTextField(F1_HF, 8, 't1', form.geo_w_FKw,3, opts=AFXTEXTFIELD_FLOAT)
+        self.F_W_t1.disable()
+        self.F_W_t2=AFXTextField(F1_HF, 8, 't2', form.geo_w_FKw,4, opts=AFXTEXTFIELD_FLOAT)
+        self.F_W_t2.disable()
+        self.L_w_F=[self.F_W_w,self.F_W_h,self.F_W_t1,self.F_W_t2]
+        F1_Box1=FXGroupBox(F1_GF, ' ' )
+        F1_HF1=FXHorizontalFrame(F1_Box1)
+        F1path = os.path.join(DAHOME, 'gui', 'icons', 'Web_profile.png')
+        icon1 = afxCreatePNGIcon(F1path)
+        FXLabel(F1_HF1, '', icon1)
+########################################################################
+        self.geo_c_F_RB=FXRadioButton(str_G_Box, 'C Frame selected',form.geo_c_F_RBKw)
+        F2_frame=FXGroupBox(str_G_Box, 'C Frame', FRAME_GROOVE )
+
+        #self.geo_c_F_RB=FXCheckButton(F2_frame, 'C frame selector' ,form.geo_c_F_RBKw)
+
+        F2_GF=FXVerticalFrame(F2_frame)
+        F2_VF=FXVerticalFrame(F2_GF)
+        F2_Box=FXGroupBox(F2_GF, ' ' )
+        F2_HA = FXHorizontalFrame(F2_Box)
+        self.F_C_w1=AFXTextField(F2_HA, 8, 'w',form.geo_c_FKw,1, opts=AFXTEXTFIELD_FLOAT)
+        self.F_C_w1.disable()
+        self.F_C_h=AFXTextField(F2_HA, 8, 'h',form.geo_c_FKw,2,  opts=AFXTEXTFIELD_FLOAT)
+        self.F_C_h.disable()
+        self.F_C_t1=AFXTextField(F2_HA, 8, 't1',form.geo_c_FKw,3, opts=AFXTEXTFIELD_FLOAT)
+        self.F_C_t1.disable()
+        self.F_C_t2=AFXTextField(F2_HA, 8, 't2',form.geo_c_FKw,4, opts=AFXTEXTFIELD_FLOAT)
+        self.F_C_t2.disable()
+        self.L_c_F=[self.F_C_w1,self.F_C_h,self.F_C_t1,self.F_C_t2]
+        F2_Box1=FXGroupBox(F2_GF, ' ' )
+        F2_HF1=FXHorizontalFrame(F2_Box1)
+        F2path = os.path.join(DAHOME, 'gui', 'icons', 'C_profile.png')
+        icon2 = afxCreatePNGIcon(F2path)
+        FXLabel(F2_HF1, '', icon2)
+########End frames
+########End stiffening
         #
         # Tabs / Model
         #
@@ -232,7 +495,7 @@ class TestDB(AFXDataDialog):
                       'especified individually')
         sw = FXSwitcher(lamFrame)
         self.lamRB = {}
-        self.lamRB['stack'] = FXRadioButton(lamRadioGB, 'stacking sequence', sw,
+        self.lamRB['stack'] = FXRadioButton(lamRadioGB, 'Stacking sequence', sw,
                                             FXSwitcher.ID_OPEN_FIRST)
         #TODO
         #self.lamRB['ABD'  ] = FXRadioButton(lamRadioGB, 'A, B, D matrices', sw,
@@ -279,8 +542,12 @@ class TestDB(AFXDataDialog):
         meshCB.appendItem('S8R5', 1)
         self.meshCB = meshCB
         meshVA = AFXVerticalAligner(meshFrame)
-        AFXTextField(meshVA, 5, 'Number of elements around the circumference:',
+        self.numel_r=AFXTextField(meshVA, 5, 'Number of elements around the circumference:',
                      form.numel_rKw, opts=AFXTEXTFIELD_INTEGER)
+
+        self.numel_str=AFXTextField(meshVA, 5, 'Number of elements per stiffening section:',
+                     form.numel_strKw, opts=AFXTEXTFIELD_INTEGER)
+        self.numel_str.disable()
         text = 'Define in Geometric Imperfections/Cutouts'
         numel_cutout = AFXTextField(meshVA, len(text),
                          'Number of elements around cutouts:')
@@ -368,7 +635,7 @@ class TestDB(AFXDataDialog):
         FXLabel(nlVFc, '')
         FXCheckButton(nlVFc, 'Displacement controlled', form.displ_controlledKw)
         FXCheckButton(nlVFc, 'Use two load steps:', form.separate_load_stepsKw)
-        self.axial_displ = AFXTextField(nlVFc, 8, 'Axial displacement:', form.axial_displKw, AFXTEXTFIELD_FLOAT)
+        self.axial_displ = AFXTextField(nlVFc, 8, 'Axial displacement:', form.axial_displKw, opts=AFXTEXTFIELD_FLOAT)
         self.axial_load = AFXTextField(nlVFc, 8, 'Axial compressive\nload:', form.axial_loadKw, opts=AFXTEXTFIELD_FLOAT)
         AFXTextField(nlVFc, 8, 'Pressure load:\n  (positive outwards)', form.pressure_loadKw, opts=AFXTEXTFIELD_FLOAT)
         FXHorizontalSeparator(nlVFc)
@@ -446,44 +713,52 @@ class TestDB(AFXDataDialog):
         self.imp_tableKw = {}
         #
         # Tabs / Geometric Imperfections /
-        # Perturbation Loads / Dimples / Cutouts / Axisymmetrics / LMBIs
+        # Perturbation Loads / Constant Amp. dimples / Dimples / Cutouts / Axisymmetrics / LMBIs
         #
         labelTabs['pl'] = 'Perturbation Loads'
+        labelTabs['cbi'] = 'Constant buckle'
         labelTabs['d'] = 'Dimples'
         labelTabs['ax'] = 'Axisymmetric'
         labelTabs['lbmi'] = 'Linear Buckling Modes'
         labelTabs['cut'] = 'Cutouts'
         colWidths['pl'] = 45
+        colWidths['cbi'] = 45
         colWidths['d'] = 40
         colWidths['ax'] = 50
         colWidths['lbmi'] = 65
         colWidths['cut'] = 60
         visibleCols['pl'] = 5
+        visibleCols['cbi'] = 5
         visibleCols['d'] = 6
         visibleCols['ax'] = 5
         visibleCols['lbmi'] = 4
         visibleCols['cut'] = 5
         labelSpinners['pl'] = 'Number of perturbation loads:'
+        labelSpinners['cbi'] = 'Number of constant buckles:'
         labelSpinners['d'] = 'Number of single buckles'
         labelSpinners['ax'] = 'Number of axisymmetrics'
         labelSpinners['lbmi'] = 'Number of buckling modes to combine:'
         labelSpinners['cut'] = 'Number of cutouts'
         self.imp_current_num['pl'] = 32
+        self.imp_current_num['cbi'] = 32
         self.imp_current_num['d'] = 16
         self.imp_current_num['ax'] = 16
         self.imp_current_num['lbmi'] = 16
         self.imp_current_num['cut'] = 16
         self.imp_maxModels['pl'] = MAX_MODELS
+        self.imp_maxModels['cbi'] = MAX_MODELS
         self.imp_maxModels['d'] = MAX_MODELS
         self.imp_maxModels['ax'] = MAX_MODELS
         self.imp_maxModels['lbmi'] = MAX_MODELS
         self.imp_maxModels['cut'] = MAX_MODELS
         self.imp_num_params['pl'] = 2
+        self.imp_num_params['cbi'] = 2
         self.imp_num_params['d'] = 4
         self.imp_num_params['ax'] = 2
         self.imp_num_params['lbmi'] = 1
         self.imp_num_params['cut'] = 3
         rowLabels['pl'] = 'Position theta:\tPosition z/H:\t'
+        rowLabels['cbi'] = 'Position theta:\tPosition z/H:\t'
         rowLabels['d'] = 'Position theta:\tPosition z/H:\t' + \
                            'Parameter a:\tParameter b:\t'
         rowLabels['ax'] = 'Position z/H:\tParameter b:\t'
@@ -491,27 +766,31 @@ class TestDB(AFXDataDialog):
         rowLabels['cut'] = 'Position theta:\tPosition z/H:' +\
                            '\tNr. radial elements\t'
         rowLabels2['pl'] = '\tPL value for model'
+        rowLabels2['cbi'] = '\tCB value for model'
         rowLabels2['d'] = '\tWb for model'
         rowLabels2['ax'] = '\tWb for model'
         rowLabels2['lbmi'] = '\tSF for model'
         rowLabels2['cut'] = '\tcutout diameter for model'
         pngs['pl'] = 'pl2.png'
+        pngs['cbi'] = 'cb.png'
         pngs['d'] = 'd2.png'
         pngs['ax'] = 'axisymmetric.png'
         pngs['lbmi'] = 'lbmi2.png'
         pngs['cut'] = 'cutout2.png'
         self.imp_tableKw['pl'] = form.pl_tableKw
+        self.imp_tableKw['cbi'] = form.cb_tableKw
         self.imp_tableKw['d'] = form.d_tableKw
         self.imp_tableKw['ax'] = form.ax_tableKw
         self.imp_tableKw['lbmi'] = form.lbmi_tableKw
         self.imp_tableKw['cut'] = form.cut_tableKw
         imp_numKw['pl'] = form.pl_numKw
+        imp_numKw['cbi'] = form.cb_numKw
         imp_numKw['d'] = form.d_numKw
         imp_numKw['ax'] = form.ax_numKw
         imp_numKw['lbmi'] = form.lbmi_numKw
         imp_numKw['cut'] = form.cut_numKw
         #
-        for k in ['pl', 'd', 'ax', 'lbmi', 'cut']:
+        for k in ['pl','cbi', 'd', 'ax', 'lbmi', 'cut']:
             maxIMP = self.imp_current_num[k]
             num_param = self.imp_num_params[k]
             maxModels = self.imp_maxModels[k]
@@ -874,6 +1153,17 @@ class TestDB(AFXDataDialog):
         FXCheckButton(postVF2, 'Put plots in Excel', form.post_put_in_ExcelKw)
         FXCheckButton(postVF2, 'Open Excel', form.post_open_ExcelKw)
         #
+        # Tabs / Post-processing / Meta-estable equilibrium assessment curves
+        #
+        FXTabItem(postBook, 'MEA curves', None, TAB_LEFT)
+        postVF = FXVerticalFrame(postBook, FRAME_RAISED|FRAME_SUNKEN)
+        postVF2 = FXVerticalFrame(postVF, opts=LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
+        postHF1 = FXHorizontalFrame(postVF2)
+        self.post_MEA_button_1 = FXButton(postHF1, 'Plot MEA curves')
+        self.post_MEA_button_2 = FXButton(postHF1, 'Plot RF1 vs. U3')
+        FXCheckButton(postVF2, 'Put plots in Excel', form.post_put_in_ExcelKw)
+        FXCheckButton(postVF2, 'Open Excel', form.post_open_ExcelKw)
+        #
         # Tabs / Post-processing / Knock-down curve
         #
         FXTabItem(postBook, 'Knock-down curve', None, TAB_LEFT)
@@ -1063,6 +1353,131 @@ class TestDB(AFXDataDialog):
             self.new_allowables_name.disable()
             self.save_allowables_button.disable()
             self.del_allowables_button.enable()
+        if self.geo_STR_CB.getCheck()==True or self.geo_ort_RB.getCheck()==True or self.geo_F_CB.getCheck()==True :
+
+            self.numel_str.enable()
+        else:
+
+            self.numel_str.disable()
+#Web stringer
+        if self.geo_STR_CB.getCheck()==True:
+            self.str_NUM.enable()
+
+        else:
+            self.str_NUM.disable()
+
+
+        if self.geo_w_str_RB.getCheck()==True & self.geo_STR_CB.getCheck()==True :#& self.geo_cs_RB.getCheck()!=True:
+
+            self.geo_cs_RB.setCheck(state=False)
+            self.geo_ccs_RB.setCheck(state=False)
+            self.geo_ort_RB.setCheck(state=False)
+
+            for xi in range(0,len(self.L_str_W)):
+                self.L_str_W[xi].enable()
+
+        else:
+            self.geo_w_str_RB.getCheck()==False
+            for xi in range(0,len(self.L_str_W)):
+                self.L_str_W[xi].disable()
+#I stringer
+        if self.geo_i_str_RB.getCheck()==True & self.geo_STR_CB.getCheck()==True :#& self.geo_cs_RB.getCheck()!=True:
+            self.geo_cs_RB.setCheck(state=False)
+            self.geo_ccs_RB.setCheck(state=False)
+            self.geo_ort_RB.setCheck(state=False)
+            for xi in range(0,len(self.L_str_I)):
+                self.L_str_I[xi].enable()
+
+        else:
+            self.geo_i_str_RB.getCheck()==False
+            for xi in range(0,len(self.L_str_I)):
+                self.L_str_I[xi].disable()
+#Z stringer
+        if self.geo_z_str_RB.getCheck()==True & self.geo_STR_CB.getCheck()==True :#& self.geo_cs_RB.getCheck()!=True:
+            self.geo_cs_RB.setCheck(state=False)
+            self.geo_ccs_RB.setCheck(state=False)
+            self.geo_ort_RB.setCheck(state=False)
+            for xi in range(0,len(self.L_str_Z)):
+                self.L_str_Z[xi].enable()
+
+        else:
+            self.geo_z_str_RB.getCheck()==False
+            for xi in range(0,len(self.L_str_Z)):
+                self.L_str_Z[xi].disable()
+#Corrugation
+        if self.geo_cs_RB.getCheck()==True :#& self.geo_STR_CB.getCheck()!=True:
+
+            self.geo_STR_CB.setCheck(state=False)
+            self.geo_ccs_RB.setCheck(state=False)
+            self.geo_ort_RB.setCheck(state=False)
+
+            for xi in range(0,len(self.L_cs)):
+                self.L_cs[xi].enable()
+        else:
+            for xi in range(0,len(self.L_cs)):
+                self.L_cs[xi].disable()
+#Orthogrid
+        if self.geo_ort_RB.getCheck()==True :#& self.geo_STR_CB.getCheck()!=True & self.geo_cs_RB.getCheck()!=True:
+            self.geo_STR_CB.setCheck(state=False)
+            self.geo_cs_RB.setCheck(state=False)
+            self.geo_ccs_RB.setCheck(state=False)
+            self.geo_F_CB.setCheck(state=False)
+
+            for xi in range(0,len(self.L_ort)):
+                self.L_ort[xi].enable()
+        else:
+
+            for xi in range(0,len(self.L_ort)):
+                self.L_ort[xi].disable()
+#Anisogrid
+#CCS
+        if self.geo_ccs_RB.getCheck()==True :#& self.geo_STR_CB.getCheck()!=True & self.geo_cs_RB.getCheck()!=True:
+            self.geo_STR_CB.setCheck(state=False)
+            self.geo_ort_RB.setCheck(state=False)
+            #self.geo_ccs_RB.setCheck(state=False)
+            self.geo_F_CB.setCheck(state=False)
+
+            for xi in range(0,len(self.L_ccs)):
+                self.L_ccs[xi].enable()
+        else:
+            for xi in range(0,len(self.L_ccs)):
+                self.L_ccs[xi].disable()
+#Frames
+        if self.geo_F_CB.getCheck()==True:
+            self.F_NUM.enable()
+
+#Web frame
+            if self.geo_w_F_RB.getCheck()==True  :#& self.geo_ccs_RB.getCheck()!=True & self.geo_ort_RB.getCheck()!=True :
+
+                self.geo_ccs_RB.setCheck(state=False)
+                self.geo_ort_RB.setCheck(state=False)
+                for xi in range(0,len(self.L_w_F)):
+                    self.L_w_F[xi].enable()
+            else:
+
+                for xi in range(0,len(self.L_w_F)):
+                    self.L_w_F[xi].setText('')
+                    self.L_w_F[xi].disable()
+#Web C
+            if self.geo_c_F_RB.getCheck()==True:#& self.geo_ccs_RB.getCheck()!=True & self.geo_ort_RB.getCheck()!=True:
+
+                self.geo_ccs_RB.setCheck(state=False)
+                self.geo_ort_RB.setCheck(state=False)
+                for xi in range(0,len(self.L_c_F)):
+                    self.L_c_F[xi].enable()
+            else:
+
+                for xi in range(0,len(self.L_c_F)):
+                    self.L_c_F[xi].disable()
+        else:
+            self.F_NUM.disable()
+
+#        if self.cs_nc.getText()!=None and self.cs_alpha.getText()!=None and self.cs_ratio.getText()!=None and self.Rbot.getText()!=None:
+#
+#            self.cor_A=cor_shell.A_cor
+#            self.cor_B=cor_shell.B_cor
+#            self.cs_a_corr.setValue(self.cor_A)
+#            self.cs_b_corr.setValue(self.cor_B)
 
 
     def save_cc(self):
@@ -1172,7 +1587,7 @@ class TestDB(AFXDataDialog):
         form.std_nameKw.setValue(rsc(std_name))
 
         # imp_tables[k]
-        for k in ['pl', 'd', 'ax', 'lbmi', 'cut']:
+        for k in ['pl','cbi', 'd', 'ax', 'lbmi', 'cut']:
             correct_num = self.imp_spinners[k].getValue()
             current_num = self.imp_current_num[k]
             if   current_num > correct_num:
@@ -1396,6 +1811,22 @@ class TestDB(AFXDataDialog):
             put_in_Excel = form.post_put_in_ExcelKw.getValue()
             open_Excel = form.post_open_ExcelKw.getValue()
             gui_plot.plot_ls_curve(std_name,
+                                    put_in_Excel, open_Excel)
+        # post MEA curves
+        if self.post_MEA_button_1.getState() == STATE_DOWN:
+            self.post_MEA_button_1.setState(STATE_UP)
+            reload(gui_plot)
+            put_in_Excel = form.post_put_in_ExcelKw.getValue()
+            open_Excel = form.post_open_ExcelKw.getValue()
+            gui_plot.plot_MEA_curve(std_name,
+                                    put_in_Excel, open_Excel)
+        # post RF1U3 curves
+        if self.post_MEA_button_2.getState() == STATE_DOWN:
+            self.post_MEA_button_2.setState(STATE_UP)
+            reload(gui_plot)
+            put_in_Excel = form.post_put_in_ExcelKw.getValue()
+            open_Excel = form.post_open_ExcelKw.getValue()
+            gui_plot.plot_RF1U3_curve(std_name,
                                     put_in_Excel, open_Excel)
 
         # post knock-down curves

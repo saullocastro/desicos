@@ -356,6 +356,8 @@ class ConeCyl(object):
         self.numel_r = 140
         self.elem_type = 'S8R5'
         self.mesh_size = None
+        #Mesh stiffening
+        self.mesh_size_str = None
         self.elsize_r  = None
         self.elsize_r2 = None
         self.elsize_h  = None
@@ -386,9 +388,15 @@ class ConeCyl(object):
         self.output_dir = os.path.join(TMP_DIR, 'outputs')
         #OUTPUTS
         self.ls_curve = None
+        self.MEA_curve = None
+        self.RF1U3_curve = None
         self.ener_total = 0.
         self.zdisp = []
         self.zload = []
+        self.rdisp = []
+        self.rload = []
+        self.zdisp_RF1U3 = []
+        self.rload_RF1U3 = []
         self.stress_min_num     = {}
         self.stress_min_ms      = {}
         self.stress_min_pos_num = {}
@@ -492,6 +500,15 @@ class ConeCyl(object):
         # mesh
         self.rmesh = ((self.rbot - self.rtop)*self.rtop/self.rbot + self.rtop)
         self.mesh_size = 2*np.pi*self.rmesh/self.numel_r
+        if self.geo_STR_CB==True:
+            if self.geo_w_str_RB==True:
+                self.mesh_size_str = float(max(self.geo_w_str))/float(self.numel_str[0])
+            elif self.geo_i_str_RB==True:
+                self.mesh_size_str =float(max(self.geo_I_str))/float(self.numel_str[0]) 
+            elif self.geo_z_str_RB==True:
+                self.mesh_size_str =float(max(self.geo_Z_str))/float(self.numel_str[0])
+        elif self.geo_ort_RB==True:
+            self.mesh_size_str =float(max(self.geo_ortho))/float(self.numel_str[0])
 
         # cutouts
         for cutout in self.cutouts:
@@ -789,6 +806,13 @@ class ConeCyl(object):
         import _plot
         return _plot.plot_forces(self, **kwargs)
 
+    def plot_R1_forces(self, **kwargs):
+        import _plot
+        return _plot.plot_R1_forces(self, **kwargs)
+
+    def plot_RF1U3_forces(self, **kwargs):
+        import _plot
+        return _plot.plot_RF1U3_forces(self, **kwargs)
 
     def plot_stress_analysis(self, **kwargs):
         import _plot

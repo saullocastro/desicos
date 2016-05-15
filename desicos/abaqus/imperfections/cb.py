@@ -5,44 +5,44 @@ from imperfection import Imperfection
 from desicos.abaqus.constants import *
 from desicos.logger import warn
 
-class PLoad(Imperfection):
-    """Perturbation Load
+class CBamp(Imperfection):
+    """Constan amplitude buckle
 
     """
-    def __init__(self, thetadeg, pt, pltotal, step=1):
-        super(PLoad, self).__init__()
+    def __init__(self, thetadeg, pt, cbtotal, step=1):
+        super(CBamp, self).__init__()
         self.thetadeg = thetadeg
         self.pt = pt
-        self.pltotal = pltotal # resultant pload
+        self.cbtotal = cbtotal # cb amplitude
         self.step = step
-        self.name = 'PL'
+        self.name = 'CB'
         self.index = None
-        if abs(pltotal) < 0.1*TOL:
-            pltotal = 0.1*TOL
-        self.plradial = None    # component radial direction
-        self.plx = None        # component x      direction
-        self.ply = None        # component y      direction
-        self.plz = None        # component z      direction
+        if abs(cbtotal) < 0.1*TOL:
+            cbtotal = 0.1*TOL
+        self.cbradial = None    # component radial direction
+        self.cbx = None         # component x      direction
+        self.cby = None         # component y      direction
+        self.cbz = None         # component z      direction
         # plotting options
-        self.xaxis = 'pltotal'
-        self.xaxis_label = 'Perturbation Load, N'
+        self.xaxis = 'cbtotal'
+        self.xaxis_label = 'Constant Buckle amplitude, mm'
 
 
     def rebuild(self):
         cc = self.impconf.conecyl
         alpharad = cc.alpharad
-        self.plradial = self.pltotal*cos(alpharad)
-        self.plz = -self.pltotal*sin(alpharad)
-        self.plx = -self.plradial*cos(np.deg2rad(self.thetadeg))
-        self.ply = -self.plradial*sin(np.deg2rad(self.thetadeg))
+        self.cbradial = self.cbtotal*cos(alpharad)
+        self.cbz = -self.cbtotal*sin(alpharad)
+        self.cbx = -self.cbradial*cos(np.deg2rad(self.thetadeg))
+        self.cby = -self.cbradial*sin(np.deg2rad(self.thetadeg))
         self.x, self.y, self.z = self.get_xyz()
         self.r, z = cc.r_z_from_pt(self.pt)
         self.thetadeg = self.thetadeg % 360.
         self.thetadegs = [self.thetadeg]
         self.pts = [self.pt]
-        self.name = 'PL_pt_{0:03d}_theta_{1:03d}'.format(
+        self.name = 'CB_pt_{0:03d}_theta_{1:03d}'.format(
                         int(self.pt*100), int(self.thetadeg))
-        if abs(self.pltotal) < 0.1*TOL:
+        if abs(self.cbtotal) < 0.1*TOL:
             warn('Ignoring perturbation load: {0}'.format(self.name))
 
 
@@ -72,9 +72,9 @@ class PLoad(Imperfection):
         # 'our' node may be moved by a MSI
         nodes = nodes.getByBoundingCylinder(pt1, pt2, r_TOL)
         if len(nodes) != 1:
-            warn("Unable to locate node where perturbation load" +
+            warn("Unable to locate node where constant buckle" +
                  "'{0}' is applied. ".format(self.name) +
-                 "Cannot calculate imperfection amplitude.")
+                 "Cannot calculate constant buckle amplitude.")
             self.amplitude = 0.
             return 0.
 
@@ -96,6 +96,7 @@ class PLoad(Imperfection):
 
 
     def create(self):
+        from abaqusConstants import (UNSET, OFF,UNIFORM,CYLINDRICAL)
         """Include the perturbation load.
 
         The load step in which the perturbation load is included depends on
@@ -110,7 +111,7 @@ class PLoad(Imperfection):
         .. note:: Must be called from Abaqus.
 
         """
-        if abs(self.pltotal) < 0.1*TOL:
+        if abs(self.cbtotal) < 0.1*TOL:
             return
         from abaqus import mdb
         import regionToolset
@@ -119,7 +120,45 @@ class PLoad(Imperfection):
         inst_shell = mod.rootAssembly.instances['INST_SHELL']
         region = regionToolset.Region(vertices=inst_shell.vertices.findAt(
                         ((self.x, self.y, self.z),)))
+        
+        vert = inst_shell.vertices.findAt(
+                        ((self.x, self.y, self.z),))
+        set_CSBI_R1=mod.rootAssembly.Set(vertices=vert, name='RF_1_csbi')
+
+        #mod.rootAssembly.Set(vertex=region, name='RF_1_csbi')
         step_name = cc.get_step_name(self.step)
-        mod.ConcentratedForce(name=self.name, createStepName=step_name,
-                region=region, cf1=self.plx, cf2=self.ply, cf3=self.plz,
-                field='')
+
+        CSBI_datum=mod.rootAssembly.DatumCsysByThreePoints(name='CSBI', 
+                                                     coordSysType=CYLINDRICAL, 
+                                                     origin=(0.0, 0.0, 0.0),
+                                                     point1=(1.0, 0.0, 0.0),
+                                                     point2=(0.0, 1.0, 0.0))
+
+        datum_CSBI = mod.rootAssembly.datums[CSBI_datum.id]
+
+        mod.DisplacementBC(name=self.name, createStepName=step_name, 
+            region=region, u1=-self.cbtotal, u2=UNSET, u3=UNSET, ur1=UNSET, ur2=UNSET, 
+            ur3=UNSET, amplitude=UNSET, fixed=OFF, distributionType=UNIFORM, 
+            fieldName='', localCsys=datum_CSBI)
+
+        mod.HistoryOutputRequest(name='CSBI_R1',
+                                 createStepName=step_name,
+                                 variables=('U1','RF1' ),
+                                 region=set_CSBI_R1)
+"""
+        mod.rootAssembly.Set(vertex=region, name='RF_1_csbi')
+        step_name = cc.get_step_name(self.step)
+
+        CSBI_datum=mod.rootAssembly.DatumCsysByThreePoints(name='CSBI', 
+                                                     coordSysType=CYLINDRICAL, 
+                                                     origin=(0.0, 0.0, 0.0),
+                                                     point1=(1.0, 0.0, 0.0),
+                                                     point2=(0.0, 1.0, 0.0))
+
+        datum_CSBI = mod.rootAssembly.datums[CSBI_datum.id]
+
+        mod.DisplacementBC(name=self.name, createStepName=step_name, 
+            region=region, u1=-self.cbtotal, u2=UNSET, u3=UNSET, ur1=UNSET, ur2=UNSET, 
+            ur3=UNSET, amplitude=UNSET, fixed=OFF, distributionType=UNIFORM, 
+            fieldName='', localCsys=datum_CSBI)
+"""

@@ -1,5 +1,5 @@
 import numpy as np
-from numpy import pi, deg2rad, rad2deg
+from numpy import deg2rad, rad2deg, pi
 
 from desicos.conecylDB.interpolate import interp
 

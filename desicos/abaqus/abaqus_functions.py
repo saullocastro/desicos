@@ -276,7 +276,8 @@ def create_composite_layup(name, stack, plyts, mat_names, region, part,
     """
     from abaqusConstants import (MIDDLE_SURFACE, FROM_SECTION, SHELL, ON, OFF,
             DEFAULT, UNIFORM, SIMPSON, GRADIENT, SYSTEM, ROTATION_NONE,
-            AXIS_1, AXIS_2, AXIS_3, SPECIFY_THICKNESS, SPECIFY_ORIENT)
+            AXIS_1, AXIS_2, AXIS_3, SPECIFY_THICKNESS, SPECIFY_ORIENT,
+            SINGLE_VALUE)
     myLayup=part.CompositeLayup(name=name,
                             description='stack from inside to outside',
                             offsetType=MIDDLE_SURFACE,
@@ -321,6 +322,34 @@ def create_composite_layup(name, stack, plyts, mat_names, region, part,
                              orientationType=SPECIFY_ORIENT,
                              numIntPoints=numIntPoints)
 
+def create_isotropic_section(name, mat_names, region, part, model,T,Sect_name,OFFTS):
+    """Creates an isotropic section
+   
+    """
+
+    from abaqusConstants import (MIDDLE_SURFACE, FROM_SECTION, SHELL, ON, OFF,
+            DEFAULT, UNIFORM, SIMPSON, GRADIENT, SYSTEM, ROTATION_NONE,
+            AXIS_1, AXIS_2, AXIS_3, SPECIFY_THICKNESS, SPECIFY_ORIENT,NO_IDEALIZATION,
+            SINGLE_VALUE)
+
+    model.HomogeneousShellSection(name=name, 
+        preIntegrate=OFF, material=mat_names[0], 
+        thicknessType=UNIFORM, thickness=T, thicknessField='', 
+        idealization=NO_IDEALIZATION, poissonDefinition=DEFAULT, 
+        thicknessModulus=None, temperature=GRADIENT, useDensity=OFF, 
+        integrationRule=SIMPSON, numIntPts=5)
+
+    region = region
+    if OFFTS==0.0:
+        part.SectionAssignment(region=region, sectionName=Sect_name, 
+                               offset=OFFTS,offsetType=MIDDLE_SURFACE, 
+                               offsetField='', 
+                               thicknessAssignment=FROM_SECTION)
+    else:
+        part.SectionAssignment(region=region, sectionName=Sect_name, 
+                               offset=OFFTS,offsetType=SINGLE_VALUE, 
+                               offsetField='', 
+                               thicknessAssignment=FROM_SECTION)
 
 def modify_composite_layup(part, layup_name, modify_func):
     """Modify plies within a composite layup
@@ -533,6 +562,3 @@ def get_current_frame():
     odb = get_current_odb()
     step = odb.steps[step_name]
     return step.frames[frame_num]
-
-
-

@@ -1,7 +1,7 @@
 import os
 import inspect
 
-TOL = 1e-6
+TOL = 1e-9
 
 inspect.getfile(inspect.currentframe())
 abspath = os.path.abspath(inspect.getfile(inspect.currentframe()))

@@ -192,7 +192,7 @@ class Study(object):
 
     def plot_forces(self, gui=False, put_in_Excel=True, open_Excel=False):
         import desicos.abaqus.utils as utils
-
+        #print('I plot_forces study')
         sheet_names = ['load_short_curves','load_short_curves_norm']
         x_labels = ['End-Shortening, mm', 'Normalized End-Shortening']
         y_labels = ['Reaction Load, kN' , 'Normalized Reaction Load']
@@ -220,6 +220,77 @@ class Study(object):
                 del book
         if put_in_Excel and open_Excel:
             self.open_excel()
+
+
+    def plot_R1_forces(self, gui=False, put_in_Excel=True, open_Excel=False):
+        import desicos.abaqus.utils as utils
+
+        sheet_names = ['R1_curves','R1_curves_norm']
+        x_labels = ['STH, mm', 'End-Shortening']
+        y_labels = ['Reaction Load, kN' , 'Radial Reaction Load']
+        for curve_num in range(2):
+            curves = []
+            names = []
+            #counter=0
+            for cc in self.ccs:
+                ok = cc.read_outputs()
+                #print('Reading '+str(counter))
+                if not ok:
+                    continue
+                curve = cc.plot_R1_forces(gui=gui)[curve_num]
+                curves.append(curve)
+                names.append(cc.model_name)
+                #counter=counter+1
+            if put_in_Excel:
+                sheet_name = sheet_names[curve_num]
+                book, sheet = utils.get_book_sheet(self.excel_name, sheet_name)
+                for i,curve in enumerate(curves):
+                    sheet.write(0, 0 + i*2, names[i])
+                    sheet.write(1, 0 + i*2, x_labels[curve_num])
+                    sheet.write(1, 1 + i*2, y_labels[curve_num])
+                    for j, xy in enumerate(curve):
+                        sheet.write(j+2, 0 + i*2, xy[0])
+                        sheet.write(j+2, 1 + i*2, xy[1])
+                book.save(self.excel_name)
+                del book
+        if put_in_Excel and open_Excel:
+            self.open_excel()
+
+
+    def plot_RF1U3_forces(self, gui=False, put_in_Excel=True, open_Excel=False):
+        import desicos.abaqus.utils as utils
+
+        sheet_names = ['RF1U3_curves','RF1U3_curves_norm']
+        x_labels = ['STH, mm', 'End-Shortening']
+        y_labels = ['Reaction Load, kN' , 'Radial Reaction Load']
+        for curve_num in range(2):
+            curves = []
+            names = []
+            #counter=0
+            for cc in self.ccs:
+                ok = cc.read_outputs()
+                #print('Reading '+str(counter))
+                if not ok:
+                    continue
+                curve = cc.plot_RF1U3_forces(gui=gui)[curve_num]
+                curves.append(curve)
+                names.append(cc.model_name)
+                #counter=counter+1
+            if put_in_Excel:
+                sheet_name = sheet_names[curve_num]
+                book, sheet = utils.get_book_sheet(self.excel_name, sheet_name)
+                for i,curve in enumerate(curves):
+                    sheet.write(0, 0 + i*2, names[i])
+                    sheet.write(1, 0 + i*2, x_labels[curve_num])
+                    sheet.write(1, 1 + i*2, y_labels[curve_num])
+                    for j, xy in enumerate(curve):
+                        sheet.write(j+2, 0 + i*2, xy[0])
+                        sheet.write(j+2, 1 + i*2, xy[1])
+                book.save(self.excel_name)
+                del book
+        if put_in_Excel and open_Excel:
+            self.open_excel()
+
 
     def plot(self,
               configure_session = False,
