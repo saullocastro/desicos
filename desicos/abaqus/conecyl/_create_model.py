@@ -41,7 +41,7 @@ def _create_mesh(cc):
     shell_elem_code_str = cc.elem_type
     mesh_size = cc.mesh_size
 
-    if cc.geo_STR_CB==True or cc.geo_ort_RB==True or cc.geo_F_CB==True:
+    if cc.geo_STR_CB == True or cc.geo_ort_RB == True or cc.geo_F_CB == True:
         mesh_size_str =cc.mesh_size_str
     resin_numel = cc.resin_numel
 
@@ -70,153 +70,153 @@ def _create_mesh(cc):
     s1 = mod.ConstrainedSketch(name='SketchCylinder',
                                sheetSize=max([2.1*rbot, 1.1*H]))
     #sketch profile to be extruded
-    if cc.geo_STR_CB==False and cc.geo_cs_RB==False and cc.geo_ort_RB==False:
+    if cc.geo_STR_CB == False and cc.geo_cs_RB == False and cc.geo_ort_RB == False:
         s1.CircleByCenterPerimeter(center=(0.0, 0.0), point1=(rbot, 0.0) )
 #New
-    elif cc.geo_STR_CB==True and cc.geo_cs_RB==False and cc.geo_ort_RB==False:
+    elif cc.geo_STR_CB == True and cc.geo_cs_RB == False and cc.geo_ort_RB == False:
         s1.CircleByCenterPerimeter(center=(0.0, 0.0), point1=(rbot, 0.0) )
         Stringers=cc.str_NUM[0]
-        if cc.geo_w_str_RB==True:
+        if cc.geo_w_str_RB == True:
 
             h_w=cc.geo_w_str[1]
             delta_A=(2*np.pi/Stringers)
             for i in range (0, Stringers):
-                s1.Line(point1=(rbot*np.cos(delta_A*i), 
-                                rbot*np.sin(delta_A*i)), 
-                        point2=((rbot-h_w)*np.cos(delta_A*i), 
-                               (rbot-h_w)*np.sin(delta_A*i))) 
+                s1.Line(point1=(rbot*np.cos(delta_A*i),
+                                rbot*np.sin(delta_A*i)),
+                        point2=((rbot-h_w)*np.cos(delta_A*i),
+                               (rbot-h_w)*np.sin(delta_A*i)))
 
-        elif cc.geo_i_str_RB==True:
-            h_w=cc.geo_I_str[2]
-            delta_A=(2*np.pi/Stringers)
-            alpha_str=np.arctan(float(cc.geo_I_str[1])/(2*(rbot-h_w)))
+        elif cc.geo_i_str_RB == True:
+            h_w = cc.geo_I_str[2]
+            delta_A = (2*np.pi/Stringers)
+            alpha_str = np.arctan(float(cc.geo_I_str[1])/(2*(rbot-h_w)))
 
             for i in range (0, Stringers):
-                s1.Line(point1=(rbot*np.cos(delta_A*i), 
-                                rbot*np.sin(delta_A*i)), 
-                        point2=((rbot-h_w)*np.cos(delta_A*i), 
+                s1.Line(point1=(rbot*np.cos(delta_A*i),
+                                rbot*np.sin(delta_A*i)),
+                        point2=((rbot-h_w)*np.cos(delta_A*i),
                                 (rbot-h_w)*np.sin(delta_A*i)))
 
-                s1.Line(point1=((rbot-h_w)*np.cos(delta_A*i), 
-                                (rbot-h_w)*np.sin(delta_A*i)), 
-                        point2=(((rbot-h_w)/np.cos(alpha_str))*np.cos(alpha_str+delta_A*i), 
+                s1.Line(point1=((rbot-h_w)*np.cos(delta_A*i),
+                                (rbot-h_w)*np.sin(delta_A*i)),
+                        point2=(((rbot-h_w)/np.cos(alpha_str))*np.cos(alpha_str+delta_A*i),
                                 ((rbot-h_w)/np.cos(alpha_str))*np.sin(alpha_str+delta_A*i)))
 
                 #s1.Arc3Points(point1=((rbot-h_w)*np.cos(alpha_str+delta_A*i),
-                #             (rbot-h_w)*np.sin(alpha_str+delta_A*i)), 
-                #             point2=((rbot-h_w)*np.cos(-alpha_str+delta_A*i), 
-                #             (rbot-h_w)*np.sin(-alpha_str+delta_A*i)), 
-                #             point3=((rbot-h_w)*np.cos(delta_A*i), 
+                #             (rbot-h_w)*np.sin(alpha_str+delta_A*i)),
+                #             point2=((rbot-h_w)*np.cos(-alpha_str+delta_A*i),
+                #             (rbot-h_w)*np.sin(-alpha_str+delta_A*i)),
+                #             point3=((rbot-h_w)*np.cos(delta_A*i),
                 #             (rbot-h_w)*np.sin(delta_A*i)))
 
-                s1.Line(point1=((rbot-h_w)*np.cos(delta_A*i), 
-                                (rbot-h_w)*np.sin(delta_A*i)), 
-                        point2=(((rbot-h_w)/np.cos(alpha_str))*np.cos(-alpha_str+delta_A*i), 
-                                ((rbot-h_w)/np.cos(alpha_str))*np.sin(-alpha_str+delta_A*i))) 
-  
-        elif cc.geo_z_str_RB==True:
+                s1.Line(point1=((rbot-h_w)*np.cos(delta_A*i),
+                                (rbot-h_w)*np.sin(delta_A*i)),
+                        point2=(((rbot-h_w)/np.cos(alpha_str))*np.cos(-alpha_str+delta_A*i),
+                                ((rbot-h_w)/np.cos(alpha_str))*np.sin(-alpha_str+delta_A*i)))
 
-            h_w=cc.geo_Z_str[2]
+        elif cc.geo_z_str_RB == True:
+
+            h_w = cc.geo_Z_str[2]
             delta_A=(2*np.pi/Stringers)
-            alpha_str=np.arctan(float(cc.geo_Z_str[1])/((rbot-h_w)))
+            alpha_str = np.arctan(float(cc.geo_Z_str[1])/((rbot-h_w)))
             for i in range (0, Stringers):
-                s1.Line(point1=(rbot*np.cos(delta_A*i), 
-                                rbot*np.sin(delta_A*i)), 
-                        point2=((rbot-h_w)*np.cos(delta_A*i), 
+                s1.Line(point1=(rbot*np.cos(delta_A*i),
+                                rbot*np.sin(delta_A*i)),
+                        point2=((rbot-h_w)*np.cos(delta_A*i),
                                (rbot-h_w)*np.sin(delta_A*i)))
 
-                s1.Line(point1=((rbot-h_w)*np.cos(delta_A*i), 
-                                (rbot-h_w)*np.sin(delta_A*i)), 
-                        point2=(((rbot-h_w)/np.cos(alpha_str))*np.cos(alpha_str+delta_A*i), 
-                               ((rbot-h_w)/np.cos(alpha_str))*np.sin(alpha_str+delta_A*i)))   
-                #s1.ArcByCenterEnds(center=(0.0, 0.0), 
+                s1.Line(point1=((rbot-h_w)*np.cos(delta_A*i),
+                                (rbot-h_w)*np.sin(delta_A*i)),
+                        point2=(((rbot-h_w)/np.cos(alpha_str))*np.cos(alpha_str+delta_A*i),
+                               ((rbot-h_w)/np.cos(alpha_str))*np.sin(alpha_str+delta_A*i)))
+                #s1.ArcByCenterEnds(center=(0.0, 0.0),
                 #             point1=((rbot-h_w)*np.cos(alpha_str+delta_A*i),
-                #             (rbot-h_w)*np.sin(alpha_str+delta_A*i)), 
-                #             point2=((rbot-h_w)*np.cos(-alpha_str+delta_A*i), 
-                #             (rbot-h_w)*np.sin(-alpha_str+delta_A*i)), 
+                #             (rbot-h_w)*np.sin(alpha_str+delta_A*i)),
+                #             point2=((rbot-h_w)*np.cos(-alpha_str+delta_A*i),
+                #             (rbot-h_w)*np.sin(-alpha_str+delta_A*i)),
                 #             direction=CLOCKWISE)
-    elif cc.geo_STR_CB==False and cc.geo_cs_RB==True and cc.geo_ort_RB==False:
+    elif cc.geo_STR_CB == False and cc.geo_cs_RB == True and cc.geo_ort_RB == False:
         #[X_cor, Y_cor]=cor_shell(cc)
         cor_shell(cc)
-        X_sketch_cr=cor_shell.X_cor
-        Y_sketch_cr=cor_shell.Y_cor
+        X_sketch_cr = cor_shell.X_cor
+        Y_sketch_cr = cor_shell.Y_cor
         for i in range(1,len(X_sketch_cr)):
             s1.Line(point1=(X_sketch_cr[i-1],
                             Y_sketch_cr[i-1]),
                     point2=(X_sketch_cr[i],
                             Y_sketch_cr[i]))
 
-    elif cc.geo_STR_CB==False and cc.geo_cs_RB==False and cc.geo_ort_RB==True:
+    elif cc.geo_STR_CB == False and cc.geo_cs_RB == False and cc.geo_ort_RB == True:
         s1.CircleByCenterPerimeter(center=(0.0, 0.0), point1=(rbot, 0.0) )
-        Stringers=cc.geo_ortho[0]
-        h_ort=cc.geo_ortho[2]
+        Stringers = cc.geo_ortho[0]
+        h_ort = cc.geo_ortho[2]
         delta_A=(2*np.pi/Stringers)
         for i in range (0, Stringers):
-            s1.Line(point1=(rbot*np.cos(delta_A*i), 
-                            rbot*np.sin(delta_A*i)), 
+            s1.Line(point1=(rbot*np.cos(delta_A*i),
+                            rbot*np.sin(delta_A*i)),
                     point2=((rbot-h_ort)*np.cos(delta_A*i),
                            (rbot-h_ort)*np.sin(delta_A*i)))
 
     part_shell.BaseShellExtrude(depth=H, draftAngle=-alphadeg, sketch=s1)
 #Partition for stringers
-    if cc.geo_STR_CB==True:
+    if cc.geo_STR_CB == True:
 
-        Stringers=cc.str_NUM[0]
+        Stringers = cc.str_NUM[0]
         delta_A=(2*np.pi/float(Stringers))
-        if cc.geo_w_str_RB==True:
-            str_delta_A=cc.geo_w_str[0]/(2*float(rbot))
-            h_str=cc.geo_w_str[1]
-        elif cc.geo_i_str_RB==True:
-            str_delta_A=cc.geo_I_str[0]/(2*float(rbot))
-            h_str=cc.geo_I_str[2]
-        elif cc.geo_z_str_RB==True:
-            str_delta_A=cc.geo_Z_str[0]/(2*float(rbot))
-            h_str=cc.geo_Z_str[2]
-        
-        Edge=part_shell.edges.findAt(((rbot-h_str/float(2)),
+        if cc.geo_w_str_RB == True:
+            str_delta_A = cc.geo_w_str[0]/(2*float(rbot))
+            h_str = cc.geo_w_str[1]
+        elif cc.geo_i_str_RB == True:
+            str_delta_A = cc.geo_I_str[0]/(2*float(rbot))
+            h_str = cc.geo_I_str[2]
+        elif cc.geo_z_str_RB == True:
+            str_delta_A = cc.geo_Z_str[0]/(2*float(rbot))
+            h_str = cc.geo_Z_str[2]
+
+        Edge = part_shell.edges.findAt(((rbot-h_str/float(2)),
                                         0.0,
                                         H),)
 
-        partt_plane=part_shell.DatumPlaneByPrincipalPlane(principalPlane=XYPLANE, offset=H)
+        partt_plane = part_shell.DatumPlaneByPrincipalPlane(principalPlane=XYPLANE, offset=H)
 
-        t = part_shell.MakeSketchTransform(sketchPlane=part_shell.datums[partt_plane.id], 
-                                           sketchUpEdge=Edge, 
-                                           sketchPlaneSide=SIDE1, 
+        t = part_shell.MakeSketchTransform(sketchPlane=part_shell.datums[partt_plane.id],
+                                           sketchUpEdge=Edge,
+                                           sketchPlaneSide=SIDE1,
                                            origin=(0.0, 0.0, H))
 
-        x1 = mod.ConstrainedSketch(name='temp_skt', 
+        x1 = mod.ConstrainedSketch(name='temp_skt',
                                    sheetSize=2.1*rbot,
                                    gridSpacing=2.1*rbot/20,
                                    transform=t)
 
         part_shell.projectReferencesOntoSketch(sketch=x1, filter=COPLANAR_EDGES)
-        if cc.geo_w_str_RB==True:
+        if cc.geo_w_str_RB == True:
 
             for i in range(0,Stringers):
-                x1.Line(point1=(0.0, 
-                                0.0), 
+                x1.Line(point1=(0.0,
+                                0.0),
                         point2=((rbot*1.2)*np.cos(delta_A*i-str_delta_A+np.pi/2),
                                 (rbot*1.2)*np.sin(delta_A*i-str_delta_A+np.pi/2)))
-                x1.Line(point1=(0.0, 
-                                0.0), 
+                x1.Line(point1=(0.0,
+                                0.0),
                         point2=((rbot*1.2)*np.cos(delta_A*i+str_delta_A+np.pi/2),
                                 (rbot*1.2)*np.sin(delta_A*i+str_delta_A+np.pi/2)))
-        elif cc.geo_i_str_RB==True or cc.geo_z_str_RB==True:
+        elif cc.geo_i_str_RB == True or cc.geo_z_str_RB == True:
 
             for i in range(0,Stringers):
                 x1.Line(point1=((rbot-h_str/float(2))*np.cos(delta_A*i-str_delta_A+np.pi/2),
-                                (rbot-h_str/float(2))*np.sin(delta_A*i-str_delta_A+np.pi/2)), 
+                                (rbot-h_str/float(2))*np.sin(delta_A*i-str_delta_A+np.pi/2)),
                         point2=((rbot*1.2)*np.cos(delta_A*i-str_delta_A+np.pi/2),
                                 (rbot*1.2)*np.sin(delta_A*i-str_delta_A+np.pi/2)))
                 x1.Line(point1=((rbot-h_str/float(2))*np.cos(delta_A*i+str_delta_A+np.pi/2),
-                                (rbot-h_str/float(2))*np.sin(delta_A*i+str_delta_A+np.pi/2)), 
+                                (rbot-h_str/float(2))*np.sin(delta_A*i+str_delta_A+np.pi/2)),
                         point2=((rbot*1.2)*np.cos(delta_A*i+str_delta_A+np.pi/2),
                                 (rbot*1.2)*np.sin(delta_A*i+str_delta_A+np.pi/2)))
 
-        part_shell.PartitionFaceBySketchThruAll(sketchPlane=part_shell.datums[partt_plane.id], 
-                                                sketchUpEdge=Edge, 
-                                                faces=part_shell.faces, 
-                                                sketchPlaneSide=SIDE1, 
+        part_shell.PartitionFaceBySketchThruAll(sketchPlane=part_shell.datums[partt_plane.id],
+                                                sketchUpEdge=Edge,
+                                                faces=part_shell.faces,
+                                                sketchPlaneSide=SIDE1,
                                                 sketch=x1)
 
         del mod.sketches['temp_skt']
@@ -233,35 +233,35 @@ def _create_mesh(cc):
                               point2=(0.0, 1.0, 0.0))
     ra_cyl_csys = ra.datums[ra_cyl_csys.id]
 #Frames creation
-    if cc.geo_ort_RB==True :
+    if cc.geo_ort_RB == True :
         create_frame (cc,mod)
         frame_part = create_frame.frame
-        frame_ass=ra.Instance(name='TEMP_frame', part=frame_part,
+        frame_ass = ra.Instance(name='TEMP_frame', part=frame_part,
             dependent=ON)
         ra.features.changeKey(fromName=inst_name_shell, toName='TEMP_shell_ass')
-        ra.InstanceFromBooleanMerge(name='Shell_asb', instances=(ra.instances['TEMP_shell_ass'], 
+        ra.InstanceFromBooleanMerge(name='Shell_asb', instances=(ra.instances['TEMP_shell_ass'],
         ra.instances['TEMP_frame'], ), originalInstances=DELETE, domain=GEOMETRY)
         ra.features.changeKey(fromName='Shell_asb-1', toName=inst_name_shell)
         del mod.parts['Frames']
         del mod.parts['Shell']
         mod.parts.changeKey(fromName='Shell_asb', toName='Shell')
-        part_shell=mod.parts['Shell']
+        part_shell = mod.parts['Shell']
         pickedRegions = part_shell.faces
         part_shell.setMeshControls(regions=pickedRegions, elemShape=QUAD, technique=STRUCTURED)
 
-    elif cc.geo_F_CB==True and cc.geo_w_str_RB==False:
+    elif cc.geo_F_CB == True and cc.geo_w_str_RB == False:
         create_frame (cc,mod)
         frame_part = create_frame.frame
-        frame_ass=ra.Instance(name='TEMP_frame', part=frame_part,
+        frame_ass = ra.Instance(name='TEMP_frame', part=frame_part,
             dependent=ON)
         ra.features.changeKey(fromName=inst_name_shell, toName='TEMP_shell_ass')
-        ra.InstanceFromBooleanMerge(name='Shell_asb', instances=(ra.instances['TEMP_shell_ass'], 
+        ra.InstanceFromBooleanMerge(name='Shell_asb', instances=(ra.instances['TEMP_shell_ass'],
         ra.instances['TEMP_frame'], ), originalInstances=DELETE, domain=GEOMETRY)
         ra.features.changeKey(fromName='Shell_asb-1', toName=inst_name_shell)
         del mod.parts['Frames']
         del mod.parts['Shell']
         mod.parts.changeKey(fromName='Shell_asb', toName='Shell')
-        part_shell=mod.parts['Shell']
+        part_shell = mod.parts['Shell']
 
     inst_shell =ra.instances[inst_name_shell]
 
@@ -293,30 +293,30 @@ def _create_mesh(cc):
                 ALLOWABLES_TSAI_WU = ALLOWABLES[0:5] + (-0.5,)
                 myMat.elastic.FailStress(table=(ALLOWABLES_TSAI_WU, ))
 #Face set creation
-    if cc.geo_STR_CB==False and cc.geo_cs_RB==False and cc.geo_ort_RB==False and cc.geo_ccs_RB==False:
+    if cc.geo_STR_CB == False and cc.geo_cs_RB == False and cc.geo_ort_RB == False and cc.geo_ccs_RB == False:
 
         face_set = part_shell.Set(name='part_shell_faces', faces=part_shell.faces)
         abaqus_functions.create_composite_layup(name='CompositePlate',
-                                                stack=cc.stack, 
-                                                plyts=cc.plyts, 
+                                                stack=cc.stack,
+                                                plyts=cc.plyts,
                                                 mat_names=mat_names,
-                                                part=part_shell, 
+                                                part=part_shell,
                                                 part_csys=part_csys,
                                                 region=face_set)
 
-    elif cc.geo_STR_CB==True and cc.geo_cs_RB==False and cc.geo_ort_RB==False and cc.geo_ccs_RB==False:
-     
-        if  cc.geo_F_CB==False :
+    elif cc.geo_STR_CB == True and cc.geo_cs_RB == False and cc.geo_ort_RB == False and cc.geo_ccs_RB == False:
+
+        if  cc.geo_F_CB == False :
             create_sets_str(part_shell,cc)
-            str_shell_faces=create_sets_str.set_shell_faces
-            str_faces=create_sets_str.set_str_faces
-            str_faces_1=create_sets_str.set_str_faces_1
-            Skin=part_shell.Set(name='part_shell_faces', faces=str_shell_faces)
-            
-            Stringers=part_shell.Set(name='part_shell_str', faces=str_faces)
-            
-            Stringers_1=part_shell.Set(name='part_shell_str_1', faces=str_faces_1)
-            
+            str_shell_faces = create_sets_str.set_shell_faces
+            str_faces = create_sets_str.set_str_faces
+            str_faces_1 = create_sets_str.set_str_faces_1
+            Skin = part_shell.Set(name='part_shell_faces', faces=str_shell_faces)
+
+            Stringers = part_shell.Set(name='part_shell_str', faces=str_faces)
+
+            Stringers_1 = part_shell.Set(name='part_shell_str_1', faces=str_faces_1)
+
             if cc.pressure_load:
                 Face_temp = part_shell.sets['part_shell_faces'].faces
                 part_shell.Surface(side2Faces=Face_temp, name='Shell_surf')
@@ -330,20 +330,20 @@ def _create_mesh(cc):
                 Face_temp = part_shell.sets['part_shell_str_1'].faces
                 part_shell.Surface(side2Faces=Face_temp, name='Str_1_surf_2')
 
-            if cc.geo_i_str_RB==True or cc.geo_z_str_RB==True:
-                str_faces_2=create_sets_str.set_str_faces_2
-                Stringers_2=part_shell.Set(name='part_shell_str_2', faces=str_faces_2)
+            if cc.geo_i_str_RB == True or cc.geo_z_str_RB == True:
+                str_faces_2 = create_sets_str.set_str_faces_2
+                Stringers_2 = part_shell.Set(name='part_shell_str_2', faces=str_faces_2)
 
                 if cc.pressure_load:
                     Face_temp = part_shell.sets['part_shell_str_2'].faces
                     part_shell.Surface(side1Faces=Face_temp, name='Str_2_surf_1')
-                    
+
                     Face_temp = part_shell.sets['part_shell_str_2'].faces
                     part_shell.Surface(side2Faces=Face_temp, name='Str_2_surf_2')
 
                 GEO=[Skin, Stringers, Stringers_1,Stringers_2]
                 NAMES=['Skin', 'Stringers', 'Stringers_1', 'Stringers_2']
-                if cc.geo_i_str_RB==True:
+                if cc.geo_i_str_RB == True:
                     THICKNESS=[cc.plyts[0],cc.geo_I_str[3]+cc.plyts[0],cc.geo_I_str[4],cc.geo_I_str[5]]
                     offt1=((cc.geo_I_str[3]+0.0)/2)/(cc.geo_I_str[3]+cc.plyts[0])
                     OFFT=[0.0,offt1,0.0,0.0]
@@ -358,12 +358,12 @@ def _create_mesh(cc):
                 offt1=((cc.geo_w_str[2]+0.0)/2)/(cc.geo_w_str[2]+cc.plyts[0])
                 OFFT=[0.0,offt1,0.0]
 
-            if material_type==ISOTROPIC:
+            if material_type == ISOTROPIC:
                 for i in range(0,len(GEO)):
-                    abaqus_functions.create_isotropic_section(name=NAMES[i], 
-                                                              mat_names=mat_names, 
-                                                              region=GEO[i], 
-                                                              part=part_shell, 
+                    abaqus_functions.create_isotropic_section(name=NAMES[i],
+                                                              mat_names=mat_names,
+                                                              region=GEO[i],
+                                                              part=part_shell,
                                                               model=mod,
                                                               T=THICKNESS[i],
                                                               Sect_name=NAMES[i],
@@ -372,30 +372,30 @@ def _create_mesh(cc):
             else:
                 for i in range(0,len(GEO)):
                     abaqus_functions.create_composite_layup(name=NAMES[i],
-                                                            stack=cc.stack, 
-                                                            plyts=cc.plyts, 
+                                                            stack=cc.stack,
+                                                            plyts=cc.plyts,
                                                             mat_names=mat_names,
-                                                            part=part_shell, 
+                                                            part=part_shell,
                                                             part_csys=part_csys,
                                                             region=NAMES[i])
 
         else:
-            TEST_temp1=0
+            TEST_temp1 = 0
 
-    elif cc.geo_STR_CB==False and cc.geo_cs_RB==True and cc.geo_ort_RB==False and cc.geo_ccs_RB==False:
-        TEST_temp1=0
-    elif cc.geo_STR_CB==False and cc.geo_cs_RB==False and cc.geo_ort_RB==True and cc.geo_ccs_RB==False:
+    elif cc.geo_STR_CB == False and cc.geo_cs_RB == True and cc.geo_ort_RB == False and cc.geo_ccs_RB == False:
+        TEST_temp1 = 0
+    elif cc.geo_STR_CB == False and cc.geo_cs_RB == False and cc.geo_ort_RB == True and cc.geo_ccs_RB == False:
 
         create_sets_ort(part_shell,cc)
-        ort_shell_faces=create_sets_ort.ort_shell_faces
-        ort_str_faces=create_sets_ort.ort_str_faces
-        ort_frames_faces=create_sets_ort.ort_frames_faces
+        ort_shell_faces = create_sets_ort.ort_shell_faces
+        ort_str_faces = create_sets_ort.ort_str_faces
+        ort_frames_faces = create_sets_ort.ort_frames_faces
         #Short_edges=create_sets_ort.ort_SEDG
-        Skin=part_shell.Set(name='part_shell_faces', faces=ort_shell_faces)
+        Skin = part_shell.Set(name='part_shell_faces', faces=ort_shell_faces)
 
-        Stringers=part_shell.Set(name='part_shell_str', faces=ort_str_faces)
+        Stringers = part_shell.Set(name='part_shell_str', faces=ort_str_faces)
 
-        Frames=part_shell.Set(name='part_shell_frames', faces=ort_frames_faces)
+        Frames = part_shell.Set(name='part_shell_frames', faces=ort_frames_faces)
 
         if cc.pressure_load:
             Face_temp = part_shell.sets['part_shell_faces'].faces
@@ -415,12 +415,12 @@ def _create_mesh(cc):
         NAMES=['Skin', 'Stringers', 'Frames']
         THICKNESS=[cc.plyts[0],cc.geo_ortho[4],cc.geo_ortho[3]]
         OFFT=[0.0,0.0,0.0]
-        if material_type==ISOTROPIC:
+        if material_type == ISOTROPIC:
             for i in range(0,len(GEO)):
-                abaqus_functions.create_isotropic_section(name=NAMES[i], 
-                                                          mat_names=mat_names, 
-                                                          region=GEO[i], 
-                                                          part=part_shell, 
+                abaqus_functions.create_isotropic_section(name=NAMES[i],
+                                                          mat_names=mat_names,
+                                                          region=GEO[i],
+                                                          part=part_shell,
                                                           model=mod,
                                                           T=THICKNESS[i],
                                                           Sect_name=NAMES[i],
@@ -428,20 +428,20 @@ def _create_mesh(cc):
         else:
             for i in range(0,len(GEO)):
                 abaqus_functions.create_composite_layup(name=NAMES[i],
-                                                        stack=cc.stack, 
-                                                        plyts=cc.plyts, 
+                                                        stack=cc.stack,
+                                                        plyts=cc.plyts,
                                                         mat_names=mat_names,
-                                                        part=part_shell, 
+                                                        part=part_shell,
                                                         part_csys=part_csys,
                                                         region=NAMES[i])
 
-    elif cc.geo_STR_CB==False and cc.geo_cs_RB==False and cc.geo_ort_RB==False and cc.geo_ccs_RB==True:
-        TEST_temp1=0
+    elif cc.geo_STR_CB == False and cc.geo_cs_RB == False and cc.geo_ort_RB == False and cc.geo_ccs_RB == True:
+        TEST_temp1 = 0
         face_set = part_shell.Set(name='part_shell_faces', faces=part_shell.faces)
         abaqus_functions.create_composite_layup(name='CompositePlate',
-        stack=cc.stack, plyts=cc.plyts, mat_names=mat_names,
-        part=part_shell, part_csys=part_csys,
-        region=face_set)
+            stack=cc.stack, plyts=cc.plyts, mat_names=mat_names,
+            part=part_shell, part_csys=part_csys,
+            region=face_set)
 #End face set
 
     # Creating the resin material.
@@ -872,18 +872,18 @@ def _create_mesh(cc):
 
         part_shell.seedEdgeBySize(edges=edges, size=size, constraint=FIXED)
 
-        if cc.geo_STR_CB==False and cc.geo_ort_RB==True:
+        if cc.geo_STR_CB == False and cc.geo_ort_RB == True:
             create_sets_ort(part_shell,cc)
 
-            Short_edges=create_sets_ort.ort_SEDG
+            Short_edges = create_sets_ort.ort_SEDG
             part_shell.setMeshControls(regions=part_shell.faces, technique=STRUCTURED, elemShape=QUAD)
             for ii in range(0,len(Short_edges)):
                 part_shell.seedEdgeBySize(edges=Short_edges[ii], size=mesh_size_str, constraint=FINER)
 
-        elif cc.geo_STR_CB==True and cc.geo_ort_RB==False:
+        elif cc.geo_STR_CB == True and cc.geo_ort_RB == False:
             create_sets_str(part_shell,cc)
 
-            Short_edges=create_sets_str.set_short_EDG
+            Short_edges = create_sets_str.set_short_EDG
             part_shell.setMeshControls(regions=part_shell.faces, technique=STRUCTURED, elemShape=QUAD)
             for ii in range(0,len(Short_edges)):
                 part_shell.seedEdgeBySize(edges=Short_edges[ii], size=mesh_size_str, constraint=FINER)
@@ -1078,7 +1078,7 @@ def _create_mesh(cc):
     shell_elem = mesh.ElemType(elemCode=shell_elem_code, elemLibrary=STANDARD)
     part_shell.setElementType(regions=Region(faces=part_shell.faces),
                         elemTypes=(shell_elem, ))
-    if cc.geo_STR_CB==False and cc.geo_ort_RB==False: 
+    if cc.geo_STR_CB == False and cc.geo_ort_RB == False:
         part_shell.setMeshControls(regions=part_shell.faces, elemShape=QUAD,
                                technique=SWEEP)
     part_shell.generateMesh()
@@ -1220,7 +1220,7 @@ def _create_mesh(cc):
                                      userMode=DOF_MODE_MPC,
                                      userType=0, csys=ra_cyl_csys)
 
-    assert len(slaves_set)==len(set(slaves_set))
+    assert len(slaves_set) == len(set(slaves_set))
 
     if False:
         # This creates the connection between the shell and top nodes, which
@@ -1278,11 +1278,11 @@ def _create_mesh(cc):
                             mpcType=PIN_MPC, userMode=DOF_MODE_MPC, userType=0,
                             csys=ra_cyl_csys)
 
-        assert len(slaves_set)==len(set(slaves_set))
-        assert len(top_slave_sets)==len(top_master_sets)*(resin_numel+1)*2
+        assert len(slaves_set) == len(set(slaves_set))
+        assert len(top_slave_sets) == len(top_master_sets)*(resin_numel+1)*2
 
     # Creating assembly sets
-    if cc.geo_STR_CB==False and cc.geo_cs_RB==False and cc.geo_ort_RB==False and cc.geo_ccs_RB==False:
+    if cc.geo_STR_CB == False and cc.geo_cs_RB == False and cc.geo_ort_RB == False and cc.geo_ccs_RB == False:
 
         ra.Set(faces=inst_shell.faces, name='shell_faces')
 
@@ -1499,8 +1499,8 @@ def _create_loads_bcs(cc):
 
     # boundary condition at the bottom edge
     if cc.resin_add_BIR:
-        if (bc_fix_bottom_uR==SET or bc_fix_bottom_v==SET or
-            bc_fix_bottom_u3==SET):
+        if (bc_fix_bottom_uR == SET or bc_fix_bottom_v == SET or
+            bc_fix_bottom_u3 == SET):
             region = ra.sets['Bottom_IR_faces']
             mod.DisplacementBC(name='BC_Bottom_IR',
                                createStepName='Initial', region=region,
@@ -1512,8 +1512,8 @@ def _create_loads_bcs(cc):
                                ur3=UNSET,
                                amplitude=UNSET, distributionType=UNIFORM,
                                fieldName='', localCsys=ra_cyl_csys)
-        if (bc_fix_bottom_side_uR==SET or bc_fix_bottom_side_v==SET or
-            bc_fix_bottom_side_u3==SET):
+        if (bc_fix_bottom_side_uR == SET or bc_fix_bottom_side_v == SET or
+            bc_fix_bottom_side_u3 == SET):
             region = ra.sets['Bottom_IR_faces_side']
             mod.DisplacementBC(name='BC_Bottom_IR_side',
                                createStepName='Initial', region=region,
@@ -1526,8 +1526,8 @@ def _create_loads_bcs(cc):
                                amplitude=UNSET, distributionType=UNIFORM,
                                fieldName='', localCsys=ra_cyl_csys)
     if cc.resin_add_BOR:
-        if (bc_fix_bottom_uR==SET or bc_fix_bottom_v==SET or
-            bc_fix_bottom_u3==SET):
+        if (bc_fix_bottom_uR == SET or bc_fix_bottom_v == SET or
+            bc_fix_bottom_u3 == SET):
             region = ra.sets['Bottom_OR_faces']
             mod.DisplacementBC(name='BC_Bottom_OR',
                                createStepName='Initial', region=region,
@@ -1539,8 +1539,8 @@ def _create_loads_bcs(cc):
                                ur3=UNSET,
                                amplitude=UNSET, distributionType=UNIFORM,
                                fieldName='', localCsys=ra_cyl_csys)
-        if (bc_fix_bottom_side_uR==SET or bc_fix_bottom_side_v==SET or
-            bc_fix_bottom_side_u3==SET):
+        if (bc_fix_bottom_side_uR == SET or bc_fix_bottom_side_v == SET or
+            bc_fix_bottom_side_u3 == SET):
             region = ra.sets['Bottom_OR_faces_side']
             mod.DisplacementBC(name='BC_Bottom_OR_side',
                                createStepName='Initial', region=region,
@@ -1560,8 +1560,8 @@ def _create_loads_bcs(cc):
         ur1_bottom = SET
         ur2_bottom = SET
         ur3_bottom = SET
-    if (bc_fix_bottom_uR==SET or bc_fix_bottom_v==SET or bc_fix_bottom_u3==SET
-        or ur1_bottom==SET or ur2_bottom==SET or ur3_bottom==SET):
+    if (bc_fix_bottom_uR == SET or bc_fix_bottom_v == SET or bc_fix_bottom_u3 == SET
+        or ur1_bottom == SET or ur2_bottom == SET or ur3_bottom == SET):
         mod.DisplacementBC(name='BC_Bottom_Shell',
                            createStepName='Initial',
                            region=Region(edges=shell_bottom_edges),
@@ -1744,16 +1744,16 @@ def _create_loads_bcs(cc):
         if cc.pressure_load:
 
 #New pressure
-            if cc.geo_STR_CB==False and cc.geo_cs_RB==False and cc.geo_ort_RB==False and cc.geo_ccs_RB==False:
-#               set_shell_faces = ra.sets['shell_faces']            
+            if cc.geo_STR_CB == False and cc.geo_cs_RB == False and cc.geo_ort_RB == False and cc.geo_ccs_RB == False:
+#               set_shell_faces = ra.sets['shell_faces']
                 region = Region(side2Faces=set_shell_faces.faces)
                 mod.Pressure(name='pressure',
                 createStepName=cc.get_step_name(cc.pressure_step),
                 region=region, magnitude=cc.pressure_load)
-            
-            elif cc.geo_STR_CB==True and cc.geo_cs_RB==False and cc.geo_ort_RB==False and cc.geo_ccs_RB==False:
-             
-                if  cc.geo_F_CB==False :
+
+            elif cc.geo_STR_CB == True and cc.geo_cs_RB == False and cc.geo_ort_RB == False and cc.geo_ccs_RB == False:
+
+                if  cc.geo_F_CB == False :
 
                     region_1 = ra.instances[ra.instances.items()[0][0]].surfaces['Shell_surf']
                     mod.Pressure(name='pressure_1',
@@ -1771,8 +1771,8 @@ def _create_loads_bcs(cc):
                     mod.Pressure(name='pressure_4',
                     createStepName=cc.get_step_name(cc.pressure_step),
                     region=region_4, magnitude=cc.pressure_load)
-            
-                    if cc.geo_i_str_RB==True or cc.geo_z_str_RB==True:
+
+                    if cc.geo_i_str_RB == True or cc.geo_z_str_RB == True:
 
                         region_5=ra.instances[ra.instances.items()[0][0]].surfaces['Str_2_surf_1']
                         mod.Pressure(name='pressure_5',
@@ -1786,7 +1786,7 @@ def _create_loads_bcs(cc):
                         pass
                 else:
                     pass #Pressure part of the frames
-            elif cc.geo_STR_CB==False and cc.geo_cs_RB==False and cc.geo_ort_RB==True and cc.geo_ccs_RB==False:
+            elif cc.geo_STR_CB == False and cc.geo_cs_RB == False and cc.geo_ort_RB == True and cc.geo_ccs_RB == False:
                 region_1 = ra.instances[ra.instances.items()[0][0]].surfaces['Shell_surf']
                 mod.Pressure(name='pressure_1',
                 createStepName=cc.get_step_name(cc.pressure_step),
@@ -1962,7 +1962,7 @@ def _create_loads_bcs(cc):
             connectors=ON, engineeringFeatures=ON, mesh=ON)
     ra.regenerate()
 
-if __name__=='__main__':
+if __name__ == '__main__':
     import conecyl
     cc = conecyl.ConeCyl()
     cc.impconf.add_pload(0., 0.5, 0.1, 1)

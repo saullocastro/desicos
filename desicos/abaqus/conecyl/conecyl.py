@@ -356,11 +356,25 @@ class ConeCyl(object):
         self.numel_r = 140
         self.elem_type = 'S8R5'
         self.mesh_size = None
-        #Mesh stiffening
+        # stiffener's mesh
         self.mesh_size_str = None
         self.elsize_r  = None
         self.elsize_r2 = None
         self.elsize_h  = None
+        # related to stiffener's geometry
+        self.geo_cs_RB = False
+        self.geo_ccs_RB = False
+        self.geo_F_CB = False
+        self.geo_STR_CB = False
+        self.geo_ort_RB = False
+        self.geo_w_str_RB = False
+        self.geo_i_str_RB = False
+        self.geo_z_str_RB = False
+        self.geo_I_str = 1.
+        self.geo_Z_str = 1.
+        self.geo_w_str = 1.
+        self.geo_ortho = 1.
+        self.numel_str = [4]
 
         # analysis related
         self.direct_ABD_input = False
@@ -500,14 +514,14 @@ class ConeCyl(object):
         # mesh
         self.rmesh = ((self.rbot - self.rtop)*self.rtop/self.rbot + self.rtop)
         self.mesh_size = 2*np.pi*self.rmesh/self.numel_r
-        if self.geo_STR_CB==True:
-            if self.geo_w_str_RB==True:
+        if self.geo_STR_CB == True:
+            if self.geo_w_str_RB == True:
                 self.mesh_size_str = float(max(self.geo_w_str))/float(self.numel_str[0])
-            elif self.geo_i_str_RB==True:
-                self.mesh_size_str =float(max(self.geo_I_str))/float(self.numel_str[0]) 
-            elif self.geo_z_str_RB==True:
-                self.mesh_size_str =float(max(self.geo_Z_str))/float(self.numel_str[0])
-        elif self.geo_ort_RB==True:
+            elif self.geo_i_str_RB == True:
+                self.mesh_size_str =float(max(self.geo_I_str))/float(self.numel_str[0])
+            elif self.geo_z_str_RB == True:
+                self.mesh_size_str = float(max(self.geo_Z_str))/float(self.numel_str[0])
+        elif self.geo_ort_RB == True:
             self.mesh_size_str =float(max(self.geo_ortho))/float(self.numel_str[0])
 
         # cutouts
