@@ -114,7 +114,6 @@ class Cutout(object):
         p = mod.parts[cc.part_name_shell]
         ra = mod.rootAssembly
         datums = p.datums
-        self.part = p
         d = self.d
         r, z = cc.r_z_from_pt(self.pt)
         x, y, z = self.x, self.y, self.z
@@ -304,6 +303,8 @@ class Cutout(object):
 
     def create_prop_around_hole(self):
         if self.prop_around_hole is not None:
+            from abaqus import mdb
+
             if not isinstance(self.prop_around_hole, dict):
                 raise ValueError('prop_around_hole must be a dictionary')
             radius = self.prop_around_hole['radius']
@@ -311,10 +312,9 @@ class Cutout(object):
             plyts = self.prop_around_hole['plyts']
             mat_names = self.prop_around_hole['mat_names']
 
-            p = self.part
-            print self.p0coord
-            print self.p2coord
-            print radius
+            cc = self.impconf.conecyl
+            mod = mdb.models[cc.model_name]
+            p = mod.parts[cc.part_name_shell]
             elem_set = p.Set(name='elems_around_cutout_%02d' % self.index,
                              elements=p.elements.getByBoundingCylinder(
                              center1=self.p0coord,
