@@ -120,7 +120,7 @@ class CBamp(Imperfection):
         inst_shell = mod.rootAssembly.instances['INST_SHELL']
         region = regionToolset.Region(vertices=inst_shell.vertices.findAt(
                         ((self.x, self.y, self.z),)))
-        
+
         vert = inst_shell.vertices.findAt(
                         ((self.x, self.y, self.z),))
         set_CSBI_R1=mod.rootAssembly.Set(vertices=vert, name='RF_1_csbi')
@@ -128,37 +128,20 @@ class CBamp(Imperfection):
         #mod.rootAssembly.Set(vertex=region, name='RF_1_csbi')
         step_name = cc.get_step_name(self.step)
 
-        CSBI_datum=mod.rootAssembly.DatumCsysByThreePoints(name='CSBI', 
-                                                     coordSysType=CYLINDRICAL, 
+        CSBI_datum=mod.rootAssembly.DatumCsysByThreePoints(name='CSBI',
+                                                     coordSysType=CYLINDRICAL,
                                                      origin=(0.0, 0.0, 0.0),
                                                      point1=(1.0, 0.0, 0.0),
                                                      point2=(0.0, 1.0, 0.0))
 
         datum_CSBI = mod.rootAssembly.datums[CSBI_datum.id]
 
-        mod.DisplacementBC(name=self.name, createStepName=step_name, 
-            region=region, u1=-self.cbtotal, u2=UNSET, u3=UNSET, ur1=UNSET, ur2=UNSET, 
-            ur3=UNSET, amplitude=UNSET, fixed=OFF, distributionType=UNIFORM, 
+        mod.DisplacementBC(name=self.name, createStepName=step_name,
+            region=region, u1=-self.cbtotal, u2=UNSET, u3=UNSET, ur1=UNSET, ur2=UNSET,
+            ur3=UNSET, amplitude=UNSET, fixed=OFF, distributionType=UNIFORM,
             fieldName='', localCsys=datum_CSBI)
 
         mod.HistoryOutputRequest(name='CSBI_R1',
                                  createStepName=step_name,
                                  variables=('U1','RF1' ),
                                  region=set_CSBI_R1)
-"""
-        mod.rootAssembly.Set(vertex=region, name='RF_1_csbi')
-        step_name = cc.get_step_name(self.step)
-
-        CSBI_datum=mod.rootAssembly.DatumCsysByThreePoints(name='CSBI', 
-                                                     coordSysType=CYLINDRICAL, 
-                                                     origin=(0.0, 0.0, 0.0),
-                                                     point1=(1.0, 0.0, 0.0),
-                                                     point2=(0.0, 1.0, 0.0))
-
-        datum_CSBI = mod.rootAssembly.datums[CSBI_datum.id]
-
-        mod.DisplacementBC(name=self.name, createStepName=step_name, 
-            region=region, u1=-self.cbtotal, u2=UNSET, u3=UNSET, ur1=UNSET, ur2=UNSET, 
-            ur3=UNSET, amplitude=UNSET, fixed=OFF, distributionType=UNIFORM, 
-            fieldName='', localCsys=datum_CSBI)
-"""
