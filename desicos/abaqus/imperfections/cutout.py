@@ -312,9 +312,6 @@ class Cutout(object):
             plyts = self.prop_around_hole['plyts']
             mat_names = self.prop_around_hole['mat_names']
 
-            cc = self.impconf.conecyl
-            mod = mdb.models[cc.model_name]
-            p = mod.parts[cc.part_name_shell]
             elem_set = p.Set(name='elems_around_cutout_%02d' % self.index,
                              elements=p.elements.getByBoundingCylinder(
                              center1=self.p0coord,
@@ -326,10 +323,14 @@ class Cutout(object):
                                                  origin=(0.0, 0.0, 0.0),
                                                  point1=(1.0, 0.0, 0.0),
                                                  point2=(0.0, 1.0, 0.0))
-            part_csys = p.datums[part_csys.id]
+
             #FIXME create a circular boundary region around the cutout to
             #      guarantee a better mesh for these cases with a new property
             #      around the cutout
+            cc = self.impconf.conecyl
+            mod = mdb.models[cc.model_name]
+            p = mod.parts[cc.part_name_shell]
+            part_csys = p.datums[part_csys.id]
             abaqus_functions.create_composite_layup(
                     name='prop_around_cutout_%02d' % self.index,
                     stack=stack, plyts=plyts, mat_names=mat_names,
