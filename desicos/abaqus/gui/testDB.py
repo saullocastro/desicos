@@ -448,10 +448,10 @@ class TestDB(AFXDataDialog):
         self.imp_tableKw = {}
         #
         # Tabs / Geometric Imperfections /
-        # Perturbation Loads / Constant Amp. Dimples / Dimples / Cutouts / Axisymmetrics / LMBIs
+        # Perturbation Loads / Constant Amp. Perturbation Buckle / Dimples / Cutouts / Axisymmetrics / LMBIs
         #
         labelTabs['pl'] = 'Perturbation Loads'
-        labelTabs['cbi'] = 'Constant buckle'
+        labelTabs['cbi'] = 'Perturbation Buckle'
         labelTabs['d'] = 'Dimples'
         labelTabs['ax'] = 'Axisymmetric'
         labelTabs['lbmi'] = 'Linear Buckling Modes'
@@ -469,7 +469,7 @@ class TestDB(AFXDataDialog):
         visibleCols['lbmi'] = 4
         visibleCols['cut'] = 5
         labelSpinners['pl'] = 'Number of perturbation loads:'
-        labelSpinners['cbi'] = 'Number of constant buckles:'
+        labelSpinners['cbi'] = 'Number of perturbation buckles:'
         labelSpinners['d'] = 'Number of single buckles'
         labelSpinners['ax'] = 'Number of axisymmetrics'
         labelSpinners['lbmi'] = 'Number of buckling modes to combine:'
@@ -501,7 +501,7 @@ class TestDB(AFXDataDialog):
         rowLabels['cut'] = 'Position theta:\tPosition z/H:' +\
                            '\tNr. radial elements\t'
         rowLabels2['pl'] = '\tPL value for model'
-        rowLabels2['cbi'] = '\tCB value for model'
+        rowLabels2['cbi'] = '\tPB value for model'
         rowLabels2['d'] = '\tWb for model'
         rowLabels2['ax'] = '\tWb for model'
         rowLabels2['lbmi'] = '\tSF for model'
