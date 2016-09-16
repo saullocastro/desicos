@@ -292,11 +292,11 @@ class ImpConf(object):
             raise ValueError('Parameter "c0" must be supplied with ' +
                              '"m0", "n0" and "funcnum"')
         elif c0 is not None and m0 and n0 and funcnum:
-            if funcnum==1:
+            if funcnum == 1:
                 size = 2
-            elif funcnum==2:
+            elif funcnum == 2:
                 size = 2
-            elif funcnum==3:
+            elif funcnum == 3:
                 size = 4
             else:
                 raise ValueError('Invalid value for "funcnum"!')
@@ -305,7 +305,7 @@ class ImpConf(object):
                     raise ValueError('File {0} not found!'.format(c0))
                 else:
                     c0 = np.loadtxt(c0)
-                    if c0.ndim==1:
+                    if c0.ndim == 1:
                         if c0.shape[0] != size*m0*n0:
                             raise ValueError(
                                 'Invalid "c0" for the given "m0" and "n0"!')
@@ -447,7 +447,7 @@ class ImpConf(object):
 
     def add_cutout(self, thetadeg, pt, d, drill_offset_deg=0.,
                    clearance_factor=0.75, numel_radial_edge=4,
-                   prop_around_hole=None):
+                   prop_around_cutout=None):
         r"""Add a cutout
 
         Parameters
@@ -470,7 +470,7 @@ class ImpConf(object):
             Number of elements along the radial edges about the cutout center.
             This parameter affects the aspect ratio of the elements inside the
             cutout area.
-        prop_around_hole : dict, optional
+        prop_around_cutout : dict, optional
             Dictionary with keys:
 
             - radius : float
@@ -496,7 +496,7 @@ class ImpConf(object):
 
         """
         cutout = Cutout(thetadeg, pt, d, drill_offset_deg, clearance_factor,
-                numel_radial_edge, prop_around_hole)
+                numel_radial_edge, prop_around_cutout)
         cutout.impconf = self
         self.cutouts.append(cutout)
         return cutout
@@ -651,7 +651,7 @@ class ImpConf(object):
         for imp in self.imperfections:
             valid = True
             for pt in imp.pts:
-                if pt<0 or pt>1.:
+                if pt < 0 or pt > 1.:
                     valid = False
                     break
             if imp and valid:

@@ -31,17 +31,18 @@ class Cutout(object):
         Number of elements along the radial edges about the cutout center.
         This parameter affects the aspect ratio of the elements inside the
         cutout area.
-    prop_around_hole : dict, optional
+    prop_around_cutout : dict, optional
         Dictionary with keys:
 
-        - radius : float
+        - 'mode' : str ('radius' or 'partition')
+        - 'radius' : float
         - 'stack': list of floats
         - 'plyts': list of floats
         - 'mat_names': list of strings
 
         Example::
 
-            prop_around_holes = {
+            prop_around_cutout = {
                 'radius': 10.,
                 'stack': [0, 90, 0],
                 'plyts': [0.125, 0.125, 0.125],
@@ -54,7 +55,7 @@ class Cutout(object):
     """
     def __init__(self, thetadeg, pt, d, drill_offset_deg=0.,
                  clearance_factor=0.75, numel_radial_edge=4,
-                 prop_around_hole=None):
+                 prop_around_cutout=None):
         self.thetadeg = thetadeg
         self.pt = pt
         self.d = d
@@ -62,7 +63,7 @@ class Cutout(object):
         self.drill_offset_deg = drill_offset_deg
         self.clearance_factor = clearance_factor
         self.numel_radial_edge = numel_radial_edge
-        self.prop_around_hole = prop_around_hole
+        self.prop_around_cutout = prop_around_cutout
         self.impconf = None
         self.name = ''
         self.thetadeg1 = None
@@ -112,6 +113,7 @@ class Cutout(object):
         cc = self.impconf.conecyl
         mod = mdb.models[cc.model_name]
         p = mod.parts[cc.part_name_shell]
+
         ra = mod.rootAssembly
         datums = p.datums
         d = self.d
@@ -301,21 +303,39 @@ class Cutout(object):
                 region = Region(vertices=inst_shell.vertices[index:index+1])
                 mod.loads[pload.name].setValues(region=region)
 
-    def create_prop_around_hole(self):
-        if self.prop_around_hole is not None:
+        if self.prop_around_cutout is not None:
+            self.create_prop_around_cutout()
+
+
+    def create_prop_around_cutout(self):
+        if self.prop_around_cutout is not None:
             from abaqus import mdb
 
-            if not isinstance(self.prop_around_hole, dict):
-                raise ValueError('prop_around_hole must be a dictionary')
-            radius = self.prop_around_hole['radius']
-            stack = self.prop_around_hole['stack']
-            plyts = self.prop_around_hole['plyts']
-            mat_names = self.prop_around_hole['mat_names']
+            cc = self.impconf.conecyl
+            mod = mdb.models[cc.model_name]
+            p = mod.parts[cc.part_name_shell]
 
-            elem_set = p.Set(name='elems_around_cutout_%02d' % self.index,
-                             elements=p.elements.getByBoundingCylinder(
-                             center1=self.p0coord,
-                             center2=self.p2coord, radius=radius))
+            if not isinstance(self.prop_around_cutout, dict):
+                raise ValueError('prop_around_cutout must be a dictionary')
+            mode = self.prop_around_cutout['mode']
+            stack = self.prop_around_cutout['stack']
+            plyts = self.prop_around_cutout['plyts']
+            mat_names = self.prop_around_cutout['mat_names']
+
+            if mode == 'radius':
+                radius = self.prop_around_cutout['radius']
+                elem_set = p.Set(name='elems_around_cutout_%02d' % self.index,
+                                 elements=p.elements.getByBoundingCylinder(
+                                 center1=self.p0coord, center2=self.p2coord,
+                                 radius=radius))
+            elif mode == 'partition':
+                selection_radius = (1+self.clearance_factor)*self.d*1.05*2**0.5
+                elem_set = p.Set(name='elems_around_cutout_%02d' % self.index,
+                                 faces=p.faces.getByBoundingCylinder(
+                                 center1=self.p0coord, center2=self.p2coord,
+                                 radius=selection_radius))
+            else:
+                raise ValueError('%s is an invalid options for "mode"' % mode)
 
             #TODO could get the Csys that already exists...
             part_csys = p.DatumCsysByThreePoints(name='part_cyl_csys',
@@ -327,17 +347,15 @@ class Cutout(object):
             #FIXME create a circular boundary region around the cutout to
             #      guarantee a better mesh for these cases with a new property
             #      around the cutout
-            cc = self.impconf.conecyl
-            mod = mdb.models[cc.model_name]
-            p = mod.parts[cc.part_name_shell]
             part_csys = p.datums[part_csys.id]
+
             abaqus_functions.create_composite_layup(
                     name='prop_around_cutout_%02d' % self.index,
                     stack=stack, plyts=plyts, mat_names=mat_names,
                     part=p, part_csys=part_csys,
                     region=elem_set)
         else:
-            raise RuntimeError('prop_around_hole not defined!')
+            raise RuntimeError('prop_around_cutout not defined!')
 
 
 if __name__ == '__main__':
