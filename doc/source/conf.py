@@ -131,7 +131,7 @@ elif html_theme == 'sphinxdoc':
 
 elif html_theme == 'alabaster':
     html_theme_options = {
-        'logo': 'desicos.png',
+        'logo': '../logo/desicos.png',
         'logo_name': False,
         'logo_text_align': None,
         'github_user': 'desicos',
