@@ -6,7 +6,7 @@ from desicos.abaqus.constants import *
 from desicos.logger import warn
 
 class CBamp(Imperfection):
-    """Constan amplitude buckle
+    """Constant Amplitude Perturbation Buckle
 
     """
     def __init__(self, thetadeg, pt, cbtotal, step=1):
@@ -19,22 +19,18 @@ class CBamp(Imperfection):
         self.index = None
         if abs(cbtotal) < 0.1*TOL:
             cbtotal = 0.1*TOL
-        self.cbradial = None    # component radial direction
-        self.cbx = None         # component x      direction
-        self.cby = None         # component y      direction
-        self.cbz = None         # component z      direction
+        self.cbradial = None # component radial direction
+        self.cbmeridional = None # component meridional direction
         # plotting options
         self.xaxis = 'cbtotal'
-        self.xaxis_label = 'Constant Buckle amplitude, mm'
+        self.xaxis_label = 'Constant Buckle Amplitude, mm'
 
 
     def rebuild(self):
         cc = self.impconf.conecyl
-        alpharad = cc.alpharad
+        alpharad = np.deg2rad(cc.alphadeg)
         self.cbradial = self.cbtotal*cos(alpharad)
-        self.cbz = -self.cbtotal*sin(alpharad)
-        self.cbx = -self.cbradial*cos(np.deg2rad(self.thetadeg))
-        self.cby = -self.cbradial*sin(np.deg2rad(self.thetadeg))
+        self.cbmeridional = self.cbtotal*sin(alpharad)
         self.x, self.y, self.z = self.get_xyz()
         self.r, z = cc.r_z_from_pt(self.pt)
         self.thetadeg = self.thetadeg % 360.
@@ -43,11 +39,11 @@ class CBamp(Imperfection):
         self.name = 'CB_pt_{0:03d}_theta_{1:03d}'.format(
                         int(self.pt*100), int(self.thetadeg))
         if abs(self.cbtotal) < 0.1*TOL:
-            warn('Ignoring perturbation load: {0}'.format(self.name))
+            warn('Ignoring perturbation buckle: {0}'.format(self.name))
 
 
     def calc_amplitude(self):
-        """Calculate the imperfection amplitude.
+        """Calculate the Constant Buckle Imperfection Amplitude
 
         The odb must be available and it will be used to extract the last
         frame of the first analysis step, corresponding to the constant loads.
@@ -97,15 +93,15 @@ class CBamp(Imperfection):
 
     def create(self):
         from abaqusConstants import (UNSET, OFF,UNIFORM,CYLINDRICAL)
-        """Include the perturbation load.
+        """Include Constant Amplitude Perturbation Buckle.
 
-        The load step in which the perturbation load is included depends on
+        The load step in which the perturbation buckle is included depends on
         the ``step`` parameter, which can be 1 or 2. If applied in the first
         step it will be kept constant, whereas in the second step it will be
         incremented.
 
-        The perturbation load is included after finding its corresponding
-        vertice. The perturbation load is **not created** if its value is
+        The perturbation buckle is included after finding its corresponding
+        vertice. The perturbation buckle is **not created** if its value is
         smaller then ``0.1*TOL`` (see :mod:`desicos.constants`).
 
         .. note:: Must be called from Abaqus.
@@ -136,9 +132,10 @@ class CBamp(Imperfection):
 
         datum_CSBI = mod.rootAssembly.datums[CSBI_datum.id]
 
-        mod.DisplacementBC(name=self.name, createStepName=step_name,
-            region=region, u1=-self.cbtotal, u2=UNSET, u3=UNSET, ur1=UNSET, ur2=UNSET,
-            ur3=UNSET, amplitude=UNSET, fixed=OFF, distributionType=UNIFORM,
+        mod.DisplacementBC(name=self.name, createStepName=step_name, region=region,
+            u1=-self.cbradial, u2=UNSET, u3=-self.cbmeridional,
+            ur1=UNSET, ur2=UNSET, ur3=UNSET,
+            amplitude=UNSET, fixed=OFF, distributionType=UNIFORM,
             fieldName='', localCsys=datum_CSBI)
 
         mod.HistoryOutputRequest(name='CSBI_R1',
