@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>desicos.abaqus.study &mdash; DESICOS 2.4.6 documentation</title>
+    <title>desicos.abaqus.study &mdash; DESICOS 2.4.7 documentation</title>
     
     <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.4.6',
+        VERSION:     '2.4.7',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,30 +23,16 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <link rel="top" title="DESICOS 2.4.6 documentation" href="../../../index.html" />
+    <link rel="top" title="DESICOS 2.4.7 documentation" href="../../../index.html" />
     <link rel="up" title="Module code" href="../../index.html" />
    
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
   <body role="document">
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../../../np-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">DESICOS 2.4.6 documentation</a> &raquo;</li>
-          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
-      </ul>
-    </div>  
+  
 
     <div class="document">
       <div class="documentwrapper">
@@ -54,7 +40,7 @@
           <div class="body" role="main">
             
   <h1>Source code for desicos.abaqus.study</h1><div class="highlight"><pre>
-<span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">==========================================</span>
 <span class="sd">Abaqus Study (:mod:`desicos.abaqus.study`)</span>
 <span class="sd">==========================================</span>
@@ -81,13 +67,13 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tmp_dir</span> <span class="o">=</span> <span class="n">TMP_DIR</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ccs</span> <span class="o">=</span> <span class="p">[]</span> <span class="c"># ccs --&gt; conecyls - conecylinders</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ccs</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># ccs --&gt; conecyls - conecylinders</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">runnames</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">study_dir</span>  <span class="o">=</span> <span class="s">&#39;&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">run_file_name</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">study_dir</span>  <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_file_name</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">params_from_gui</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">p1</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">calc_Pcr</span> <span class="o">=</span> <span class="bp">True</span>
@@ -101,7 +87,7 @@
 
     <span class="k">def</span> <span class="nf">rebuild</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">study_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp_dir</span>  <span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">study_dir</span><span class="p">,</span> <span class="s">&#39;outputs&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">study_dir</span><span class="p">,</span> <span class="s1">&#39;outputs&#39;</span><span class="p">)</span>
         <span class="n">index</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
         <span class="k">for</span> <span class="n">cc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ccs</span><span class="p">:</span>
             <span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -112,16 +98,16 @@
             <span class="n">cc</span><span class="o">.</span><span class="n">output_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span>
             <span class="n">cc</span><span class="o">.</span><span class="n">rebuild</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">excel_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">study_dir</span><span class="p">,</span>
-                                       <span class="s">&#39;{0}.xls&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+                                       <span class="s1">&#39;{0}.xls&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">configure_folders</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rebuild</span><span class="p">()</span>
-        <span class="n">log</span><span class="p">(</span><span class="s">&#39;configuring folders...&#39;</span><span class="p">)</span>
+        <span class="n">log</span><span class="p">(</span><span class="s1">&#39;configuring folders...&#39;</span><span class="p">)</span>
         <span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span><span class="p">):</span>
             <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Study.save"><a class="viewcode-back" href="../../../modules/abaqus/index.html#desicos.abaqus.study.Study.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="Study.save"><a class="viewcode-back" href="../../../modules/abaqus/index.html#desicos.abaqus.study.Study.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Save the current study</span>
 
 <span class="sd">        Parameters</span>
@@ -133,15 +119,15 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">cc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ccs</span><span class="p">:</span>
             <span class="n">cc</span><span class="o">.</span><span class="n">prepare_to_save</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">path</span><span class="o">==</span><span class="s">&#39;&#39;</span><span class="p">:</span>
-            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp_dir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s">&#39;.study&#39;</span><span class="p">)</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">pfile</span><span class="p">:</span>
-            <span class="n">cPickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">file</span><span class="o">=</span><span class="n">pfile</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="n">cPickle</span><span class="o">.</span><span class="n">HIGHEST_PROTOCOL</span><span class="p">)</span>
-</div>
-    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">path</span> <span class="o">==</span> <span class="s">&#39;&#39;</span><span class="p">:</span>
-            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp_dir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s">&#39;.study&#39;</span><span class="p">)</span>
-        <span class="n">pfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s">&#39;rb&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">path</span><span class="o">==</span><span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp_dir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;.study&#39;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">pfile</span><span class="p">:</span>
+            <span class="n">cPickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">file</span><span class="o">=</span><span class="n">pfile</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="n">cPickle</span><span class="o">.</span><span class="n">HIGHEST_PROTOCOL</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">path</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp_dir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;.study&#39;</span><span class="p">)</span>
+        <span class="n">pfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span>
         <span class="n">new_std</span> <span class="o">=</span> <span class="n">cPickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">pfile</span><span class="p">)</span>
         <span class="n">pfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">new_std</span>
@@ -174,12 +160,12 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">rebuild</span><span class="p">()</span>
         <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_Pcr</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">ccs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">model_name</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:]</span> <span class="o">!=</span> <span class="s">&#39;_lb&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_Pcr</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">ccs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">model_name</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:]</span> <span class="o">!=</span> <span class="s1">&#39;_lb&#39;</span><span class="p">:</span>
             <span class="kn">import</span> <span class="nn">copy</span>
             <span class="n">cc_Pcr</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ccs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
             <span class="n">cc_Pcr</span><span class="o">.</span><span class="n">linear_buckling</span> <span class="o">=</span> <span class="bp">True</span>
             <span class="n">cc_Pcr</span><span class="o">.</span><span class="n">rename</span> <span class="o">=</span> <span class="bp">False</span>
-            <span class="n">cc_Pcr</span><span class="o">.</span><span class="n">model_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s">&#39;_lb&#39;</span>
+            <span class="n">cc_Pcr</span><span class="o">.</span><span class="n">model_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;_lb&#39;</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ccs</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">cc_Pcr</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ccs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">direct_ABD_input</span> <span class="o">=</span> <span class="bp">False</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ccs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">impconf</span> <span class="o">=</span> <span class="n">imperfections</span><span class="o">.</span><span class="n">ImpConf</span><span class="p">()</span>
@@ -207,8 +193,8 @@
         <span class="k">for</span> <span class="n">cc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ccs</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">msi</span> <span class="ow">in</span> <span class="n">cc</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">msis</span><span class="p">:</span>
                 <span class="n">msi</span><span class="o">.</span><span class="n">nodal_translations</span> <span class="o">=</span> <span class="n">nodal_translations</span>
-                <span class="n">nodal_translations</span> <span class="o">=</span> <span class="n">msi</span><span class="o">.</span><span class="n">create</span><span class="p">()</span>
-</div>
+                <span class="n">nodal_translations</span> <span class="o">=</span> <span class="n">msi</span><span class="o">.</span><span class="n">create</span><span class="p">()</span></div>
+
 <div class="viewcode-block" id="Study.apply_tis"><a class="viewcode-back" href="../../../modules/abaqus/index.html#desicos.abaqus.study.Study.apply_tis">[docs]</a>    <span class="k">def</span> <span class="nf">apply_tis</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Applies all thickness imperfections in this study</span>
 
@@ -222,8 +208,8 @@
             <span class="k">for</span> <span class="n">ti</span> <span class="ow">in</span> <span class="n">cc</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">tis</span><span class="p">:</span>
                 <span class="n">ti</span><span class="o">.</span><span class="n">elems_t_dict</span> <span class="o">=</span> <span class="n">elems_t_dict</span>
                 <span class="n">ti</span><span class="o">.</span><span class="n">t_set</span> <span class="o">=</span> <span class="n">t_set</span>
-                <span class="n">elems_t_dict</span><span class="p">,</span> <span class="n">t_set</span> <span class="o">=</span> <span class="n">ti</span><span class="o">.</span><span class="n">create</span><span class="p">()</span>
-</div>
+                <span class="n">elems_t_dict</span><span class="p">,</span> <span class="n">t_set</span> <span class="o">=</span> <span class="n">ti</span><span class="o">.</span><span class="n">create</span><span class="p">()</span></div>
+
 <div class="viewcode-block" id="Study.create_run_file"><a class="viewcode-back" href="../../../modules/abaqus/index.html#desicos.abaqus.study.Study.create_run_file">[docs]</a>    <span class="k">def</span> <span class="nf">create_run_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Creates the run file which can be called from any Python</span>
 
@@ -235,23 +221,23 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">runnames</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">cc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ccs</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">runnames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cc</span><span class="o">.</span><span class="n">model_name</span><span class="p">)</span>
-        <span class="n">prefix</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">study_dir</span><span class="p">,</span> <span class="s">&#39;run_&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">run_file_name</span> <span class="o">=</span> <span class="n">prefix</span> <span class="o">+</span> <span class="s">&#39;.py&#39;</span>
-        <span class="n">tmpf</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">run_file_name</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span>
+        <span class="n">prefix</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">study_dir</span><span class="p">,</span> <span class="s1">&#39;run_&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_file_name</span> <span class="o">=</span> <span class="n">prefix</span> <span class="o">+</span> <span class="s1">&#39;.py&#39;</span>
+        <span class="n">tmpf</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">run_file_name</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
         <span class="n">jobs</span><span class="o">.</span><span class="n">print_run_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">study_dir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">runnames</span><span class="p">,</span> <span class="n">tmpf</span><span class="p">)</span>
-        <span class="n">shutil</span><span class="o">.</span><span class="n">copy2</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DAHOME</span><span class="p">,</span> <span class="s">&#39;utils&#39;</span><span class="p">,</span> <span class="s">&#39;job_stopper.py&#39;</span><span class="p">),</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">copy2</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DAHOME</span><span class="p">,</span> <span class="s1">&#39;utils&#39;</span><span class="p">,</span> <span class="s1">&#39;job_stopper.py&#39;</span><span class="p">),</span>
                                   <span class="bp">self</span><span class="o">.</span><span class="n">study_dir</span><span class="p">)</span>
-        <span class="n">tmpf</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-</div>
+        <span class="n">tmpf</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
     <span class="k">def</span> <span class="nf">open_excel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">excel_name</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">plot_forces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gui</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">put_in_Excel</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">open_Excel</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
         <span class="kn">import</span> <span class="nn">desicos.abaqus.utils</span> <span class="kn">as</span> <span class="nn">utils</span>
 
-        <span class="n">sheet_names</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;load_short_curves&#39;</span><span class="p">,</span><span class="s">&#39;load_short_curves_norm&#39;</span><span class="p">]</span>
-        <span class="n">x_labels</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;End-Shortening, mm&#39;</span><span class="p">,</span> <span class="s">&#39;Normalized End-Shortening&#39;</span><span class="p">]</span>
-        <span class="n">y_labels</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;Reaction Load, kN&#39;</span> <span class="p">,</span> <span class="s">&#39;Normalized Reaction Load&#39;</span><span class="p">]</span>
+        <span class="n">sheet_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;load_short_curves&#39;</span><span class="p">,</span><span class="s1">&#39;load_short_curves_norm&#39;</span><span class="p">]</span>
+        <span class="n">x_labels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;End-Shortening, mm&#39;</span><span class="p">,</span> <span class="s1">&#39;Normalized End-Shortening&#39;</span><span class="p">]</span>
+        <span class="n">y_labels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Reaction Load, kN&#39;</span> <span class="p">,</span> <span class="s1">&#39;Normalized Reaction Load&#39;</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">curve_num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
             <span class="n">curves</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="n">names</span> <span class="o">=</span> <span class="p">[]</span>
@@ -306,17 +292,17 @@
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">limit</span><span class="p">):</span>
             <span class="n">imp_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ccs</span><span class="p">[</span><span class="n">start</span><span class="p">]</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">imperfections</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">cc</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">imperfections</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">cc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ccs</span><span class="p">[</span><span class="n">start</span><span class="p">:]):</span>
-                <span class="n">warn</span><span class="p">(</span><span class="s">&quot;imperfection &#39;{0}&#39; is zero for all ConeCyl objects, skipping...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">warn</span><span class="p">(</span><span class="s2">&quot;imperfection &#39;{0}&#39; is zero for all ConeCyl objects, skipping...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                      <span class="n">imp_ref</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
                 <span class="k">continue</span>
             <span class="n">xaxis_label</span> <span class="o">=</span> <span class="n">imp_ref</span><span class="o">.</span><span class="n">xaxis_label</span>
-            <span class="k">for</span> <span class="n">pre</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&#39;fb&#39;</span><span class="p">,</span><span class="s">&#39;gb&#39;</span><span class="p">]:</span>
+            <span class="k">for</span> <span class="n">pre</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;fb&#39;</span><span class="p">,</span><span class="s1">&#39;gb&#39;</span><span class="p">]:</span>
                 <span class="n">curve</span> <span class="o">=</span> <span class="p">[]</span>
                 <span class="n">curve_amp</span> <span class="o">=</span> <span class="p">[]</span>
                 <span class="k">for</span> <span class="n">cc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ccs</span><span class="p">[</span><span class="n">start</span><span class="p">:]:</span>
-                    <span class="c">#</span>
+                    <span class="c1">#</span>
                     <span class="k">if</span> <span class="n">cc</span><span class="o">.</span><span class="n">check_completed</span><span class="p">()</span> <span class="ow">and</span> <span class="n">cc</span><span class="o">.</span><span class="n">outputs_ok</span><span class="p">:</span>
-                        <span class="k">if</span> <span class="n">pre</span> <span class="o">==</span> <span class="s">&#39;fb&#39;</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">pre</span> <span class="o">==</span> <span class="s1">&#39;fb&#39;</span><span class="p">:</span>
                             <span class="n">b_load</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">find_fb_load</span><span class="p">(</span><span class="n">cc</span><span class="o">.</span><span class="n">zload</span><span class="p">)</span>
                         <span class="k">else</span><span class="p">:</span>
                             <span class="n">b_load</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">cc</span><span class="o">.</span><span class="n">zload</span><span class="p">)</span>
@@ -327,36 +313,36 @@
                         <span class="k">else</span><span class="p">:</span>
                             <span class="n">imp_xaxis</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">imp_ref</span><span class="p">,</span> <span class="n">imp_ref</span><span class="o">.</span><span class="n">xaxis</span><span class="p">)</span>
                             <span class="n">amplitude</span> <span class="o">=</span> <span class="mf">0.</span>
-                        <span class="c">#</span>
+                        <span class="c1">#</span>
                         <span class="n">curve</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">imp_xaxis</span><span class="p">,</span> <span class="mf">0.001</span> <span class="o">*</span> <span class="n">b_load</span><span class="p">))</span>
                         <span class="n">curve_amp</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">amplitude</span><span class="p">,</span> <span class="mf">0.001</span> <span class="o">*</span> <span class="n">b_load</span><span class="p">))</span>
                     <span class="k">elif</span> <span class="ow">not</span> <span class="n">cc</span><span class="o">.</span><span class="n">outputs_ok</span><span class="p">:</span>
-                        <span class="n">warn</span><span class="p">(</span><span class="s">&#39;error in {0}.odb, skipping...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">warn</span><span class="p">(</span><span class="s1">&#39;error in {0}.odb, skipping...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                              <span class="n">cc</span><span class="o">.</span><span class="n">model_name</span><span class="p">))</span>
 
-                <span class="c">#</span>
-                <span class="c"># sorting curves</span>
+                <span class="c1">#</span>
+                <span class="c1"># sorting curves</span>
                 <span class="n">curve</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
                 <span class="n">curve_amp</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-                <span class="c">#</span>
-                <span class="c">#</span>
-                <span class="n">yaxis_label</span> <span class="o">=</span> <span class="s">&#39;Reaction Load, kN&#39;</span>
-                <span class="n">name</span> <span class="o">=</span> <span class="s">&#39;{0}_imp_{1:02d}_KD_curve_{2}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">pre</span><span class="p">)</span>
+                <span class="c1">#</span>
+                <span class="c1">#</span>
+                <span class="n">yaxis_label</span> <span class="o">=</span> <span class="s1">&#39;Reaction Load, kN&#39;</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;{0}_imp_{1:02d}_KD_curve_{2}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">pre</span><span class="p">)</span>
                 <span class="n">curves_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">xaxis_label</span><span class="p">,</span> <span class="n">yaxis_label</span><span class="p">,</span> <span class="n">curve</span><span class="p">]</span>
                 <span class="n">session</span><span class="o">.</span><span class="n">XYData</span><span class="p">(</span> <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">curve</span><span class="p">,</span> <span class="n">xValuesLabel</span> <span class="o">=</span>
                         <span class="n">xaxis_label</span><span class="p">,</span> <span class="n">yValuesLabel</span> <span class="o">=</span> <span class="n">yaxis_label</span><span class="p">,</span> <span class="n">legendLabel</span>
                         <span class="o">=</span> <span class="n">imp_ref</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-                <span class="n">name</span> <span class="o">=</span> <span class="s">&#39;{0}_imp_{1:02d}_KD_curve_{2}_amplitude&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;{0}_imp_{1:02d}_KD_curve_{2}_amplitude&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                        <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">pre</span><span class="p">)</span>
 
-                <span class="n">curves_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;Imperfection amplitude, mm&#39;</span><span class="p">,</span>
+                <span class="n">curves_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Imperfection amplitude, mm&#39;</span><span class="p">,</span>
                                        <span class="n">yaxis_label</span><span class="p">,</span> <span class="n">curve_amp</span><span class="p">]</span>
                 <span class="n">session</span><span class="o">.</span><span class="n">XYData</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">curve_amp</span><span class="p">,</span>
-                        <span class="n">xValuesLabel</span><span class="o">=</span><span class="s">&#39;Imperfection amplitude, mm&#39;</span><span class="p">,</span>
+                        <span class="n">xValuesLabel</span><span class="o">=</span><span class="s1">&#39;Imperfection amplitude, mm&#39;</span><span class="p">,</span>
                         <span class="n">yValuesLabel</span><span class="o">=</span><span class="n">yaxis_label</span><span class="p">,</span> <span class="n">legendLabel</span><span class="o">=</span><span class="n">imp_ref</span><span class="o">.</span><span class="n">name</span><span class="p">,)</span>
                 <span class="k">if</span> <span class="n">calc_Pcr</span><span class="p">:</span>
-                    <span class="n">yaxis_label</span> <span class="o">=</span> <span class="s">&#39;Knock-Down Factor (P/Pcr)&#39;</span>
-                    <span class="n">name</span> <span class="o">=</span> <span class="s">&#39;{0}_imp_{1:02d}_norm_KD_curve_{2}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">yaxis_label</span> <span class="o">=</span> <span class="s1">&#39;Knock-Down Factor (P/Pcr)&#39;</span>
+                    <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;{0}_imp_{1:02d}_norm_KD_curve_{2}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                            <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">pre</span><span class="p">)</span>
                     <span class="n">norm_curve</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">curve</span><span class="p">)</span>
                     <span class="n">norm_curve</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span> <span class="o">/=</span> <span class="n">pcr_kN</span>
@@ -365,22 +351,22 @@
                             <span class="n">xValuesLabel</span><span class="o">=</span><span class="n">xaxis_label</span><span class="p">,</span>
                             <span class="n">yValuesLabel</span><span class="o">=</span><span class="n">yaxis_label</span><span class="p">,</span>
                             <span class="n">legendLabel</span><span class="o">=</span><span class="n">imp_ref</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-                    <span class="n">name</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;{0}_imp_{1:02d}_norm_KD_curve_{2}_amplitude&#39;</span><span class="o">.</span>
+                    <span class="n">name</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;{0}_imp_{1:02d}_norm_KD_curve_{2}_amplitude&#39;</span><span class="o">.</span>
                             <span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">pre</span><span class="p">))</span>
                     <span class="n">norm_curve_amp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">curve_amp</span><span class="p">)</span>
                     <span class="n">norm_curve_amp</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">/=</span> <span class="n">laminate_t</span>
                     <span class="n">norm_curve_amp</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span> <span class="o">/=</span> <span class="n">pcr_kN</span>
-                    <span class="n">curves_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;Imperfection amplitude / laminate thickness&#39;</span><span class="p">,</span>
+                    <span class="n">curves_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Imperfection amplitude / laminate thickness&#39;</span><span class="p">,</span>
                                            <span class="n">yaxis_label</span><span class="p">,</span>
                                            <span class="n">norm_curve_amp</span><span class="p">]</span>
                     <span class="n">session</span><span class="o">.</span><span class="n">XYData</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">norm_curve_amp</span><span class="p">,</span>
-                <span class="n">xValuesLabel</span><span class="o">=</span><span class="s">&#39;Imperfection amplitude / laminate thickness&#39;</span><span class="p">,</span>
+                <span class="n">xValuesLabel</span><span class="o">=</span><span class="s1">&#39;Imperfection amplitude / laminate thickness&#39;</span><span class="p">,</span>
                 <span class="n">yValuesLabel</span><span class="o">=</span><span class="n">yaxis_label</span><span class="p">,</span> <span class="n">legendLabel</span><span class="o">=</span><span class="n">imp_ref</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">configure_session</span><span class="p">:</span>
             <span class="n">abaqus_functions</span><span class="o">.</span><span class="n">configure_session</span><span class="p">(</span><span class="n">session</span><span class="o">=</span><span class="n">session</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">put_in_Excel</span><span class="p">:</span>
-            <span class="n">sheet_name</span> <span class="o">=</span> <span class="s">&#39;kd_curves&#39;</span>
+            <span class="n">sheet_name</span> <span class="o">=</span> <span class="s1">&#39;kd_curves&#39;</span>
             <span class="n">keys</span> <span class="o">=</span> <span class="n">curves_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
             <span class="n">keys</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
             <span class="n">book</span><span class="p">,</span> <span class="n">sheet</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_book_sheet</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">excel_name</span><span class="p">,</span> <span class="n">sheet_name</span><span class="p">)</span>
@@ -399,8 +385,9 @@
             <span class="k">del</span> <span class="n">book</span>
             <span class="k">if</span> <span class="n">open_Excel</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">open_excel</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">kd_curves</span> <span class="o">=</span> <span class="n">curves_dict</span>
-</pre></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kd_curves</span> <span class="o">=</span> <span class="n">curves_dict</span></div>
+
+</pre></div>
 
           </div>
         </div>
@@ -409,10 +396,14 @@
         <div class="sphinxsidebarwrapper">
 <p class="logo">
   <a href="../../../index.html">
-    <img class="logo" src="../../../_static/desicos.png" alt="Logo"/>
+    <img class="logo" src="../../../_static/../logo/desicos.png" alt="Logo"/>
     
   </a>
 </p>
+
+
+
+
 
 
 
@@ -430,14 +421,11 @@
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -448,8 +436,8 @@
       &copy;2012-2015 Desicos Improved Software Team.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
       
     </div>
 

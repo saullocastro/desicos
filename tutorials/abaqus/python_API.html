@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Python API &mdash; DESICOS 2.4.6 documentation</title>
+    <title>Python API &mdash; DESICOS 2.4.7 documentation</title>
     
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.4.6',
+        VERSION:     '2.4.7',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,39 +23,18 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <link rel="top" title="DESICOS 2.4.6 documentation" href="../../index.html" />
+    <link rel="top" title="DESICOS 2.4.7 documentation" href="../../index.html" />
     <link rel="up" title="Abaqus plug-in (desicos.abaqus)" href="index.html" />
     <link rel="next" title="Cone / Cylinder DataBase (desicos.conecylDB)" href="../conecylDB/index.html" />
     <link rel="prev" title="GUI" href="gui.html" />
    
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
   <body role="document">
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../../np-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="../conecylDB/index.html" title="Cone / Cylinder DataBase (desicos.conecylDB)"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="gui.html" title="GUI"
-             accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">DESICOS 2.4.6 documentation</a> &raquo;</li>
-          <li class="nav-item nav-item-1"><a href="../index.html" >Tutorials</a> &raquo;</li>
-          <li class="nav-item nav-item-2"><a href="index.html" accesskey="U">Abaqus plug-in (<code class="docutils literal"><span class="pre">desicos.abaqus</span></code>)</a> &raquo;</li> 
-      </ul>
-    </div>  
+  
 
     <div class="document">
       <div class="documentwrapper">
@@ -64,26 +43,166 @@
             
   <div class="section" id="python-api">
 <h1>Python API<a class="headerlink" href="#python-api" title="Permalink to this headline">¶</a></h1>
-<p>The functionalities of the <a class="reference internal" href="gui.html#gui"><span>GUI</span></a> can all be accessed through
-command lines. Although the <a class="reference internal" href="gui.html#gui"><span>GUI</span></a> is more convenient for small
+<p>The functionalities of the <a class="reference internal" href="gui.html#gui"><span class="std std-ref">GUI</span></a> can all be accessed through
+command lines. Although the <a class="reference internal" href="gui.html#gui"><span class="std std-ref">GUI</span></a> is more convenient for small
 to middle studies, the <code class="docutils literal"><span class="pre">Python</span> <span class="pre">API</span></code> allows the configuration of
 big studies where many different parameters can be changed between the
 different models.</p>
 <div class="section" id="creating-a-model-from-the-database">
 <h2>Creating a Model from the Database<a class="headerlink" href="#creating-a-model-from-the-database" title="Permalink to this headline">¶</a></h2>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">desicos.abaqus.conecyl</span> <span class="kn">import</span> <span class="n">ConeCyl</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">desicos.abaqus.conecyl</span> <span class="k">import</span> <span class="n">ConeCyl</span>
 <span class="n">cc</span> <span class="o">=</span> <span class="n">ConeCyl</span><span class="p">()</span>
-<span class="n">cc</span><span class="o">.</span><span class="n">fromDB</span><span class="p">(</span><span class="s">&#39;huehne_2008_z07&#39;</span><span class="p">)</span>
+<span class="n">cc</span><span class="o">.</span><span class="n">fromDB</span><span class="p">(</span><span class="s1">&#39;huehne_2008_z07&#39;</span><span class="p">)</span>
 <span class="n">cc</span><span class="o">.</span><span class="n">create_model</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="applying-measured-imperfections-using-the-imperfection-database">
 <h2>Applying Measured Imperfections using the Imperfection Database<a class="headerlink" href="#applying-measured-imperfections-using-the-imperfection-database" title="Permalink to this headline">¶</a></h2>
-<p>Function <code class="xref py py-func docutils literal"><span class="pre">desicos.abaqus.apply_imperfections.translate_nodes_ABAQUS()</span></code> can
+<p>Function <a class="reference internal" href="#desicos.abaqus.apply_imperfections.translate_nodes_ABAQUS" title="desicos.abaqus.apply_imperfections.translate_nodes_ABAQUS"><code class="xref py py-func docutils literal"><span class="pre">desicos.abaqus.apply_imperfections.translate_nodes_ABAQUS()</span></code></a> can
 be readily used to apply imperfections from the database in a given finite
 element model (cylinder or cone).</p>
+<dl class="function">
+<dt id="desicos.abaqus.apply_imperfections.translate_nodes_ABAQUS">
+<code class="descclassname">desicos.abaqus.apply_imperfections.</code><code class="descname">translate_nodes_ABAQUS</code><span class="sig-paren">(</span><em>imperfection_file_name</em>, <em>model_name</em>, <em>part_name</em>, <em>H_model</em>, <em>H_measured</em>, <em>R_model</em>, <em>R_best_fit=None</em>, <em>semi_angle=0.0</em>, <em>stretch_H=False</em>, <em>z_offset_bot=None</em>, <em>rotatedeg=0.0</em>, <em>scaling_factor=1.0</em>, <em>r_TOL=1.0</em>, <em>num_closest_points=5</em>, <em>power_parameter=2</em>, <em>num_sec_z=50</em>, <em>nodal_translations=None</em>, <em>use_theta_z_format=False</em>, <em>ignore_bot_h=None</em>, <em>ignore_top_h=None</em>, <em>sample_size=None</em>, <em>T=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/abaqus/apply_imperfections.html#translate_nodes_ABAQUS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.apply_imperfections.translate_nodes_ABAQUS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Translates the nodes in Abaqus based on imperfection data</p>
+<p>The imperfection amplitude for each node is calculated using an inversed
+weight function (see <a class="reference internal" href="../../modules/conecylDB/index.html#desicos.conecylDB.interpolate.inv_weighted" title="desicos.conecylDB.interpolate.inv_weighted"><code class="xref py py-func docutils literal"><span class="pre">desicos.conecylDB.interpolate.inv_weighted()</span></code></a>).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>imperfection_file_name</strong> : str</p>
+<blockquote>
+<div><p>The full path to the imperfection file, which must be a file with
+three columns containing the <code class="docutils literal"><span class="pre">x,</span> <span class="pre">y,</span> <span class="pre">z</span></code> coordinates when
+<code class="docutils literal"><span class="pre">use_theta_z_format=False</span></code> or containing <code class="docutils literal"><span class="pre">x,</span> <span class="pre">theta,</span> <span class="pre">amplitude</span></code>
+when <code class="docutils literal"><span class="pre">use_theta_z_format=True</span></code>.</p>
+</div></blockquote>
+<p><strong>model_name</strong> : str</p>
+<blockquote>
+<div><p>Must be a valid key in the dictionary <code class="docutils literal"><span class="pre">mdb.models</span></code>, in the
+interactive Python inside Abaqus.</p>
+</div></blockquote>
+<p><strong>part_name</strong> : str</p>
+<blockquote>
+<div><p>Must be a valid key in the dictionary
+<code class="docutils literal"><span class="pre">mdb.models[model_name].parts</span></code>, in the interactive Python inside
+Abaqus.</p>
+</div></blockquote>
+<p><strong>H_model</strong> : float</p>
+<blockquote>
+<div><p>Total height of the model where the imperfections will be applied to,
+considering also eventual resin rings.</p>
+</div></blockquote>
+<p><strong>H_measured</strong> : float</p>
+<blockquote>
+<div><p>The total height of the measured test specimen, including eventual
+resin rings at the edges.</p>
+</div></blockquote>
+<p><strong>R_model</strong> : float</p>
+<blockquote>
+<div><p>The radius of the current model. In case of cones this should be the
+bottom radius.</p>
+</div></blockquote>
+<p><strong>R_best_fit</strong> : float, optional</p>
+<blockquote>
+<div><p>Best fit radius obtained with functions <a class="reference internal" href="../../modules/conecylDB/index.html#desicos.conecylDB.fit_data.best_fit_cylinder" title="desicos.conecylDB.fit_data.best_fit_cylinder"><code class="xref py py-func docutils literal"><span class="pre">best_fit_cylinder()</span></code></a>
+or <a class="reference internal" href="../../modules/conecylDB/index.html#desicos.conecylDB.fit_data.best_fit_cone" title="desicos.conecylDB.fit_data.best_fit_cone"><code class="xref py py-func docutils literal"><span class="pre">best_fit_cone()</span></code></a>.</p>
+</div></blockquote>
+<p><strong>semi_angle</strong> : float, optional</p>
+<blockquote>
+<div><p>The cone semi-vertex angle (a null value indicates that a cylinder is
+beeing analyzed).</p>
+</div></blockquote>
+<p><strong>stretch_H</strong> : float, optional</p>
+<blockquote>
+<div><p>A boolean indicating if the imperfection pattern should be stretched
+when applied to the model. The measurement systems usually cannot
+obtain data for the whole surface, making it an option to stretch the
+data to fit the whole surface. In case <code class="docutils literal"><span class="pre">stretch_H=False</span></code> the
+measured data of the extremities will be extruded up to the end of the
+domain.</p>
+</div></blockquote>
+<p><strong>z_offset_bot</strong> : float, optional</p>
+<blockquote>
+<div><p>This parameter allows the analyst to adjust the height of the measured
+data about the model, when the measured data is not available for the
+whole domain.</p>
+</div></blockquote>
+<p><strong>rotatedeg</strong> : float, optional</p>
+<blockquote>
+<div><p>Rotation angle in degrees telling how much the imperfection pattern
+should be rotated about the <img class="math" src="../../_images/math/8375795458398ca154038d40c458aede9ed2266f.png" alt="X_3"/> (or <img class="math" src="../../_images/math/208075146bab6f4a5cfa358d4c857f07dcc2004f.png" alt="Z"/>) axis.</p>
+</div></blockquote>
+<p><strong>scaling_factor</strong> : float, optional</p>
+<blockquote>
+<div><p>The scaling factor that will multiply the calculated imperfection
+amplitude.</p>
+</div></blockquote>
+<p><strong>r_TOL</strong> : float, optional</p>
+<blockquote>
+<div><p>Parameter to ignore noisy data in the imperfection file, the points
+with a radius higher than <img class="math" src="../../_images/math/1700f3dd9b2ca91e448abf07ae27db66c74a4c0c.png" alt="r=r_{model} \times (1 + r_{TOL})"/> will not
+be considered in the interpolation.</p>
+</div></blockquote>
+<p><strong>num_closest_points</strong> : int, optional</p>
+<blockquote>
+<div><p>See <a class="reference internal" href="../../modules/conecylDB/index.html#desicos.conecylDB.interpolate.inv_weighted" title="desicos.conecylDB.interpolate.inv_weighted"><code class="xref py py-func docutils literal"><span class="pre">the</span> <span class="pre">inverse-weighted</span> <span class="pre">interpolation</span> <span class="pre">algorithm</span></code></a>.</p>
+</div></blockquote>
+<p><strong>power_parameter</strong> : int, optional</p>
+<blockquote>
+<div><p>See <a class="reference internal" href="../../modules/conecylDB/index.html#desicos.conecylDB.interpolate.inv_weighted" title="desicos.conecylDB.interpolate.inv_weighted"><code class="xref py py-func docutils literal"><span class="pre">the</span> <span class="pre">inverse-weighted</span> <span class="pre">interpolation</span> <span class="pre">algorithm</span></code></a>.</p>
+</div></blockquote>
+<p><strong>num_sec_z</strong> : int, optional</p>
+<blockquote>
+<div><p>Number of cross sections that will be used to classify the points
+spatially in the inverse-weighted algorithm.</p>
+</div></blockquote>
+<p><strong>nodal_translations</strong> : None or numpy.ndarray, optional</p>
+<blockquote>
+<div><p>An array containing the interpolated traslations, which is passed to
+avoid repeated calls to the interpolation functions.</p>
+</div></blockquote>
+<p><strong>use_theta_z_format</strong> : bool, optional</p>
+<blockquote>
+<div><p>A boolean to indicate whether the imperfection file contains <code class="docutils literal"><span class="pre">x,</span> <span class="pre">y,</span>
+<span class="pre">z</span></code> positions or <code class="docutils literal"><span class="pre">theta,</span> <span class="pre">z,</span> <span class="pre">amplitude</span></code>.</p>
+</div></blockquote>
+<p><strong>ignore_bot_h</strong> : None or float, optional</p>
+<blockquote>
+<div><p>Used to ignore nodes from the bottom resin ring.</p>
+</div></blockquote>
+<p><strong>ignore_top_h</strong> : None or float, optional</p>
+<blockquote>
+<div><p>Used to ignore nodes from the top resin ring.</p>
+</div></blockquote>
+<p><strong>sample_size</strong> : int, optional</p>
+<blockquote>
+<div><p>If the input file containing the measured data is too large it may be
+required to limit the sample size in order to avoid memory errors.</p>
+</div></blockquote>
+<p><strong>T</strong> : None or np.ndarray, optional</p>
+<blockquote>
+<div><p>A transformation matrix (cf. <a class="reference internal" href="../../modules/conecylDB/index.html#desicos.conecylDB.fit_data.transf_matrix" title="desicos.conecylDB.fit_data.transf_matrix"><code class="xref py py-func docutils literal"><span class="pre">transf_matrix()</span></code></a>) required when the
+mesh is not in the <a class="reference internal" href="../../modules/abaqus/index.html#figure-conecyl"><span class="std std-ref">default coordinate system</span></a>.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>nodal_translations</strong> : numpy.ndarray</p>
+<blockquote class="last">
+<div><p>A 2-D array containing the translations <code class="docutils literal"><span class="pre">x,</span> <span class="pre">y,</span> <span class="pre">z</span></code> for each column.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Despite the nodal traslations are returned all the nodes belonging to this
+model will already be translated.</p>
+</dd></dl>
+
 </div>
 <div class="section" id="applying-measured-imperfections-using-fourier-series">
 <h2>Applying Measured Imperfections using Fourier Series<a class="headerlink" href="#applying-measured-imperfections-using-fourier-series" title="Permalink to this headline">¶</a></h2>
@@ -92,25 +211,111 @@ the imperfection function, <span class="xref std std-ref">as explained here</spa
 be directly used to calculate the imperfection amplitude of each node. The
 following example shows how this can be achieved using the module
 <a class="reference internal" href="../../modules/conecylDB/index.html#module-desicos.conecylDB.fit_data" title="desicos.conecylDB.fit_data"><code class="xref py py-mod docutils literal"><span class="pre">desicos.conecylDB.fit_data</span></code></a> (it must be run inside Abaqus):</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">desicos.abaqus.apply_imperfections</span> <span class="kn">import</span> <span class="n">translate_nodes_ABAQUS_c0</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">desicos.abaqus.apply_imperfections</span> <span class="k">import</span> <span class="n">translate_nodes_ABAQUS_c0</span>
 
 <span class="n">model_names</span> <span class="o">=</span> <span class="n">mdb</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
 
-<span class="n">nodal_translations</span> <span class="o">=</span> <span class="bp">None</span>
+<span class="n">nodal_translations</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="n">scaling_factors</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.25</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">1.75</span><span class="p">,</span> <span class="mf">2.</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mf">3.</span><span class="p">,</span>
                    <span class="mf">3.5</span><span class="p">,</span> <span class="mf">4.</span><span class="p">]</span>
-<span class="n">part_name</span> <span class="o">=</span> <span class="s">&#39;Cylinder&#39;</span>
+<span class="n">part_name</span> <span class="o">=</span> <span class="s1">&#39;Cylinder&#39;</span>
 <span class="k">for</span> <span class="n">scaling_factor</span><span class="p">,</span> <span class="n">model_name</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">scaling_factors</span><span class="p">,</span> <span class="n">model_names</span><span class="p">):</span>
     <span class="n">nodal_translations</span> <span class="o">=</span> <span class="n">translate_nodes_ABAQUS_c0</span><span class="p">(</span><span class="n">m0</span><span class="p">,</span> <span class="n">n0</span><span class="p">,</span> <span class="n">c0</span><span class="p">,</span>
             <span class="n">funcnum</span><span class="o">=</span><span class="n">funcnum</span><span class="p">,</span> <span class="n">model_name</span><span class="o">=</span><span class="n">model_name</span><span class="p">,</span> <span class="n">part_name</span><span class="o">=</span><span class="n">part_name</span><span class="p">,</span>
             <span class="n">H_model</span><span class="o">=</span><span class="n">H_model</span><span class="p">,</span> <span class="n">H_measured</span><span class="o">=</span><span class="n">H_measured</span><span class="p">,</span> <span class="n">R_model</span><span class="o">=</span><span class="n">R_model</span><span class="p">,</span>
             <span class="n">scaling_factor</span><span class="o">=</span><span class="n">scaling_factor</span><span class="p">,</span>
             <span class="n">nodal_translations</span><span class="o">=</span><span class="n">nodal_translations</span><span class="p">,</span>
-            <span class="n">fem_xaxis_from_bot2top</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="n">fem_xaxis_from_bot2top</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>it will translate all the nodes for each model according to the scaling factor
 adopted. See the function documentation for more details:</p>
+<dl class="function">
+<dt id="desicos.abaqus.apply_imperfections.translate_nodes_ABAQUS_c0">
+<code class="descclassname">desicos.abaqus.apply_imperfections.</code><code class="descname">translate_nodes_ABAQUS_c0</code><span class="sig-paren">(</span><em>m0</em>, <em>n0</em>, <em>c0</em>, <em>funcnum</em>, <em>model_name</em>, <em>part_name</em>, <em>H_model</em>, <em>semi_angle=0.0</em>, <em>scaling_factor=1.0</em>, <em>fem_meridian_bot2top=True</em>, <em>ignore_bot_h=None</em>, <em>ignore_top_h=None</em>, <em>T=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/abaqus/apply_imperfections.html#translate_nodes_ABAQUS_c0"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.abaqus.apply_imperfections.translate_nodes_ABAQUS_c0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Translates the nodes in Abaqus based on a Fourier series</p>
+<p>The Fourier Series can be a half-sine, half-cosine or a complete Fourier
+Series as detailed in <a class="reference internal" href="../../modules/conecylDB/index.html#desicos.conecylDB.fit_data.calc_c0" title="desicos.conecylDB.fit_data.calc_c0"><code class="xref py py-func docutils literal"><span class="pre">desicos.conecylDB.fit_data.calc_c0()</span></code></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>m0</strong> : int</p>
+<blockquote>
+<div><p>Number of terms along the <img class="math" src="../../_images/math/fcbaa2ea1c6a047f151a45849927929823fc5d88.png" alt="x"/> coordinate.</p>
+</div></blockquote>
+<p><strong>n0</strong> : int</p>
+<blockquote>
+<div><p>Number of terms along the <img class="math" src="../../_images/math/4dc4789b8e2f448615b3e2c2bdc22fb9267f7cd8.png" alt="\theta"/> coordinate.</p>
+</div></blockquote>
+<p><strong>c0</strong> : numpy.ndarray</p>
+<blockquote>
+<div><p>The coefficients that will give the imperfection pattern.</p>
+</div></blockquote>
+<p><strong>funcnum</strong> : int</p>
+<blockquote>
+<div><p>The function type, as detailed in
+<a class="reference internal" href="../../modules/conecylDB/index.html#desicos.conecylDB.fit_data.calc_c0" title="desicos.conecylDB.fit_data.calc_c0"><code class="xref py py-func docutils literal"><span class="pre">desicos.conecylDB.fit_data.calc_c0()</span></code></a>.</p>
+</div></blockquote>
+<p><strong>model_name</strong> : str</p>
+<blockquote>
+<div><p>Must be a valid key in the dictionary <code class="docutils literal"><span class="pre">mdb.models</span></code>, in the
+interactive Python inside Abaqus.</p>
+</div></blockquote>
+<p><strong>part_name</strong> : str</p>
+<blockquote>
+<div><p>Must be a valid key in the dictionary
+<code class="docutils literal"><span class="pre">mdb.models[model_name].parts</span></code>, in the interactive Python inside
+Abaqus.</p>
+</div></blockquote>
+<p><strong>H_model</strong> : float</p>
+<blockquote>
+<div><p>Total height of the model where the imperfections will be applied to,
+considering also eventual resin rings.</p>
+</div></blockquote>
+<p><strong>semi_angle</strong> : float, optional</p>
+<blockquote>
+<div><p>The cone semi-vertex angle (a null value indicates that a cylinder is
+beeing analyzed).</p>
+</div></blockquote>
+<p><strong>scaling_factor</strong> : float, optional</p>
+<blockquote>
+<div><p>The scaling factor that will multiply <code class="docutils literal"><span class="pre">c0</span></code> when applying the
+imperfections.</p>
+</div></blockquote>
+<p><strong>fem_meridian_bot2top</strong> : bool, optional</p>
+<blockquote>
+<div><p>A boolean indicating if the finite element has the <img class="math" src="../../_images/math/fcbaa2ea1c6a047f151a45849927929823fc5d88.png" alt="x"/> axis starting
+at the bottom or at the top.</p>
+</div></blockquote>
+<p><strong>ignore_bot_h</strong> : None or float, optional</p>
+<blockquote>
+<div><p>Used to ignore nodes from the bottom resin ring.</p>
+</div></blockquote>
+<p><strong>ignore_top_h</strong> : None or float, optional</p>
+<blockquote>
+<div><p>Used to ignore nodes from the top resin ring.</p>
+</div></blockquote>
+<p><strong>T</strong> : None or np.ndarray, optional</p>
+<blockquote>
+<div><p>A transformation matrix (cf. <a class="reference internal" href="../../modules/conecylDB/index.html#desicos.conecylDB.fit_data.transf_matrix" title="desicos.conecylDB.fit_data.transf_matrix"><code class="xref py py-func docutils literal"><span class="pre">transf_matrix()</span></code></a>) required when the
+mesh is not in the <a class="reference internal" href="../../modules/abaqus/index.html#figure-conecyl"><span class="std std-ref">default coordinate system</span></a>.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>nodal_translations</strong> : numpy.ndarray</p>
+<blockquote class="last">
+<div><p>A 2-D array containing the translations <code class="docutils literal"><span class="pre">x,</span> <span class="pre">y,</span> <span class="pre">z</span></code> for each column.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Despite the nodal traslations are returned all the nodes belonging to this
+model will be already translated.</p>
+</dd></dl>
+
 </div>
 </div>
 
@@ -122,10 +327,14 @@ adopted. See the function documentation for more details:</p>
         <div class="sphinxsidebarwrapper">
 <p class="logo">
   <a href="../../index.html">
-    <img class="logo" src="../../_static/desicos.png" alt="Logo"/>
+    <img class="logo" src="../../_static/../logo/desicos.png" alt="Logo"/>
     
   </a>
 </p>
+
+
+
+
 
 
 
@@ -143,14 +352,11 @@ adopted. See the function documentation for more details:</p>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -161,8 +367,8 @@ adopted. See the function documentation for more details:</p>
       &copy;2012-2015 Desicos Improved Software Team.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
       
     </div>
 

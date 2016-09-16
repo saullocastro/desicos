@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Static Databases &mdash; DESICOS 2.4.6 documentation</title>
+    <title>Static Databases &mdash; DESICOS 2.4.7 documentation</title>
     
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.4.6',
+        VERSION:     '2.4.7',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,39 +23,18 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <link rel="top" title="DESICOS 2.4.6 documentation" href="../../index.html" />
+    <link rel="top" title="DESICOS 2.4.7 documentation" href="../../index.html" />
     <link rel="up" title="Cone / Cylinder DataBase (desicos.conecylDB)" href="index.html" />
     <link rel="next" title="Dynamic Database" href="dynamic.html" />
     <link rel="prev" title="Cone / Cylinder DataBase (desicos.conecylDB)" href="index.html" />
    
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
   <body role="document">
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../../np-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="dynamic.html" title="Dynamic Database"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="index.html" title="Cone / Cylinder DataBase (desicos.conecylDB)"
-             accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">DESICOS 2.4.6 documentation</a> &raquo;</li>
-          <li class="nav-item nav-item-1"><a href="../index.html" >Tutorials</a> &raquo;</li>
-          <li class="nav-item nav-item-2"><a href="index.html" accesskey="U">Cone / Cylinder DataBase (<code class="docutils literal"><span class="pre">desicos.conecylDB</span></code>)</a> &raquo;</li> 
-      </ul>
-    </div>  
+  
 
     <div class="document">
       <div class="documentwrapper">
@@ -66,12 +45,12 @@
 <span id="static-database"></span><h1>Static Databases<a class="headerlink" href="#static-databases" title="Permalink to this headline">¶</a></h1>
 <p>Since many partners may contribute to this database, a list of all the
 available databases is included in:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">databases</span><span class="o">.</span><span class="n">json</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">databases</span><span class="o">.</span><span class="n">json</span>
 </pre></div>
 </div>
 <p>Data for the structures, material properties and allowables are stored
 respectively in:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">ccs</span><span class="o">.</span><span class="n">py</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ccs</span><span class="o">.</span><span class="n">py</span>
 <span class="n">laminaprops</span><span class="o">.</span><span class="n">py</span>
 <span class="n">allowables</span><span class="o">.</span><span class="n">py</span>
 </pre></div>
@@ -81,19 +60,19 @@ respectively in:</p>
 <p>These are static components that one can change in order to add
 more samples. In <code class="docutils literal"><span class="pre">ccs.py</span></code> the <code class="docutils literal"><span class="pre">ccs</span></code> dictionary contains all the samples
 in a format like:</p>
-<div class="highlight-python"><div class="highlight"><pre>&#39;zimmermann_1992_z33&#39;: {
-    &#39;msi&#39;: &#39;zimmermann_1992_z33&#39;,
-    &#39;r&#39;: 250.,
-    &#39;h&#39;: 510.,
-    &#39;elem_type&#39;:&#39;S4R&#39;,
-    &#39;numel_r&#39;: 240,
-    &#39;plyt&#39;:0.125,
-    &#39;laminapropKey&#39;: &#39;geier_2002&#39;,
-    &#39;allowablesKey&#39;: &#39;degenhardt_2010_IM78552_cocomat&#39;,
-    &#39;stack&#39;: [0,0,19,-19,37,-37,45,-45,51,-51],
-    &#39;axial_displ&#39;: 1.,
-    &#39;ploads&#39;: [1, 10, 20, 30, 40, 46.5, 70, 90],
-    &#39;database&#39;:&#39;dlr&#39;,
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="s1">&#39;zimmermann_1992_z33&#39;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s1">&#39;msi&#39;</span><span class="p">:</span> <span class="s1">&#39;zimmermann_1992_z33&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;r&#39;</span><span class="p">:</span> <span class="mf">250.</span><span class="p">,</span>
+    <span class="s1">&#39;h&#39;</span><span class="p">:</span> <span class="mf">510.</span><span class="p">,</span>
+    <span class="s1">&#39;elem_type&#39;</span><span class="p">:</span><span class="s1">&#39;S4R&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;numel_r&#39;</span><span class="p">:</span> <span class="mi">240</span><span class="p">,</span>
+    <span class="s1">&#39;plyt&#39;</span><span class="p">:</span><span class="mf">0.125</span><span class="p">,</span>
+    <span class="s1">&#39;laminapropKey&#39;</span><span class="p">:</span> <span class="s1">&#39;geier_2002&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;allowablesKey&#39;</span><span class="p">:</span> <span class="s1">&#39;degenhardt_2010_IM78552_cocomat&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;stack&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">19</span><span class="p">,</span><span class="o">-</span><span class="mi">19</span><span class="p">,</span><span class="mi">37</span><span class="p">,</span><span class="o">-</span><span class="mi">37</span><span class="p">,</span><span class="mi">45</span><span class="p">,</span><span class="o">-</span><span class="mi">45</span><span class="p">,</span><span class="mi">51</span><span class="p">,</span><span class="o">-</span><span class="mi">51</span><span class="p">],</span>
+    <span class="s1">&#39;axial_displ&#39;</span><span class="p">:</span> <span class="mf">1.</span><span class="p">,</span>
+    <span class="s1">&#39;ploads&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mf">46.5</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">90</span><span class="p">],</span>
+    <span class="s1">&#39;database&#39;</span><span class="p">:</span><span class="s1">&#39;dlr&#39;</span><span class="p">,</span>
 </pre></div>
 </div>
 <p>where <code class="docutils literal"><span class="pre">database</span></code> indicates from which database the sample belongs to. When
@@ -101,21 +80,21 @@ geometric imperfection measurements are available for a sample, the key
 <code class="docutils literal"><span class="pre">msi</span></code> is defined with the name of the imperfection file.
 When thickness imperfections are available, the key <code class="docutils literal"><span class="pre">ti</span></code> is defined, as in
 the example below:</p>
-<div class="highlight-python"><div class="highlight"><pre>&#39;degenhardt_2010_z15&#39;: {
-    &#39;msi&#39;: &#39;degenhardt_2010_z15&#39;,
-    &#39;ti&#39;: &#39;degenhardt_2010_z15&#39;,
-    &#39;r&#39;: 250.27,
-    &#39;h&#39;: 500.,
-    &#39;elem_type&#39;:&#39;S4R&#39;,
-    &#39;numel_r&#39;: 240,
-    &#39;plyt&#39;:0.11575,
-    &#39;laminapropKey&#39;: &#39;degenhardt_2010_IM78552_cocomat&#39;,
-    &#39;allowablesKey&#39;: &#39;degenhardt_2010_IM78552_cocomat&#39;,
-    &#39;stack&#39;: [24,-24,41,-41],
-    &#39;axial_displ&#39;: 1.,
-    &#39;ploads&#39;: [1,2,3,4,5,10],
-    &#39;database&#39;:&#39;dlr&#39;,
-    },
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="s1">&#39;degenhardt_2010_z15&#39;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s1">&#39;msi&#39;</span><span class="p">:</span> <span class="s1">&#39;degenhardt_2010_z15&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;ti&#39;</span><span class="p">:</span> <span class="s1">&#39;degenhardt_2010_z15&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;r&#39;</span><span class="p">:</span> <span class="mf">250.27</span><span class="p">,</span>
+    <span class="s1">&#39;h&#39;</span><span class="p">:</span> <span class="mf">500.</span><span class="p">,</span>
+    <span class="s1">&#39;elem_type&#39;</span><span class="p">:</span><span class="s1">&#39;S4R&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;numel_r&#39;</span><span class="p">:</span> <span class="mi">240</span><span class="p">,</span>
+    <span class="s1">&#39;plyt&#39;</span><span class="p">:</span><span class="mf">0.11575</span><span class="p">,</span>
+    <span class="s1">&#39;laminapropKey&#39;</span><span class="p">:</span> <span class="s1">&#39;degenhardt_2010_IM78552_cocomat&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;allowablesKey&#39;</span><span class="p">:</span> <span class="s1">&#39;degenhardt_2010_IM78552_cocomat&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;stack&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">24</span><span class="p">,</span><span class="o">-</span><span class="mi">24</span><span class="p">,</span><span class="mi">41</span><span class="p">,</span><span class="o">-</span><span class="mi">41</span><span class="p">],</span>
+    <span class="s1">&#39;axial_displ&#39;</span><span class="p">:</span> <span class="mf">1.</span><span class="p">,</span>
+    <span class="s1">&#39;ploads&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">10</span><span class="p">],</span>
+    <span class="s1">&#39;database&#39;</span><span class="p">:</span><span class="s1">&#39;dlr&#39;</span><span class="p">,</span>
+    <span class="p">},</span>
 </pre></div>
 </div>
 <p>The material properties are given by names stored in the <code class="docutils literal"><span class="pre">laminapropKey</span></code>
@@ -132,11 +111,11 @@ the same explanation of the <code class="docutils literal"><span class="pre">lam
 <h2>laminaprops.py<a class="headerlink" href="#laminaprops-py" title="Permalink to this headline">¶</a></h2>
 <p>Keeps the material properties, the dictionary <code class="docutils literal"><span class="pre">laminaprops</span></code> has
 in each key a <code class="docutils literal"><span class="pre">tuple</span></code> or <code class="docutils literal"><span class="pre">list</span></code> with the properties:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="p">(</span><span class="n">E11</span><span class="p">,</span> <span class="n">E22</span><span class="p">,</span> <span class="n">nu12</span><span class="p">,</span> <span class="n">G12</span><span class="p">,</span> <span class="n">G13</span><span class="p">,</span> <span class="n">G23</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">E11</span><span class="p">,</span> <span class="n">E22</span><span class="p">,</span> <span class="n">nu12</span><span class="p">,</span> <span class="n">G12</span><span class="p">,</span> <span class="n">G13</span><span class="p">,</span> <span class="n">G23</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>for orthotropic materials or:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="p">(</span><span class="n">E11</span><span class="p">,</span> <span class="n">E11</span><span class="p">,</span> <span class="n">nu</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">E11</span><span class="p">,</span> <span class="n">E11</span><span class="p">,</span> <span class="n">nu</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>for isotropic materials. Each key in <code class="docutils literal"><span class="pre">laminaprops</span></code> corresponds to a
@@ -147,7 +126,7 @@ in each key a <code class="docutils literal"><span class="pre">tuple</span></cod
 <p>Keeps the allowables&#8217; for the materials in the dictionary <code class="docutils literal"><span class="pre">allowables</span></code>,
 where each key corresponds to a <code class="docutils literal"><span class="pre">allowablesKey</span></code> in <code class="docutils literal"><span class="pre">ccs.py</span></code>. Each value
 is a <code class="docutils literal"><span class="pre">tuple</span></code> or <code class="docutils literal"><span class="pre">list</span></code> with:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="p">(</span><span class="n">S11t</span><span class="p">,</span> <span class="n">S11c</span><span class="p">,</span> <span class="n">S22t</span><span class="p">,</span> <span class="n">S22c</span><span class="p">,</span> <span class="n">S12</span><span class="p">,</span> <span class="n">S13</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">S11t</span><span class="p">,</span> <span class="n">S11c</span><span class="p">,</span> <span class="n">S22t</span><span class="p">,</span> <span class="n">S22c</span><span class="p">,</span> <span class="n">S12</span><span class="p">,</span> <span class="n">S13</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -161,10 +140,14 @@ is a <code class="docutils literal"><span class="pre">tuple</span></code> or <co
         <div class="sphinxsidebarwrapper">
 <p class="logo">
   <a href="../../index.html">
-    <img class="logo" src="../../_static/desicos.png" alt="Logo"/>
+    <img class="logo" src="../../_static/../logo/desicos.png" alt="Logo"/>
     
   </a>
 </p>
+
+
+
+
 
 
 
@@ -182,14 +165,11 @@ is a <code class="docutils literal"><span class="pre">tuple</span></code> or <co
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -200,8 +180,8 @@ is a <code class="docutils literal"><span class="pre">tuple</span></code> or <co
       &copy;2012-2015 Desicos Improved Software Team.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
       
     </div>
 

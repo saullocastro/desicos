@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>desicos.abaqus.imperfections.impconf &mdash; DESICOS 2.4.6 documentation</title>
+    <title>desicos.abaqus.imperfections.impconf &mdash; DESICOS 2.4.7 documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     '2.4.6',
+        VERSION:     '2.4.7',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,30 +23,16 @@
     <script type="text/javascript" src="../../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../../_static/doctools.js"></script>
-    <link rel="top" title="DESICOS 2.4.6 documentation" href="../../../../index.html" />
+    <link rel="top" title="DESICOS 2.4.7 documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
    
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
   <body role="document">
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../../../../np-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="../../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../index.html">DESICOS 2.4.6 documentation</a> &raquo;</li>
-          <li class="nav-item nav-item-1"><a href="../../../index.html" accesskey="U">Module code</a> &raquo;</li> 
-      </ul>
-    </div>  
+  
 
     <div class="document">
       <div class="documentwrapper">
@@ -54,7 +40,7 @@
           <div class="body" role="main">
             
   <h1>Source code for desicos.abaqus.imperfections.impconf</h1><div class="highlight"><pre>
-<span class="kn">import</span> <span class="nn">os</span>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
@@ -63,6 +49,7 @@
 <span class="kn">from</span> <span class="nn">axisymmetric</span> <span class="kn">import</span> <span class="n">Axisymmetric</span>
 <span class="kn">from</span> <span class="nn">dimple</span> <span class="kn">import</span> <span class="n">Dimple</span>
 <span class="kn">from</span> <span class="nn">pload</span> <span class="kn">import</span> <span class="n">PLoad</span>
+<span class="kn">from</span> <span class="nn">cb</span> <span class="kn">import</span> <span class="n">CBamp</span>
 <span class="kn">from</span> <span class="nn">lbmi</span> <span class="kn">import</span> <span class="n">LBMI</span>
 <span class="kn">from</span> <span class="nn">msi</span> <span class="kn">import</span> <span class="n">MSI</span>
 <span class="kn">from</span> <span class="nn">ti</span> <span class="kn">import</span> <span class="n">TI</span>
@@ -120,6 +107,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">uneven_top_edge</span><span class="o">.</span><span class="n">impconf</span> <span class="o">=</span> <span class="bp">self</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">imperfections</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ploads</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cb</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dimples</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">axisymmetrics</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lbmis</span> <span class="o">=</span> <span class="p">[]</span>
@@ -129,14 +117,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">ppi</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ffi</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rename</span> <span class="o">=</span> <span class="bp">True</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">conecyl</span> <span class="o">=</span> <span class="bp">None</span>
 
 
     <span class="k">def</span> <span class="nf">__setstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attrs</span><span class="p">):</span>
-        <span class="c"># Called during unpickling (i.e. loading)</span>
-        <span class="c"># Calling __init__ prevents problems with missing attributes,</span>
-        <span class="c"># when loading from older versions</span>
+        <span class="c1"># Called during unpickling (i.e. loading)</span>
+        <span class="c1"># Calling __init__ prevents problems with missing attributes,</span>
+        <span class="c1"># when loading from older versions</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">attrs</span><span class="p">)</span>
 
@@ -161,9 +149,9 @@
         <span class="n">ax</span> <span class="o">=</span> <span class="n">Axisymmetric</span><span class="p">(</span><span class="n">pt</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">wb</span><span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">impconf</span> <span class="o">=</span> <span class="bp">self</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">axisymmetrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">ax</span>
+        <span class="k">return</span> <span class="n">ax</span></div>
 
-</div>
+
 <div class="viewcode-block" id="ImpConf.add_dimple"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.impconf.ImpConf.add_dimple">[docs]</a>    <span class="k">def</span> <span class="nf">add_dimple</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thetadeg</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">wb</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Add a Dimple Imperfection (DI)</span>
 
@@ -186,9 +174,9 @@
         <span class="n">d</span> <span class="o">=</span> <span class="n">Dimple</span><span class="p">(</span><span class="n">thetadeg</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">wb</span><span class="p">)</span>
         <span class="n">d</span><span class="o">.</span><span class="n">impconf</span> <span class="o">=</span> <span class="bp">self</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dimples</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">d</span>
+        <span class="k">return</span> <span class="n">d</span></div>
 
-</div>
+
 <div class="viewcode-block" id="ImpConf.add_lbmi"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.impconf.ImpConf.add_lbmi">[docs]</a>    <span class="k">def</span> <span class="nf">add_lbmi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">scaling_factor</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Add a Linear Buckling Mode-shaped Imperfection (LBMI)</span>
 
@@ -207,9 +195,9 @@
         <span class="n">lbmi</span> <span class="o">=</span> <span class="n">LBMI</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">scaling_factor</span><span class="p">)</span>
         <span class="n">lbmi</span><span class="o">.</span><span class="n">impconf</span> <span class="o">=</span> <span class="bp">self</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lbmis</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lbmi</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">lbmi</span>
+        <span class="k">return</span> <span class="n">lbmi</span></div>
 
-</div>
+
 <div class="viewcode-block" id="ImpConf.add_measured_u3s_bottom_edge"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.impconf.ImpConf.add_measured_u3s_bottom_edge">[docs]</a>    <span class="k">def</span> <span class="nf">add_measured_u3s_bottom_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thetadegs</span><span class="p">,</span> <span class="n">u3s</span><span class="p">):</span>
         <span class="sd">r&quot;&quot;&quot;Add a measured uneven bottom edge</span>
 
@@ -232,9 +220,9 @@
 <span class="sd">            `X_3` axis :ref:`of the adopted model &lt;figure_conecyl&gt;`.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">uneven_bottom_edge</span><span class="o">.</span><span class="n">add_measured_u3s</span><span class="p">(</span><span class="n">thetadegs</span><span class="p">,</span> <span class="n">u3s</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">uneven_bottom_edge</span><span class="o">.</span><span class="n">add_measured_u3s</span><span class="p">(</span><span class="n">thetadegs</span><span class="p">,</span> <span class="n">u3s</span><span class="p">)</span></div>
 
-</div>
+
 <div class="viewcode-block" id="ImpConf.add_measured_u3s_top_edge"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.impconf.ImpConf.add_measured_u3s_top_edge">[docs]</a>    <span class="k">def</span> <span class="nf">add_measured_u3s_top_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thetadegs</span><span class="p">,</span> <span class="n">u3s</span><span class="p">):</span>
         <span class="sd">r&quot;&quot;&quot;Add a measured uneven top edge</span>
 
@@ -257,10 +245,10 @@
 <span class="sd">            `X_3` axis :ref:`of the adopted model &lt;figure_conecyl&gt;`.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">uneven_top_edge</span><span class="o">.</span><span class="n">add_measured_u3s</span><span class="p">(</span><span class="n">thetadegs</span><span class="p">,</span> <span class="n">u3s</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">uneven_top_edge</span><span class="o">.</span><span class="n">add_measured_u3s</span><span class="p">(</span><span class="n">thetadegs</span><span class="p">,</span> <span class="n">u3s</span><span class="p">)</span></div>
 
-</div>
-<div class="viewcode-block" id="ImpConf.add_msi"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.impconf.ImpConf.add_msi">[docs]</a>    <span class="k">def</span> <span class="nf">add_msi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">imp_ms</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">scaling_factor</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">R_best_fit</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+
+<div class="viewcode-block" id="ImpConf.add_msi"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.impconf.ImpConf.add_msi">[docs]</a>    <span class="k">def</span> <span class="nf">add_msi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">imp_ms</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">scaling_factor</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">R_best_fit</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
                 <span class="n">H_measured</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">use_theta_z_format</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
                 <span class="n">rotatedeg</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">ignore_bot_h</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">ignore_top_h</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
                 <span class="n">stretch_H</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">c0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
@@ -343,37 +331,37 @@
         <span class="n">msi</span><span class="o">.</span><span class="n">stretch_H</span> <span class="o">=</span> <span class="n">stretch_H</span>
 
         <span class="k">if</span> <span class="n">c0</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="p">(</span><span class="n">m0</span> <span class="ow">and</span> <span class="n">n0</span> <span class="ow">and</span> <span class="n">funcnum</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;Parameter &quot;c0&quot; must be supplied with &#39;</span> <span class="o">+</span>
-                             <span class="s">&#39;&quot;m0&quot;, &quot;n0&quot; and &quot;funcnum&quot;&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Parameter &quot;c0&quot; must be supplied with &#39;</span> <span class="o">+</span>
+                             <span class="s1">&#39;&quot;m0&quot;, &quot;n0&quot; and &quot;funcnum&quot;&#39;</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">c0</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">m0</span> <span class="ow">and</span> <span class="n">n0</span> <span class="ow">and</span> <span class="n">funcnum</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">funcnum</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">funcnum</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">size</span> <span class="o">=</span> <span class="mi">2</span>
-            <span class="k">elif</span> <span class="n">funcnum</span><span class="o">==</span><span class="mi">2</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">funcnum</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
                 <span class="n">size</span> <span class="o">=</span> <span class="mi">2</span>
-            <span class="k">elif</span> <span class="n">funcnum</span><span class="o">==</span><span class="mi">3</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">funcnum</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
                 <span class="n">size</span> <span class="o">=</span> <span class="mi">4</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;Invalid value for &quot;funcnum&quot;!&#39;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Invalid value for &quot;funcnum&quot;!&#39;</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">c0</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">c0</span><span class="p">):</span>
-                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;File {0} not found!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c0</span><span class="p">))</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;File {0} not found!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c0</span><span class="p">))</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">c0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">c0</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="n">c0</span><span class="o">.</span><span class="n">ndim</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">c0</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                         <span class="k">if</span> <span class="n">c0</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">size</span><span class="o">*</span><span class="n">m0</span><span class="o">*</span><span class="n">n0</span><span class="p">:</span>
                             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                                <span class="s">&#39;Invalid &quot;c0&quot; for the given &quot;m0&quot; and &quot;n0&quot;!&#39;</span><span class="p">)</span>
+                                <span class="s1">&#39;Invalid &quot;c0&quot; for the given &quot;m0&quot; and &quot;n0&quot;!&#39;</span><span class="p">)</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                                <span class="s">&#39;Array for &quot;c0&quot; must be one-dimensional!&#39;</span><span class="p">)</span>
+                                <span class="s1">&#39;Array for &quot;c0&quot; must be one-dimensional!&#39;</span><span class="p">)</span>
         <span class="n">msi</span><span class="o">.</span><span class="n">c0</span> <span class="o">=</span> <span class="n">c0</span>
         <span class="n">msi</span><span class="o">.</span><span class="n">m0</span> <span class="o">=</span> <span class="n">m0</span>
         <span class="n">msi</span><span class="o">.</span><span class="n">n0</span> <span class="o">=</span> <span class="n">n0</span>
         <span class="n">msi</span><span class="o">.</span><span class="n">funcnum</span> <span class="o">=</span> <span class="n">funcnum</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">msis</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">msi</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">msi</span>
+        <span class="k">return</span> <span class="n">msi</span></div>
 
-</div>
+
 <div class="viewcode-block" id="ImpConf.add_pload"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.impconf.ImpConf.add_pload">[docs]</a>    <span class="k">def</span> <span class="nf">add_pload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thetadeg</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="n">pltotal</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Add a Perturbation Load</span>
 
@@ -399,9 +387,37 @@
         <span class="n">pload</span> <span class="o">=</span> <span class="n">PLoad</span><span class="p">(</span><span class="n">thetadeg</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="n">pltotal</span><span class="p">,</span> <span class="n">step</span><span class="p">)</span>
         <span class="n">pload</span><span class="o">.</span><span class="n">impconf</span> <span class="o">=</span> <span class="bp">self</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ploads</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pload</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">pload</span>
+        <span class="k">return</span> <span class="n">pload</span></div>
 
-</div>
+
+<div class="viewcode-block" id="ImpConf.add_cb"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.impconf.ImpConf.add_cb">[docs]</a>    <span class="k">def</span> <span class="nf">add_cb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thetadeg</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="n">cbtotal</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add a Constant Amplitude Perturbation Buckle Imperfection</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        thetadeg : float</span>
+<span class="sd">            Circumferential position.</span>
+<span class="sd">        pt : float</span>
+<span class="sd">            Normalized meridional position.</span>
+<span class="sd">        cbtotal : float</span>
+<span class="sd">            The magnitude of the constant buckle (it is always applied</span>
+<span class="sd">            normally to the shell surface).</span>
+<span class="sd">        step : int</span>
+<span class="sd">            The step in which the constant buckle will be included. In</span>
+<span class="sd">            ``step=1`` the load is constant along the analysis while in</span>
+<span class="sd">            ``step=2`` the load is incremented.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        cb : :class:`.CBamp` object.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cb</span> <span class="o">=</span> <span class="n">CBamp</span><span class="p">(</span><span class="n">thetadeg</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="n">cbtotal</span><span class="p">,</span> <span class="n">step</span><span class="p">)</span>
+        <span class="n">cb</span><span class="o">.</span><span class="n">impconf</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cb</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cb</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">cb</span></div>
+
+
 <div class="viewcode-block" id="ImpConf.add_shim_bottom_edge"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.impconf.ImpConf.add_shim_bottom_edge">[docs]</a>    <span class="k">def</span> <span class="nf">add_shim_bottom_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thetadeg</span><span class="p">,</span> <span class="n">thick</span><span class="p">,</span> <span class="n">width</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Add a Shim to the bottom edge</span>
 
@@ -420,9 +436,9 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">shim</span> <span class="o">=</span> <span class="n">Shim</span><span class="p">(</span><span class="n">thetadeg</span><span class="p">,</span> <span class="n">thick</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">uneven_bottom_edge</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">shim</span>
+        <span class="k">return</span> <span class="n">shim</span></div>
 
-</div>
+
 <div class="viewcode-block" id="ImpConf.add_shim_top_edge"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.impconf.ImpConf.add_shim_top_edge">[docs]</a>    <span class="k">def</span> <span class="nf">add_shim_top_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thetadeg</span><span class="p">,</span> <span class="n">thick</span><span class="p">,</span> <span class="n">width</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Add a Shim to the top edge</span>
 
@@ -441,9 +457,9 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">shim</span> <span class="o">=</span> <span class="n">Shim</span><span class="p">(</span><span class="n">thetadeg</span><span class="p">,</span> <span class="n">thick</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">uneven_top_edge</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">shim</span>
+        <span class="k">return</span> <span class="n">shim</span></div>
 
-</div>
+
 <div class="viewcode-block" id="ImpConf.add_ti"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.impconf.ImpConf.add_ti">[docs]</a>    <span class="k">def</span> <span class="nf">add_ti</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">imp_thick</span><span class="p">,</span> <span class="n">scaling_factor</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Add Thickness Imperfection (TI)</span>
 
@@ -468,11 +484,12 @@
         <span class="n">ti</span><span class="o">.</span><span class="n">imp_thick</span> <span class="o">=</span> <span class="n">imp_thick</span>
         <span class="n">ti</span><span class="o">.</span><span class="n">scaling_factor</span> <span class="o">=</span> <span class="n">scaling_factor</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tis</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ti</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">ti</span>
+        <span class="k">return</span> <span class="n">ti</span></div>
 
-</div>
+
 <div class="viewcode-block" id="ImpConf.add_cutout"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.impconf.ImpConf.add_cutout">[docs]</a>    <span class="k">def</span> <span class="nf">add_cutout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thetadeg</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">drill_offset_deg</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span>
-                   <span class="n">clearance_factor</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span> <span class="n">numel_radial_edge</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+                   <span class="n">clearance_factor</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span> <span class="n">numel_radial_edge</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                   <span class="n">prop_around_cutout</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">r&quot;&quot;&quot;Add a cutout</span>
 
 <span class="sd">        Parameters</span>
@@ -495,6 +512,39 @@
 <span class="sd">            Number of elements along the radial edges about the cutout center.</span>
 <span class="sd">            This parameter affects the aspect ratio of the elements inside the</span>
 <span class="sd">            cutout area.</span>
+<span class="sd">        prop_around_cutout : dict, optional</span>
+<span class="sd">            Dictionary with keys:</span>
+
+<span class="sd">            - &#39;mode&#39; : str (&#39;radius&#39; or &#39;partition&#39;)</span>
+<span class="sd">            - &#39;radius&#39; : float</span>
+<span class="sd">            - &#39;stack&#39;: list of floats</span>
+<span class="sd">            - &#39;plyts&#39;: list of floats</span>
+<span class="sd">            - &#39;mat_names&#39;: list of strings</span>
+<span class="sd">            .</span>
+
+<span class="sd">            Examples:</span>
+
+<span class="sd">            - Defining a property with ``&#39;mode&#39;=&#39;radius&#39;``::</span>
+
+<span class="sd">                prop_around_cutout = {</span>
+<span class="sd">                    &#39;mode&#39;: &#39;radius&#39;,</span>
+<span class="sd">                    &#39;radius&#39;: 10.,</span>
+<span class="sd">                    &#39;stack&#39;: [0, 90, 0],</span>
+<span class="sd">                    &#39;plyts&#39;: [0.125, 0.125, 0.125],</span>
+<span class="sd">                    &#39;mat_names&#39;: [&#39;Alum&#39;, &#39;Alum&#39;, &#39;Alum&#39;],</span>
+<span class="sd">                }</span>
+
+<span class="sd">            - Defining a property with ``&#39;mode&#39;=&#39;partition&#39;``::</span>
+
+<span class="sd">                prop_around_cutout = {</span>
+<span class="sd">                    &#39;mode&#39;: &#39;partition&#39;,</span>
+<span class="sd">                    &#39;stack&#39;: [0, 90, 0],</span>
+<span class="sd">                    &#39;plyts&#39;: [0.125, 0.125, 0.125],</span>
+<span class="sd">                    &#39;mat_names&#39;: [&#39;Alum&#39;, &#39;Alum&#39;, &#39;Alum&#39;],</span>
+<span class="sd">                }</span>
+
+<span class="sd">            .. note:: ``mat_names`` must be a list of materials already created in</span>
+<span class="sd">                      the current model in Abaqus</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -502,12 +552,12 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">cutout</span> <span class="o">=</span> <span class="n">Cutout</span><span class="p">(</span><span class="n">thetadeg</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">drill_offset_deg</span><span class="p">,</span> <span class="n">clearance_factor</span><span class="p">,</span>
-                <span class="n">numel_radial_edge</span><span class="p">)</span>
+                <span class="n">numel_radial_edge</span><span class="p">,</span> <span class="n">prop_around_cutout</span><span class="p">)</span>
         <span class="n">cutout</span><span class="o">.</span><span class="n">impconf</span> <span class="o">=</span> <span class="bp">self</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cutouts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cutout</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">cutout</span>
+        <span class="k">return</span> <span class="n">cutout</span></div>
 
-</div>
+
 <div class="viewcode-block" id="ImpConf.add_ppi"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.impconf.ImpConf.add_ppi">[docs]</a>    <span class="k">def</span> <span class="nf">add_ppi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">extra_height</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Adds Ply Piece Imperfection (PPI)</span>
 
@@ -528,12 +578,12 @@
 <span class="sd">        ppi : :class:`.PPI` object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ppi</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="n">warn</span><span class="p">(</span><span class="s">&#39;PPI object already set, overriding...&#39;</span><span class="p">)</span>
+            <span class="n">warn</span><span class="p">(</span><span class="s1">&#39;PPI object already set, overriding...&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ppi</span> <span class="o">=</span> <span class="n">PPI</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">extra_height</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ppi</span><span class="o">.</span><span class="n">impconf</span> <span class="o">=</span> <span class="bp">self</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ppi</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ppi</span></div>
 
-</div>
+
 <div class="viewcode-block" id="ImpConf.add_ffi"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.impconf.ImpConf.add_ffi">[docs]</a>    <span class="k">def</span> <span class="nf">add_ffi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nominal_vf</span><span class="p">,</span> <span class="n">E_matrix</span><span class="p">,</span> <span class="n">nu_matrix</span><span class="p">,</span> <span class="n">use_ti</span><span class="p">,</span> <span class="n">global_sf</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Adds Fiber Fraction Imperfection (FFI)</span>
 
@@ -562,86 +612,92 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ffi</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="n">warn</span><span class="p">(</span><span class="s">&#39;FFI object already set, overriding...&#39;</span><span class="p">)</span>
+            <span class="n">warn</span><span class="p">(</span><span class="s1">&#39;FFI object already set, overriding...&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ffi</span> <span class="o">=</span> <span class="n">FFI</span><span class="p">(</span><span class="n">nominal_vf</span><span class="p">,</span> <span class="n">E_matrix</span><span class="p">,</span> <span class="n">nu_matrix</span><span class="p">,</span> <span class="n">use_ti</span><span class="p">,</span> <span class="n">global_sf</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ffi</span><span class="o">.</span><span class="n">impconf</span> <span class="o">=</span> <span class="bp">self</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ffi</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ffi</span></div>
 
-</div>
+
     <span class="k">def</span> <span class="nf">rebuild</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c"># TODO: Reduce the amount of code duplication?</span>
+        <span class="c1"># TODO: Reduce the amount of code duplication?</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">imperfections</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
-        <span class="c"># uneven bottom edge</span>
+        <span class="c1"># uneven bottom edge</span>
         <span class="n">ube</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uneven_bottom_edge</span>
         <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="n">ube</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">i</span>
         <span class="n">ube</span><span class="o">.</span><span class="n">rebuild</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">imperfections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ube</span><span class="p">)</span>
-        <span class="c"># uneven top edge</span>
+        <span class="c1"># uneven top edge</span>
         <span class="n">ute</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uneven_top_edge</span>
         <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="n">ute</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">i</span>
         <span class="n">ute</span><span class="o">.</span><span class="n">rebuild</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">imperfections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ute</span><span class="p">)</span>
-        <span class="c"># ploads</span>
+        <span class="c1"># ploads</span>
         <span class="k">for</span> <span class="n">pload</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ploads</span><span class="p">:</span>
             <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="n">pload</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">i</span>
             <span class="n">pload</span><span class="o">.</span><span class="n">rebuild</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">imperfections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pload</span><span class="p">)</span>
-        <span class="c"># dimples</span>
+        <span class="c1"># CSBI</span>
+        <span class="k">for</span> <span class="n">cb</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cb</span><span class="p">:</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">cb</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">i</span>
+            <span class="n">cb</span><span class="o">.</span><span class="n">rebuild</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">imperfections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cb</span><span class="p">)</span>
+        <span class="c1"># dimples</span>
         <span class="k">for</span> <span class="n">sb</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimples</span><span class="p">:</span>
             <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="n">sb</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">i</span>
             <span class="n">sb</span><span class="o">.</span><span class="n">rebuild</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">imperfections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sb</span><span class="p">)</span>
-        <span class="c"># axisymmetrics</span>
+        <span class="c1"># axisymmetrics</span>
         <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">axisymmetrics</span><span class="p">:</span>
             <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">i</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">rebuild</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">imperfections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
-        <span class="c"># linear buckling mode-shaped imperfection (LBMI)</span>
+        <span class="c1"># linear buckling mode-shaped imperfection (LBMI)</span>
         <span class="k">for</span> <span class="n">lbmi</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">lbmis</span><span class="p">:</span>
             <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="n">lbmi</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">i</span>
             <span class="n">lbmi</span><span class="o">.</span><span class="n">rebuild</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">imperfections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lbmi</span><span class="p">)</span>
-        <span class="c"># cutout</span>
+        <span class="c1"># cutout</span>
         <span class="k">for</span> <span class="n">cutout</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cutouts</span><span class="p">:</span>
             <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="n">cutout</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">i</span>
             <span class="n">cutout</span><span class="o">.</span><span class="n">rebuild</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">imperfections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cutout</span><span class="p">)</span>
-        <span class="c"># ply piece imperfection</span>
+        <span class="c1"># ply piece imperfection</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ppi</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ppi</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">i</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ppi</span><span class="o">.</span><span class="n">rebuild</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">imperfections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ppi</span><span class="p">)</span>
-        <span class="c"># fiber fraction imperfection</span>
+        <span class="c1"># fiber fraction imperfection</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ffi</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ffi</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">i</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ffi</span><span class="o">.</span><span class="n">rebuild</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">imperfections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ffi</span><span class="p">)</span>
-        <span class="c"># thickness imperfection (TI)</span>
+        <span class="c1"># thickness imperfection (TI)</span>
         <span class="k">for</span> <span class="n">ti</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tis</span><span class="p">:</span>
             <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="n">ti</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">i</span>
             <span class="n">ti</span><span class="o">.</span><span class="n">rebuild</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">imperfections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ti</span><span class="p">)</span>
-        <span class="c"># mid-surface imperfection (MSI)</span>
+        <span class="c1"># mid-surface imperfection (MSI)</span>
         <span class="k">for</span> <span class="n">msi</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">msis</span><span class="p">:</span>
             <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="n">msi</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">i</span>
             <span class="n">msi</span><span class="o">.</span><span class="n">rebuild</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">imperfections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">msi</span><span class="p">)</span>
-        <span class="c"># name</span>
+        <span class="c1"># name</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rename</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;PLs_</span><span class="si">%02d</span><span class="s">_dimples_</span><span class="si">%02d</span><span class="s">_axisym_</span><span class="si">%02d</span><span class="s">&#39;</span> <span class="o">+</span>\
-                        <span class="s">&#39;_lbmis_</span><span class="si">%02d</span><span class="s">_MSIs_</span><span class="si">%02d</span><span class="s">_TIs_</span><span class="si">%02d</span><span class="s">&#39;</span><span class="p">)</span> <span class="o">%</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;PLs_</span><span class="si">%02d</span><span class="s1">_dimples_</span><span class="si">%02d</span><span class="s1">_axisym_</span><span class="si">%02d</span><span class="s1">&#39;</span> <span class="o">+</span>\
+                        <span class="s1">&#39;_lbmis_</span><span class="si">%02d</span><span class="s1">_MSIs_</span><span class="si">%02d</span><span class="s1">_TIs_</span><span class="si">%02d</span><span class="s1">&#39;</span><span class="p">)</span> <span class="o">%</span> \
                         <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ploads</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dimples</span><span class="p">),</span>
                           <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">axisymmetrics</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lbmis</span><span class="p">),</span>
                           <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">msis</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tis</span><span class="p">))</span>
@@ -651,12 +707,13 @@
         <span class="k">for</span> <span class="n">imp</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">imperfections</span><span class="p">:</span>
             <span class="n">valid</span> <span class="o">=</span> <span class="bp">True</span>
             <span class="k">for</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">imp</span><span class="o">.</span><span class="n">pts</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">pt</span><span class="o">&lt;</span><span class="mi">0</span> <span class="ow">or</span> <span class="n">pt</span><span class="o">&gt;</span><span class="mf">1.</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">pt</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">pt</span> <span class="o">&gt;</span> <span class="mf">1.</span><span class="p">:</span>
                     <span class="n">valid</span> <span class="o">=</span> <span class="bp">False</span>
                     <span class="k">break</span>
             <span class="k">if</span> <span class="n">imp</span> <span class="ow">and</span> <span class="n">valid</span><span class="p">:</span>
-                <span class="n">imp</span><span class="o">.</span><span class="n">create</span><span class="p">()</span>
-</pre></div></div>
+                <span class="n">imp</span><span class="o">.</span><span class="n">create</span><span class="p">()</span></div>
+
+</pre></div>
 
           </div>
         </div>
@@ -665,10 +722,14 @@
         <div class="sphinxsidebarwrapper">
 <p class="logo">
   <a href="../../../../index.html">
-    <img class="logo" src="../../../../_static/desicos.png" alt="Logo"/>
+    <img class="logo" src="../../../../_static/../logo/desicos.png" alt="Logo"/>
     
   </a>
 </p>
+
+
+
+
 
 
 
@@ -686,14 +747,11 @@
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -704,8 +762,8 @@
       &copy;2012-2015 Desicos Improved Software Team.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
       
     </div>
 

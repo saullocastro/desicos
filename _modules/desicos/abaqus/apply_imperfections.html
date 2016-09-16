@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>desicos.abaqus.apply_imperfections &mdash; DESICOS 2.4.6 documentation</title>
+    <title>desicos.abaqus.apply_imperfections &mdash; DESICOS 2.4.7 documentation</title>
     
     <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.4.6',
+        VERSION:     '2.4.7',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,30 +23,16 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <link rel="top" title="DESICOS 2.4.6 documentation" href="../../../index.html" />
+    <link rel="top" title="DESICOS 2.4.7 documentation" href="../../../index.html" />
     <link rel="up" title="Module code" href="../../index.html" />
    
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
   <body role="document">
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../../../np-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">DESICOS 2.4.6 documentation</a> &raquo;</li>
-          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
-      </ul>
-    </div>  
+  
 
     <div class="document">
       <div class="documentwrapper">
@@ -54,7 +40,7 @@
           <div class="body" role="main">
             
   <h1>Source code for desicos.abaqus.apply_imperfections</h1><div class="highlight"><pre>
-<span class="sd">r&quot;&quot;&quot;</span>
+<span></span><span class="sd">r&quot;&quot;&quot;</span>
 <span class="sd">===============================================================</span>
 <span class="sd">Apply Imperfections (:mod:`desicos.abaqus.apply_imperfections`)</span>
 <span class="sd">===============================================================</span>
@@ -201,14 +187,14 @@
         <span class="k">if</span> <span class="n">sample_size</span><span class="p">:</span>
             <span class="n">num</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">sample_size</span> <span class="o">&lt;</span> <span class="n">num</span><span class="p">:</span>
-                <span class="n">log</span><span class="p">(</span><span class="s">&#39;Using sample_size={0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sample_size</span><span class="p">),</span> <span class="n">level</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">log</span><span class="p">(</span><span class="s1">&#39;Using sample_size={0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sample_size</span><span class="p">),</span> <span class="n">level</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
                 <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">sample</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">num</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">sample_size</span><span class="p">)),</span> <span class="p">:]</span>
 
         <span class="k">if</span> <span class="n">r_TOL</span><span class="p">:</span>
             <span class="n">max_imp</span> <span class="o">=</span> <span class="n">R_model</span> <span class="o">*</span> <span class="n">r_TOL</span> <span class="o">/</span> <span class="mf">100.</span>
             <span class="n">imp</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span>
             <span class="n">cond</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">imp</span> <span class="o">&gt;</span> <span class="n">max_imp</span><span class="p">,</span> <span class="n">imp</span> <span class="o">&lt;</span> <span class="p">(</span><span class="o">-</span><span class="n">max_imp</span><span class="p">))),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-            <span class="n">log</span><span class="p">(</span><span class="s">&#39;Skipping {0} points&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">imp</span><span class="p">[</span><span class="n">cond</span><span class="p">])))</span>
+            <span class="n">log</span><span class="p">(</span><span class="s1">&#39;Skipping {0} points&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">imp</span><span class="p">[</span><span class="n">cond</span><span class="p">])))</span>
             <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="n">cond</span><span class="p">),</span> <span class="p">:]</span>
 
         <span class="n">data3D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">4</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">FLOAT</span><span class="p">)</span>
@@ -240,14 +226,14 @@
         <span class="n">trans</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">w0</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">alpharad</span><span class="p">)</span>
 
     <span class="k">else</span><span class="p">:</span>
-        <span class="c">#NOTE perhaps remove this in the future, when the imperfection files</span>
-        <span class="c">#     are stored as theta, z, amplitude only</span>
+        <span class="c1">#NOTE perhaps remove this in the future, when the imperfection files</span>
+        <span class="c1">#     are stored as theta, z, amplitude only</span>
         <span class="n">nodes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">n</span><span class="o">.</span><span class="n">coordinates</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
                            <span class="n">n</span><span class="o">.</span><span class="n">coordinates</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
                            <span class="n">n</span><span class="o">.</span><span class="n">coordinates</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
                            <span class="n">n</span><span class="o">.</span><span class="n">label</span><span class="p">]</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">part_nodes</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">FLOAT</span><span class="p">)</span>
 
-        <span class="c"># calling translate_nodes function</span>
+        <span class="c1"># calling translate_nodes function</span>
         <span class="n">trans</span> <span class="o">=</span> <span class="n">calc_nodal_translations</span><span class="p">(</span>
                                 <span class="n">imperfection_file_name</span><span class="p">,</span>
                                 <span class="n">nodes</span> <span class="o">=</span> <span class="n">nodes</span><span class="p">,</span>
@@ -266,10 +252,10 @@
                                 <span class="n">sample_size</span> <span class="o">=</span> <span class="n">sample_size</span><span class="p">)</span>
         <span class="n">trans</span> <span class="o">=</span> <span class="n">trans</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span>
 
-    <span class="k">return</span> <span class="n">trans</span>
+    <span class="k">return</span> <span class="n">trans</span></div>
 
-</div>
-<div class="viewcode-block" id="translate_nodes_ABAQUS"><a class="viewcode-back" href="../../../tutorials/abaqus/python_API.html#desicos.abaqus.apply_imperfections.translate_nodes_ABAQUS">[docs]</a><span class="k">def</span> <span class="nf">translate_nodes_ABAQUS</span><span class="p">(</span><span class="n">imperfection_file_name</span><span class="p">,</span>
+
+<div class="viewcode-block" id="translate_nodes_ABAQUS"><a class="viewcode-back" href="../../../modules/abaqus/index.html#desicos.abaqus.apply_imperfections.translate_nodes_ABAQUS">[docs]</a><span class="k">def</span> <span class="nf">translate_nodes_ABAQUS</span><span class="p">(</span><span class="n">imperfection_file_name</span><span class="p">,</span>
                            <span class="n">model_name</span><span class="p">,</span>
                            <span class="n">part_name</span><span class="p">,</span>
                            <span class="n">H_model</span><span class="p">,</span>
@@ -400,7 +386,7 @@
         <span class="k">if</span> <span class="n">ignore_bot_h</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">ignore_bot_h</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">log</span><span class="p">(</span><span class="s">&#39;Applying ignore_bot_h: ignoring nodes with z &lt;= {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">log</span><span class="p">(</span><span class="s1">&#39;Applying ignore_bot_h: ignoring nodes with z &lt;= {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">ignore_bot_h</span><span class="p">))</span>
             <span class="n">mask</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">ignore_bot_h</span>
             <span class="n">coords</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
@@ -410,7 +396,7 @@
         <span class="k">if</span> <span class="n">ignore_top_h</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">ignore_top_h</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">log</span><span class="p">(</span><span class="s">&#39;Applying ignore_top_h: ignoring nodes with z &gt;= {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">log</span><span class="p">(</span><span class="s1">&#39;Applying ignore_top_h: ignoring nodes with z &gt;= {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">H_model</span> <span class="o">-</span> <span class="n">ignore_top_h</span><span class="p">))</span>
             <span class="n">mask</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">H_model</span> <span class="o">-</span> <span class="n">ignore_top_h</span><span class="p">)</span>
             <span class="n">coords</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
@@ -444,11 +430,11 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">trans</span> <span class="o">=</span> <span class="n">nodal_translations</span>
 
-        <span class="c"># applying translations</span>
+        <span class="c1"># applying translations</span>
         <span class="n">viewport</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">viewports</span><span class="p">[</span><span class="n">session</span><span class="o">.</span><span class="n">currentViewportName</span><span class="p">]</span>
-        <span class="n">log</span><span class="p">(</span><span class="s">&#39;Applying new nodal positions in ABAQUS CAE to model {0} ...&#39;</span><span class="o">.</span>
+        <span class="n">log</span><span class="p">(</span><span class="s1">&#39;Applying new nodal positions in ABAQUS CAE to model {0} ...&#39;</span><span class="o">.</span>
             <span class="n">format</span><span class="p">(</span><span class="n">model_name</span><span class="p">))</span>
-        <span class="n">log</span><span class="p">(</span><span class="s">&#39;    (using a scaling factor of {0})&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">scaling_factor</span><span class="p">))</span>
+        <span class="n">log</span><span class="p">(</span><span class="s1">&#39;    (using a scaling factor of {0})&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">scaling_factor</span><span class="p">))</span>
 
         <span class="n">new_coords</span> <span class="o">=</span> <span class="n">coords</span> <span class="o">+</span> <span class="n">trans</span><span class="o">*</span><span class="n">scaling_factor</span>
 
@@ -465,7 +451,7 @@
         <span class="n">new_coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">new_coords</span><span class="p">)</span>
         <span class="n">part</span><span class="o">.</span><span class="n">editNode</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="n">part_nodes</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">coordinates</span><span class="o">=</span><span class="n">new_coords</span><span class="p">)</span>
 
-        <span class="n">log</span><span class="p">(</span><span class="s">&#39;Application of new nodal positions finished!&#39;</span><span class="p">)</span>
+        <span class="n">log</span><span class="p">(</span><span class="s1">&#39;Application of new nodal positions finished!&#39;</span><span class="p">)</span>
 
         <span class="n">ra</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">rootAssembly</span>
         <span class="n">viewport</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">displayedObject</span><span class="o">=</span><span class="n">ra</span><span class="p">)</span>
@@ -479,7 +465,7 @@
                            <span class="n">n</span><span class="o">.</span><span class="n">coordinates</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
                            <span class="n">n</span><span class="o">.</span><span class="n">label</span><span class="p">]</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">part_nodes</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">FLOAT</span><span class="p">)</span>
 
-        <span class="c"># calling translate_nodes function</span>
+        <span class="c1"># calling translate_nodes function</span>
         <span class="k">if</span> <span class="n">nodal_translations</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">nodal_translations</span> <span class="o">=</span> <span class="n">calc_translations_ABAQUS</span><span class="p">(</span>
                          <span class="n">imperfection_file_name</span> <span class="o">=</span> <span class="n">imperfection_file_name</span><span class="p">,</span>
@@ -504,11 +490,11 @@
                          <span class="n">sample_size</span> <span class="o">=</span> <span class="n">sample_size</span><span class="p">,</span>
                          <span class="n">T</span> <span class="o">=</span> <span class="n">T</span><span class="p">)</span>
 
-        <span class="c"># applying translations</span>
+        <span class="c1"># applying translations</span>
         <span class="n">viewport</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">viewports</span><span class="p">[</span><span class="n">session</span><span class="o">.</span><span class="n">currentViewportName</span><span class="p">]</span>
-        <span class="n">log</span><span class="p">(</span><span class="s">&#39;Applying new nodal positions in ABAQUS CAE for model {0} ...&#39;</span><span class="o">.</span>
+        <span class="n">log</span><span class="p">(</span><span class="s1">&#39;Applying new nodal positions in ABAQUS CAE for model {0} ...&#39;</span><span class="o">.</span>
             <span class="n">format</span><span class="p">(</span><span class="n">model_name</span><span class="p">))</span>
-        <span class="n">log</span><span class="p">(</span><span class="s">&#39;    (using a scaling factor of {0})&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">scaling_factor</span><span class="p">))</span>
+        <span class="n">log</span><span class="p">(</span><span class="s1">&#39;    (using a scaling factor of {0})&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">scaling_factor</span><span class="p">))</span>
 
         <span class="n">trans</span> <span class="o">=</span> <span class="n">nodal_translations</span>
 
@@ -527,16 +513,16 @@
         <span class="n">new_coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">new_coords</span><span class="p">)</span>
         <span class="n">part</span><span class="o">.</span><span class="n">editNode</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="n">meshNodeArray</span><span class="p">,</span> <span class="n">coordinates</span><span class="o">=</span><span class="n">new_coords</span><span class="p">)</span>
 
-        <span class="n">log</span><span class="p">(</span><span class="s">&#39;Application of new nodal positions finished!&#39;</span><span class="p">)</span>
-        <span class="c"># regenerating ra</span>
+        <span class="n">log</span><span class="p">(</span><span class="s1">&#39;Application of new nodal positions finished!&#39;</span><span class="p">)</span>
+        <span class="c1"># regenerating ra</span>
         <span class="n">ra</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">rootAssembly</span>
         <span class="n">viewport</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">displayedObject</span><span class="o">=</span><span class="n">ra</span><span class="p">)</span>
         <span class="n">ra</span><span class="o">.</span><span class="n">regenerate</span><span class="p">()</span>
 
-        <span class="k">return</span> <span class="n">nodal_translations</span>
+        <span class="k">return</span> <span class="n">nodal_translations</span></div>
 
-</div>
-<div class="viewcode-block" id="translate_nodes_ABAQUS_c0"><a class="viewcode-back" href="../../../tutorials/abaqus/python_API.html#desicos.abaqus.apply_imperfections.translate_nodes_ABAQUS_c0">[docs]</a><span class="k">def</span> <span class="nf">translate_nodes_ABAQUS_c0</span><span class="p">(</span><span class="n">m0</span><span class="p">,</span> <span class="n">n0</span><span class="p">,</span> <span class="n">c0</span><span class="p">,</span> <span class="n">funcnum</span><span class="p">,</span>
+
+<div class="viewcode-block" id="translate_nodes_ABAQUS_c0"><a class="viewcode-back" href="../../../modules/abaqus/index.html#desicos.abaqus.apply_imperfections.translate_nodes_ABAQUS_c0">[docs]</a><span class="k">def</span> <span class="nf">translate_nodes_ABAQUS_c0</span><span class="p">(</span><span class="n">m0</span><span class="p">,</span> <span class="n">n0</span><span class="p">,</span> <span class="n">c0</span><span class="p">,</span> <span class="n">funcnum</span><span class="p">,</span>
                               <span class="n">model_name</span><span class="p">,</span>
                               <span class="n">part_name</span><span class="p">,</span>
                               <span class="n">H_model</span><span class="p">,</span>
@@ -604,9 +590,9 @@
 
     <span class="kn">from</span> <span class="nn">desicos.conecylDB</span> <span class="kn">import</span> <span class="n">fit_data</span>
 
-    <span class="n">log</span><span class="p">(</span><span class="s">&#39;Calculating imperfection amplitudes for model {0} ...</span><span class="se">\n\t</span><span class="s">&#39;</span><span class="o">.</span>
+    <span class="n">log</span><span class="p">(</span><span class="s1">&#39;Calculating imperfection amplitudes for model {0} ...</span><span class="se">\n\t</span><span class="s1">&#39;</span><span class="o">.</span>
         <span class="n">format</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span> <span class="o">+</span>
-        <span class="s">&#39;(using a scaling factor of {0})&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">scaling_factor</span><span class="p">))</span>
+        <span class="s1">&#39;(using a scaling factor of {0})&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">scaling_factor</span><span class="p">))</span>
     <span class="n">c0</span> <span class="o">=</span> <span class="n">c0</span><span class="o">*</span><span class="n">scaling_factor</span>
     <span class="n">mod</span> <span class="o">=</span> <span class="n">mdb</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="n">model_name</span><span class="p">]</span>
     <span class="n">part</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="n">part_name</span><span class="p">]</span>
@@ -623,7 +609,7 @@
         <span class="k">if</span> <span class="n">ignore_bot_h</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">ignore_bot_h</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">log</span><span class="p">(</span><span class="s">&#39;Applying ignore_bot_h: ignoring nodes with z &lt;= {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">log</span><span class="p">(</span><span class="s1">&#39;Applying ignore_bot_h: ignoring nodes with z &lt;= {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">ignore_bot_h</span><span class="p">))</span>
             <span class="n">mask</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">ignore_bot_h</span>
             <span class="n">coords</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
@@ -633,7 +619,7 @@
         <span class="k">if</span> <span class="n">ignore_top_h</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">ignore_top_h</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">log</span><span class="p">(</span><span class="s">&#39;Applying ignore_top_h: ignoring nodes with z &gt;= {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">log</span><span class="p">(</span><span class="s1">&#39;Applying ignore_top_h: ignoring nodes with z &gt;= {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">H_model</span> <span class="o">-</span> <span class="n">ignore_top_h</span><span class="p">))</span>
             <span class="n">mask</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">H_model</span> <span class="o">-</span> <span class="n">ignore_top_h</span><span class="p">)</span>
             <span class="n">coords</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
@@ -658,13 +644,13 @@
     <span class="n">nodal_translations</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">w0</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">alpharad</span><span class="p">)</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">thetas</span><span class="p">)</span>
     <span class="n">nodal_translations</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">w0</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">alpharad</span><span class="p">)</span>
 
-    <span class="n">log</span><span class="p">(</span><span class="s">&#39;Calculation of imperfection amplitudes finished!&#39;</span><span class="p">)</span>
+    <span class="n">log</span><span class="p">(</span><span class="s1">&#39;Calculation of imperfection amplitudes finished!&#39;</span><span class="p">)</span>
 
-    <span class="c"># applying translations</span>
+    <span class="c1"># applying translations</span>
     <span class="n">viewport</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">viewports</span><span class="p">[</span><span class="n">session</span><span class="o">.</span><span class="n">currentViewportName</span><span class="p">]</span>
-    <span class="n">log</span><span class="p">(</span><span class="s">&#39;Applying new nodal positions in ABAQUS CAE to model {0} ...&#39;</span><span class="o">.</span>
+    <span class="n">log</span><span class="p">(</span><span class="s1">&#39;Applying new nodal positions in ABAQUS CAE to model {0} ...&#39;</span><span class="o">.</span>
         <span class="n">format</span><span class="p">(</span><span class="n">model_name</span><span class="p">))</span>
-    <span class="n">log</span><span class="p">(</span><span class="s">&#39;    (using a scaling factor of {0})&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">scaling_factor</span><span class="p">))</span>
+    <span class="n">log</span><span class="p">(</span><span class="s1">&#39;    (using a scaling factor of {0})&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">scaling_factor</span><span class="p">))</span>
 
     <span class="n">new_coords</span> <span class="o">=</span> <span class="n">coords</span> <span class="o">+</span> <span class="n">nodal_translations</span>
 
@@ -681,15 +667,15 @@
     <span class="n">new_coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">new_coords</span><span class="p">)</span>
     <span class="n">part</span><span class="o">.</span><span class="n">editNode</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="n">meshNodeArray</span><span class="p">,</span> <span class="n">coordinates</span><span class="o">=</span><span class="n">new_coords</span><span class="p">)</span>
 
-    <span class="n">log</span><span class="p">(</span><span class="s">&#39;Application of new nodal positions finished!&#39;</span><span class="p">)</span>
+    <span class="n">log</span><span class="p">(</span><span class="s1">&#39;Application of new nodal positions finished!&#39;</span><span class="p">)</span>
 
     <span class="n">ra</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">rootAssembly</span>
     <span class="n">viewport</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">displayedObject</span><span class="o">=</span><span class="n">ra</span><span class="p">)</span>
     <span class="n">ra</span><span class="o">.</span><span class="n">regenerate</span><span class="p">()</span>
 
-    <span class="k">return</span> <span class="n">nodal_translations</span>
+    <span class="k">return</span> <span class="n">nodal_translations</span></div>
 
-</div>
+
 <div class="viewcode-block" id="change_thickness_ABAQUS"><a class="viewcode-back" href="../../../modules/abaqus/index.html#desicos.abaqus.apply_imperfections.change_thickness_ABAQUS">[docs]</a><span class="k">def</span> <span class="nf">change_thickness_ABAQUS</span><span class="p">(</span><span class="n">imperfection_file_name</span><span class="p">,</span>
                             <span class="n">model_name</span><span class="p">,</span>
                             <span class="n">part_name</span><span class="p">,</span>
@@ -788,15 +774,15 @@
 
     <span class="n">mod</span> <span class="o">=</span> <span class="n">mdb</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="n">model_name</span><span class="p">]</span>
     <span class="n">part</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="n">part_name</span><span class="p">]</span>
-    <span class="n">part_cyl_csys</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="s">&#39;part_cyl_csys&#39;</span><span class="p">]</span>
+    <span class="n">part_cyl_csys</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="s1">&#39;part_cyl_csys&#39;</span><span class="p">]</span>
     <span class="n">part_cyl_csys</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">datums</span><span class="p">[</span><span class="n">part_cyl_csys</span><span class="o">.</span><span class="n">id</span><span class="p">]</span>
 
     <span class="k">if</span> <span class="n">use_theta_z_format</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">elems_t</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="n">t_set</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="n">log</span><span class="p">(</span><span class="s">&#39;Reading coordinates for elements...&#39;</span><span class="p">)</span>
+            <span class="n">log</span><span class="p">(</span><span class="s1">&#39;Reading coordinates for elements...&#39;</span><span class="p">)</span>
             <span class="n">elements</span> <span class="o">=</span> <span class="n">vec_calc_elem_cg</span><span class="p">(</span><span class="n">part</span><span class="o">.</span><span class="n">elements</span><span class="p">)</span>
 
-            <span class="n">log</span><span class="p">(</span><span class="s">&#39;Coordinates for elements read!&#39;</span><span class="p">)</span>
+            <span class="n">log</span><span class="p">(</span><span class="s1">&#39;Coordinates for elements read!&#39;</span><span class="p">)</span>
             <span class="n">d</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">read_theta_z_imp</span><span class="p">(</span><span class="n">path</span> <span class="o">=</span> <span class="n">imperfection_file_name</span><span class="p">,</span>
                                           <span class="n">H_measured</span> <span class="o">=</span> <span class="n">H_measured</span><span class="p">,</span>
                                           <span class="n">stretch_H</span> <span class="o">=</span> <span class="n">stretch_H</span><span class="p">,</span>
@@ -822,21 +808,21 @@
                                <span class="n">power_parameter</span> <span class="o">=</span> <span class="n">power_parameter</span><span class="p">)</span>
 
             <span class="n">t_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">ans</span><span class="p">)</span>
-            <span class="n">t_set</span><span class="o">.</span><span class="n">discard</span><span class="p">(</span><span class="mf">0.</span><span class="p">)</span> <span class="c">#TODO why inv_weighted returns an array with 0.</span>
+            <span class="n">t_set</span><span class="o">.</span><span class="n">discard</span><span class="p">(</span><span class="mf">0.</span><span class="p">)</span> <span class="c1">#TODO why inv_weighted returns an array with 0.</span>
             <span class="n">elems_t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">elements</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">2</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">FLOAT</span><span class="p">)</span>
             <span class="n">elems_t</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">elements</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">]</span>
             <span class="n">elems_t</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">ans</span>
 
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">log</span><span class="p">(</span><span class="s">&#39;Thickness differences already calculated!&#39;</span><span class="p">)</span>
+            <span class="n">log</span><span class="p">(</span><span class="s1">&#39;Thickness differences already calculated!&#39;</span><span class="p">)</span>
 
     <span class="k">else</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">elems_t</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="n">t_set</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="c"># reading elements data</span>
-            <span class="n">log</span><span class="p">(</span><span class="s">&#39;Reading coordinates for elements...&#39;</span><span class="p">)</span>
+            <span class="c1"># reading elements data</span>
+            <span class="n">log</span><span class="p">(</span><span class="s1">&#39;Reading coordinates for elements...&#39;</span><span class="p">)</span>
             <span class="n">elements</span> <span class="o">=</span> <span class="n">vec_calc_elem_cg</span><span class="p">(</span><span class="n">part</span><span class="o">.</span><span class="n">elements</span><span class="p">)</span>
-            <span class="n">log</span><span class="p">(</span><span class="s">&#39;Coordinates for elements read!&#39;</span><span class="p">)</span>
-            <span class="c"># calling translate_nodes function</span>
+            <span class="n">log</span><span class="p">(</span><span class="s1">&#39;Coordinates for elements read!&#39;</span><span class="p">)</span>
+            <span class="c1"># calling translate_nodes function</span>
             <span class="n">elems_t</span><span class="p">,</span> <span class="n">t_set</span> <span class="o">=</span> <span class="n">calc_elems_t</span><span class="p">(</span>
                                 <span class="n">imperfection_file_name</span><span class="p">,</span>
                                 <span class="n">nodes</span> <span class="o">=</span> <span class="n">elements</span><span class="p">,</span>
@@ -853,15 +839,15 @@
                                 <span class="n">power_parameter</span> <span class="o">=</span> <span class="n">power_parameter</span><span class="p">,</span>
                                 <span class="n">num_sec_z</span> <span class="o">=</span> <span class="n">num_sec_z</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">log</span><span class="p">(</span><span class="s">&#39;Thickness differences already calculated!&#39;</span><span class="p">)</span>
-    <span class="c"># creating sets</span>
+            <span class="n">log</span><span class="p">(</span><span class="s1">&#39;Thickness differences already calculated!&#39;</span><span class="p">)</span>
+    <span class="c1"># creating sets</span>
     <span class="n">t_list</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">max_len_t_set</span> <span class="o">=</span> <span class="mi">100</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">t_set</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">max_len_t_set</span> <span class="ow">and</span> <span class="n">number_of_sets</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span>
         <span class="n">number_of_sets</span> <span class="o">=</span> <span class="mi">10</span>
-        <span class="n">log</span><span class="p">(</span><span class="s">&#39;More than {0:d} different thicknesses measured!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">log</span><span class="p">(</span><span class="s1">&#39;More than {0:d} different thicknesses measured!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="n">max_len_t_set</span><span class="p">))</span>
-        <span class="n">log</span><span class="p">(</span><span class="s">&#39;Forcing a number_of_sets = {0:d}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">number_of_sets</span><span class="p">))</span>
+        <span class="n">log</span><span class="p">(</span><span class="s1">&#39;Forcing a number_of_sets = {0:d}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">number_of_sets</span><span class="p">))</span>
     <span class="k">if</span> <span class="n">number_of_sets</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="n">number_of_sets</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">number_of_sets</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">t_set</span><span class="p">)</span>
         <span class="n">t_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">t_set</span><span class="p">)</span>
@@ -871,33 +857,33 @@
         <span class="n">t_max</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">t_set</span><span class="p">)</span>
         <span class="n">t_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">t_min</span><span class="p">,</span> <span class="n">t_max</span><span class="p">,</span> <span class="n">number_of_sets</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
 
-    <span class="c"># grouping elements</span>
+    <span class="c1"># grouping elements</span>
     <span class="n">sets_ids</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">t_list</span><span class="p">))]</span>
     <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">elems_t</span><span class="p">:</span>
         <span class="n">elem_id</span><span class="p">,</span> <span class="n">t</span> <span class="o">=</span> <span class="n">entry</span>
         <span class="n">index</span> <span class="o">=</span> <span class="n">index_within_linspace</span><span class="p">(</span><span class="n">t_list</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
         <span class="n">sets_ids</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">elem_id</span><span class="p">))</span>
-    <span class="c"># putting elements in sets</span>
-    <span class="n">original_layup</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">compositeLayups</span><span class="p">[</span><span class="s">&#39;CompositePlate&#39;</span><span class="p">]</span>
+    <span class="c1"># putting elements in sets</span>
+    <span class="n">original_layup</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">compositeLayups</span><span class="p">[</span><span class="s1">&#39;CompositePlate&#39;</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">set_ids</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sets_ids</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">set_ids</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="c"># since t_set_norm * t_model &lt;&gt; t_set originally measured</span>
-            <span class="c"># there may be empty set_ids at the end</span>
+            <span class="c1"># since t_set_norm * t_model &lt;&gt; t_set originally measured</span>
+            <span class="c1"># there may be empty set_ids at the end</span>
             <span class="k">continue</span>
         <span class="n">elements</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">elements</span><span class="o">.</span><span class="n">sequenceFromLabels</span><span class="p">(</span><span class="n">labels</span><span class="o">=</span><span class="n">set_ids</span><span class="p">)</span>
-        <span class="n">suffix</span> <span class="o">=</span> <span class="s">&#39;measured_imp_t_{0:03d}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-        <span class="n">set_name</span> <span class="o">=</span> <span class="s">&#39;Set_&#39;</span> <span class="o">+</span> <span class="n">suffix</span>
-        <span class="n">log</span><span class="p">(</span><span class="s">&#39;Creating set ({0: 7d} elements): {1}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">suffix</span> <span class="o">=</span> <span class="s1">&#39;measured_imp_t_{0:03d}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="n">set_name</span> <span class="o">=</span> <span class="s1">&#39;Set_&#39;</span> <span class="o">+</span> <span class="n">suffix</span>
+        <span class="n">log</span><span class="p">(</span><span class="s1">&#39;Creating set ({0: 7d} elements): {1}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="nb">len</span><span class="p">(</span><span class="n">set_ids</span><span class="p">),</span> <span class="n">set_name</span><span class="p">))</span>
         <span class="n">part</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="n">set_name</span><span class="p">,</span> <span class="n">elements</span> <span class="o">=</span> <span class="n">elements</span><span class="p">)</span>
         <span class="n">region</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">sets</span><span class="p">[</span><span class="n">set_name</span><span class="p">]</span>
-        <span class="n">layup_name</span> <span class="o">=</span> <span class="s">&#39;CLayup_&#39;</span> <span class="o">+</span> <span class="n">suffix</span>
+        <span class="n">layup_name</span> <span class="o">=</span> <span class="s1">&#39;CLayup_&#39;</span> <span class="o">+</span> <span class="n">suffix</span>
         <span class="n">t_diff</span> <span class="o">=</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">t_list</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">-</span> <span class="n">t_model</span><span class="p">)</span> <span class="o">*</span> <span class="n">scaling_factor</span>
         <span class="n">t_scaling_factor</span> <span class="o">=</span> <span class="p">(</span><span class="n">t_model</span> <span class="o">+</span> <span class="n">t_diff</span><span class="p">)</span><span class="o">/</span><span class="n">t_model</span>
 
         <span class="k">def</span> <span class="nf">modify_ply</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
-            <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;thickness&#39;</span><span class="p">]</span> <span class="o">*=</span> <span class="n">t_scaling_factor</span>
-            <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;region&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">region</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;thickness&#39;</span><span class="p">]</span> <span class="o">*=</span> <span class="n">t_scaling_factor</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;region&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">region</span>
             <span class="k">return</span> <span class="n">kwargs</span>
 
         <span class="n">layup</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">CompositeLayup</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">layup_name</span><span class="p">,</span>
@@ -905,14 +891,14 @@
         <span class="n">layup</span><span class="o">.</span><span class="n">resume</span><span class="p">()</span>
         <span class="n">abaqus_functions</span><span class="o">.</span><span class="n">modify_composite_layup</span><span class="p">(</span><span class="n">part</span><span class="o">=</span><span class="n">part</span><span class="p">,</span>
             <span class="n">layup_name</span><span class="o">=</span><span class="n">layup_name</span><span class="p">,</span> <span class="n">modify_func</span><span class="o">=</span><span class="n">modify_ply</span><span class="p">)</span>
-    <span class="c"># suppress needed to put the new properties to the input file</span>
+    <span class="c1"># suppress needed to put the new properties to the input file</span>
     <span class="n">original_layup</span><span class="o">.</span><span class="n">suppress</span><span class="p">()</span>
 
-    <span class="k">return</span> <span class="n">elems_t</span><span class="p">,</span> <span class="n">t_set</span>
+    <span class="k">return</span> <span class="n">elems_t</span><span class="p">,</span> <span class="n">t_set</span></div>
 
-</div>
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
-    <span class="n">cc</span> <span class="o">=</span> <span class="n">stds</span><span class="p">[</span><span class="s">&#39;desicos_study&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">ccs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">cc</span> <span class="o">=</span> <span class="n">stds</span><span class="p">[</span><span class="s1">&#39;desicos_study&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">ccs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
     <span class="n">cc</span><span class="o">.</span><span class="n">created_model</span> <span class="o">=</span> <span class="bp">False</span>
     <span class="n">cc</span><span class="o">.</span><span class="n">create_model</span><span class="p">()</span>
     <span class="n">part_nodes</span> <span class="o">=</span> <span class="n">mdb</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="n">cc</span><span class="o">.</span><span class="n">model_name</span><span class="p">]</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="n">cc</span><span class="o">.</span><span class="n">part_name_shell</span><span class="p">]</span><span class="o">.</span><span class="n">nodes</span>
@@ -920,7 +906,7 @@
 
     <span class="n">sf</span> <span class="o">=</span> <span class="mi">100</span>
 
-    <span class="n">path</span> <span class="o">=</span> <span class="s">r&#39;C:\clones\desicos\desicos\conecylDB\files\dlr\degenhardt_2010_z20\degenhardt_2010_z20_msi_theta_z_imp.txt&#39;</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="s1">r&#39;C:\clones\desicos\desicos\conecylDB\files\dlr\degenhardt_2010_z20\degenhardt_2010_z20_msi_theta_z_imp.txt&#39;</span>
     <span class="n">H_measured</span> <span class="o">=</span> <span class="mf">510.</span>
     <span class="n">H_model</span> <span class="o">=</span> <span class="mf">510.</span>
     <span class="n">d</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">read_theta_z_imp</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">,</span>
@@ -928,9 +914,9 @@
                                   <span class="n">stretch_H</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
                                   <span class="n">z_offset_bot</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
 
-    <span class="n">log</span><span class="p">(</span><span class="s">&#39;init sample&#39;</span><span class="p">)</span>
+    <span class="n">log</span><span class="p">(</span><span class="s1">&#39;init sample&#39;</span><span class="p">)</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">sample</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="mi">10000</span><span class="p">))</span>
-    <span class="n">log</span><span class="p">(</span><span class="s">&#39;end sample&#39;</span><span class="p">)</span>
+    <span class="n">log</span><span class="p">(</span><span class="s1">&#39;end sample&#39;</span><span class="p">)</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])]</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">data</span><span class="p">[</span><span class="o">-</span><span class="mi">3000</span><span class="p">:],</span> <span class="n">data</span><span class="p">[:],</span> <span class="n">data</span><span class="p">[:</span><span class="mi">3000</span><span class="p">]))</span>
     <span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">/=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
@@ -967,10 +953,14 @@
         <div class="sphinxsidebarwrapper">
 <p class="logo">
   <a href="../../../index.html">
-    <img class="logo" src="../../../_static/desicos.png" alt="Logo"/>
+    <img class="logo" src="../../../_static/../logo/desicos.png" alt="Logo"/>
     
   </a>
 </p>
+
+
+
+
 
 
 
@@ -988,14 +978,11 @@
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -1006,8 +993,8 @@
       &copy;2012-2015 Desicos Improved Software Team.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
       
     </div>
 

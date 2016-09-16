@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Virtual Material Model (VMM) &mdash; DESICOS 2.4.6 documentation</title>
+    <title>Virtual Material Model (VMM) &mdash; DESICOS 2.4.7 documentation</title>
     
     <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.4.6',
+        VERSION:     '2.4.7',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,39 +23,18 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <link rel="top" title="DESICOS 2.4.6 documentation" href="../../../index.html" />
+    <link rel="top" title="DESICOS 2.4.7 documentation" href="../../../index.html" />
     <link rel="up" title="Cone Ply Piece Optimization Tool (CPPOT)" href="../index.html" />
     <link rel="next" title="References" href="../ref.html" />
     <link rel="prev" title="GUI for the Cone Ply Piece Optimization Tool" href="../gui/index.html" />
    
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
   <body role="document">
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../../../np-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="../ref.html" title="References"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="../gui/index.html" title="GUI for the Cone Ply Piece Optimization Tool"
-             accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">DESICOS 2.4.6 documentation</a> &raquo;</li>
-          <li class="nav-item nav-item-1"><a href="../../index.html" >Tutorials</a> &raquo;</li>
-          <li class="nav-item nav-item-2"><a href="../index.html" accesskey="U">Cone Ply Piece Optimization Tool (CPPOT)</a> &raquo;</li> 
-      </ul>
-    </div>  
+  
 
     <div class="document">
       <div class="documentwrapper">
@@ -73,12 +52,12 @@ different fiber angles <img class="math" src="../../../_images/math/9d5701ac5def
 and <img class="math" src="../../../_images/math/3473c14d011d9f1aede5914054e51b46686d5045.png" alt="s_2"/>. The variable s is part of the conical coordinate system. Goldfeld
 <a class="reference internal" href="../ref.html#goldfeld2007" id="id1">[goldfeld2007]</a> describes the local fiber angle <img class="math" src="../../../_images/math/f6479197a297e86fd8493f26228dc4bc10ac492d.png" alt="\Theta"/> as a function of s:</p>
 <div class="math">
-<p><img src="../../../_images/math/c039a25e161ac1f19e936d78490be2193710eeaf.png" alt="\Theta(s)=arcsin \left( \frac{s_1}{s} \cdot sin(\Theta_1) \right)"/></p>
+<p><img src="../../../_images/math/cea9c7583ae9520a68503fef86fcb6173a6578b7.png" alt="\Theta(s)=arcsin \left( \frac{s_1}{s} \cdot sin(\Theta_1) \right)"/></p>
 </div><p>This approach is only valid for the path of a single fiber. A new approach is
 to describe the local fiber angle by the difference between the angle of the
 point of interest and the angle of the starting point of the ply part:</p>
 <div class="math">
-<p><img src="../../../_images/math/f5e17469200e2ee6b61e6e38addd5d0b363a7403.png" alt="\Theta(\phi)= \Theta_1-(\phi-\phi_1)"/></p>
+<p><img src="../../../_images/math/10208f6223623ff919383af0ea08611b52b48210.png" alt="\Theta(\phi)= \Theta_1-(\phi-\phi_1)"/></p>
 </div><p>This approach can be used for ply parts with a finite width and is the key
 formula for this program.</p>
 <div class="figure align-center" id="id2">
@@ -104,7 +83,7 @@ and in the separate Cone Ply Piece Optimization Tool (CPPOT).</p>
 <li><strong>3D-Cartesian</strong>: Used for the model generation in ABAQUS</li>
 </ul>
 <div class="math">
-<p><img src="../../../_images/math/83eb817f78b73b9b15e4ed3db806e3230a7b6e8c.png" alt="x,y,z \in [-\infty, +\infty]"/></p>
+<p><img src="../../../_images/math/63af6d05baa176ec6d6961ad0fba5b2ca0acafb7.png" alt="x,y,z \in [-\infty, +\infty]"/></p>
 </div><div class="figure align-center" id="id3">
 <a class="reference internal image-reference" href="../../../_images/fig_global_cart_csys.png"><img alt="../../../_images/fig_global_cart_csys.png" src="../../../_images/fig_global_cart_csys.png" style="width: 500px;" /></a>
 <p class="caption"><span class="caption-text">Figure 2: Global 3D-Cartesian coordinate system</span></p>
@@ -116,7 +95,7 @@ for the circumferential coordinate instead of <img class="math" src="../../../_i
 will be used for the fiber angle.</li>
 </ul>
 <div class="math">
-<p><img src="../../../_images/math/90daaddaad8c6cfdda0781b7b3e79b4f8758845d.png" alt="r &amp;\in [0, +\infty] \\
+<p><img src="../../../_images/math/c264d292e90fec7ae28f44436ad5c10c9a176a37.png" alt="r &amp;\in [0, +\infty] \\
 \psi &amp;\in [0, 2\pi) \\
 z &amp;\in [-\infty, +\infty]"/></p>
 </div><div class="figure align-center" id="id4">
@@ -126,13 +105,13 @@ z &amp;\in [-\infty, +\infty]"/></p>
 <p>The coordinate transformation between Cartesian and cylindrical coordinates
 and vice versa is done as follows:</p>
 <div class="math">
-<p><img src="../../../_images/math/50a47b45d7ac245ad2291898184c8fc503c84dc4.png" alt="(x, y, z) &amp;= (r\cos\psi, r\sin\psi, z) \\
+<p><img src="../../../_images/math/962fb5484ddea1fc83c264e2707e41413ba8380c.png" alt="(x, y, z) &amp;= (r\cos\psi, r\sin\psi, z) \\
 (r, \psi, z) &amp;= (\sqrt{x^2 + y^2}, {\rm atan2}{(y, x)}, z)"/></p>
 </div><p><strong>Unfolded coordinates</strong></p>
 <p>The cone surface is a two-dimensional surface within the three-dimensional
 space. Points on the cone have to satisfy the following equation:</p>
 <div class="math">
-<p><img src="../../../_images/math/4f48b5cb21bb08c38666d90321333742c39401b6.png" alt="r = r_{bot} - z \tan\alpha"/></p>
+<p><img src="../../../_images/math/abbc11e02a574a2d12290cf19bfffb97410ceca5.png" alt="r = r_{bot} - z \tan\alpha"/></p>
 </div><p>Points that satisfy this equation can be described using a two-dimensional
 coordinate system. For this purpose, an imaginary cut is made through the cone
 at <img class="math" src="../../../_images/math/d790d5675f12087431f993a4b2074c33bfc78229.png" alt="\psi = 0"/>, see the above figure. The apex of the cone is placed at the
@@ -148,19 +127,19 @@ in the layout shown below:</p>
 <li><strong>2D-polar</strong>: This is the most natural description:</li>
 </ul>
 <div class="math">
-<p><img src="../../../_images/math/2b5462368fc70ddb9ef427f412ea5041051e5c25.png" alt="s &amp;\in [0, +\infty] \\
+<p><img src="../../../_images/math/9103aa8ea183c2f6910d434059a1f25f5a8f2972.png" alt="s &amp;\in [0, +\infty] \\
 \phi &amp;\in [0, \phi_{max})"/></p>
 </div><p>The relation between the 2D-polar coordinates <img class="math" src="../../../_images/math/ef8ccc3407f353528c904a90d95cec3080df8bfe.png" alt="(s, \phi)"/> and 3D-cylindrical
 coordinates is as follows, valid only for points on the cone surface:</p>
 <div class="math">
-<p><img src="../../../_images/math/404280baa2428a17f808a867c01f4e52a31074ed.png" alt="(s, \phi) &amp;= \left(\frac{r}{\sin\alpha}, \psi\sin\alpha\right) \\
+<p><img src="../../../_images/math/d1cbe22881c18ba70652d8c521cdd60ce43f9fef.png" alt="(s, \phi) &amp;= \left(\frac{r}{\sin\alpha}, \psi\sin\alpha\right) \\
 (r, \psi, z) &amp;= \left(s\sin\alpha, \frac{\phi}{\sin\alpha},
 \frac{r_{bot}}{\tan\alpha} - s\cos\alpha\right)"/></p>
 </div><p>Using the above coordinate transformation, the maximum value for the
 <img class="math" src="../../../_images/math/190802f0a804647b88ba7261622649237474ea0a.png" alt="\phi"/>-coordinate (labeled <img class="math" src="../../../_images/math/11927f45f7ba3049f8302e6f7da25a727cfd6d56.png" alt="phi_{max}"/>) can be calculated, as well as the
 radial limits <img class="math" src="../../../_images/math/e9c3ff2d26f999a0ec57f74eb142f8e590abf373.png" alt="s_{bot}"/> and <img class="math" src="../../../_images/math/8f77b052040337fd50d9748d8b8f932b67d047d2.png" alt="s_{top}"/>:</p>
 <div class="math">
-<p><img src="../../../_images/math/6cafabad54e47fd2756ea854a10e246b2054ca44.png" alt="\phi_{max} &amp;= 2\pi\sin\alpha \\
+<p><img src="../../../_images/math/f47bb0df4615d40d70e7cd215046a732a3ee365d.png" alt="\phi_{max} &amp;= 2\pi\sin\alpha \\
 s_{bot} &amp;= \frac{r_{bot}}{\sin\alpha} \\
 s_{top} &amp;= \frac{s_{top}}{\sin\alpha} =
 \frac{r_{bot} - H\tan\alpha}{\sin\alpha} =
@@ -170,10 +149,10 @@ s_{top} &amp;= \frac{s_{top}}{\sin\alpha} =
 (defining lines, calculating intersection points, ...):</li>
 </ul>
 <div class="math">
-<p><img src="../../../_images/math/00cd43886e4c1c750de2600df6022a94e5db8c84.png" alt="\eta, \zeta \in [-\infty,+\infty]"/></p>
+<p><img src="../../../_images/math/10ffc4b3aabe6097352f67d2a83212282c74a484.png" alt="\eta, \zeta \in [-\infty,+\infty]"/></p>
 </div><p>The transformation rules are fairly straightforward:</p>
 <div class="math">
-<p><img src="../../../_images/math/bffbc487ef7e599eb53b4c9218304f2d68243a43.png" alt="(\eta, \zeta) &amp;= (s\cos\phi, s\sin\phi) \\
+<p><img src="../../../_images/math/ead0b41a5b519a84789f4fb145c5325f7e397aff.png" alt="(\eta, \zeta) &amp;= (s\cos\phi, s\sin\phi) \\
 (s, \phi) &amp;= \left(\sqrt{\eta^2 + \zeta^2},
 {\rm atan2}{(\zeta, \eta)}\right)"/></p>
 </div><ul class="simple">
@@ -343,7 +322,7 @@ Now the two constituent parts of <img class="math" src="../../../_images/math/43
 the difference in angular coordinate between <img class="math" src="../../../_images/math/8ce9595714288cbb7d1d803a016458158c47eb1e.png" alt="P_2"/> and <img class="math" src="../../../_images/math/99aae1030a748448110351fcdad1a276730a133e.png" alt="T_2"/>, the other between
 <img class="math" src="../../../_images/math/77eeec7821ce583dab140afb8da68063e774b240.png" alt="T_3"/> and <img class="math" src="../../../_images/math/8b02169c598827978c881f7d874a905a2f33a1c0.png" alt="P_3"/>. This is shown more clearly in figure 12 below.</p>
 <div class="math">
-<p><img src="../../../_images/math/96209bb2ec52085884c63e3a2f327a099b63e9b7.png" alt="\Delta\phi_1 &amp;= \phi_{P2} - \phi_{T2} \\
+<p><img src="../../../_images/math/6914496fe670e54e1c34023eb2522c56a49ff4d1.png" alt="\Delta\phi_1 &amp;= \phi_{P2} - \phi_{T2} \\
 \Delta\phi_2 &amp;= \phi_{T3} - \phi_{P3} \\
 \Delta\phi &amp;= \Delta\phi_1 + \Delta\phi_2"/></p>
 </div><div class="figure align-center" id="id13">
@@ -393,13 +372,13 @@ defined by the four corner points <img class="math" src="../../../_images/math/f
 <img class="math" src="../../../_images/math/85df95dc4073dcfb2093d664e01881be9c183d5f.png" alt="s_{\theta nom}"/> (the starting position), the ply piece spans an angle from
 <img class="math" src="../../../_images/math/15f519a61ca78b8a74ef24ae0d0fce838e095041.png" alt="\phi_{nom, min}"/> to <img class="math" src="../../../_images/math/52a17f358eb664e8dc152caffe4bfeb381fe71d1.png" alt="\phi_{nom, max}"/>. These angles can be calculated by:</p>
 <div class="math">
-<p><img src="../../../_images/math/def7adf3f416e92df90e482cc18fc8f3890d7102.png" alt="\phi_{nom, min} &amp;= \phi_{nom} - \Delta\phi_2 \\
+<p><img src="../../../_images/math/f31a8ba34044ced8c4fde75451e55f5a58bc0f66.png" alt="\phi_{nom, min} &amp;= \phi_{nom} - \Delta\phi_2 \\
 \phi_{nom, max} &amp;= \phi_{nom} + \Delta\phi_1"/></p>
 </div><p>Additionally, the <em>limit angles</em> of the ply piece are defined as the minimal
 and maximum value of the angular coordinate. Since the extreme values are
 always located at the corner points, these can be calculated by:</p>
 <div class="math">
-<p><img src="../../../_images/math/54307e1ee7d0ef12968a37a8a6e18d11d463595d.png" alt="\phi_{limit, min} &amp;= \min_i(\phi_{Pi}) \\
+<p><img src="../../../_images/math/284bbc2f5e6711729186e235ea6eeb98364d1a90.png" alt="\phi_{limit, min} &amp;= \min_i(\phi_{Pi}) \\
 \phi_{limit, max} &amp;= \max_i(\phi_{Pi})"/></p>
 </div><div class="figure align-center" id="id17">
 <a class="reference internal image-reference" href="../../../_images/fig_final_piece.png"><img alt="../../../_images/fig_final_piece.png" src="../../../_images/fig_final_piece.png" style="width: 500px;" /></a>
@@ -414,7 +393,7 @@ mainly in the method
 <a class="reference internal" href="../../../modules/cppot/index.html#desicos.cppot.core.ply_model.PlyPieceModel.rebuild" title="desicos.cppot.core.ply_model.PlyPieceModel.rebuild"><code class="xref py py-func docutils literal"><span class="pre">desicos.cppot.core.ply_model.PlyPieceModel.rebuild()</span></code></a>.</p>
 <p>First the required number of ply pieces is determined:</p>
 <div class="math">
-<p><img src="../../../_images/math/0de22cc05b92867b15b9aed904cec5644dbff553.png" alt="n_{pieces} = \frac{\phi_{max}}{\Delta\phi}"/></p>
+<p><img src="../../../_images/math/393a3c3b97ba79d208ec47ec2f61e2567579cb21.png" alt="n_{pieces} = \frac{\phi_{max}}{\Delta\phi}"/></p>
 </div><div class="figure align-center" id="id18">
 <a class="reference internal image-reference" href="../../../_images/fig_continuity.png"><img alt="../../../_images/fig_continuity.png" src="../../../_images/fig_continuity.png" style="width: 600px;" /></a>
 <p class="caption"><span class="caption-text">Figure 17: Continuity problem</span></p>
@@ -424,13 +403,13 @@ similar pieces would result in a discontinuous model, as shown in figure 17.
 To remedy this problem, a smaller <em>rest</em> piece is added. This rest piece should
 span an angle: (with <img class="math" src="../../../_images/math/9e67a17df91559dcd8b99e84606d01f2dd12b7b2.png" alt="\lfloor x\rfloor"/> denoting the floor function)</p>
 <div class="math">
-<p><img src="../../../_images/math/7537a9bab7af9801ff4944f962291ae7907286d4.png" alt="\Delta\phi_{rest} &amp;= \phi_{max} - \lfloor n_{pieces}\rfloor\Delta\phi \\
+<p><img src="../../../_images/math/3fbc3dd42d76ff70871b3065e0a7c21d37b978b9.png" alt="\Delta\phi_{rest} &amp;= \phi_{max} - \lfloor n_{pieces}\rfloor\Delta\phi \\
 &amp;= n_{pieces}\Delta\phi - \lfloor n_{pieces}\rfloor\Delta\phi \\
 &amp;= \left(n_{pieces} - \lfloor n_{pieces}\rfloor\right)\Delta\phi \\
 &amp;= f_{rest}\Delta\phi"/></p>
 </div><p>with</p>
 <div class="math">
-<p><img src="../../../_images/math/b22fed224826a8b5590d7e597aac03570565ac64.png" alt="f_{rest} = \frac{\Delta\phi_{rest}}{\Delta\phi}
+<p><img src="../../../_images/math/01b021a209cccb172ce1e7cec3e3904e382a7bbd.png" alt="f_{rest} = \frac{\Delta\phi_{rest}}{\Delta\phi}
 = n_{pieces} - \lfloor n_{pieces} \rfloor"/></p>
 </div><p>So in words, <img class="math" src="../../../_images/math/a3fdbedde68d9b77d2479dd53f4b93583addb397.png" alt="f_{rest}"/> is the fractional part of <img class="math" src="../../../_images/math/5dc82ae6dae83ad1f2d907201e3919ba66ae40a2.png" alt="n_{pieces}"/>. To construct
 the rest piece, the same procedure is followed as for a normal ply piece.
@@ -440,7 +419,7 @@ a ply piece whose angular span <img class="math" src="../../../_images/math/e8fc
 equations. The positions of points <img class="math" src="../../../_images/math/8ce9595714288cbb7d1d803a016458158c47eb1e.png" alt="P_2"/> and <img class="math" src="../../../_images/math/8b02169c598827978c881f7d874a905a2f33a1c0.png" alt="P_3"/> (and, of course, the
 calculations in subsequent steps) are adjusted accordingly.</p>
 <div class="math">
-<p><img src="../../../_images/math/408d22528996e67bc205ffb4d1cdb7c2e5492a6d.png" alt="\Delta\phi_{rest,1} &amp;= f_{rest}\Delta\phi_1 \\
+<p><img src="../../../_images/math/8f90b1413d0ae8aff371189c3379cfa7e6c8843e.png" alt="\Delta\phi_{rest,1} &amp;= f_{rest}\Delta\phi_1 \\
 \Delta\phi_{rest,2} &amp;= f_{rest}\Delta\phi_2 \\
 \Delta\phi_{rest} &amp;= \Delta\phi_{rest,1} + \Delta\phi_{rest,2}
 = f_{rest}\Delta\phi"/></p>
@@ -452,14 +431,14 @@ edges in multiple plies coincide, which would (unnecessarily) cause weak spots
 in the actual cone. The offset parameter is specified in relative terms
 (0...1), based on this value <img class="math" src="../../../_images/math/77fd1e4528e089fdc9c5d3504efc0a7200de03e1.png" alt="\phi_{offset}"/> is calculated as follows:</p>
 <div class="math">
-<p><img src="../../../_images/math/ca435215a3a67677d68aec0b9db5977809e39dac.png" alt="\phi_{offset} = f_{rel,offset}\Delta\phi \\
+<p><img src="../../../_images/math/ecb87515be467af0303561def3c3e47d87ac4252.png" alt="\phi_{offset} = f_{rel,offset}\Delta\phi \\
 {\rm with}\qquad f_{rel,offset} \in [0, 1)"/></p>
 </div><p>Ply pieces are then placed in both directions at angular increments of
 <img class="math" src="../../../_images/math/20009de95ff5d66255f15355a75d7b0210cd190a.png" alt="\pm\Delta\phi"/>. Pieces are added as long as they cover some area in the
 angular range <img class="math" src="../../../_images/math/8d788847d6357ab45935b909f849d3f42793b749.png" alt="[0, \phi_{max}]"/>, which is the case if both below-stated
 inequalities are satisfied.</p>
 <div class="math">
-<p><img src="../../../_images/math/d7e255f52f6387fa45a3b1c352519623f8fc1f8c.png" alt="\phi_{limit,min} &amp;\leq \phi_{max} \\
+<p><img src="../../../_images/math/894abd410788533ca0443d5180e6d996b29e3f63.png" alt="\phi_{limit,min} &amp;\leq \phi_{max} \\
 \phi_{limit,max} &amp;\geq 0"/></p>
 </div><p>The possible result of this operation is shown in figure 18. Here the unfolded
 cone is drawn in red, the first ply piece in blue, the other ply pieces in
@@ -473,7 +452,7 @@ the previous piece and the next piece are named <img class="math" src="../../../
 <img class="math" src="../../../_images/math/766aed84bd37b755cdd4faa4e93415071adebfd5.png" alt="\phi_{nom,prev}"/> and <img class="math" src="../../../_images/math/b06d11acf81c775bad8b00d8b1ff58c909954e41.png" alt="\phi_{nom,next}"/>, respectively, their mutual relations
 are as stated below. Refer also to the figure.</p>
 <div class="math">
-<p><img src="../../../_images/math/53c40b025eb0d6ea9875092b924d89e4903a3b9a.png" alt="\phi_{nom,rest} - \phi_{nom,prev} &amp;= \Delta\phi_1 + \Delta\phi_{rest,2} \\
+<p><img src="../../../_images/math/48bc891f5f5c19db6698dbbd35f057c2a9c9201d.png" alt="\phi_{nom,rest} - \phi_{nom,prev} &amp;= \Delta\phi_1 + \Delta\phi_{rest,2} \\
 \phi_{nom,next} - \phi_{nom,rest} &amp;= \Delta\phi_{1,rest} + \Delta\phi_2"/></p>
 </div><div class="figure align-center" id="id19">
 <a class="reference internal image-reference" href="../../../_images/fig_all_pieces.png"><img alt="../../../_images/fig_all_pieces.png" src="../../../_images/fig_all_pieces.png" style="width: 700px;" /></a>
@@ -514,7 +493,7 @@ A relation for the local fiber angle can be found, based on the principle that
 the sum of all angles inside a triangle is always equal to <img class="math" src="../../../_images/math/9c0ac8aee783dd6f224563b1a850f9ad269aeaed.png" alt="180^\circ"/>. This
 results in the following equation:</p>
 <div class="math">
-<p><img src="../../../_images/math/41c598f37ae6298b11984bafc535c1880ef680e7.png" alt="\theta_{local} = \theta_{nom} - (\phi - \phi_{nom})"/></p>
+<p><img src="../../../_images/math/a90fffc2ee43c2a827a70da5ba67322a5f75a9c5.png" alt="\theta_{local} = \theta_{nom} - (\phi - \phi_{nom})"/></p>
 </div><p>An example plot of the local fiber angle is shown in the figure below. Note
 that all points within the same ply piece have a constant fiber angle along
 radial lines (<img class="math" src="../../../_images/math/2e5f03515c49f345399eb77eaaf5f2fe9fc664a7.png" alt="\phi = {\rm const}"/>) and that there are significant
@@ -534,10 +513,14 @@ discontinuities between adjacent plies.</p>
         <div class="sphinxsidebarwrapper">
 <p class="logo">
   <a href="../../../index.html">
-    <img class="logo" src="../../../_static/desicos.png" alt="Logo"/>
+    <img class="logo" src="../../../_static/../logo/desicos.png" alt="Logo"/>
     
   </a>
 </p>
+
+
+
+
 
 
 
@@ -555,14 +538,11 @@ discontinuities between adjacent plies.</p>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -573,8 +553,8 @@ discontinuities between adjacent plies.</p>
       &copy;2012-2015 Desicos Improved Software Team.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
       
     </div>
 

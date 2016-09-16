@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>desicos.abaqus.imperfections.cutout &mdash; DESICOS 2.4.6 documentation</title>
+    <title>desicos.abaqus.imperfections.cutout &mdash; DESICOS 2.4.7 documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     '2.4.6',
+        VERSION:     '2.4.7',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,30 +23,16 @@
     <script type="text/javascript" src="../../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../../_static/doctools.js"></script>
-    <link rel="top" title="DESICOS 2.4.6 documentation" href="../../../../index.html" />
+    <link rel="top" title="DESICOS 2.4.7 documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
    
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
   <body role="document">
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../../../../np-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="../../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../index.html">DESICOS 2.4.6 documentation</a> &raquo;</li>
-          <li class="nav-item nav-item-1"><a href="../../../index.html" accesskey="U">Module code</a> &raquo;</li> 
-      </ul>
-    </div>  
+  
 
     <div class="document">
       <div class="documentwrapper">
@@ -54,11 +40,12 @@
           <div class="body" role="main">
             
   <h1>Source code for desicos.abaqus.imperfections.cutout</h1><div class="highlight"><pre>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">sin</span><span class="p">,</span> <span class="n">cos</span>
 
 <span class="kn">from</span> <span class="nn">desicos.abaqus.utils</span> <span class="kn">import</span> <span class="n">cyl2rec</span>
 <span class="kn">from</span> <span class="nn">desicos.logger</span> <span class="kn">import</span> <span class="n">warn</span>
+<span class="kn">from</span> <span class="nn">desicos.abaqus</span> <span class="kn">import</span> <span class="n">abaqus_functions</span>
 
 
 <div class="viewcode-block" id="Cutout"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.cutout.Cutout">[docs]</a><span class="k">class</span> <span class="nc">Cutout</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -84,10 +71,44 @@
 <span class="sd">        Number of elements along the radial edges about the cutout center.</span>
 <span class="sd">        This parameter affects the aspect ratio of the elements inside the</span>
 <span class="sd">        cutout area.</span>
+<span class="sd">    prop_around_cutout : dict, optional</span>
+<span class="sd">        Dictionary with keys:</span>
+
+<span class="sd">        - &#39;mode&#39; : str (&#39;radius&#39; or &#39;partition&#39;)</span>
+<span class="sd">        - &#39;radius&#39; : float</span>
+<span class="sd">        - &#39;stack&#39;: list of floats</span>
+<span class="sd">        - &#39;plyts&#39;: list of floats</span>
+<span class="sd">        - &#39;mat_names&#39;: list of strings</span>
+<span class="sd">        .</span>
+
+<span class="sd">        Examples:</span>
+
+<span class="sd">        - Defining a property with ``&#39;mode&#39;=&#39;radius&#39;``::</span>
+
+<span class="sd">            prop_around_cutout = {</span>
+<span class="sd">                &#39;mode&#39;: &#39;radius&#39;,</span>
+<span class="sd">                &#39;radius&#39;: 10.,</span>
+<span class="sd">                &#39;stack&#39;: [0, 90, 0],</span>
+<span class="sd">                &#39;plyts&#39;: [0.125, 0.125, 0.125],</span>
+<span class="sd">                &#39;mat_names&#39;: [&#39;Alum&#39;, &#39;Alum&#39;, &#39;Alum&#39;],</span>
+<span class="sd">            }</span>
+
+<span class="sd">        - Defining a property with ``&#39;mode&#39;=&#39;partition&#39;``::</span>
+
+<span class="sd">            prop_around_cutout = {</span>
+<span class="sd">                &#39;mode&#39;: &#39;partition&#39;,</span>
+<span class="sd">                &#39;stack&#39;: [0, 90, 0],</span>
+<span class="sd">                &#39;plyts&#39;: [0.125, 0.125, 0.125],</span>
+<span class="sd">                &#39;mat_names&#39;: [&#39;Alum&#39;, &#39;Alum&#39;, &#39;Alum&#39;],</span>
+<span class="sd">            }</span>
+
+<span class="sd">        .. note:: ``mat_names`` must be a list of materials already created in</span>
+<span class="sd">                  the current model in Abaqus</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thetadeg</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">drill_offset_deg</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span>
-                 <span class="n">clearance_factor</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span> <span class="n">numel_radial_edge</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+                 <span class="n">clearance_factor</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span> <span class="n">numel_radial_edge</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                 <span class="n">prop_around_cutout</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">thetadeg</span> <span class="o">=</span> <span class="n">thetadeg</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pt</span> <span class="o">=</span> <span class="n">pt</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="o">=</span> <span class="n">d</span>
@@ -95,14 +116,15 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">drill_offset_deg</span> <span class="o">=</span> <span class="n">drill_offset_deg</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">clearance_factor</span> <span class="o">=</span> <span class="n">clearance_factor</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">numel_radial_edge</span> <span class="o">=</span> <span class="n">numel_radial_edge</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prop_around_cutout</span> <span class="o">=</span> <span class="n">prop_around_cutout</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">impconf</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">thetadeg1</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">thetadeg2</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">offsetdeg</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="c"># plotting options</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">xaxis</span> <span class="o">=</span> <span class="s">&#39;d&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">xaxis_label</span> <span class="o">=</span> <span class="s">&#39;Cutout diameter, mm&#39;</span>
+        <span class="c1"># plotting options</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xaxis</span> <span class="o">=</span> <span class="s1">&#39;d&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xaxis_label</span> <span class="o">=</span> <span class="s1">&#39;Cutout diameter, mm&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="bp">None</span>
@@ -124,13 +146,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">ptlow</span> <span class="o">=</span> <span class="p">(</span><span class="n">z</span> <span class="o">-</span> <span class="n">zoffs</span><span class="p">)</span><span class="o">/</span><span class="n">H</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ptup</span> <span class="o">=</span> <span class="p">(</span><span class="n">z</span> <span class="o">+</span> <span class="n">zoffs</span><span class="p">)</span><span class="o">/</span><span class="n">H</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39;cutout&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;cutout&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">thetadegs</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">thetadeg1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">thetadeg</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">thetadeg2</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pts</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ptlow</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pt</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ptup</span><span class="p">]</span>
 
 
     <span class="k">def</span> <span class="nf">calc_amplitude</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c"># Label the cutout diameter as &#39;amplitude&#39;, at least for now.</span>
+        <span class="c1"># Label the cutout diameter as &#39;amplitude&#39;, at least for now.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">amplitude</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">d</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">amplitude</span>
 
@@ -144,6 +166,7 @@
         <span class="n">cc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">conecyl</span>
         <span class="n">mod</span> <span class="o">=</span> <span class="n">mdb</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="n">cc</span><span class="o">.</span><span class="n">model_name</span><span class="p">]</span>
         <span class="n">p</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="n">cc</span><span class="o">.</span><span class="n">part_name_shell</span><span class="p">]</span>
+
         <span class="n">ra</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">rootAssembly</span>
         <span class="n">datums</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">datums</span>
         <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">d</span>
@@ -156,26 +179,27 @@
         <span class="n">thetadeg1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">thetadeg1</span>
         <span class="n">thetadeg2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">thetadeg2</span>
 
-        <span class="c"># line defining the z axis</span>
+        <span class="c1"># line defining the z axis</span>
         <span class="n">_p1</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">DatumPointByCoordinate</span><span class="p">(</span><span class="n">coords</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
         <span class="n">_p2</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">DatumPointByCoordinate</span><span class="p">(</span><span class="n">coords</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
         <span class="n">zaxis</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">DatumAxisByTwoPoint</span><span class="p">(</span><span class="n">point1</span><span class="o">=</span><span class="n">datums</span><span class="p">[</span><span class="n">_p1</span><span class="o">.</span><span class="n">id</span><span class="p">],</span>
                                       <span class="n">point2</span><span class="o">=</span><span class="n">datums</span><span class="p">[</span><span class="n">_p2</span><span class="o">.</span><span class="n">id</span><span class="p">])</span>
 
-        <span class="c"># line defining the cutting axis</span>
-        <span class="n">p1coord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">))</span>
+        <span class="c1"># line defining the cutting axis</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p1coord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">))</span>
         <span class="n">dx</span> <span class="o">=</span> <span class="n">d</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">alpharad</span> <span class="o">-</span> <span class="n">drill_offset_rad</span><span class="p">)</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">thetarad</span><span class="p">)</span>
         <span class="n">dy</span> <span class="o">=</span> <span class="n">d</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">alpharad</span> <span class="o">-</span> <span class="n">drill_offset_rad</span><span class="p">)</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">thetarad</span><span class="p">)</span>
         <span class="n">dz</span> <span class="o">=</span> <span class="n">d</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">alpharad</span> <span class="o">-</span> <span class="n">drill_offset_rad</span><span class="p">)</span>
-        <span class="n">p2coord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">x</span><span class="o">+</span><span class="n">dx</span><span class="p">,</span> <span class="n">y</span><span class="o">+</span><span class="n">dy</span><span class="p">,</span> <span class="n">z</span><span class="o">+</span><span class="n">dz</span><span class="p">))</span>
-        <span class="n">p1</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">DatumPointByCoordinate</span><span class="p">(</span><span class="n">coords</span><span class="o">=</span><span class="n">p1coord</span><span class="p">)</span>
-        <span class="n">p2</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">DatumPointByCoordinate</span><span class="p">(</span><span class="n">coords</span><span class="o">=</span><span class="n">p2coord</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p0coord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">x</span><span class="o">-</span><span class="n">dx</span><span class="p">,</span> <span class="n">y</span><span class="o">-</span><span class="n">dy</span><span class="p">,</span> <span class="n">z</span><span class="o">-</span><span class="n">dz</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p2coord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">x</span><span class="o">+</span><span class="n">dx</span><span class="p">,</span> <span class="n">y</span><span class="o">+</span><span class="n">dy</span><span class="p">,</span> <span class="n">z</span><span class="o">+</span><span class="n">dz</span><span class="p">))</span>
+        <span class="n">p1</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">DatumPointByCoordinate</span><span class="p">(</span><span class="n">coords</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">p1coord</span><span class="p">)</span>
+        <span class="n">p2</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">DatumPointByCoordinate</span><span class="p">(</span><span class="n">coords</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">p2coord</span><span class="p">)</span>
         <span class="n">drillaxis</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">DatumAxisByTwoPoint</span><span class="p">(</span><span class="n">point1</span><span class="o">=</span><span class="n">datums</span><span class="p">[</span><span class="n">p1</span><span class="o">.</span><span class="n">id</span><span class="p">],</span>
                                           <span class="n">point2</span><span class="o">=</span><span class="n">datums</span><span class="p">[</span><span class="n">p2</span><span class="o">.</span><span class="n">id</span><span class="p">])</span>
 
-        <span class="c">#TODO get vertices where to pass the cutting plane</span>
-        <span class="n">plow</span> <span class="o">=</span> <span class="n">p1coord</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="n">pup</span> <span class="o">=</span> <span class="n">p1coord</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="c1">#TODO get vertices where to pass the cutting plane</span>
+        <span class="n">plow</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p1coord</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">pup</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p1coord</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">rlow</span><span class="p">,</span> <span class="n">zlow</span> <span class="o">=</span> <span class="n">cc</span><span class="o">.</span><span class="n">r_z_from_pt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ptlow</span><span class="p">)</span>
         <span class="n">plow</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">zlow</span>
         <span class="n">rup</span><span class="p">,</span> <span class="n">zup</span> <span class="o">=</span> <span class="n">cc</span><span class="o">.</span><span class="n">r_z_from_pt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ptup</span><span class="p">)</span>
@@ -211,7 +235,7 @@
         <span class="n">c4</span> <span class="o">=</span> <span class="n">cyl2rec</span><span class="p">(</span><span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">rlow</span> <span class="o">+</span> <span class="n">r</span><span class="p">),</span> <span class="n">thetadeg</span> <span class="o">+</span> <span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">offsetdeg</span><span class="p">,</span>
                      <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">z</span> <span class="o">+</span> <span class="n">zlow</span><span class="p">))</span>
 
-        <span class="c">#TODO try / except blocks needed due to an Abaqus bug</span>
+        <span class="c1">#TODO try / except blocks needed due to an Abaqus bug</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">face1</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">faces</span><span class="o">.</span><span class="n">findAt</span><span class="p">(</span><span class="n">c1</span><span class="p">)</span>
             <span class="n">p</span><span class="o">.</span><span class="n">PartitionFaceByDatumPlane</span><span class="p">(</span><span class="n">datumPlane</span><span class="o">=</span><span class="n">datums</span><span class="p">[</span><span class="n">diag1</span><span class="o">.</span><span class="n">id</span><span class="p">],</span>
@@ -247,16 +271,16 @@
                             <span class="n">sketchPlane</span><span class="o">=</span><span class="n">datums</span><span class="p">[</span><span class="n">sketchplane</span><span class="o">.</span><span class="n">id</span><span class="p">],</span>
                             <span class="n">sketchUpEdge</span><span class="o">=</span><span class="n">datums</span><span class="p">[</span><span class="n">zaxis</span><span class="o">.</span><span class="n">id</span><span class="p">],</span>
                             <span class="n">sketchPlaneSide</span><span class="o">=</span><span class="n">SIDE1</span><span class="p">,</span>
-                            <span class="n">origin</span><span class="o">=</span><span class="n">p2coord</span><span class="p">)</span>
+                            <span class="n">origin</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">p2coord</span><span class="p">)</span>
 
-        <span class="n">sketch</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">ConstrainedSketch</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;__profile__&#39;</span><span class="p">,</span>
+        <span class="n">sketch</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">ConstrainedSketch</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;__profile__&#39;</span><span class="p">,</span>
             <span class="n">sheetSize</span><span class="o">=</span><span class="mf">10.</span><span class="o">*</span><span class="n">d</span><span class="p">,</span> <span class="n">gridSpacing</span><span class="o">=</span><span class="n">d</span><span class="o">/</span><span class="mf">10.</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">sketchstrans</span><span class="p">)</span>
         <span class="n">sketch</span><span class="o">.</span><span class="n">setPrimaryObject</span><span class="p">(</span><span class="n">option</span><span class="o">=</span><span class="n">SUPERIMPOSE</span><span class="p">)</span>
         <span class="n">p</span><span class="o">.</span><span class="n">projectReferencesOntoSketch</span><span class="p">(</span><span class="n">sketch</span><span class="o">=</span><span class="n">sketch</span><span class="p">,</span> <span class="nb">filter</span><span class="o">=</span><span class="n">COPLANAR_EDGES</span><span class="p">)</span>
         <span class="n">sketch</span><span class="o">.</span><span class="n">CircleByCenterPerimeter</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
                                        <span class="n">point1</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">d</span><span class="o">/</span><span class="mf">2.</span><span class="p">))</span>
 
-        <span class="c">#TODO try / except blocks needed due to an Abaqus bug</span>
+        <span class="c1">#TODO try / except blocks needed due to an Abaqus bug</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">p</span><span class="o">.</span><span class="n">PartitionFaceBySketchDistance</span><span class="p">(</span><span class="n">sketchPlane</span><span class="o">=</span><span class="n">datums</span><span class="p">[</span><span class="n">sketchplane</span><span class="o">.</span><span class="n">id</span><span class="p">],</span>
                     <span class="n">sketchUpEdge</span><span class="o">=</span><span class="n">datums</span><span class="p">[</span><span class="n">zaxis</span><span class="o">.</span><span class="n">id</span><span class="p">],</span> <span class="n">faces</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">faces</span><span class="p">,</span>
@@ -265,20 +289,20 @@
             <span class="k">pass</span>
 
         <span class="n">sketch</span><span class="o">.</span><span class="n">unsetPrimaryObject</span><span class="p">()</span>
-        <span class="k">del</span> <span class="n">mod</span><span class="o">.</span><span class="n">sketches</span><span class="p">[</span><span class="s">&#39;__profile__&#39;</span><span class="p">]</span>
+        <span class="k">del</span> <span class="n">mod</span><span class="o">.</span><span class="n">sketches</span><span class="p">[</span><span class="s1">&#39;__profile__&#39;</span><span class="p">]</span>
 
         <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
             <span class="n">faceList</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">p</span><span class="o">.</span><span class="n">faces</span><span class="o">.</span><span class="n">getClosest</span><span class="p">(</span><span class="n">coordinates</span><span class="o">=</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
                 <span class="n">z</span><span class="p">),),</span> <span class="n">searchTolerance</span><span class="o">=</span><span class="p">(</span><span class="n">d</span><span class="o">/</span><span class="mf">2.</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">))</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">faceList</span><span class="p">:</span>
                 <span class="k">break</span>
-            <span class="c">#TODO try / except blocks needed due to an Abaqus bug</span>
+            <span class="c1">#TODO try / except blocks needed due to an Abaqus bug</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">p</span><span class="o">.</span><span class="n">RemoveFaces</span><span class="p">(</span><span class="n">faceList</span><span class="o">=</span><span class="n">faceList</span><span class="p">,</span> <span class="n">deleteCells</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
             <span class="k">except</span><span class="p">:</span>
                 <span class="k">pass</span>
 
-        <span class="c"># Seed edges around cutout area</span>
+        <span class="c1"># Seed edges around cutout area</span>
         <span class="n">numel_per_edge</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">offsetdeg</span> <span class="o">/</span> <span class="mf">360.0</span> <span class="o">*</span> <span class="n">cc</span><span class="o">.</span><span class="n">numel_r</span><span class="p">))</span>
         <span class="n">edge_coords</span> <span class="o">=</span> <span class="p">[</span>
             <span class="p">(</span><span class="n">rup</span><span class="p">,</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">thetadeg1</span> <span class="o">+</span> <span class="n">thetadeg</span><span class="p">),</span> <span class="n">zup</span><span class="p">),</span>
@@ -295,7 +319,7 @@
             <span class="n">searchTolerance</span><span class="o">=</span><span class="mf">1.</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span>
         <span class="n">p</span><span class="o">.</span><span class="n">seedEdgeByNumber</span><span class="p">(</span><span class="n">edges</span><span class="o">=</span><span class="n">edgeList</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="n">numel_per_edge</span><span class="p">,</span> <span class="n">constraint</span><span class="o">=</span><span class="n">FIXED</span><span class="p">)</span>
 
-        <span class="c"># Seed radial edges about the cutout</span>
+        <span class="c1"># Seed radial edges about the cutout</span>
         <span class="n">edge_coords</span> <span class="o">=</span> <span class="p">[</span>
             <span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">thetadeg2</span> <span class="o">+</span> <span class="n">thetadeg</span><span class="p">),</span> <span class="n">z</span><span class="p">),</span>
             <span class="p">(</span><span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">rup</span> <span class="o">+</span> <span class="n">r</span><span class="p">),</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">thetadeg2</span> <span class="o">+</span> <span class="n">thetadeg</span><span class="p">),</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">zup</span> <span class="o">+</span> <span class="n">z</span><span class="p">)),</span>
@@ -312,34 +336,92 @@
         <span class="n">p</span><span class="o">.</span><span class="n">seedEdgeByNumber</span><span class="p">(</span><span class="n">edges</span><span class="o">=</span><span class="n">edgeList</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">numel_radial_edge</span><span class="p">,</span>
                            <span class="n">constraint</span><span class="o">=</span><span class="n">FIXED</span><span class="p">)</span>
 
-        <span class="c"># Mesh control for cutout faces</span>
+        <span class="c1"># Mesh control for cutout faces</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">p</span><span class="o">.</span><span class="n">setMeshControls</span><span class="p">(</span><span class="n">regions</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">faces</span><span class="p">,</span> <span class="n">technique</span><span class="o">=</span><span class="n">SWEEP</span><span class="p">)</span>
         <span class="k">except</span><span class="p">:</span>
-            <span class="n">warn</span><span class="p">(</span><span class="s">&quot;Unable to set mesh control to &#39;SWEEP&#39;, please check the mesh around your cutout(s)&quot;</span><span class="p">)</span>
+            <span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Unable to set mesh control to &#39;SWEEP&#39;, please check the mesh around your cutout(s)&quot;</span><span class="p">)</span>
         <span class="n">p</span><span class="o">.</span><span class="n">generateMesh</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">pload</span> <span class="ow">in</span> <span class="n">cc</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">ploads</span><span class="p">:</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">pload</span><span class="o">.</span><span class="n">pt</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">pt</span> <span class="ow">and</span> <span class="n">pload</span><span class="o">.</span><span class="n">thetadeg</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">thetadeg</span> <span class="ow">and</span>
                     <span class="n">pload</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">mod</span><span class="o">.</span><span class="n">loads</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
-                <span class="n">warn</span><span class="p">(</span><span class="s">&quot;Cutout is in the same location as perturbation load, moving PL to cutout edge&quot;</span><span class="p">)</span>
-                <span class="n">inst_shell</span> <span class="o">=</span> <span class="n">ra</span><span class="o">.</span><span class="n">instances</span><span class="p">[</span><span class="s">&#39;INST_SHELL&#39;</span><span class="p">]</span>
+                <span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Cutout is in the same location as perturbation load, moving PL to cutout edge&quot;</span><span class="p">)</span>
+                <span class="n">inst_shell</span> <span class="o">=</span> <span class="n">ra</span><span class="o">.</span><span class="n">instances</span><span class="p">[</span><span class="s1">&#39;INST_SHELL&#39;</span><span class="p">]</span>
                 <span class="n">coords</span> <span class="o">=</span> <span class="n">cyl2rec</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">thetadeg</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="mf">2.</span><span class="o">/</span><span class="n">r</span><span class="p">),</span> <span class="n">z</span><span class="p">)</span>
                 <span class="n">new_vertex</span> <span class="o">=</span> <span class="n">inst_shell</span><span class="o">.</span><span class="n">vertices</span><span class="o">.</span><span class="n">getClosest</span><span class="p">(</span>
                     <span class="n">coordinates</span><span class="o">=</span><span class="p">[</span><span class="n">coords</span><span class="p">],</span> <span class="n">searchTolerance</span><span class="o">=</span><span class="mf">1.</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-                <span class="c">#TODO Unfortunately you cannot simply pass a vertex or list of vertices</span>
-                <span class="c"># It has to be some internal abaqus sequence type... work around that:</span>
+                <span class="c1">#TODO Unfortunately you cannot simply pass a vertex or list of vertices</span>
+                <span class="c1"># It has to be some internal abaqus sequence type... work around that:</span>
                 <span class="n">index</span> <span class="o">=</span> <span class="n">inst_shell</span><span class="o">.</span><span class="n">vertices</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">new_vertex</span><span class="p">)</span>
                 <span class="n">region</span> <span class="o">=</span> <span class="n">Region</span><span class="p">(</span><span class="n">vertices</span><span class="o">=</span><span class="n">inst_shell</span><span class="o">.</span><span class="n">vertices</span><span class="p">[</span><span class="n">index</span><span class="p">:</span><span class="n">index</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
                 <span class="n">mod</span><span class="o">.</span><span class="n">loads</span><span class="p">[</span><span class="n">pload</span><span class="o">.</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">region</span><span class="o">=</span><span class="n">region</span><span class="p">)</span>
-</div>
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prop_around_cutout</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">create_prop_around_cutout</span><span class="p">()</span>
+
+
+    <span class="k">def</span> <span class="nf">create_prop_around_cutout</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prop_around_cutout</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">abaqus</span> <span class="kn">import</span> <span class="n">mdb</span>
+            <span class="kn">from</span> <span class="nn">abaqusConstants</span> <span class="kn">import</span> <span class="n">CYLINDRICAL</span>
+
+            <span class="n">cc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">conecyl</span>
+            <span class="n">mod</span> <span class="o">=</span> <span class="n">mdb</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="n">cc</span><span class="o">.</span><span class="n">model_name</span><span class="p">]</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="n">cc</span><span class="o">.</span><span class="n">part_name_shell</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prop_around_cutout</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;prop_around_cutout must be a dictionary&#39;</span><span class="p">)</span>
+            <span class="n">mode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prop_around_cutout</span><span class="p">[</span><span class="s1">&#39;mode&#39;</span><span class="p">]</span>
+            <span class="n">stack</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prop_around_cutout</span><span class="p">[</span><span class="s1">&#39;stack&#39;</span><span class="p">]</span>
+            <span class="n">plyts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prop_around_cutout</span><span class="p">[</span><span class="s1">&#39;plyts&#39;</span><span class="p">]</span>
+            <span class="n">mat_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prop_around_cutout</span><span class="p">[</span><span class="s1">&#39;mat_names&#39;</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;radius&#39;</span><span class="p">:</span>
+                <span class="n">radius</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prop_around_cutout</span><span class="p">[</span><span class="s1">&#39;radius&#39;</span><span class="p">]</span>
+                <span class="n">elem_set</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;elems_around_cutout_</span><span class="si">%02d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+                                 <span class="n">elements</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">elements</span><span class="o">.</span><span class="n">getByBoundingCylinder</span><span class="p">(</span>
+                                 <span class="n">center1</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">p0coord</span><span class="p">,</span> <span class="n">center2</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">p2coord</span><span class="p">,</span>
+                                 <span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;partition&#39;</span><span class="p">:</span>
+                <span class="n">selection_radius</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">clearance_factor</span><span class="p">)</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">d</span><span class="o">*</span><span class="mf">1.05</span><span class="o">*</span><span class="mi">2</span><span class="o">**</span><span class="mf">0.5</span>
+                <span class="n">elem_set</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;elems_around_cutout_</span><span class="si">%02d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+                                 <span class="n">faces</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">faces</span><span class="o">.</span><span class="n">getByBoundingCylinder</span><span class="p">(</span>
+                                 <span class="n">center1</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">p0coord</span><span class="p">,</span> <span class="n">center2</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">p2coord</span><span class="p">,</span>
+                                 <span class="n">radius</span><span class="o">=</span><span class="n">selection_radius</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> is an invalid options for &quot;mode&quot;&#39;</span> <span class="o">%</span> <span class="n">mode</span><span class="p">)</span>
+
+            <span class="c1">#TODO could get the Csys that already exists...</span>
+            <span class="n">part_csys</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">DatumCsysByThreePoints</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;part_cyl_csys&#39;</span><span class="p">,</span>
+                                                 <span class="n">coordSysType</span><span class="o">=</span><span class="n">CYLINDRICAL</span><span class="p">,</span>
+                                                 <span class="n">origin</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span>
+                                                 <span class="n">point1</span><span class="o">=</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span>
+                                                 <span class="n">point2</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
+
+            <span class="c1">#FIXME create a circular boundary region around the cutout to</span>
+            <span class="c1">#      guarantee a better mesh for these cases with a new property</span>
+            <span class="c1">#      around the cutout</span>
+            <span class="n">part_csys</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">datums</span><span class="p">[</span><span class="n">part_csys</span><span class="o">.</span><span class="n">id</span><span class="p">]</span>
+
+            <span class="n">abaqus_functions</span><span class="o">.</span><span class="n">create_composite_layup</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;prop_around_cutout_</span><span class="si">%02d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+                    <span class="n">stack</span><span class="o">=</span><span class="n">stack</span><span class="p">,</span> <span class="n">plyts</span><span class="o">=</span><span class="n">plyts</span><span class="p">,</span> <span class="n">mat_names</span><span class="o">=</span><span class="n">mat_names</span><span class="p">,</span>
+                    <span class="n">part</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="n">part_csys</span><span class="o">=</span><span class="n">part_csys</span><span class="p">,</span>
+                    <span class="n">region</span><span class="o">=</span><span class="n">elem_set</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;prop_around_cutout not defined!&#39;</span><span class="p">)</span></div>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">desicos.abaqus.conecyl</span> <span class="kn">import</span> <span class="n">ConeCyl</span>
 
     <span class="n">cc</span> <span class="o">=</span> <span class="n">ConeCyl</span><span class="p">()</span>
-    <span class="n">cc</span><span class="o">.</span><span class="n">from_DB</span><span class="p">(</span><span class="s">&#39;desicos_2014_c17&#39;</span><span class="p">)</span>
+    <span class="n">cc</span><span class="o">.</span><span class="n">from_DB</span><span class="p">(</span><span class="s1">&#39;desicos_2014_c17&#39;</span><span class="p">)</span>
     <span class="n">cc</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">ploads</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">cc</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">add_cutout</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">45</span><span class="p">)</span>
     <span class="n">cc</span><span class="o">.</span><span class="n">create_model</span><span class="p">()</span>
+
+
 </pre></div>
 
           </div>
@@ -349,10 +431,14 @@
         <div class="sphinxsidebarwrapper">
 <p class="logo">
   <a href="../../../../index.html">
-    <img class="logo" src="../../../../_static/desicos.png" alt="Logo"/>
+    <img class="logo" src="../../../../_static/../logo/desicos.png" alt="Logo"/>
     
   </a>
 </p>
+
+
+
+
 
 
 
@@ -370,14 +456,11 @@
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -388,8 +471,8 @@
       &copy;2012-2015 Desicos Improved Software Team.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
       
     </div>
 

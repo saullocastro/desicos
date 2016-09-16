@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Dynamic Database &mdash; DESICOS 2.4.6 documentation</title>
+    <title>Dynamic Database &mdash; DESICOS 2.4.7 documentation</title>
     
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.4.6',
+        VERSION:     '2.4.7',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,39 +23,18 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <link rel="top" title="DESICOS 2.4.6 documentation" href="../../index.html" />
+    <link rel="top" title="DESICOS 2.4.7 documentation" href="../../index.html" />
     <link rel="up" title="Cone / Cylinder DataBase (desicos.conecylDB)" href="index.html" />
     <link rel="next" title="Processing Geometric Imperfection Data" href="processing_measured_imp_data/processing_measured_imp_data.html" />
     <link rel="prev" title="Static Databases" href="static.html" />
    
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
   <body role="document">
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../../np-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="processing_measured_imp_data/processing_measured_imp_data.html" title="Processing Geometric Imperfection Data"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="static.html" title="Static Databases"
-             accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">DESICOS 2.4.6 documentation</a> &raquo;</li>
-          <li class="nav-item nav-item-1"><a href="../index.html" >Tutorials</a> &raquo;</li>
-          <li class="nav-item nav-item-2"><a href="index.html" accesskey="U">Cone / Cylinder DataBase (<code class="docutils literal"><span class="pre">desicos.conecylDB</span></code>)</a> &raquo;</li> 
-      </ul>
-    </div>  
+  
 
     <div class="document">
       <div class="documentwrapper">
@@ -66,7 +45,7 @@
 <span id="id1"></span><h1>Dynamic Database<a class="headerlink" href="#dynamic-database" title="Permalink to this headline">¶</a></h1>
 <p>One can store or delete entries in the dynamic database. This database
 will be created in the path stored in:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">localDB_path</span><span class="o">.</span><span class="n">json</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">localDB_path</span><span class="o">.</span><span class="n">json</span>
 </pre></div>
 </div>
 <p>Two functions are used to work on this database:
@@ -76,32 +55,32 @@ examples about how to use these functions.</p>
 <div class="section" id="creating-a-material">
 <h2>Creating a material<a class="headerlink" href="#creating-a-material" title="Permalink to this headline">¶</a></h2>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">desicos.conecylDB</span> <span class="kn">import</span> <span class="n">save</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">desicos.conecylDB</span> <span class="k">import</span> <span class="n">save</span>
 
 <span class="n">laminaprop</span> <span class="o">=</span> <span class="p">(</span><span class="mf">125.774e3</span><span class="p">,</span> <span class="mf">10.03e3</span><span class="p">,</span> <span class="mf">0.271</span><span class="p">,</span> <span class="mf">5.555e3</span><span class="p">,</span> <span class="mf">5.555e3</span><span class="p">,</span> <span class="mf">3.4e3</span><span class="p">)</span>
-<span class="n">save</span><span class="p">(</span><span class="s">&#39;laminaprops&#39;</span><span class="p">,</span> <span class="s">&#39;new_material&#39;</span><span class="p">,</span> <span class="n">laminaprop</span><span class="p">)</span>
+<span class="n">save</span><span class="p">(</span><span class="s1">&#39;laminaprops&#39;</span><span class="p">,</span> <span class="s1">&#39;new_material&#39;</span><span class="p">,</span> <span class="n">laminaprop</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="creating-an-allowable">
 <h2>Creating an allowable<a class="headerlink" href="#creating-an-allowable" title="Permalink to this headline">¶</a></h2>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">desicos.conecylDB</span> <span class="kn">import</span> <span class="n">save</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">desicos.conecylDB</span> <span class="k">import</span> <span class="n">save</span>
 
 <span class="n">allowables</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1741.</span><span class="p">,</span> <span class="o">-</span><span class="mf">855.</span><span class="p">,</span> <span class="mf">29.</span><span class="p">,</span> <span class="o">-</span><span class="mf">283.</span><span class="p">,</span> <span class="mf">98.</span><span class="p">,</span> <span class="mf">90.</span><span class="p">)</span>
-<span class="n">save</span><span class="p">(</span><span class="s">&#39;allowables&#39;</span><span class="p">,</span> <span class="s">&#39;new_allowable&#39;</span><span class="p">,</span> <span class="n">allowables</span><span class="p">)</span>
+<span class="n">save</span><span class="p">(</span><span class="s1">&#39;allowables&#39;</span><span class="p">,</span> <span class="s1">&#39;new_allowable&#39;</span><span class="p">,</span> <span class="n">allowables</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="creating-a-cone-cylinder-sample">
 <h2>Creating a cone / cylinder sample<a class="headerlink" href="#creating-a-cone-cylinder-sample" title="Permalink to this headline">¶</a></h2>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre>cc = {&#39;r&#39;: 250.,
-      &#39;h&#39;: 510.,
-      &#39;plyt&#39;: 0.125,
-      &#39;laminapropKey&#39;,}
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cc</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;r&#39;</span><span class="p">:</span> <span class="mf">250.</span><span class="p">,</span>
+      <span class="s1">&#39;h&#39;</span><span class="p">:</span> <span class="mf">510.</span><span class="p">,</span>
+      <span class="s1">&#39;plyt&#39;</span><span class="p">:</span> <span class="mf">0.125</span><span class="p">,</span>
+      <span class="s1">&#39;laminapropKey&#39;</span><span class="p">,}</span>
 
-save(&#39;cc&#39;, &#39;new_sample&#39;, cc)
+<span class="n">save</span><span class="p">(</span><span class="s1">&#39;cc&#39;</span><span class="p">,</span> <span class="s1">&#39;new_sample&#39;</span><span class="p">,</span> <span class="n">cc</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The following sections explain the common steps required to include a
@@ -110,11 +89,11 @@ file in the database.</p>
 <div class="section" id="deleting">
 <h2>Deleting<a class="headerlink" href="#deleting" title="Permalink to this headline">¶</a></h2>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">desicos.conecylDB</span> <span class="kn">import</span> <span class="n">delete</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">desicos.conecylDB</span> <span class="k">import</span> <span class="n">delete</span>
 
-<span class="n">delete</span><span class="p">(</span><span class="s">&#39;ccs&#39;</span><span class="p">,</span> <span class="s">&#39;new_conecyl&#39;</span><span class="p">)</span>
-<span class="n">delete</span><span class="p">(</span><span class="s">&#39;laminaprops&#39;</span><span class="p">,</span> <span class="s">&#39;new_material&#39;</span><span class="p">)</span>
-<span class="n">delete</span><span class="p">(</span><span class="s">&#39;allowables&#39;</span><span class="p">,</span> <span class="s">&#39;new_allowable&#39;</span><span class="p">)</span>
+<span class="n">delete</span><span class="p">(</span><span class="s1">&#39;ccs&#39;</span><span class="p">,</span> <span class="s1">&#39;new_conecyl&#39;</span><span class="p">)</span>
+<span class="n">delete</span><span class="p">(</span><span class="s1">&#39;laminaprops&#39;</span><span class="p">,</span> <span class="s1">&#39;new_material&#39;</span><span class="p">)</span>
+<span class="n">delete</span><span class="p">(</span><span class="s1">&#39;allowables&#39;</span><span class="p">,</span> <span class="s1">&#39;new_allowable&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -128,10 +107,14 @@ file in the database.</p>
         <div class="sphinxsidebarwrapper">
 <p class="logo">
   <a href="../../index.html">
-    <img class="logo" src="../../_static/desicos.png" alt="Logo"/>
+    <img class="logo" src="../../_static/../logo/desicos.png" alt="Logo"/>
     
   </a>
 </p>
+
+
+
+
 
 
 
@@ -149,14 +132,11 @@ file in the database.</p>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -167,8 +147,8 @@ file in the database.</p>
       &copy;2012-2015 Desicos Improved Software Team.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
       
     </div>
 

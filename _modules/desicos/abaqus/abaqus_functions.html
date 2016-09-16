@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>desicos.abaqus.abaqus_functions &mdash; DESICOS 2.4.6 documentation</title>
+    <title>desicos.abaqus.abaqus_functions &mdash; DESICOS 2.4.7 documentation</title>
     
     <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.4.6',
+        VERSION:     '2.4.7',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,30 +23,16 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <link rel="top" title="DESICOS 2.4.6 documentation" href="../../../index.html" />
+    <link rel="top" title="DESICOS 2.4.7 documentation" href="../../../index.html" />
     <link rel="up" title="Module code" href="../../index.html" />
    
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
   <body role="document">
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../../../np-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">DESICOS 2.4.6 documentation</a> &raquo;</li>
-          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
-      </ul>
-    </div>  
+  
 
     <div class="document">
       <div class="documentwrapper">
@@ -54,7 +40,7 @@
           <div class="body" role="main">
             
   <h1>Source code for desicos.abaqus.abaqus_functions</h1><div class="highlight"><pre>
-<span class="sd">r&quot;&quot;&quot;</span>
+<span></span><span class="sd">r&quot;&quot;&quot;</span>
 <span class="sd">=========================================================</span>
 <span class="sd">Utilities Abaqus (:mod:`desicos.abaqus.abaqus_functions`)</span>
 <span class="sd">=========================================================</span>
@@ -81,10 +67,10 @@
             <span class="n">HOLLOW_CIRCLE</span><span class="p">,</span> <span class="n">DECIMAL</span><span class="p">,</span> <span class="n">INCREMENT</span><span class="p">)</span>
 
     <span class="n">plot_names</span><span class="o">=</span><span class="n">session</span><span class="o">.</span><span class="n">xyDataObjects</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="s">&#39;XYPlot-1&#39;</span> <span class="ow">in</span> <span class="n">session</span><span class="o">.</span><span class="n">xyPlots</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="n">xyp</span><span class="o">=</span><span class="n">session</span><span class="o">.</span><span class="n">XYPlot</span><span class="p">(</span><span class="s">&#39;XYPlot-1&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="s1">&#39;XYPlot-1&#39;</span> <span class="ow">in</span> <span class="n">session</span><span class="o">.</span><span class="n">xyPlots</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">xyp</span><span class="o">=</span><span class="n">session</span><span class="o">.</span><span class="n">XYPlot</span><span class="p">(</span><span class="s1">&#39;XYPlot-1&#39;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">xyp</span><span class="o">=</span><span class="n">session</span><span class="o">.</span><span class="n">xyPlots</span><span class="p">[</span><span class="s">&#39;XYPlot-1&#39;</span><span class="p">]</span>
+        <span class="n">xyp</span><span class="o">=</span><span class="n">session</span><span class="o">.</span><span class="n">xyPlots</span><span class="p">[</span><span class="s1">&#39;XYPlot-1&#39;</span><span class="p">]</span>
     <span class="n">chartName</span><span class="o">=</span><span class="n">xyp</span><span class="o">.</span><span class="n">charts</span><span class="o">.</span><span class="n">keys</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">chart</span><span class="o">=</span><span class="n">xyp</span><span class="o">.</span><span class="n">charts</span><span class="p">[</span><span class="n">chartName</span><span class="p">]</span>
     <span class="n">tmp</span><span class="o">=</span><span class="n">session</span><span class="o">.</span><span class="n">xyDataObjects</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
@@ -93,9 +79,9 @@
     <span class="n">xy1</span><span class="o">=</span><span class="n">session</span><span class="o">.</span><span class="n">xyDataObjects</span><span class="p">[</span><span class="n">tmp</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
     <span class="n">c1</span><span class="o">=</span><span class="n">session</span><span class="o">.</span><span class="n">Curve</span><span class="p">(</span><span class="n">xyData</span><span class="o">=</span><span class="n">xy1</span><span class="p">)</span>
     <span class="n">chart</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">curvesToPlot</span><span class="o">=</span><span class="p">(</span><span class="n">c1</span><span class="p">,),)</span>
-    <span class="n">session</span><span class="o">.</span><span class="n">viewports</span><span class="p">[</span><span class="s">&#39;Viewport: 1&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">displayedObject</span><span class="o">=</span><span class="n">xyp</span><span class="p">)</span>
+    <span class="n">session</span><span class="o">.</span><span class="n">viewports</span><span class="p">[</span><span class="s1">&#39;Viewport: 1&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">displayedObject</span><span class="o">=</span><span class="n">xyp</span><span class="p">)</span>
 
-    <span class="n">chart</span><span class="o">=</span><span class="n">session</span><span class="o">.</span><span class="n">charts</span><span class="p">[</span><span class="s">&#39;Chart-1&#39;</span><span class="p">]</span>
+    <span class="n">chart</span><span class="o">=</span><span class="n">session</span><span class="o">.</span><span class="n">charts</span><span class="p">[</span><span class="s1">&#39;Chart-1&#39;</span><span class="p">]</span>
     <span class="n">chart</span><span class="o">.</span><span class="n">minorAxis1GridStyle</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">show</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="n">chart</span><span class="o">.</span><span class="n">majorAxis1GridStyle</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">show</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="n">chart</span><span class="o">.</span><span class="n">majorAxis1GridStyle</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="n">DASHED</span><span class="p">)</span>
@@ -103,19 +89,19 @@
     <span class="n">chart</span><span class="o">.</span><span class="n">majorAxis2GridStyle</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">show</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="n">chart</span><span class="o">.</span><span class="n">majorAxis2GridStyle</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="n">DASHED</span><span class="p">)</span>
     <span class="n">chart</span><span class="o">.</span><span class="n">gridArea</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">fill</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
-    <span class="n">chart</span><span class="o">.</span><span class="n">legend</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">show</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span> <span class="c"># necessary to update legend values</span>
+    <span class="n">chart</span><span class="o">.</span><span class="n">legend</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">show</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span> <span class="c1"># necessary to update legend values</span>
     <span class="n">chart</span><span class="o">.</span><span class="n">legend</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">show</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="n">chart</span><span class="o">.</span><span class="n">legend</span><span class="o">.</span><span class="n">area</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">inset</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="n">chart</span><span class="o">.</span><span class="n">legend</span><span class="o">.</span><span class="n">area</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">originOffset</span><span class="o">=</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">))</span>
     <span class="n">chart</span><span class="o">.</span><span class="n">legend</span><span class="o">.</span><span class="n">area</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">fill</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="n">chart</span><span class="o">.</span><span class="n">legend</span><span class="o">.</span><span class="n">textStyle</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span>
-            <span class="n">font</span><span class="o">=</span><span class="s">&#39;-*-arial narrow-medium-r-normal-*-*-480-*-*-p-*-*-*&#39;</span><span class="p">)</span>
+            <span class="n">font</span><span class="o">=</span><span class="s1">&#39;-*-arial narrow-medium-r-normal-*-*-480-*-*-p-*-*-*&#39;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">plot_names</span><span class="p">:</span>
         <span class="n">c</span><span class="o">=</span><span class="n">session</span><span class="o">.</span><span class="n">Curve</span><span class="p">(</span><span class="n">xyData</span><span class="o">=</span><span class="n">session</span><span class="o">.</span><span class="n">xyDataObjects</span><span class="p">[</span><span class="n">name</span><span class="p">])</span>
-        <span class="n">chart</span><span class="o">=</span><span class="n">session</span><span class="o">.</span><span class="n">xyPlots</span><span class="p">[</span><span class="s">&#39;XYPlot-1&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">charts</span><span class="p">[</span><span class="s">&#39;Chart-1&#39;</span><span class="p">]</span>
+        <span class="n">chart</span><span class="o">=</span><span class="n">session</span><span class="o">.</span><span class="n">xyPlots</span><span class="p">[</span><span class="s1">&#39;XYPlot-1&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">charts</span><span class="p">[</span><span class="s1">&#39;Chart-1&#39;</span><span class="p">]</span>
         <span class="n">chart</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">curvesToPlot</span><span class="o">=</span><span class="p">(</span><span class="n">c</span><span class="p">,))</span>
         <span class="n">chart</span><span class="o">.</span><span class="n">fitCurves</span><span class="p">(</span><span class="n">fitAxes1</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">fitAxes2</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-        <span class="n">curve</span><span class="o">=</span><span class="n">session</span><span class="o">.</span><span class="n">charts</span><span class="p">[</span><span class="s">&#39;Chart-1&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">curves</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="n">curve</span><span class="o">=</span><span class="n">session</span><span class="o">.</span><span class="n">charts</span><span class="p">[</span><span class="s1">&#39;Chart-1&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">curves</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
         <span class="n">curve</span><span class="o">.</span><span class="n">curveOptions</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">showSymbol</span><span class="o">=</span><span class="n">ON</span><span class="p">)</span>
         <span class="n">curve</span><span class="o">.</span><span class="n">curveOptions</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">symbolSize</span><span class="o">=</span><span class="n">SMALL</span><span class="p">)</span>
         <span class="n">curve</span><span class="o">.</span><span class="n">lineStyle</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">thickness</span><span class="o">=</span><span class="mf">1.6</span><span class="p">)</span>
@@ -124,16 +110,16 @@
         <span class="n">ax</span><span class="o">=</span><span class="n">chart</span><span class="o">.</span><span class="n">axes1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">ay</span><span class="o">=</span><span class="n">chart</span><span class="o">.</span><span class="n">axes2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">labelStyle</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span>
-            <span class="n">font</span><span class="o">=</span><span class="s">&#39;-*-arial narrow-bold-r-normal-*-*-480-*-*-p-*-*-*&#39;</span><span class="p">,</span>
+            <span class="n">font</span><span class="o">=</span><span class="s1">&#39;-*-arial narrow-bold-r-normal-*-*-480-*-*-p-*-*-*&#39;</span><span class="p">,</span>
             <span class="n">color</span><span class="o">=</span><span class="n">COLOR_BLACK</span><span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">titleStyle</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span>
-            <span class="n">font</span><span class="o">=</span><span class="s">&#39;-*-arial narrow-bold-r-normal-*-*-480-*-*-p-*-*-*&#39;</span><span class="p">,</span>
+            <span class="n">font</span><span class="o">=</span><span class="s1">&#39;-*-arial narrow-bold-r-normal-*-*-480-*-*-p-*-*-*&#39;</span><span class="p">,</span>
             <span class="n">color</span><span class="o">=</span><span class="n">COLOR_BLACK</span><span class="p">)</span>
         <span class="n">ay</span><span class="o">.</span><span class="n">labelStyle</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span>
-            <span class="n">font</span><span class="o">=</span><span class="s">&#39;-*-arial narrow-bold-r-normal-*-*-480-*-*-p-*-*-*&#39;</span><span class="p">,</span>
+            <span class="n">font</span><span class="o">=</span><span class="s1">&#39;-*-arial narrow-bold-r-normal-*-*-480-*-*-p-*-*-*&#39;</span><span class="p">,</span>
             <span class="n">color</span><span class="o">=</span><span class="n">COLOR_BLACK</span><span class="p">)</span>
         <span class="n">ay</span><span class="o">.</span><span class="n">titleStyle</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span>
-            <span class="n">font</span><span class="o">=</span><span class="s">&#39;-*-arial narrow-bold-r-normal-*-*-480-*-*-p-*-*-*&#39;</span><span class="p">,</span>
+            <span class="n">font</span><span class="o">=</span><span class="s1">&#39;-*-arial narrow-bold-r-normal-*-*-480-*-*-p-*-*-*&#39;</span><span class="p">,</span>
             <span class="n">color</span><span class="o">=</span><span class="n">COLOR_BLACK</span><span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">tickPlacement</span><span class="o">=</span><span class="n">OUTSIDE</span><span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">axisData</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">labelFormat</span><span class="o">=</span><span class="n">DECIMAL</span><span class="p">,</span>
@@ -142,9 +128,9 @@
         <span class="n">ay</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">tickPlacement</span><span class="o">=</span><span class="n">OUTSIDE</span><span class="p">)</span>
         <span class="n">ay</span><span class="o">.</span><span class="n">axisData</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">labelFormat</span><span class="o">=</span><span class="n">DECIMAL</span><span class="p">,</span>
                               <span class="n">labelNumDigits</span><span class="o">=</span><span class="mi">0</span><span class="p">,)</span>
-        <span class="k">if</span> <span class="n">ax</span><span class="o">.</span><span class="n">axisData</span><span class="o">.</span><span class="n">title</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;ispl&#39;</span><span class="p">)</span><span class="o">&gt;-</span><span class="mi">1</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">ax</span><span class="o">.</span><span class="n">axisData</span><span class="o">.</span><span class="n">title</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;ispl&#39;</span><span class="p">)</span><span class="o">&gt;-</span><span class="mi">1</span><span class="p">:</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">axisData</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">labelNumDigits</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;circumference&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;circumference&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">axisData</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">tickMode</span><span class="o">=</span><span class="n">INCREMENT</span><span class="p">,</span>
                                   <span class="n">tickIncrement</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
                                   <span class="n">minorTickCount</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
@@ -152,10 +138,10 @@
                                   <span class="n">minValue</span><span class="o">=-</span><span class="mi">180</span><span class="p">,</span>
                                   <span class="n">maxAutoCompute</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
                                   <span class="n">maxValue</span><span class="o">=</span><span class="mi">185</span><span class="p">)</span>
-        <span class="c">#</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;FI_HSNFCCRT&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;FI_HSNFTCRT&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span>
-         <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;FI_HSNMCCRT&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;FI_HSNMTCRT&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span>
-         <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;FI_TSAIW&#39;</span><span class="p">)</span>    <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="c1">#</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;FI_HSNFCCRT&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;FI_HSNFTCRT&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span>
+         <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;FI_HSNMCCRT&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;FI_HSNMTCRT&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span>
+         <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;FI_TSAIW&#39;</span><span class="p">)</span>    <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
             <span class="n">ay</span><span class="o">.</span><span class="n">axisData</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">labelNumDigits</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                                   <span class="n">minAutoCompute</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
                                   <span class="n">minValue</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
@@ -166,11 +152,11 @@
             <span class="n">curve</span><span class="o">.</span><span class="n">curveOptions</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">showSymbol</span><span class="o">=</span><span class="n">OFF</span><span class="p">)</span>
             <span class="n">ay</span><span class="o">.</span><span class="n">titleStyle</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">COLOR_WHINE</span><span class="p">)</span>
             <span class="n">ay</span><span class="o">.</span><span class="n">labelStyle</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">COLOR_WHINE</span><span class="p">)</span>
-        <span class="c">#</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;MS_HSNFCCRT&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;MS_HSNFTCRT&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span>
-         <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;MS_HSNMCCRT&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;MS_HSNMTCRT&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span>
-         <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;MS_TSAIW&#39;</span><span class="p">)</span>    <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span>
-         <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;MS_MAX&#39;</span><span class="p">)</span>      <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;MS_MIN&#39;</span><span class="p">)</span>      <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="c1">#</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;MS_HSNFCCRT&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;MS_HSNFTCRT&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span>
+         <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;MS_HSNMCCRT&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;MS_HSNMTCRT&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span>
+         <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;MS_TSAIW&#39;</span><span class="p">)</span>    <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span>
+         <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;MS_MAX&#39;</span><span class="p">)</span>      <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;MS_MIN&#39;</span><span class="p">)</span>      <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
             <span class="n">ay</span><span class="o">.</span><span class="n">axisData</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">labelNumDigits</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                                   <span class="n">minAutoCompute</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
                                   <span class="n">minValue</span><span class="o">=-</span><span class="mf">0.5</span><span class="p">,</span>
@@ -180,9 +166,9 @@
                                       <span class="n">color</span><span class="o">=</span><span class="n">COLOR_DARK_BLUE</span><span class="p">)</span>
             <span class="n">curve</span><span class="o">.</span><span class="n">curveOptions</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">showSymbol</span><span class="o">=</span><span class="n">OFF</span><span class="p">)</span>
             <span class="n">ay</span><span class="o">.</span><span class="n">titleStyle</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">COLOR_DARK_BLUE</span><span class="p">)</span>
-            <span class="n">ay</span><span class="o">.</span><span class="n">labelStyle</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">COLOR_DARK_BLUE</span><span class="p">)</span>
+            <span class="n">ay</span><span class="o">.</span><span class="n">labelStyle</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">COLOR_DARK_BLUE</span><span class="p">)</span></div>
 
-</div>
+
 <div class="viewcode-block" id="print_png"><a class="viewcode-back" href="../../../modules/abaqus/index.html#desicos.abaqus.abaqus_functions.print_png">[docs]</a><span class="k">def</span> <span class="nf">print_png</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Print a png file from the current viewport</span>
 
@@ -198,9 +184,9 @@
     <span class="n">viewport</span><span class="o">=</span><span class="n">session</span><span class="o">.</span><span class="n">viewports</span><span class="p">[</span><span class="n">session</span><span class="o">.</span><span class="n">currentViewportName</span><span class="p">]</span>
     <span class="n">session</span><span class="o">.</span><span class="n">printToFile</span><span class="p">(</span><span class="n">fileName</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span>
                          <span class="n">format</span><span class="o">=</span><span class="n">PNG</span><span class="p">,</span>
-                         <span class="n">canvasObjects</span><span class="o">=</span><span class="p">(</span><span class="n">viewport</span><span class="p">,))</span>
+                         <span class="n">canvasObjects</span><span class="o">=</span><span class="p">(</span><span class="n">viewport</span><span class="p">,))</span></div>
 
-</div>
+
 <div class="viewcode-block" id="set_default_view"><a class="viewcode-back" href="../../../modules/abaqus/index.html#desicos.abaqus.abaqus_functions.set_default_view">[docs]</a><span class="k">def</span> <span class="nf">set_default_view</span><span class="p">(</span><span class="n">cc</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Set a default view in order to compare figures from different models</span>
 
@@ -213,18 +199,18 @@
             <span class="n">FREE</span><span class="p">,</span> <span class="n">UNIFORM</span><span class="p">,</span> <span class="n">CONTINUOUS</span><span class="p">,</span> <span class="n">ON</span><span class="p">,</span> <span class="n">OFF</span><span class="p">)</span>
     <span class="n">odb</span><span class="o">=</span><span class="n">cc</span><span class="o">.</span><span class="n">attach_results</span><span class="p">()</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">odb</span><span class="p">:</span>
-        <span class="k">print</span> <span class="s">&#39;No .odb file found for </span><span class="si">%s</span><span class="s">!&#39;</span> <span class="o">%</span> <span class="n">cc</span><span class="o">.</span><span class="n">jobname</span>
+        <span class="k">print</span> <span class="s1">&#39;No .odb file found for </span><span class="si">%s</span><span class="s1">!&#39;</span> <span class="o">%</span> <span class="n">cc</span><span class="o">.</span><span class="n">jobname</span>
         <span class="k">return</span>
     <span class="n">dtm</span><span class="o">=</span><span class="n">odb</span><span class="o">.</span><span class="n">rootAssembly</span><span class="o">.</span><span class="n">datumCsyses</span><span class="p">[</span>
-              <span class="s">&#39;ASSEMBLY__T-INSTANCECYLINDER-CSYSCYLINDER&#39;</span><span class="p">]</span>
+              <span class="s1">&#39;ASSEMBLY__T-INSTANCECYLINDER-CSYSCYLINDER&#39;</span><span class="p">]</span>
     <span class="n">viewport</span><span class="o">=</span><span class="n">session</span><span class="o">.</span><span class="n">viewports</span><span class="p">[</span><span class="n">session</span><span class="o">.</span><span class="n">currentViewportName</span><span class="p">]</span>
     <span class="n">viewport</span><span class="o">.</span><span class="n">odbDisplay</span><span class="o">.</span><span class="n">basicOptions</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span>
         <span class="n">averageElementOutput</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">transformationType</span><span class="o">=</span><span class="n">USER_SPECIFIED</span><span class="p">,</span>
         <span class="n">datumCsys</span><span class="o">=</span><span class="n">dtm</span><span class="p">)</span>
     <span class="n">viewport</span><span class="o">.</span><span class="n">odbDisplay</span><span class="o">.</span><span class="n">setPrimaryVariable</span><span class="p">(</span>
-                        <span class="n">variableLabel</span><span class="o">=</span><span class="s">&#39;U&#39;</span><span class="p">,</span>
+                        <span class="n">variableLabel</span><span class="o">=</span><span class="s1">&#39;U&#39;</span><span class="p">,</span>
                         <span class="n">outputPosition</span><span class="o">=</span><span class="n">NODAL</span><span class="p">,</span>
-                        <span class="n">refinement</span><span class="o">=</span><span class="p">(</span><span class="n">COMPONENT</span><span class="p">,</span> <span class="s">&#39;U1&#39;</span><span class="p">),)</span>
+                        <span class="n">refinement</span><span class="o">=</span><span class="p">(</span><span class="n">COMPONENT</span><span class="p">,</span> <span class="s1">&#39;U1&#39;</span><span class="p">),)</span>
     <span class="n">viewport</span><span class="o">.</span><span class="n">obasicOptions</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">averageElementOutput</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
                       <span class="n">curveRefinementLevel</span><span class="o">=</span><span class="n">EXTRA_FINE</span><span class="p">)</span>
     <span class="n">viewport</span><span class="o">.</span><span class="n">odbDisplay</span><span class="o">.</span><span class="n">commonOptions</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">visibleEdges</span><span class="o">=</span><span class="n">FREE</span><span class="p">,</span>
@@ -240,9 +226,9 @@
     <span class="n">viewport</span><span class="o">.</span><span class="n">viewportAnnotationOptions</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">legendTitle</span><span class="o">=</span><span class="n">OFF</span><span class="p">)</span>
     <span class="n">viewport</span><span class="o">.</span><span class="n">viewportAnnotationOptions</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">legendBox</span><span class="o">=</span><span class="n">OFF</span><span class="p">)</span>
     <span class="n">viewport</span><span class="o">.</span><span class="n">viewportAnnotationOptions</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span>
-            <span class="n">legendFont</span><span class="o">=</span><span class="s">&#39;-*-arial narrow-bold-r-normal-*-*-140-*-*-p-*-*-*&#39;</span><span class="p">)</span>
+            <span class="n">legendFont</span><span class="o">=</span><span class="s1">&#39;-*-arial narrow-bold-r-normal-*-*-140-*-*-p-*-*-*&#39;</span><span class="p">)</span>
     <span class="n">viewport</span><span class="o">.</span><span class="n">viewportAnnotationOptions</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span>
-            <span class="n">legendFont</span><span class="o">=</span><span class="s">&#39;-*-arial narrow-bold-r-normal-*-*-180-*-*-p-*-*-*&#39;</span><span class="p">)</span>
+            <span class="n">legendFont</span><span class="o">=</span><span class="s1">&#39;-*-arial narrow-bold-r-normal-*-*-180-*-*-p-*-*-*&#39;</span><span class="p">)</span>
     <span class="n">viewport</span><span class="o">.</span><span class="n">viewportAnnotationOptions</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">legendPosition</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">99</span><span class="p">))</span>
     <span class="n">viewport</span><span class="o">.</span><span class="n">viewportAnnotationOptions</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">legendDecimalPlaces</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">viewport</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">origin</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.05833435058594</span><span class="p">),</span>
@@ -256,9 +242,9 @@
                             <span class="n">width</span><span class="o">=</span><span class="mf">750.942</span><span class="p">,</span>
                             <span class="n">height</span><span class="o">=</span><span class="mf">665.183</span><span class="p">,</span>
                             <span class="n">cameraPosition</span><span class="o">=</span><span class="p">(</span><span class="mf">1236.44</span><span class="p">,</span> <span class="mf">1079.87</span><span class="p">,</span> <span class="mf">889.94</span><span class="p">),</span>
-                            <span class="n">cameraTarget</span><span class="o">=</span><span class="p">(</span><span class="mf">27.3027</span><span class="p">,</span> <span class="o">-</span><span class="mf">54.758</span><span class="p">,</span> <span class="mf">306.503</span><span class="p">))</span>
+                            <span class="n">cameraTarget</span><span class="o">=</span><span class="p">(</span><span class="mf">27.3027</span><span class="p">,</span> <span class="o">-</span><span class="mf">54.758</span><span class="p">,</span> <span class="mf">306.503</span><span class="p">))</span></div>
 
-</div>
+
 <div class="viewcode-block" id="edit_keywords"><a class="viewcode-back" href="../../../modules/abaqus/index.html#desicos.abaqus.abaqus_functions.edit_keywords">[docs]</a><span class="k">def</span> <span class="nf">edit_keywords</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">before_pattern</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">insert</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Edit the keywords to add commands not available in Abaqus CAE</span>
 
@@ -286,15 +272,15 @@
                 <span class="n">index</span><span class="o">=</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span>
                 <span class="k">break</span>
         <span class="k">if</span> <span class="n">index</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="k">print</span> <span class="s">&#39;WARNING - *edit_keywords failed !&#39;</span>
-            <span class="k">print</span> <span class="s">&#39;          </span><span class="si">%s</span><span class="s"> pattern not found !&#39;</span> <span class="o">%</span> <span class="n">before_pattern</span>
-            <span class="c">#TODO better error handling here...</span>
+            <span class="k">print</span> <span class="s1">&#39;WARNING - *edit_keywords failed !&#39;</span>
+            <span class="k">print</span> <span class="s1">&#39;          </span><span class="si">%s</span><span class="s1"> pattern not found !&#39;</span> <span class="o">%</span> <span class="n">before_pattern</span>
+            <span class="c1">#TODO better error handling here...</span>
     <span class="k">if</span> <span class="n">insert</span><span class="p">:</span>
         <span class="n">mod</span><span class="o">.</span><span class="n">keywordBlock</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">mod</span><span class="o">.</span><span class="n">keywordBlock</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+        <span class="n">mod</span><span class="o">.</span><span class="n">keywordBlock</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span></div>
 
-</div>
+
 <div class="viewcode-block" id="create_composite_layup"><a class="viewcode-back" href="../../../modules/abaqus/index.html#desicos.abaqus.abaqus_functions.create_composite_layup">[docs]</a><span class="k">def</span> <span class="nf">create_composite_layup</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">stack</span><span class="p">,</span> <span class="n">plyts</span><span class="p">,</span> <span class="n">mat_names</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="n">part</span><span class="p">,</span>
                            <span class="n">part_csys</span><span class="p">,</span> <span class="n">symmetric</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">scaling_factor</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span>
                            <span class="n">axis_normal</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
@@ -332,9 +318,10 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">from</span> <span class="nn">abaqusConstants</span> <span class="kn">import</span> <span class="p">(</span><span class="n">MIDDLE_SURFACE</span><span class="p">,</span> <span class="n">FROM_SECTION</span><span class="p">,</span> <span class="n">SHELL</span><span class="p">,</span> <span class="n">ON</span><span class="p">,</span> <span class="n">OFF</span><span class="p">,</span>
             <span class="n">DEFAULT</span><span class="p">,</span> <span class="n">UNIFORM</span><span class="p">,</span> <span class="n">SIMPSON</span><span class="p">,</span> <span class="n">GRADIENT</span><span class="p">,</span> <span class="n">SYSTEM</span><span class="p">,</span> <span class="n">ROTATION_NONE</span><span class="p">,</span>
-            <span class="n">AXIS_1</span><span class="p">,</span> <span class="n">AXIS_2</span><span class="p">,</span> <span class="n">AXIS_3</span><span class="p">,</span> <span class="n">SPECIFY_THICKNESS</span><span class="p">,</span> <span class="n">SPECIFY_ORIENT</span><span class="p">)</span>
+            <span class="n">AXIS_1</span><span class="p">,</span> <span class="n">AXIS_2</span><span class="p">,</span> <span class="n">AXIS_3</span><span class="p">,</span> <span class="n">SPECIFY_THICKNESS</span><span class="p">,</span> <span class="n">SPECIFY_ORIENT</span><span class="p">,</span>
+            <span class="n">SINGLE_VALUE</span><span class="p">)</span>
     <span class="n">myLayup</span><span class="o">=</span><span class="n">part</span><span class="o">.</span><span class="n">CompositeLayup</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
-                            <span class="n">description</span><span class="o">=</span><span class="s">&#39;stack from inside to outside&#39;</span><span class="p">,</span>
+                            <span class="n">description</span><span class="o">=</span><span class="s1">&#39;stack from inside to outside&#39;</span><span class="p">,</span>
                             <span class="n">offsetType</span><span class="o">=</span><span class="n">MIDDLE_SURFACE</span><span class="p">,</span>
                             <span class="n">symmetric</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
                             <span class="n">thicknessAssignment</span><span class="o">=</span><span class="n">FROM_SECTION</span><span class="p">,</span>
@@ -352,15 +339,15 @@
     <span class="k">elif</span> <span class="n">axis_normal</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
         <span class="n">axis</span> <span class="o">=</span> <span class="n">AXIS_3</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;Invalid value for `axis_normal`&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Invalid value for `axis_normal`&#39;</span><span class="p">)</span>
     <span class="n">myLayup</span><span class="o">.</span><span class="n">ReferenceOrientation</span><span class="p">(</span><span class="n">orientationType</span><span class="o">=</span><span class="n">SYSTEM</span><span class="p">,</span>
                                  <span class="n">localCsys</span><span class="o">=</span><span class="n">part_csys</span><span class="p">,</span>
-                                 <span class="n">fieldName</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span>
+                                 <span class="n">fieldName</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
                                  <span class="n">additionalRotationType</span><span class="o">=</span><span class="n">ROTATION_NONE</span><span class="p">,</span>
                                  <span class="n">angle</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span>
-                                 <span class="n">additionalRotationField</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span>
+                                 <span class="n">additionalRotationField</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
                                  <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
-    <span class="c">#CREATING ALL PLIES</span>
+    <span class="c1">#CREATING ALL PLIES</span>
     <span class="n">numIntPoints</span><span class="o">=</span><span class="mi">3</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">stack</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
         <span class="n">numIntPoints</span><span class="o">=</span><span class="mi">5</span>
@@ -368,16 +355,44 @@
         <span class="n">plyt</span><span class="o">=</span><span class="n">plyts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
         <span class="n">mat_name</span><span class="o">=</span><span class="n">mat_names</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
         <span class="n">myLayup</span><span class="o">.</span><span class="n">CompositePly</span><span class="p">(</span><span class="n">suppressed</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
-                             <span class="n">plyName</span><span class="o">=</span><span class="s">&#39;ply_</span><span class="si">%02d</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span>
+                             <span class="n">plyName</span><span class="o">=</span><span class="s1">&#39;ply_</span><span class="si">%02d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span>
                              <span class="n">region</span><span class="o">=</span><span class="n">region</span><span class="p">,</span>
                              <span class="n">material</span><span class="o">=</span><span class="n">mat_name</span><span class="p">,</span>
                              <span class="n">thicknessType</span><span class="o">=</span><span class="n">SPECIFY_THICKNESS</span><span class="p">,</span>
                              <span class="n">thickness</span><span class="o">=</span><span class="n">plyt</span><span class="o">*</span><span class="n">scaling_factor</span><span class="p">,</span>
                              <span class="n">orientationValue</span><span class="o">=</span><span class="n">angle</span><span class="p">,</span>
                              <span class="n">orientationType</span><span class="o">=</span><span class="n">SPECIFY_ORIENT</span><span class="p">,</span>
-                             <span class="n">numIntPoints</span><span class="o">=</span><span class="n">numIntPoints</span><span class="p">)</span>
+                             <span class="n">numIntPoints</span><span class="o">=</span><span class="n">numIntPoints</span><span class="p">)</span></div>
 
-</div>
+<div class="viewcode-block" id="create_isotropic_section"><a class="viewcode-back" href="../../../modules/abaqus/index.html#desicos.abaqus.abaqus_functions.create_isotropic_section">[docs]</a><span class="k">def</span> <span class="nf">create_isotropic_section</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">mat_names</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="n">part</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span><span class="n">T</span><span class="p">,</span><span class="n">Sect_name</span><span class="p">,</span><span class="n">OFFTS</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Creates an isotropic section</span>
+<span class="sd">   </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="kn">from</span> <span class="nn">abaqusConstants</span> <span class="kn">import</span> <span class="p">(</span><span class="n">MIDDLE_SURFACE</span><span class="p">,</span> <span class="n">FROM_SECTION</span><span class="p">,</span> <span class="n">SHELL</span><span class="p">,</span> <span class="n">ON</span><span class="p">,</span> <span class="n">OFF</span><span class="p">,</span>
+            <span class="n">DEFAULT</span><span class="p">,</span> <span class="n">UNIFORM</span><span class="p">,</span> <span class="n">SIMPSON</span><span class="p">,</span> <span class="n">GRADIENT</span><span class="p">,</span> <span class="n">SYSTEM</span><span class="p">,</span> <span class="n">ROTATION_NONE</span><span class="p">,</span>
+            <span class="n">AXIS_1</span><span class="p">,</span> <span class="n">AXIS_2</span><span class="p">,</span> <span class="n">AXIS_3</span><span class="p">,</span> <span class="n">SPECIFY_THICKNESS</span><span class="p">,</span> <span class="n">SPECIFY_ORIENT</span><span class="p">,</span><span class="n">NO_IDEALIZATION</span><span class="p">,</span>
+            <span class="n">SINGLE_VALUE</span><span class="p">)</span>
+
+    <span class="n">model</span><span class="o">.</span><span class="n">HomogeneousShellSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> 
+        <span class="n">preIntegrate</span><span class="o">=</span><span class="n">OFF</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="n">mat_names</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> 
+        <span class="n">thicknessType</span><span class="o">=</span><span class="n">UNIFORM</span><span class="p">,</span> <span class="n">thickness</span><span class="o">=</span><span class="n">T</span><span class="p">,</span> <span class="n">thicknessField</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> 
+        <span class="n">idealization</span><span class="o">=</span><span class="n">NO_IDEALIZATION</span><span class="p">,</span> <span class="n">poissonDefinition</span><span class="o">=</span><span class="n">DEFAULT</span><span class="p">,</span> 
+        <span class="n">thicknessModulus</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="n">GRADIENT</span><span class="p">,</span> <span class="n">useDensity</span><span class="o">=</span><span class="n">OFF</span><span class="p">,</span> 
+        <span class="n">integrationRule</span><span class="o">=</span><span class="n">SIMPSON</span><span class="p">,</span> <span class="n">numIntPts</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+    <span class="n">region</span> <span class="o">=</span> <span class="n">region</span>
+    <span class="k">if</span> <span class="n">OFFTS</span><span class="o">==</span><span class="mf">0.0</span><span class="p">:</span>
+        <span class="n">part</span><span class="o">.</span><span class="n">SectionAssignment</span><span class="p">(</span><span class="n">region</span><span class="o">=</span><span class="n">region</span><span class="p">,</span> <span class="n">sectionName</span><span class="o">=</span><span class="n">Sect_name</span><span class="p">,</span> 
+                               <span class="n">offset</span><span class="o">=</span><span class="n">OFFTS</span><span class="p">,</span><span class="n">offsetType</span><span class="o">=</span><span class="n">MIDDLE_SURFACE</span><span class="p">,</span> 
+                               <span class="n">offsetField</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> 
+                               <span class="n">thicknessAssignment</span><span class="o">=</span><span class="n">FROM_SECTION</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">part</span><span class="o">.</span><span class="n">SectionAssignment</span><span class="p">(</span><span class="n">region</span><span class="o">=</span><span class="n">region</span><span class="p">,</span> <span class="n">sectionName</span><span class="o">=</span><span class="n">Sect_name</span><span class="p">,</span> 
+                               <span class="n">offset</span><span class="o">=</span><span class="n">OFFTS</span><span class="p">,</span><span class="n">offsetType</span><span class="o">=</span><span class="n">SINGLE_VALUE</span><span class="p">,</span> 
+                               <span class="n">offsetField</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> 
+                               <span class="n">thicknessAssignment</span><span class="o">=</span><span class="n">FROM_SECTION</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="modify_composite_layup"><a class="viewcode-back" href="../../../modules/abaqus/index.html#desicos.abaqus.abaqus_functions.modify_composite_layup">[docs]</a><span class="k">def</span> <span class="nf">modify_composite_layup</span><span class="p">(</span><span class="n">part</span><span class="p">,</span> <span class="n">layup_name</span><span class="p">,</span> <span class="n">modify_func</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Modify plies within a composite layup</span>
 
@@ -404,28 +419,28 @@
     <span class="n">layup</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">compositeLayups</span><span class="p">[</span><span class="n">layup_name</span><span class="p">]</span>
 
     <span class="n">ply_data</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">STORE_PLY_ATTRS</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;additionalRotationField&#39;</span><span class="p">,</span> <span class="s">&#39;additionalRotationType&#39;</span><span class="p">,</span>
-        <span class="s">&#39;angle&#39;</span><span class="p">,</span> <span class="s">&#39;axis&#39;</span><span class="p">,</span> <span class="s">&#39;material&#39;</span><span class="p">,</span> <span class="s">&#39;numIntPoints&#39;</span><span class="p">,</span> <span class="s">&#39;orientation&#39;</span><span class="p">,</span>
-        <span class="s">&#39;orientationType&#39;</span><span class="p">,</span> <span class="s">&#39;orientationValue&#39;</span><span class="p">,</span> <span class="s">&#39;plyName&#39;</span><span class="p">,</span> <span class="s">&#39;region&#39;</span><span class="p">,</span>
-        <span class="s">&#39;suppressed&#39;</span><span class="p">,</span> <span class="s">&#39;thickness&#39;</span><span class="p">,</span> <span class="s">&#39;thicknessType&#39;</span><span class="p">]</span>
+    <span class="n">STORE_PLY_ATTRS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;additionalRotationField&#39;</span><span class="p">,</span> <span class="s1">&#39;additionalRotationType&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;angle&#39;</span><span class="p">,</span> <span class="s1">&#39;axis&#39;</span><span class="p">,</span> <span class="s1">&#39;material&#39;</span><span class="p">,</span> <span class="s1">&#39;numIntPoints&#39;</span><span class="p">,</span> <span class="s1">&#39;orientation&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;orientationType&#39;</span><span class="p">,</span> <span class="s1">&#39;orientationValue&#39;</span><span class="p">,</span> <span class="s1">&#39;plyName&#39;</span><span class="p">,</span> <span class="s1">&#39;region&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;suppressed&#39;</span><span class="p">,</span> <span class="s1">&#39;thickness&#39;</span><span class="p">,</span> <span class="s1">&#39;thicknessType&#39;</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">ply</span> <span class="ow">in</span> <span class="n">layup</span><span class="o">.</span><span class="n">plies</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
         <span class="n">ply_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">dict</span><span class="p">((</span><span class="n">attr</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">ply</span><span class="p">,</span> <span class="n">attr</span><span class="p">))</span> <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">STORE_PLY_ATTRS</span><span class="p">))</span>
     <span class="n">layup</span><span class="o">.</span><span class="n">deletePlies</span><span class="p">()</span>
 
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">kwargs</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ply_data</span><span class="p">):</span>
-        <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;region&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">sets</span><span class="p">[</span><span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;region&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]]</span>
-        <span class="k">if</span> <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;orientationType&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">SPECIFY_ORIENT</span><span class="p">:</span>
-            <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&#39;orientationValue&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;orientationType&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">CSYS</span><span class="p">:</span>
-            <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&#39;orientation&#39;</span><span class="p">)</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;region&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">sets</span><span class="p">[</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;region&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]]</span>
+        <span class="k">if</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;orientationType&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">SPECIFY_ORIENT</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;orientationValue&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;orientationType&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">CSYS</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;orientation&#39;</span><span class="p">)</span>
         <span class="n">kwargs</span> <span class="o">=</span> <span class="n">modify_func</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
-        <span class="n">layup</span><span class="o">.</span><span class="n">CompositePly</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">layup</span><span class="o">.</span><span class="n">CompositePly</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
-</div>
+
 <span class="k">def</span> <span class="nf">createDiscreteField</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="n">odb</span><span class="p">,</span> <span class="n">step_name</span><span class="p">,</span> <span class="n">frame_num</span><span class="p">):</span>
     <span class="kn">from</span> <span class="nn">abaqusConstants</span> <span class="kn">import</span> <span class="p">(</span><span class="n">NODES</span><span class="p">,</span> <span class="n">PRESCRIBEDCONDITION_DOF</span><span class="p">)</span>
-    <span class="n">u</span><span class="o">=</span><span class="n">odb</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="n">step_name</span><span class="p">]</span><span class="o">.</span><span class="n">frames</span><span class="p">[</span><span class="n">frame_num</span><span class="p">]</span><span class="o">.</span><span class="n">fieldOutputs</span><span class="p">[</span><span class="s">&#39;U&#39;</span><span class="p">]</span>
-    <span class="n">ur</span><span class="o">=</span><span class="n">odb</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="n">step_name</span><span class="p">]</span><span class="o">.</span><span class="n">frames</span><span class="p">[</span><span class="n">frame_num</span><span class="p">]</span><span class="o">.</span><span class="n">fieldOutputs</span><span class="p">[</span><span class="s">&#39;UR&#39;</span><span class="p">]</span>
+    <span class="n">u</span><span class="o">=</span><span class="n">odb</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="n">step_name</span><span class="p">]</span><span class="o">.</span><span class="n">frames</span><span class="p">[</span><span class="n">frame_num</span><span class="p">]</span><span class="o">.</span><span class="n">fieldOutputs</span><span class="p">[</span><span class="s1">&#39;U&#39;</span><span class="p">]</span>
+    <span class="n">ur</span><span class="o">=</span><span class="n">odb</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="n">step_name</span><span class="p">]</span><span class="o">.</span><span class="n">frames</span><span class="p">[</span><span class="n">frame_num</span><span class="p">]</span><span class="o">.</span><span class="n">fieldOutputs</span><span class="p">[</span><span class="s1">&#39;UR&#39;</span><span class="p">]</span>
     <span class="n">datas</span><span class="o">=</span><span class="p">[]</span>
     <span class="k">for</span> <span class="n">u_value</span><span class="p">,</span> <span class="n">ur_value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">ur</span><span class="o">.</span><span class="n">values</span><span class="p">):</span>
         <span class="nb">id</span><span class="o">=</span><span class="n">u_value</span><span class="o">.</span><span class="n">nodeLabel</span>
@@ -440,13 +455,13 @@
             <span class="n">list_dof_values</span> <span class="o">+=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">dof</span><span class="p">),</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">dof</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
     <span class="n">tuple_ids</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="n">list_ids</span><span class="p">)</span>
     <span class="n">tuple_dof_values</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="n">list_dof_values</span><span class="p">)</span>
-    <span class="n">mod</span><span class="o">.</span><span class="n">DiscreteField</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;discreteField&#39;</span><span class="p">,</span>
-                      <span class="n">description</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span>
+    <span class="n">mod</span><span class="o">.</span><span class="n">DiscreteField</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;discreteField&#39;</span><span class="p">,</span>
+                      <span class="n">description</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
                       <span class="n">location</span><span class="o">=</span><span class="n">NODES</span><span class="p">,</span>
                       <span class="n">fieldType</span><span class="o">=</span><span class="n">PRESCRIBEDCONDITION_DOF</span><span class="p">,</span>
                       <span class="n">dataWidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
                       <span class="n">defaultValues</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span>
-                      <span class="n">data</span><span class="o">=</span><span class="p">((</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">tuple_ids</span><span class="p">,</span> <span class="n">tuple_dof_values</span><span class="p">),))</span>
+                      <span class="n">data</span><span class="o">=</span><span class="p">((</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">tuple_ids</span><span class="p">,</span> <span class="n">tuple_dof_values</span><span class="p">),))</span>
 
 
 <div class="viewcode-block" id="create_sketch_plane"><a class="viewcode-back" href="../../../modules/abaqus/index.html#desicos.abaqus.abaqus_functions.create_sketch_plane">[docs]</a><span class="k">def</span> <span class="nf">create_sketch_plane</span><span class="p">(</span><span class="n">cc</span><span class="p">,</span> <span class="n">entity</span><span class="p">):</span>
@@ -495,9 +510,9 @@
     <span class="n">plane</span><span class="o">.</span><span class="n">create</span><span class="p">()</span>
     <span class="n">plane</span><span class="o">.</span><span class="n">thetadeg</span> <span class="o">=</span> <span class="n">entity</span><span class="o">.</span><span class="n">thetadeg</span>
     <span class="n">cc</span><span class="o">.</span><span class="n">sketch_planes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">plane</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">plane</span>
+    <span class="k">return</span> <span class="n">plane</span></div>
 
-</div>
+
 <span class="k">def</span> <span class="nf">set_colors_ti</span><span class="p">(</span><span class="n">cc</span><span class="p">):</span>
     <span class="kn">from</span> <span class="nn">abaqus</span> <span class="kn">import</span> <span class="n">mdb</span><span class="p">,</span> <span class="n">session</span>
     <span class="kn">from</span> <span class="nn">abaqusConstants</span> <span class="kn">import</span> <span class="n">ON</span>
@@ -506,17 +521,17 @@
     <span class="n">viewport</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">viewports</span><span class="p">[</span><span class="n">session</span><span class="o">.</span><span class="n">currentViewportName</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">viewport</span><span class="o">.</span><span class="n">displayedObject</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
         <span class="n">viewport</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">displayedObject</span><span class="o">=</span><span class="n">part</span><span class="p">)</span>
-    <span class="n">cmap</span> <span class="o">=</span> <span class="n">viewport</span><span class="o">.</span><span class="n">colorMappings</span><span class="p">[</span><span class="s">&#39;Set&#39;</span><span class="p">]</span>
+    <span class="n">cmap</span> <span class="o">=</span> <span class="n">viewport</span><span class="o">.</span><span class="n">colorMappings</span><span class="p">[</span><span class="s1">&#39;Set&#39;</span><span class="p">]</span>
     <span class="n">viewport</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="n">colorMapping</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
     <span class="n">viewport</span><span class="o">.</span><span class="n">enableMultipleColors</span><span class="p">()</span>
-    <span class="n">viewport</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="n">initialColor</span><span class="o">=</span><span class="s">&#39;#BDBDBD&#39;</span><span class="p">)</span>
+    <span class="n">viewport</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="n">initialColor</span><span class="o">=</span><span class="s1">&#39;#BDBDBD&#39;</span><span class="p">)</span>
     <span class="n">keys</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">sets</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-    <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">keys</span> <span class="k">if</span> <span class="s">&#39;Set_measured_imp_t&#39;</span> <span class="ow">in</span> <span class="n">k</span><span class="p">]</span>
+    <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">keys</span> <span class="k">if</span> <span class="s1">&#39;Set_measured_imp_t&#39;</span> <span class="ow">in</span> <span class="n">k</span><span class="p">]</span>
 
-    <span class="c"># If there are not enough colors for all thicknesses,</span>
-    <span class="c"># repeat the same color for multiple subsequent thickness sets</span>
+    <span class="c1"># If there are not enough colors for all thicknesses,</span>
+    <span class="c1"># repeat the same color for multiple subsequent thickness sets</span>
     <span class="n">repeat</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">),</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">COLORS</span><span class="p">))))</span>
-    <span class="n">overrides</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">name</span><span class="p">,</span> <span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="n">COLORS</span><span class="p">[</span><span class="n">i</span><span class="o">//</span><span class="n">repeat</span><span class="p">],</span> <span class="s">&#39;Default&#39;</span><span class="p">,</span>
+    <span class="n">overrides</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">name</span><span class="p">,</span> <span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="n">COLORS</span><span class="p">[</span><span class="n">i</span><span class="o">//</span><span class="n">repeat</span><span class="p">],</span> <span class="s1">&#39;Default&#39;</span><span class="p">,</span>
         <span class="n">COLORS</span><span class="p">[</span><span class="n">i</span><span class="o">//</span><span class="n">repeat</span><span class="p">]))</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">names</span><span class="p">))</span>
     <span class="n">dummylen</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">overrides</span><span class="p">)</span>
     <span class="n">new_COLORS</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="n">COLORS</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span><span class="o">*</span><span class="n">dummylen</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">COLORS</span><span class="p">))</span>
@@ -543,7 +558,7 @@
     <span class="n">session</span><span class="o">.</span><span class="n">printOptions</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">reduceColors</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">51</span><span class="p">):</span>
         <span class="n">vp</span><span class="o">.</span><span class="n">odbDisplay</span><span class="o">.</span><span class="n">setFrame</span><span class="p">(</span><span class="n">step</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">frame</span><span class="o">=</span><span class="n">i</span><span class="p">)</span>
-        <span class="n">session</span><span class="o">.</span><span class="n">printToFile</span><span class="p">(</span><span class="n">fileName</span><span class="o">=</span><span class="s">&#39;mode </span><span class="si">%02d</span><span class="s">.png&#39;</span><span class="o">%</span><span class="n">i</span><span class="p">,</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">printToFile</span><span class="p">(</span><span class="n">fileName</span><span class="o">=</span><span class="s1">&#39;mode </span><span class="si">%02d</span><span class="s1">.png&#39;</span><span class="o">%</span><span class="n">i</span><span class="p">,</span>
                              <span class="n">format</span><span class="o">=</span><span class="n">PNG</span><span class="p">,</span>
                              <span class="n">canvasObjects</span><span class="o">=</span><span class="p">(</span><span class="n">vp</span><span class="p">,))</span>
 
@@ -598,10 +613,14 @@
         <div class="sphinxsidebarwrapper">
 <p class="logo">
   <a href="../../../index.html">
-    <img class="logo" src="../../../_static/desicos.png" alt="Logo"/>
+    <img class="logo" src="../../../_static/../logo/desicos.png" alt="Logo"/>
     
   </a>
 </p>
+
+
+
+
 
 
 
@@ -619,14 +638,11 @@
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -637,8 +653,8 @@
       &copy;2012-2015 Desicos Improved Software Team.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
       
     </div>
 

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Cone Ply Piece Optimization Tool (desicos.cppot) &mdash; DESICOS 2.4.6 documentation</title>
+    <title>Cone Ply Piece Optimization Tool (desicos.cppot) &mdash; DESICOS 2.4.7 documentation</title>
     
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.4.6',
+        VERSION:     '2.4.7',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,34 +23,17 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <link rel="top" title="DESICOS 2.4.6 documentation" href="../../index.html" />
+    <link rel="top" title="DESICOS 2.4.7 documentation" href="../../index.html" />
     <link rel="up" title="Modules" href="../index.html" />
     <link rel="prev" title="Cone / Cylinder DataBase (desicos.conecylDB)" href="../conecylDB/index.html" />
    
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
   <body role="document">
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../../np-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="../conecylDB/index.html" title="Cone / Cylinder DataBase (desicos.conecylDB)"
-             accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">DESICOS 2.4.6 documentation</a> &raquo;</li>
-          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Modules</a> &raquo;</li> 
-      </ul>
-    </div>  
+  
 
     <div class="document">
       <div class="documentwrapper">
@@ -59,7 +42,7 @@
             
   <span class="target" id="module-desicos.cppot"><span id="module-cppot"></span></span><div class="section" id="cone-ply-piece-optimization-tool-desicos-cppot">
 <h1>Cone Ply Piece Optimization Tool (<a class="reference internal" href="#module-desicos.cppot" title="desicos.cppot"><code class="xref py py-mod docutils literal"><span class="pre">desicos.cppot</span></code></a>)<a class="headerlink" href="#cone-ply-piece-optimization-tool-desicos-cppot" title="Permalink to this headline">¶</a></h1>
-<p>Please, refer to the <a class="reference internal" href="../../tutorials/cppot/index.html#cppot-tutorial"><span>CPPOT tutorial</span></a> for more details
+<p>Please, refer to the <a class="reference internal" href="../../tutorials/cppot/index.html#cppot-tutorial"><span class="std std-ref">CPPOT tutorial</span></a> for more details
 about how to use this module.</p>
 <span class="target" id="module-desicos.cppot.core"></span><div class="section" id="cone-virtual-material-model-desicos-cppot-core">
 <h2>Cone Virtual Material Model (<a class="reference internal" href="#module-desicos.cppot.core" title="desicos.cppot.core"><code class="xref py py-mod docutils literal"><span class="pre">desicos.cppot.core</span></code></a>)<a class="headerlink" href="#cone-virtual-material-model-desicos-cppot-core" title="Permalink to this headline">¶</a></h2>
@@ -99,6 +82,45 @@ radians. Must be between 0 and pi/2.</td>
 this height is added along both the top and bottom
 edge of the free cone. This represents the extra
 material that is present during manufacturing.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.cppot.core.geom.ConeGeometry.L" title="desicos.cppot.core.geom.ConeGeometry.L"><code class="xref py py-obj docutils literal"><span class="pre">L</span></code></a></td>
+<td>Read-only property: Meridional length.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.cppot.core.geom.ConeGeometry.cone_area" title="desicos.cppot.core.geom.ConeGeometry.cone_area"><code class="xref py py-obj docutils literal"><span class="pre">cone_area</span></code></a></td>
+<td>Read-only property: Surface area of the free cone (supports excluded).</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.cppot.core.geom.ConeGeometry.cos_alpha" title="desicos.cppot.core.geom.ConeGeometry.cos_alpha"><code class="xref py py-obj docutils literal"><span class="pre">cos_alpha</span></code></a></td>
+<td>Read-only property: Cosine of the semi-vertex angle.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.cppot.core.geom.ConeGeometry.rtop" title="desicos.cppot.core.geom.ConeGeometry.rtop"><code class="xref py py-obj docutils literal"><span class="pre">rtop</span></code></a></td>
+<td>Read-only property: Top radius of the cone.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.cppot.core.geom.ConeGeometry.s1" title="desicos.cppot.core.geom.ConeGeometry.s1"><code class="xref py py-obj docutils literal"><span class="pre">s1</span></code></a></td>
+<td>Read-only property: Radius of top (support) edge in unfolded coordinates.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.cppot.core.geom.ConeGeometry.s2" title="desicos.cppot.core.geom.ConeGeometry.s2"><code class="xref py py-obj docutils literal"><span class="pre">s2</span></code></a></td>
+<td>Read-only property: Radius of top edge of the free cone in unfolded coordinates.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.cppot.core.geom.ConeGeometry.s3" title="desicos.cppot.core.geom.ConeGeometry.s3"><code class="xref py py-obj docutils literal"><span class="pre">s3</span></code></a></td>
+<td>Read-only property: Radius of bottom edge of the free cone in unfolded coordinates.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.cppot.core.geom.ConeGeometry.s4" title="desicos.cppot.core.geom.ConeGeometry.s4"><code class="xref py py-obj docutils literal"><span class="pre">s4</span></code></a></td>
+<td>Read-only property: Radius of bottom (support) edge in unfolded coordinates.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#desicos.cppot.core.geom.ConeGeometry.sin_alpha" title="desicos.cppot.core.geom.ConeGeometry.sin_alpha"><code class="xref py py-obj docutils literal"><span class="pre">sin_alpha</span></code></a></td>
+<td>Read-only property: Sine of the semi-vertex angle.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#desicos.cppot.core.geom.ConeGeometry.tan_alpha" title="desicos.cppot.core.geom.ConeGeometry.tan_alpha"><code class="xref py py-obj docutils literal"><span class="pre">tan_alpha</span></code></a></td>
+<td>Read-only property: Tangent of the semi-vertex angle.</td>
 </tr>
 </tbody>
 </table>
@@ -234,6 +256,24 @@ The latter normalization constraint is enforced in <code class="docutils literal
 </tr>
 <tr class="row-even"><td><code class="docutils literal"><span class="pre">c</span></code></td>
 <td><code class="docutils literal"><span class="pre">float</span></code>, Line parameter in equation (a*x + b*y = c)</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">a</span></code></td>
+<td>Alias for field number 0</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">b</span></code></td>
+<td>Alias for field number 1</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">c</span></code></td>
+<td>Alias for field number 2</td>
 </tr>
 </tbody>
 </table>
@@ -568,6 +608,21 @@ pre-multiplying by a scalar.</p>
 </tr>
 <tr class="row-odd"><td><code class="docutils literal"><span class="pre">y</span></code></td>
 <td><code class="docutils literal"><span class="pre">float</span></code>, Cartesian y-coordinate</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">x</span></code></td>
+<td>Alias for field number 0</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">y</span></code></td>
+<td>Alias for field number 1</td>
 </tr>
 </tbody>
 </table>
@@ -1592,10 +1647,14 @@ clicking on the <code class="docutils literal"><span class="pre">Click_me.pyw</s
         <div class="sphinxsidebarwrapper">
 <p class="logo">
   <a href="../../index.html">
-    <img class="logo" src="../../_static/desicos.png" alt="Logo"/>
+    <img class="logo" src="../../_static/../logo/desicos.png" alt="Logo"/>
     
   </a>
 </p>
+
+
+
+
 
 
 
@@ -1613,14 +1672,11 @@ clicking on the <code class="docutils literal"><span class="pre">Click_me.pyw</s
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -1631,8 +1687,8 @@ clicking on the <code class="docutils literal"><span class="pre">Click_me.pyw</s
       &copy;2012-2015 Desicos Improved Software Team.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
       
     </div>
 
