@@ -1,8 +1,6 @@
 import numpy as np
 from numpy import sin, cos
 
-from abaqusConstants import *
-
 from desicos.abaqus.utils import cyl2rec
 from desicos.logger import warn
 from desicos.abaqus import abaqus_functions
@@ -39,17 +37,30 @@ class Cutout(object):
         - 'stack': list of floats
         - 'plyts': list of floats
         - 'mat_names': list of strings
+        .
 
-        Example::
+        Examples:
+
+        - Defining a property with ``'mode'='radius'``::
 
             prop_around_cutout = {
+                'mode': 'radius',
                 'radius': 10.,
                 'stack': [0, 90, 0],
                 'plyts': [0.125, 0.125, 0.125],
                 'mat_names': ['Alum', 'Alum', 'Alum'],
             }
 
-        .. note:: `mat_names` must be a list of materials already created in
+        - Defining a property with ``'mode'='partition'``::
+
+            prop_around_cutout = {
+                'mode': 'partition',
+                'stack': [0, 90, 0],
+                'plyts': [0.125, 0.125, 0.125],
+                'mat_names': ['Alum', 'Alum', 'Alum'],
+            }
+
+        .. note:: ``mat_names`` must be a list of materials already created in
                   the current model in Abaqus
 
     """
@@ -310,6 +321,7 @@ class Cutout(object):
     def create_prop_around_cutout(self):
         if self.prop_around_cutout is not None:
             from abaqus import mdb
+            from abaqusConstants import CYLINDRICAL
 
             cc = self.impconf.conecyl
             mod = mdb.models[cc.model_name]

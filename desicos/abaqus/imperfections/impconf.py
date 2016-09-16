@@ -473,21 +473,35 @@ class ImpConf(object):
         prop_around_cutout : dict, optional
             Dictionary with keys:
 
-            - radius : float
+            - 'mode' : str ('radius' or 'partition')
+            - 'radius' : float
             - 'stack': list of floats
             - 'plyts': list of floats
             - 'mat_names': list of strings
+            .
 
-            Example::
+            Examples:
 
-                prop_around_holes = {
+            - Defining a property with ``'mode'='radius'``::
+
+                prop_around_cutout = {
+                    'mode': 'radius',
                     'radius': 10.,
                     'stack': [0, 90, 0],
                     'plyts': [0.125, 0.125, 0.125],
                     'mat_names': ['Alum', 'Alum', 'Alum'],
                 }
 
-            .. note:: `mat_names` must be a list of materials already created in
+            - Defining a property with ``'mode'='partition'``::
+
+                prop_around_cutout = {
+                    'mode': 'partition',
+                    'stack': [0, 90, 0],
+                    'plyts': [0.125, 0.125, 0.125],
+                    'mat_names': ['Alum', 'Alum', 'Alum'],
+                }
+
+            .. note:: ``mat_names`` must be a list of materials already created in
                       the current model in Abaqus
 
         Returns
