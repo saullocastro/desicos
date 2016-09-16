@@ -10,7 +10,6 @@ import numpy as np
 import desicos.abaqus.abaqus_functions as abaqus_functions
 import desicos.conecylDB as conecylDB
 import desicos.abaqus.conecyl as conecyl
-#import desicos.abaqus.stringers as stringers
 import desicos.abaqus.study as study
 from desicos.abaqus.constants import TMP_DIR
 from desicos.conecylDB import fetch, save
@@ -32,12 +31,8 @@ ccattrs = ['rbot','H','alphadeg','plyts',
 'resin_E', 'resin_nu', 'resin_numel',
 'resin_bot_h', 'resin_bir_w1', 'resin_bir_w2', 'resin_bor_w1', 'resin_bor_w2',
 'resin_top_h', 'resin_tir_w1', 'resin_tir_w2', 'resin_tor_w1', 'resin_tor_w2',
-'laminapropKeys', 'allowables', 'timeInterval', 'stress_output',
-'str_NUM','numel_str',
-'geo_STR_CB','geo_w_str','geo_w_str_RB','geo_I_str',
-'geo_i_str_RB','geo_Z_str','geo_z_str_RB','geo_cs_RB',
-'geo_cs','geo_ort_RB','geo_ortho','geo_ccs_RB','geo_ccs',
-'geo_F_CB','F_NUM','geo_w_F_RB','geo_w_F','geo_c_F_RB','geo_c_F']
+'laminapropKeys', 'allowables', 'timeInterval', 'stress_output']
+
 
 def find_std_name(std_name):
     #
@@ -149,6 +144,7 @@ def create_study(**kwargs):
     ax_table = kwargs.get('ax_table')
     lbmi_table = kwargs.get('lbmi_table')
     cut_table = kwargs.get('cut_table')
+
     ppi_enabled = kwargs.get('ppi_enabled')
     ppi_extra_height = kwargs.get('ppi_extra_height')
     ppi_table = kwargs.get('ppi_table')
@@ -159,36 +155,7 @@ def create_study(**kwargs):
     omegadeg = kwargs.get('omegadeg', 0.)
     betadegs = kwargs.get('betadegs')
     omegadegs = kwargs.get('omegadegs')
-    #Stiffening
-    #Stringers
-    str_G_st=kwargs.get('geo_STR_CB')
-    #Web stringers
-    web_str_st=kwargs.get('geo_w_str_RB')
-    web_str_geo=kwargs.get('geo_w_str')
-    #T stringers
-    T_str_st=kwargs.get('geo_i_str_RB')
-    T_str_geo=kwargs.get('geo_I_str')
-    #Z stringers
-    web_str_st=kwargs.get('geo_z_str_RB')
-    web_str_geo=kwargs.get('geo_Z_str')
-    #Corrugation
-    cs_st=kwargs.get('geo_cs_RB')
-    cs_geo=kwargs.get('geo_cs')
-    #Orthogrid
-    ort_st=kwargs.get('geo_ort_RB')
-    ort_geo=kwargs.get('geo_ortho')
-    #Corrugated core sanwich
-    ccs_st=kwargs.get('geo_ccs_RB')
-    ccs_geo=kwargs.get('geo_ccs')
-    #Frames
-    F_G_st=kwargs.get('geo_F_CB')
-    #Web frame
-    w_F_st=kwargs.get('geo_w_F_RB')
-    w_F_geo=kwargs.get('geo_w_F')
-    #C Frame
-    c_F_st=kwargs.get('geo_c_F_RB')
-    c_F_geo=kwargs.get('geo_c_F')
-    #End stiffening
+
     imp_num = {}
     imp_num['pl'] = kwargs.get('pl_num')
     imp_num['cbi'] = kwargs.get('cb_num')
@@ -197,12 +164,12 @@ def create_study(**kwargs):
     imp_num['lbmi'] = kwargs.get('lbmi_num')
     imp_num['cut'] = kwargs.get('cut_num')
     imp_tables = {}
-    imp_tables['pl'] = kwargs.get('pl_table')
-    imp_tables['cbi'] = kwargs.get('cb_table')
-    imp_tables['d'] = kwargs.get('d_table')
-    imp_tables['ax'] = kwargs.get('ax_table')
-    imp_tables['lbmi'] = kwargs.get('lbmi_table')
-    imp_tables['cut'] = kwargs.get('cut_table')
+    imp_tables['pl'] = pl_table
+    imp_tables['cbi'] = cb_table
+    imp_tables['d'] = d_table
+    imp_tables['ax'] = ax_table
+    imp_tables['lbmi'] = lbmi_table
+    imp_tables['cut'] = cut_table
     num_params = {}
     num_params['pl'] = 2
     num_params['cbi'] = 2
@@ -211,7 +178,7 @@ def create_study(**kwargs):
     num_params['lbmi'] = 1
     num_params['cut'] = 3
     num_models = 1
-    for k in ['pl','cbi','d','ax','lbmi','cut']:
+    for k in ['pl', 'cbi', 'd', 'ax', 'lbmi', 'cut']:
         if imp_num[k] == 0:
             continue
         imp_table = imp_tables[k]
@@ -627,3 +594,4 @@ def load_study_gui(std_name, form):
         form.setDefault()
     form.read_params_from_gui(std.params_from_gui)
     return saved_from_gui
+

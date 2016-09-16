@@ -47,8 +47,8 @@ params = ['rbot', 'H', 'alphadeg','betadeg','omegadeg',
 'use_job_stopper',
 'laminate','stack',
 'allowables', 'timeInterval', 'stress_output',
-'pl_num', 'cb_num','d_num', 'ax_num', 'lbmi_num', 'cut_num',
-'pl_table', 'cb_table','d_table', 'ax_table', 'lbmi_table', 'cut_table',
+'pl_num', 'cb_num', 'd_num', 'ax_num', 'lbmi_num', 'cut_num',
+'pl_table', 'cb_table', 'd_table', 'ax_table', 'lbmi_table', 'cut_table',
 'ppi_enabled', 'ppi_extra_height', 'ppi_table',
 'ffi_nominal_vf', 'ffi_E_matrix', 'ffi_nu_matrix', 'ffi_scalings',
 'std_name',
@@ -63,12 +63,7 @@ params = ['rbot', 'H', 'alphadeg','betadeg','omegadeg',
 'imp_ms_power_parameter', 'imp_t_power_parameter',
 'imp_ms_num_sec_z', 'imp_t_num_sec_z',
 'imp_ms_rotatedeg', 'imp_t_rotatedeg',
-'imp_num_sets',
-'str_NUM','numel_str',
-'geo_STR_CB','geo_w_str','geo_w_str_RB','geo_I_str',
-'geo_i_str_RB','geo_Z_str','geo_z_str_RB','geo_cs_RB',
-'geo_cs','geo_ort_RB','geo_ortho','geo_ccs_RB','geo_ccs',
-'geo_F_CB','F_NUM','geo_w_F_RB','geo_w_F','geo_c_F_RB','geo_c_F']
+'imp_num_sets']
 
 
 class TestForm(AFXForm):
@@ -108,38 +103,7 @@ class TestForm(AFXForm):
         self.plytKw = AFXFloatKeyword(self.dummy, 'plyt', FALSE)
         self.elem_typeKw = AFXStringKeyword(self.cmd, 'elem_type', TRUE)
         self.numel_rKw = AFXIntKeyword(self.cmd, 'numel_r', TRUE)
-        self.numel_strKw=AFXTupleKeyword(self.cmd, 'numel_str', TRUE)
-        #Stiffening
-        #Stringers
-        self.geo_STR_CBKw=AFXBoolKeyword(self.cmd, 'geo_STR_CB', TRUE_FALSE, TRUE)
-        self.str_NUMKw=AFXTupleKeyword(self.cmd, 'str_NUM', TRUE)
-        #
-        self.geo_w_strKw=AFXTupleKeyword(self.cmd, 'geo_w_str', TRUE)
-        self.geo_w_str_RBKw=AFXBoolKeyword(self.cmd, 'geo_w_str_RB', TRUE_FALSE, TRUE)
-        self.geo_I_strKw=AFXTupleKeyword(self.cmd, 'geo_I_str', TRUE)
-        self.geo_i_str_RBKw=AFXBoolKeyword(self.cmd, 'geo_i_str_RB', TRUE_FALSE, TRUE)
-        self.geo_Z_strKw=AFXTupleKeyword(self.cmd, 'geo_Z_str', TRUE)
-        self.geo_z_str_RBKw=AFXBoolKeyword(self.cmd, 'geo_z_str_RB', TRUE_FALSE, TRUE)
-        #Corrugation
-        self.geo_cs_RBKw=AFXBoolKeyword(self.cmd, 'geo_cs_RB', TRUE_FALSE, TRUE)
-        self.geo_csKw=AFXTupleKeyword(self.cmd, 'geo_cs', TRUE)
-        #Orthogrid
-        self.geo_ort_RBKw=AFXBoolKeyword(self.cmd, 'geo_ort_RB', TRUE_FALSE, TRUE)
-        self.geo_orthoKw=AFXTupleKeyword(self.cmd, 'geo_ortho', TRUE)
-        #An-isogrid
-        #Corrugated core sandwich
-        self.geo_ccs_RBKw=AFXBoolKeyword(self.cmd, 'geo_ccs_RB', TRUE_FALSE, TRUE)
-        self.geo_ccsKw=AFXTupleKeyword(self.cmd, 'geo_ccs', TRUE)
-        #Frames
-        self.geo_F_CBKw=AFXBoolKeyword(self.cmd, 'geo_F_CB', TRUE_FALSE, TRUE)
-        self.F_NUMKw=AFXTupleKeyword(self.cmd, 'F_NUM', TRUE)
-        #Web frame
-        self.geo_w_F_RBKw=AFXBoolKeyword(self.cmd, 'geo_w_F_RB', TRUE_FALSE, TRUE)
-        self.geo_w_FKw=AFXTupleKeyword(self.cmd, 'geo_w_F', TRUE)
-        #C frame
-        self.geo_c_F_RBKw=AFXBoolKeyword(self.cmd, 'geo_c_F_RB', TRUE_FALSE, TRUE)
-        self.geo_c_FKw=AFXTupleKeyword(self.cmd, 'geo_c_F', TRUE)
-        #
+
         self.separate_load_stepsKw = AFXBoolKeyword(self.cmd, 'separate_load_steps', TRUE_FALSE, TRUE)
         self.displ_controlledKw = AFXBoolKeyword(self.cmd, 'displ_controlled', TRUE_FALSE, TRUE)
         self.axial_displKw = AFXFloatKeyword(self.cmd, 'axial_displ', TRUE)

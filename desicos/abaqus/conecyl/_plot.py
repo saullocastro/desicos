@@ -27,7 +27,6 @@ def plot_xy(self, xs, ys, name = 'default_plot',
 
 def plot_forces(self, step_num=2, along_edge=False, gui=False):
     import __main__
-
     step_name = self.get_step_name(step_num)
     names = []
     do_norm = False
@@ -45,24 +44,15 @@ def plot_forces(self, step_num=2, along_edge=False, gui=False):
         if do_norm:
             names.append('%s_Step_%02d_Displacement_X_Force_norm' %
                      (self.model_name, step_num))
-    #
     lamt = sum(self.plyts)
     tmp_displ_f = []
     tmp_displ_f_norm = []
     fb_load = utils.find_fb_load(self.zload)
-
     for i in range(len(self.zload)):
-
         zload = self.zload[i]
-
         tmp_displ_f.append((abs(self.zdisp[i]), 0.001 * zload))
         if do_norm:
-
-            if Pcr==0.0:
-                tmp_displ_f_norm.append((abs(self.zdisp[i]/lamt), 0.0))
-            else:
-                tmp_displ_f_norm.append((abs(self.zdisp[i]/lamt), zload/Pcr))
-
+            tmp_displ_f_norm.append((abs(self.zdisp[i]/lamt), zload/Pcr))
     if len(tmp_displ_f) == 0:
         print 'ERROR - plot_forces - run read_outputs first'
         return
@@ -112,83 +102,6 @@ def plot_forces(self, step_num=2, along_edge=False, gui=False):
     else:
         return tmp_displ_f, None
 
-#New
-def plot_R1_forces(self, step_num=2, along_edge=False, gui=False):
-    import __main__
-
-    names = []
-    
-    if gui:
-        names.append('%s_MEA_curve' % self.model_name)
-
-    else:
-        names.append('%s_Step_%02d_Displacement_X_Force' %
-                     (self.model_name, step_num))
-
-    lamt = sum(self.plyts)
-    tmp_displ_f = []
-    tmp_displ_f_norm = []
-    
-    for i in range(len(self.rload)):
-        rload = self.rload[i]
-        tmp_displ_f.append((abs(self.rdisp[i]), 0.001 * rload))
-
-    if len(tmp_displ_f) == 0:
-        print 'ERROR - MEA_plot_forces - run read_outputs first'
-        return
-
-    legendLabel = self.model_name
-
-    session = __main__.session
-    session.XYData(
-            name = names[0],
-            data = tmp_displ_f,
-            xValuesLabel = 'Radial displacement, mm',
-            yValuesLabel = 'Radial reaction Load, kN',
-            legendLabel = legendLabel)
-
-    self.MEA_curve = tmp_displ_f
-
-    return tmp_displ_f, None
-
-def plot_RF1U3_forces(self, step_num=2, along_edge=False, gui=False):
-    import __main__
-
-    names = []
-    
-    if gui:
-        names.append('%s_RF1U3_curve' % self.model_name)
-
-    else:
-        names.append('%s_Step_%02d_Displacement_X_Force' %
-                     (self.model_name, step_num))
-
-    lamt = sum(self.plyts)
-    tmp_displ_f = []
-    tmp_displ_f_norm = []
-
-    for i in range(len(self.rload_RF1U3)):
-        rload_RF1U3 = self.rload_RF1U3[i]
-        tmp_displ_f.append((abs(self.zdisp_RF1U3[i]), 0.001 * rload_RF1U3))
-        #print(i)
-    if len(tmp_displ_f) == 0:
-        print 'ERROR - RF1U3_plot_forces - run read_outputs first'
-        return
-
-    legendLabel = self.model_name
-
-    session = __main__.session
-    session.XYData(
-            name = names[0],
-            data = tmp_displ_f,
-            xValuesLabel = 'Axial displacement, mm',
-            yValuesLabel = 'Radial reaction Load, kN',
-            legendLabel = legendLabel)
-
-    self.RF1U3_curve = tmp_displ_f
-
-    return tmp_displ_f, None
-#End new 
 def plot_displacements(self, step_num=1, frame_num = -1):
     import __main__
     step_name = self.get_step_name(step_num)

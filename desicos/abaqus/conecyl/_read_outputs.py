@@ -18,41 +18,19 @@ def read_outputs(self, last_frame=False, last_cross_section=True,
         return False
 
     if self.linear_buckling:
-        try:
-            pcrs = []
-            for frame in odb.steps[self.step1Name].frames:
-                description = frame.description
-                if description.find('EigenValue') > -1:
-                    pcr = float(description.split('EigenValue =')[1].strip())
-                    pcrs.append(pcr)
-            self.zdisp = np.linspace(       0., self.axial_displ or 1., 10)
-            self.zload = np.linspace(min(pcrs),              min(pcrs), 10)
-            self.rdisp = np.linspace(       0., self.axial_displ or 1., 10)
-            self.rload = np.linspace(min(pcrs),              min(pcrs), 10)
-            self.rload_RF1U3 = np.linspace(min(pcrs),              min(pcrs), 10)
-            self.zdisp_RF1U3 = np.linspace(       0., self.axial_displ or 1., 10)
-            self.detach_results(odb)
-            return True
-        except:
-            
-            self.zdisp = np.linspace(       0., self.axial_displ or 1., 10)
-            self.zload = np.linspace(       0.,              1., 10)
-            self.rdisp = np.linspace(       0., self.axial_displ or 1., 10)
-            self.rload = np.linspace(       0.,              1., 10)
-            self.zdisp_RF1U3 = np.linspace( 0., self.axial_displ or 1., 10)
-            self.rload_RF1U3 = np.linspace( 0.,              1., 10)
-            
-            self.detach_results(odb)
-            
-            return True
-    
+        pcrs = []
+        for frame in odb.steps[self.step1Name].frames:
+            description = frame.description
+            if description.find('EigenValue') > -1:
+                pcr = float(description.split('EigenValue =')[1].strip())
+                pcrs.append(pcr)
+        self.zdisp = np.linspace(       0., self.axial_displ or 1., 10)
+        self.zload = np.linspace(min(pcrs),              min(pcrs), 10)
+        self.detach_results(odb)
+        return True
+
     _read_outputs._read_axial_load_displ_history(self, odb)
 
-    try:
-        _read_outputs._read_R1_load_displ_history(self, odb)
-        _read_outputs._read_RF1U3_load_displ_history(self, odb)
-    except:
-        return True
     return True
 
 
@@ -153,7 +131,6 @@ def _read_outputs_entity(cc, odb, entity, last_frame=False):
 
 
 def _read_axial_load_displ_history(cc, odb):
-    #print('I read_outputs No CSBI')
     step_name = cc.step2Name
     step = odb.steps[step_name]
     historyRegion = step.historyRegions['Node ASSEMBLY.2']
@@ -164,44 +141,3 @@ def _read_axial_load_displ_history(cc, odb):
         cc.zload = [-value[1] for value in zload_data]
     else:
         cc.zload = [cc.axial_load*value[0] for value in zload_data]
-#New
-def _read_R1_load_displ_history(cc, odb):
-
-    STPS=odb.steps.keys()
-    rdisp_data=[]
-    rload_data=[]
-    for xx in range(len(STPS)):
-
-        step = odb.steps[STPS[xx]]
-
-        check=step.historyRegions.keys()
-        for i in range(0,len(step.historyRegions.keys())):
-            if 'Node INST_SHELL' in check[i]:
-                historyRegion = step.historyRegions[check[i]]
-        
-        rdisp_data += historyRegion.historyOutputs['U1'].data
-
-        rload_data += historyRegion.historyOutputs['RF1'].data
-
-    cc.rdisp = [value[1] for value in rdisp_data]
-
-    cc.rload = [value[1] for value in rload_data]
-
-def _read_RF1U3_load_displ_history(cc, odb):
-    
-    step_name = cc.step2Name
-    step = odb.steps[step_name]
-
-    check=step.historyRegions.keys()
-    for i in range(0,len(step.historyRegions.keys())):
-        if 'Node INST_SHELL' in check[i]:
-
-            historyRegion = step.historyRegions[check[i]]
-            rload_data_RF1U3 = historyRegion.historyOutputs['RF1'].data
-
-    historyRegion = step.historyRegions['Node ASSEMBLY.2']
-
-    zdisp_data_RF1U3 = historyRegion.historyOutputs['U3'].data
-    #End read
-    cc.zdisp_RF1U3 = [value[1] for value in zdisp_data_RF1U3]
-    cc.rload_RF1U3 = [value[1] for value in rload_data_RF1U3]
