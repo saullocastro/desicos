@@ -22,7 +22,7 @@ Installation
 
 Latest Release:
 
-- `Version 2.5.2 <https://github.com/desicos/desicos/releases/tag/2.5.2>`_
+- `Version 2.4.7 <https://github.com/desicos/desicos/releases/tag/2.4.7>`_
 
 `Click here <https://github.com/desicos/desicos/releases>`_ to check all
 releases.
