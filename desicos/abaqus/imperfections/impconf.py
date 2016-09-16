@@ -349,8 +349,7 @@ class ImpConf(object):
 
 
     def add_cb(self, thetadeg, pt, cbtotal, step=1):
-
-        """Add a Perturbation Load
+        """Add a Constant Amplitude Perturbation Buckle Imperfection
 
         Parameters
         ----------
@@ -362,13 +361,13 @@ class ImpConf(object):
             The magnitude of the constant buckle (it is always applied
             normally to the shell surface).
         step : int
-            The step in which the perturbation load will be included. In
+            The step in which the constant buckle will be included. In
             ``step=1`` the load is constant along the analysis while in
             ``step=2`` the load is incremented.
 
         Returns
         -------
-        pload : :class:`.PLoad` object.
+        cb : :class:`.CBamp` object.
 
         """
         cb = CBamp(thetadeg, pt, cbtotal, step)
