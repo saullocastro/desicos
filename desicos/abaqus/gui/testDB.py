@@ -1228,8 +1228,6 @@ class TestDB(AFXDataDialog):
         else:
             self.ppiTable.disable()
 
-        # linking variables
-        std_name = form.std_to_postKw.getValue()
         #
         self.logcount += 1
         if form.just_created_study:
@@ -1315,6 +1313,7 @@ class TestDB(AFXDataDialog):
             self.load_std.setState(STATE_UP)
             message('Loading...')
             self.logcount = 10000
+            std_name = form.std_to_postKw.getValue()
             command = ('import gui_commands\n' +
                        'reload(gui_commands)\n' +
                        'gui_commands.load_study("{0}")\n'.format(std_name))
@@ -1397,6 +1396,7 @@ class TestDB(AFXDataDialog):
             return
         else:
             if not form.post_outpathKw.getValue():
+                std_name = form.std_to_postKw.getValue()
                 if std_name:
                     outpath = os.path.join(TMP_DIR, std_name)
                 else:
@@ -1409,8 +1409,9 @@ class TestDB(AFXDataDialog):
             reload(gui_plot)
             put_in_Excel = form.post_put_in_ExcelKw.getValue()
             open_Excel = form.post_open_ExcelKw.getValue()
+            std_name = form.std_to_postKw.getValue()
             gui_plot.plot_ls_curve(std_name,
-                                    put_in_Excel, open_Excel)
+                                   put_in_Excel, open_Excel)
 
         # post knock-down curves
         if self.post_kdf_button.getState() == STATE_DOWN:
@@ -1418,15 +1419,17 @@ class TestDB(AFXDataDialog):
             reload(gui_plot)
             put_in_Excel = form.post_put_in_ExcelKw.getValue()
             open_Excel = form.post_open_ExcelKw.getValue()
+            std_name = form.std_to_postKw.getValue()
             gui_plot.plot_kdf_curve(std_name,
-                                     put_in_Excel, open_Excel,
-                                     configure_session=False)
+                                    put_in_Excel, open_Excel,
+                                    configure_session=False)
 
         # post stress analysis button
         if self.post_stress_button.getState() == STATE_DOWN:
             self.post_stress_button.setState(STATE_UP)
             reload(gui_plot)
             cc_name = form.model_to_postKw.getValue()
+            std_name = form.std_to_postKw.getValue()
             gui_plot.plot_stress_analysis(std_name, cc_name)
 
         # plot PPI button
@@ -1437,6 +1440,7 @@ class TestDB(AFXDataDialog):
             # ply_index is 1-based in GUI, 0-based in code
             ply_index = form.plot_ply_indexKw.getValue() - 1
             plot_type = int(form.plot_imp_typeKw.getValue()[-1])
+            std_name = form.std_to_postKw.getValue()
             gui_plot.plot_ppi(std_name, cc_name, ply_index, plot_type)
 
         # plot MSI button
@@ -1445,6 +1449,7 @@ class TestDB(AFXDataDialog):
             reload(gui_plot)
             cc_name = form.plot_imp_modelKw.getValue()
             plot_type = int(form.plot_imp_typeKw.getValue()[-1])
+            std_name = form.std_to_postKw.getValue()
             gui_plot.plot_msi(std_name, cc_name, plot_type)
 
         # plot TI button
@@ -1453,6 +1458,7 @@ class TestDB(AFXDataDialog):
             reload(gui_plot)
             cc_name = form.plot_imp_modelKw.getValue()
             plot_type = int(form.plot_imp_typeKw.getValue()[-1])
+            std_name = form.std_to_postKw.getValue()
             gui_plot.plot_ti(std_name, cc_name, plot_type)
 
         # run models
@@ -1460,6 +1466,7 @@ class TestDB(AFXDataDialog):
             self.exec_std.setState(STATE_UP)
             self.logcount = 10000
             ncpus = form.ncpusKw.getValue()
+            std_name = form.std_to_postKw.getValue()
             command = ('import __main__\n' +
                        '__main__.stds["{0}"].write_inputs()\n'.format(std_name))
             sendCommand(command)
