@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Old / new best fit radii &mdash; DESICOS 2.4.7 documentation</title>
+    <title>Old / new best fit radii &#8212; DESICOS 2.4.8 documentation</title>
     
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -14,21 +14,23 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.4.7',
+        VERSION:     '2.4.8',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <link rel="top" title="DESICOS 2.4.7 documentation" href="../../index.html" />
-    <link rel="up" title="Cone / Cylinder DataBase (desicos.conecylDB)" href="index.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Cone Ply Piece Optimization Tool (CPPOT)" href="../cppot/index.html" />
     <link rel="prev" title="Adding New Imperfection Files" href="add_file.html" />
    
   <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
@@ -43,14 +45,14 @@
             
   <div class="section" id="old-new-best-fit-radii">
 <h1>Old / new best fit radii<a class="headerlink" href="#old-new-best-fit-radii" title="Permalink to this headline">¶</a></h1>
-<p>The implementation of <a class="reference internal" href="../../modules/conecylDB/index.html#module-desicos.conecylDB.fit_data" title="desicos.conecylDB.fit_data"><code class="xref py py-mod docutils literal"><span class="pre">the</span> <span class="pre">new</span> <span class="pre">best</span> <span class="pre">fit</span> <span class="pre">algorithms</span></code></a> allowed
+<p>The implementation of <code class="xref py py-mod docutils literal"><span class="pre">the</span> <span class="pre">new</span> <span class="pre">best</span> <span class="pre">fit</span> <span class="pre">algorithms</span></code> allowed
 an improvement of the database by storing the mid-surface imperfections in a
-&#8220;<img class="math" src="../../_images/math/4dc4789b8e2f448615b3e2c2bdc22fb9267f7cd8.png" alt="\theta"/> <img class="math" src="../../_images/math/eb4fcf2ea15c365948abb172ed3693fbc10b3b4a.png" alt="z"/> <img class="math" src="../../_images/math/1dbe4518c654678ac4ebe72ffe8850d2bcad90dc.png" alt="imperfection"/>&#8221; format instead of a &#8220;<img class="math" src="../../_images/math/fcbaa2ea1c6a047f151a45849927929823fc5d88.png" alt="x"/> <img class="math" src="../../_images/math/5a1161c9b9bf6a6addc18ade0f7fe8bb5ce0ba95.png" alt="y"/> <img class="math" src="../../_images/math/eb4fcf2ea15c365948abb172ed3693fbc10b3b4a.png" alt="z"/>&#8221; format and the
-thickness imperfections in a &#8220;<img class="math" src="../../_images/math/4dc4789b8e2f448615b3e2c2bdc22fb9267f7cd8.png" alt="\theta"/> <img class="math" src="../../_images/math/eb4fcf2ea15c365948abb172ed3693fbc10b3b4a.png" alt="z"/> <img class="math" src="../../_images/math/f4a8bb70b73ef02b02700035daacd0eb39a325df.png" alt="thickness"/>&#8221; format instead of a
-&#8220;<img class="math" src="../../_images/math/fcbaa2ea1c6a047f151a45849927929823fc5d88.png" alt="x"/> <img class="math" src="../../_images/math/5a1161c9b9bf6a6addc18ade0f7fe8bb5ce0ba95.png" alt="y"/> <img class="math" src="../../_images/math/eb4fcf2ea15c365948abb172ed3693fbc10b3b4a.png" alt="z"/> <img class="math" src="../../_images/math/f4a8bb70b73ef02b02700035daacd0eb39a325df.png" alt="thickness"/>&#8221; file. This showed to be more convenient to
+&#8220;<span class="math">\theta</span> <span class="math">z</span> <span class="math">imperfection</span>&#8221; format instead of a &#8220;<span class="math">x</span> <span class="math">y</span> <span class="math">z</span>&#8221; format and the
+thickness imperfections in a &#8220;<span class="math">\theta</span> <span class="math">z</span> <span class="math">thickness</span>&#8221; format instead of a
+&#8220;<span class="math">x</span> <span class="math">y</span> <span class="math">z</span> <span class="math">thickness</span>&#8221; file. This showed to be more convenient to
 interchange imperfections between cones and cylinders and requires less stored
 information.</p>
-<p>The previous files with  &#8220;<img class="math" src="../../_images/math/fcbaa2ea1c6a047f151a45849927929823fc5d88.png" alt="x"/> <img class="math" src="../../_images/math/5a1161c9b9bf6a6addc18ade0f7fe8bb5ce0ba95.png" alt="y"/> <img class="math" src="../../_images/math/eb4fcf2ea15c365948abb172ed3693fbc10b3b4a.png" alt="z"/>&#8221; had been compared with the new
+<p>The previous files with  &#8220;<span class="math">x</span> <span class="math">y</span> <span class="math">z</span>&#8221; had been compared with the new
 generated files and the respective best fit radius, which <strong>for
 cones</strong> should be taken as <strong>the radius at the bottom</strong>. Below the old
 radius is compared with the new radius, showing that the files that
@@ -257,8 +259,8 @@ were in the database had already been treated by a best fit algorithm.</p>
       &copy;2012-2015 Desicos Improved Software Team.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.3</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
       
     </div>
 

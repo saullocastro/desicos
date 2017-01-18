@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Virtual Material Model (VMM) &mdash; DESICOS 2.4.7 documentation</title>
+    <title>Virtual Material Model (VMM) &#8212; DESICOS 2.4.8 documentation</title>
     
     <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -14,21 +14,23 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.4.7',
+        VERSION:     '2.4.8',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <link rel="top" title="DESICOS 2.4.7 documentation" href="../../../index.html" />
-    <link rel="up" title="Cone Ply Piece Optimization Tool (CPPOT)" href="../index.html" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="References" href="../ref.html" />
     <link rel="prev" title="GUI for the Cone Ply Piece Optimization Tool" href="../gui/index.html" />
    
   <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
@@ -48,16 +50,16 @@
 <p>The basic problem with laminated cones is the change of the local fiber angle
 due to the plane ply parts and the curved cone surface. Because of the curved
 surface the fibers are lying on the geodesic path, see Figure 1. There are two
-different fiber angles <img class="math" src="../../../_images/math/9d5701ac5defbef113046d7dfafad6a6a37c514c.png" alt="\Theta_{s1}"/> and <img class="math" src="../../../_images/math/279a612a1f96b972d2fc6855a54ebc63a345392b.png" alt="\Theta_{s2}"/> at the positions <img class="math" src="../../../_images/math/b7442399db5dac0d97e2692e250a298d334c76d3.png" alt="s_1"/>
-and <img class="math" src="../../../_images/math/3473c14d011d9f1aede5914054e51b46686d5045.png" alt="s_2"/>. The variable s is part of the conical coordinate system. Goldfeld
-<a class="reference internal" href="../ref.html#goldfeld2007" id="id1">[goldfeld2007]</a> describes the local fiber angle <img class="math" src="../../../_images/math/f6479197a297e86fd8493f26228dc4bc10ac492d.png" alt="\Theta"/> as a function of s:</p>
+different fiber angles <span class="math">\Theta_{s1}</span> and <span class="math">\Theta_{s2}</span> at the positions <span class="math">s_1</span>
+and <span class="math">s_2</span>. The variable s is part of the conical coordinate system. Goldfeld
+<a class="reference internal" href="../ref.html#goldfeld2007" id="id1">[goldfeld2007]</a> describes the local fiber angle <span class="math">\Theta</span> as a function of s:</p>
 <div class="math">
-<p><img src="../../../_images/math/cea9c7583ae9520a68503fef86fcb6173a6578b7.png" alt="\Theta(s)=arcsin \left( \frac{s_1}{s} \cdot sin(\Theta_1) \right)"/></p>
+<p><span class="math">\Theta(s)=arcsin \left( \frac{s_1}{s} \cdot sin(\Theta_1) \right)</span></p>
 </div><p>This approach is only valid for the path of a single fiber. A new approach is
 to describe the local fiber angle by the difference between the angle of the
 point of interest and the angle of the starting point of the ply part:</p>
 <div class="math">
-<p><img src="../../../_images/math/10208f6223623ff919383af0ea08611b52b48210.png" alt="\Theta(\phi)= \Theta_1-(\phi-\phi_1)"/></p>
+<p><span class="math">\Theta(\phi)= \Theta_1-(\phi-\phi_1)</span></p>
 </div><p>This approach can be used for ply parts with a finite width and is the key
 formula for this program.</p>
 <div class="figure align-center" id="id2">
@@ -67,7 +69,7 @@ formula for this program.</p>
 <p>The objective of this tool is to calculate the local fiber angle and thickness
 of any given point on a laminated cone. To do this the laminate will be
 rebuilt as a virtual model. Each ply (i) consists of a finite number of pieces
-(j) with a certain ply angle <img class="math" src="../../../_images/math/2da91ca4eac8f854d9199d2e6615c1b644c6d963.png" alt="\Theta_i"/> and offset angle <img class="math" src="../../../_images/math/f2eee92c82af31a355a430b03a59b1adeb9af3d6.png" alt="\phi_{i,j}"/>. These
+(j) with a certain ply angle <span class="math">\Theta_i</span> and offset angle <span class="math">\phi_{i,j}</span>. These
 are called ply pieces. After building the model, another algorithm determines
 in which ply piece(s) a given point lies and calculates the local fiber angles
 and thickness.</p>
@@ -83,21 +85,21 @@ and in the separate Cone Ply Piece Optimization Tool (CPPOT).</p>
 <li><strong>3D-Cartesian</strong>: Used for the model generation in ABAQUS</li>
 </ul>
 <div class="math">
-<p><img src="../../../_images/math/63af6d05baa176ec6d6961ad0fba5b2ca0acafb7.png" alt="x,y,z \in [-\infty, +\infty]"/></p>
+<p><span class="math">x,y,z \in [-\infty, +\infty]</span></p>
 </div><div class="figure align-center" id="id3">
 <a class="reference internal image-reference" href="../../../_images/fig_global_cart_csys.png"><img alt="../../../_images/fig_global_cart_csys.png" src="../../../_images/fig_global_cart_csys.png" style="width: 500px;" /></a>
 <p class="caption"><span class="caption-text">Figure 2: Global 3D-Cartesian coordinate system</span></p>
 </div>
 <ul class="simple">
 <li><strong>3D-cylindrical</strong>: This often allows considerable simplification in
-axisymmetric cases, such as cones. Note that the symbol <img class="math" src="../../../_images/math/25ca9e78b678a5e6b3746b5d2e4e1b71419578a2.png" alt="\psi"/> is used here
-for the circumferential coordinate instead of <img class="math" src="../../../_images/math/4dc4789b8e2f448615b3e2c2bdc22fb9267f7cd8.png" alt="\theta"/>, because the latter
+axisymmetric cases, such as cones. Note that the symbol <span class="math">\psi</span> is used here
+for the circumferential coordinate instead of <span class="math">\theta</span>, because the latter
 will be used for the fiber angle.</li>
 </ul>
 <div class="math">
-<p><img src="../../../_images/math/c264d292e90fec7ae28f44436ad5c10c9a176a37.png" alt="r &amp;\in [0, +\infty] \\
+<p><span class="math">r &amp;\in [0, +\infty] \\
 \psi &amp;\in [0, 2\pi) \\
-z &amp;\in [-\infty, +\infty]"/></p>
+z &amp;\in [-\infty, +\infty]</span></p>
 </div><div class="figure align-center" id="id4">
 <a class="reference internal image-reference" href="../../../_images/fig_global_cyl_csys.png"><img alt="../../../_images/fig_global_cyl_csys.png" src="../../../_images/fig_global_cyl_csys.png" style="width: 500px;" /></a>
 <p class="caption"><span class="caption-text">Figure 3: Global 3D-cylindrical coordinate system</span></p>
@@ -105,17 +107,17 @@ z &amp;\in [-\infty, +\infty]"/></p>
 <p>The coordinate transformation between Cartesian and cylindrical coordinates
 and vice versa is done as follows:</p>
 <div class="math">
-<p><img src="../../../_images/math/962fb5484ddea1fc83c264e2707e41413ba8380c.png" alt="(x, y, z) &amp;= (r\cos\psi, r\sin\psi, z) \\
-(r, \psi, z) &amp;= (\sqrt{x^2 + y^2}, {\rm atan2}{(y, x)}, z)"/></p>
+<p><span class="math">(x, y, z) &amp;= (r\cos\psi, r\sin\psi, z) \\
+(r, \psi, z) &amp;= (\sqrt{x^2 + y^2}, {\rm atan2}{(y, x)}, z)</span></p>
 </div><p><strong>Unfolded coordinates</strong></p>
 <p>The cone surface is a two-dimensional surface within the three-dimensional
 space. Points on the cone have to satisfy the following equation:</p>
 <div class="math">
-<p><img src="../../../_images/math/abbc11e02a574a2d12290cf19bfffb97410ceca5.png" alt="r = r_{bot} - z \tan\alpha"/></p>
+<p><span class="math">r = r_{bot} - z \tan\alpha</span></p>
 </div><p>Points that satisfy this equation can be described using a two-dimensional
 coordinate system. For this purpose, an imaginary cut is made through the cone
-at <img class="math" src="../../../_images/math/d790d5675f12087431f993a4b2074c33bfc78229.png" alt="\psi = 0"/>, see the above figure. The apex of the cone is placed at the
-origin of the new coordinate system. The edge in the direction <img class="math" src="../../../_images/math/3d8d9a9b5d9692d0033de79c66b088859ff9ec49.png" alt="\psi &gt; 0"/>
+at <span class="math">\psi = 0</span>, see the above figure. The apex of the cone is placed at the
+origin of the new coordinate system. The edge in the direction <span class="math">\psi &gt; 0</span>
 (right edge in the figure) is mapped to the horizontal axis. This results
 in the layout shown below:</p>
 <div class="figure align-center" id="id5">
@@ -127,34 +129,34 @@ in the layout shown below:</p>
 <li><strong>2D-polar</strong>: This is the most natural description:</li>
 </ul>
 <div class="math">
-<p><img src="../../../_images/math/9103aa8ea183c2f6910d434059a1f25f5a8f2972.png" alt="s &amp;\in [0, +\infty] \\
-\phi &amp;\in [0, \phi_{max})"/></p>
-</div><p>The relation between the 2D-polar coordinates <img class="math" src="../../../_images/math/ef8ccc3407f353528c904a90d95cec3080df8bfe.png" alt="(s, \phi)"/> and 3D-cylindrical
+<p><span class="math">s &amp;\in [0, +\infty] \\
+\phi &amp;\in [0, \phi_{max})</span></p>
+</div><p>The relation between the 2D-polar coordinates <span class="math">(s, \phi)</span> and 3D-cylindrical
 coordinates is as follows, valid only for points on the cone surface:</p>
 <div class="math">
-<p><img src="../../../_images/math/d1cbe22881c18ba70652d8c521cdd60ce43f9fef.png" alt="(s, \phi) &amp;= \left(\frac{r}{\sin\alpha}, \psi\sin\alpha\right) \\
+<p><span class="math">(s, \phi) &amp;= \left(\frac{r}{\sin\alpha}, \psi\sin\alpha\right) \\
 (r, \psi, z) &amp;= \left(s\sin\alpha, \frac{\phi}{\sin\alpha},
-\frac{r_{bot}}{\tan\alpha} - s\cos\alpha\right)"/></p>
+\frac{r_{bot}}{\tan\alpha} - s\cos\alpha\right)</span></p>
 </div><p>Using the above coordinate transformation, the maximum value for the
-<img class="math" src="../../../_images/math/190802f0a804647b88ba7261622649237474ea0a.png" alt="\phi"/>-coordinate (labeled <img class="math" src="../../../_images/math/11927f45f7ba3049f8302e6f7da25a727cfd6d56.png" alt="phi_{max}"/>) can be calculated, as well as the
-radial limits <img class="math" src="../../../_images/math/e9c3ff2d26f999a0ec57f74eb142f8e590abf373.png" alt="s_{bot}"/> and <img class="math" src="../../../_images/math/8f77b052040337fd50d9748d8b8f932b67d047d2.png" alt="s_{top}"/>:</p>
+<span class="math">\phi</span>-coordinate (labeled <span class="math">phi_{max}</span>) can be calculated, as well as the
+radial limits <span class="math">s_{bot}</span> and <span class="math">s_{top}</span>:</p>
 <div class="math">
-<p><img src="../../../_images/math/f47bb0df4615d40d70e7cd215046a732a3ee365d.png" alt="\phi_{max} &amp;= 2\pi\sin\alpha \\
+<p><span class="math">\phi_{max} &amp;= 2\pi\sin\alpha \\
 s_{bot} &amp;= \frac{r_{bot}}{\sin\alpha} \\
 s_{top} &amp;= \frac{s_{top}}{\sin\alpha} =
 \frac{r_{bot} - H\tan\alpha}{\sin\alpha} =
-\frac{r_{bot}}{\sin\alpha} - \frac{H}{\cos\alpha}"/></p>
+\frac{r_{bot}}{\sin\alpha} - \frac{H}{\cos\alpha}</span></p>
 </div><ul class="simple">
 <li><strong>2D-Cartesian</strong>: Used for geometrical operations on the unfolded cone
 (defining lines, calculating intersection points, ...):</li>
 </ul>
 <div class="math">
-<p><img src="../../../_images/math/10ffc4b3aabe6097352f67d2a83212282c74a484.png" alt="\eta, \zeta \in [-\infty,+\infty]"/></p>
+<p><span class="math">\eta, \zeta \in [-\infty,+\infty]</span></p>
 </div><p>The transformation rules are fairly straightforward:</p>
 <div class="math">
-<p><img src="../../../_images/math/ead0b41a5b519a84789f4fb145c5325f7e397aff.png" alt="(\eta, \zeta) &amp;= (s\cos\phi, s\sin\phi) \\
+<p><span class="math">(\eta, \zeta) &amp;= (s\cos\phi, s\sin\phi) \\
 (s, \phi) &amp;= \left(\sqrt{\eta^2 + \zeta^2},
-{\rm atan2}{(\zeta, \eta)}\right)"/></p>
+{\rm atan2}{(\zeta, \eta)}\right)</span></p>
 </div><ul class="simple">
 <li><strong>Laminate coordinates</strong> To describe the orientation of fibers and plies,
 a laminate coordinate system is used in Abaqus, as is shown in the figure
@@ -163,8 +165,8 @@ each point on the cone. The 1-direction is obtained by projecting the
 z-axis onto the cone surface, i.e. it is always pointing towards the
 apex of the cone. The n-direction is normal to the surface and always
 pointing outward. The 2-direction is obtained by rotating the 1-direction
-<img class="math" src="../../../_images/math/6999be3ebb93720aaf61ca7c8254b9148c55ab07.png" alt="90^\circ"/> around the normal vector, using the right-hand rule. The angle
-<img class="math" src="../../../_images/math/4dc4789b8e2f448615b3e2c2bdc22fb9267f7cd8.png" alt="\theta"/> is used to define the orientation of a fiber or ply. It is defined
+<span class="math">90^\circ</span> around the normal vector, using the right-hand rule. The angle
+<span class="math">\theta</span> is used to define the orientation of a fiber or ply. It is defined
 as being 0 for fibers parallel to the 1-direction and increases when
 rotating from the 1- to 2-direction, as shown in the figure.</li>
 </ul>
@@ -203,9 +205,9 @@ based on a few input parameters, listed below. All other parameters
 (<code class="docutils literal"><span class="pre">s1</span></code> .. <code class="docutils literal"><span class="pre">s4</span></code>, <code class="docutils literal"><span class="pre">rtop</span></code>, ...) are then easily retrieved upon request.</p>
 <blockquote>
 <div><ul class="simple">
-<li>The bottom radius of the free cone <img class="math" src="../../../_images/math/e0ac39d18138c058fc5a9401c13e39627e802d24.png" alt="r_{bot}"/> (400 mm in figure 6)</li>
-<li>The semi-vertex angle <img class="math" src="../../../_images/math/bbfbc8a7251a97f42020bf1fae519f2cd55dbdf7.png" alt="\alpha"/> (<img class="math" src="../../../_images/math/dd61e74a16318b6a928b9fdf80c75d279dc6728c.png" alt="35^\circ"/> in figure 6)</li>
-<li>The free cone height <img class="math" src="../../../_images/math/5b4dfe819df3c0c09e92d12de54b6910e15f8457.png" alt="H"/> (300 mm in figure 6)</li>
+<li>The bottom radius of the free cone <span class="math">r_{bot}</span> (400 mm in figure 6)</li>
+<li>The semi-vertex angle <span class="math">\alpha</span> (<span class="math">35^\circ</span> in figure 6)</li>
+<li>The free cone height <span class="math">H</span> (300 mm in figure 6)</li>
 <li>The support height <code class="docutils literal"><span class="pre">extra_height</span></code> (70 mm in figure 6)</li>
 </ul>
 </div></blockquote>
@@ -253,114 +255,114 @@ procedure described here is contained in the method
 <a class="reference internal" href="../../../modules/cppot/index.html#desicos.cppot.core.ply_model.TrapezPlyPieceModel.construct_single_ply_piece" title="desicos.cppot.core.ply_model.TrapezPlyPieceModel.construct_single_ply_piece"><code class="xref py py-func docutils literal"><span class="pre">desicos.cppot.core.ply_model.TrapezPlyPieceModel.construct_single_ply_piece()</span></code></a>.</p>
 <p>The constructed ply pieces will be trapezoidal in shape, as shown in the
 figure below. These trapezoidal pieces will be constructed such the angle that
-is spanned or “covered” by each ply piece is a constant <img class="math" src="../../../_images/math/439a2f76e8844e8e43e86942ab1d1e8dfdd566d9.png" alt="\Delta\phi"/>,
-independent of <img class="math" src="../../../_images/math/c4ded84544dfe7b2f03e15f14a623fba0417d26a.png" alt="s"/>. This property is important to allow covering the entire
+is spanned or “covered” by each ply piece is a constant <span class="math">\Delta\phi</span>,
+independent of <span class="math">s</span>. This property is important to allow covering the entire
 cone with similarly-shaped pieces, without having gaps or overlaps.</p>
 <div class="figure align-center" id="id9">
 <a class="reference internal image-reference" href="../../../_images/fig_single_ply_piece.png"><img alt="../../../_images/fig_single_ply_piece.png" src="../../../_images/fig_single_ply_piece.png" style="width: 400px;" /></a>
 <p class="caption"><span class="caption-text">Figure 8: View of single ply piece</span></p>
 </div>
 <p><strong>Step 1: Origin line `L_0`</strong></p>
-<p>The first step is to construct the <em>origin line</em> <img class="math" src="../../../_images/math/c2a2a1f43973aa0d1ad6b8a0fff438ad7729d12b.png" alt="L_0"/>. All fibers in the ply
+<p>The first step is to construct the <em>origin line</em> <span class="math">L_0</span>. All fibers in the ply
 piece will be parallel to this line. It is defined based on three parameters:</p>
 <ul class="simple">
-<li>The nominal fiber angle <img class="math" src="../../../_images/math/f9b2b5e43a4344d328fad2de16bb93e62d955eb7.png" alt="\theta_{nom}"/>, which is the same for all ply pieces
+<li>The nominal fiber angle <span class="math">\theta_{nom}</span>, which is the same for all ply pieces
 in a ply.</li>
-<li>The nominal ply piece angle <img class="math" src="../../../_images/math/049897c528c3ce7e86327e7f041f8a9098e132d9.png" alt="\phi_{nom}"/>. Note that this is a property of the
+<li>The nominal ply piece angle <span class="math">\phi_{nom}</span>. Note that this is a property of the
 individual ply piece, not a property of the ply.</li>
-<li>The starting position <img class="math" src="../../../_images/math/85df95dc4073dcfb2093d664e01881be9c183d5f.png" alt="s_{\theta nom}"/>, which is the radius at which
-(at the nominal ply piece angle <img class="math" src="../../../_images/math/049897c528c3ce7e86327e7f041f8a9098e132d9.png" alt="\phi_{nom}"/>) the actual fiber angle equals
+<li>The starting position <span class="math">s_{\theta nom}</span>, which is the radius at which
+(at the nominal ply piece angle <span class="math">\phi_{nom}</span>) the actual fiber angle equals
 the nominal fiber angle.</li>
 </ul>
-<p>The line <img class="math" src="../../../_images/math/c2a2a1f43973aa0d1ad6b8a0fff438ad7729d12b.png" alt="L_0"/> is then defined as the line going through the point
-<img class="math" src="../../../_images/math/68adcc22975fa0736ebcb384a1d96c796337bac2.png" alt="(s, \phi) = (s_{\theta nom}, \phi_{nom})"/> at an angle
-(<img class="math" src="../../../_images/math/d80737d595639298dfa4ebdacf5f5ce812488062.png" alt="\theta_{nom} + \phi_{nom}"/>) with respect to the <img class="math" src="../../../_images/math/d21f0434b95458dc90f4e1c24800d0cec69e68a3.png" alt="\eta"/>-axis. See figure 9:</p>
+<p>The line <span class="math">L_0</span> is then defined as the line going through the point
+<span class="math">(s, \phi) = (s_{\theta nom}, \phi_{nom})</span> at an angle
+(<span class="math">\theta_{nom} + \phi_{nom}</span>) with respect to the <span class="math">\eta</span>-axis. See figure 9:</p>
 <div class="figure align-center" id="id10">
 <a class="reference internal image-reference" href="../../../_images/fig_origin_line.png"><img alt="../../../_images/fig_origin_line.png" src="../../../_images/fig_origin_line.png" style="width: 400px;" /></a>
-<p class="caption"><span class="caption-text">Figure 9: Construction of origin line <img class="math" src="../../../_images/math/c2a2a1f43973aa0d1ad6b8a0fff438ad7729d12b.png" alt="L_0"/></span></p>
+<p class="caption"><span class="caption-text">Figure 9: Construction of origin line <span class="math">L_0</span></span></p>
 </div>
 <p><strong>Step 2: Base line `L_2`</strong></p>
-<p>The <em>base line</em> <img class="math" src="../../../_images/math/30dfb4eeb5eb27e6bc7e1bfd1ac8c356a3725750.png" alt="L_2"/> is the line along which the width of the ply piece will
-be measured. <img class="math" src="../../../_images/math/30dfb4eeb5eb27e6bc7e1bfd1ac8c356a3725750.png" alt="L_2"/> is defined as the line perpendicular to <img class="math" src="../../../_images/math/c2a2a1f43973aa0d1ad6b8a0fff438ad7729d12b.png" alt="L_0"/> and tangent to
-the circle with radius <img class="math" src="../../../_images/math/db74c856d8fe1e2340379c00ace8b58f68fca7d0.png" alt="s_4"/>. Point <img class="math" src="../../../_images/math/2c28d4438979ee2ca633eb2bad589e25db7de677.png" alt="P_0"/> is then defined as the intersection
-point of <img class="math" src="../../../_images/math/c2a2a1f43973aa0d1ad6b8a0fff438ad7729d12b.png" alt="L_0"/> and <img class="math" src="../../../_images/math/30dfb4eeb5eb27e6bc7e1bfd1ac8c356a3725750.png" alt="L_2"/>. See Figure 10:</p>
+<p>The <em>base line</em> <span class="math">L_2</span> is the line along which the width of the ply piece will
+be measured. <span class="math">L_2</span> is defined as the line perpendicular to <span class="math">L_0</span> and tangent to
+the circle with radius <span class="math">s_4</span>. Point <span class="math">P_0</span> is then defined as the intersection
+point of <span class="math">L_0</span> and <span class="math">L_2</span>. See Figure 10:</p>
 <div class="figure align-center" id="id11">
 <a class="reference internal image-reference" href="../../../_images/fig_base_line.png"><img alt="../../../_images/fig_base_line.png" src="../../../_images/fig_base_line.png" style="width: 400px;" /></a>
-<p class="caption"><span class="caption-text">Figure 10: Construction of base line <img class="math" src="../../../_images/math/30dfb4eeb5eb27e6bc7e1bfd1ac8c356a3725750.png" alt="L_2"/></span></p>
+<p class="caption"><span class="caption-text">Figure 10: Construction of base line <span class="math">L_2</span></span></p>
 </div>
 <p><strong>Step 3:  Corners at outer edge</strong></p>
-<p>The outer edge of the polygon is formed by the line <img class="math" src="../../../_images/math/30dfb4eeb5eb27e6bc7e1bfd1ac8c356a3725750.png" alt="L_2"/>. The position of the
-corner points <img class="math" src="../../../_images/math/8ce9595714288cbb7d1d803a016458158c47eb1e.png" alt="P_2"/> and <img class="math" src="../../../_images/math/8b02169c598827978c881f7d874a905a2f33a1c0.png" alt="P_3"/> along this line is determined by two parameters:</p>
+<p>The outer edge of the polygon is formed by the line <span class="math">L_2</span>. The position of the
+corner points <span class="math">P_2</span> and <span class="math">P_3</span> along this line is determined by two parameters:</p>
 <ul class="simple">
-<li>The maximum ply piece width <img class="math" src="../../../_images/math/7d106eca3ac6f856440f5efd7b8317393daa966c.png" alt="w_{max}"/> is equal to the distance between the
-two points <img class="math" src="../../../_images/math/8ce9595714288cbb7d1d803a016458158c47eb1e.png" alt="P_2"/> and <img class="math" src="../../../_images/math/8b02169c598827978c881f7d874a905a2f33a1c0.png" alt="P_3"/>.</li>
-<li>The <em>eccentricity parameter</em> <img class="math" src="../../../_images/math/2008d3874b2ec421a62d13d3499cb3b5473adeb4.png" alt="a_{ecc}"/> (also known as <em>width variation</em>)
-determines the placement of the two points relative to <img class="math" src="../../../_images/math/2c28d4438979ee2ca633eb2bad589e25db7de677.png" alt="P_0"/>. <img class="math" src="../../../_images/math/2008d3874b2ec421a62d13d3499cb3b5473adeb4.png" alt="a_{ecc}"/> is
-defined as the distance from <img class="math" src="../../../_images/math/2c28d4438979ee2ca633eb2bad589e25db7de677.png" alt="P_0"/> to <img class="math" src="../../../_images/math/8ce9595714288cbb7d1d803a016458158c47eb1e.png" alt="P_2"/>, divided by <img class="math" src="../../../_images/math/7d106eca3ac6f856440f5efd7b8317393daa966c.png" alt="w_{max}"/>. So for
-<img class="math" src="../../../_images/math/e09ef0c5e840d12874d9ff13ba4d1824710a8fc9.png" alt="a_{ecc} = 0"/>, <img class="math" src="../../../_images/math/8ce9595714288cbb7d1d803a016458158c47eb1e.png" alt="P_2"/> and <img class="math" src="../../../_images/math/2c28d4438979ee2ca633eb2bad589e25db7de677.png" alt="P_0"/> coincide and for <img class="math" src="../../../_images/math/a9fe4adb7d5e899c5b549826639d6730fb01cc8b.png" alt="a_{ecc} = 1"/>, <img class="math" src="../../../_images/math/8b02169c598827978c881f7d874a905a2f33a1c0.png" alt="P_3"/> and
-<img class="math" src="../../../_images/math/2c28d4438979ee2ca633eb2bad589e25db7de677.png" alt="P_0"/> coincide.</li>
+<li>The maximum ply piece width <span class="math">w_{max}</span> is equal to the distance between the
+two points <span class="math">P_2</span> and <span class="math">P_3</span>.</li>
+<li>The <em>eccentricity parameter</em> <span class="math">a_{ecc}</span> (also known as <em>width variation</em>)
+determines the placement of the two points relative to <span class="math">P_0</span>. <span class="math">a_{ecc}</span> is
+defined as the distance from <span class="math">P_0</span> to <span class="math">P_2</span>, divided by <span class="math">w_{max}</span>. So for
+<span class="math">a_{ecc} = 0</span>, <span class="math">P_2</span> and <span class="math">P_0</span> coincide and for <span class="math">a_{ecc} = 1</span>, <span class="math">P_3</span> and
+<span class="math">P_0</span> coincide.</li>
 </ul>
-<p>This is also shown in figure 11. So <img class="math" src="../../../_images/math/8ce9595714288cbb7d1d803a016458158c47eb1e.png" alt="P_2"/> is defined as the point on <img class="math" src="../../../_images/math/30dfb4eeb5eb27e6bc7e1bfd1ac8c356a3725750.png" alt="L_2"/> at a
-distance (<img class="math" src="../../../_images/math/713a042b8cadaeba6c6f6aa60842e47a846aead7.png" alt="a_{ecc}\cdot w_{max}"/>) from <img class="math" src="../../../_images/math/c2a2a1f43973aa0d1ad6b8a0fff438ad7729d12b.png" alt="L_0"/>, while <img class="math" src="../../../_images/math/8b02169c598827978c881f7d874a905a2f33a1c0.png" alt="P_3"/> is defined as the
-point on <img class="math" src="../../../_images/math/30dfb4eeb5eb27e6bc7e1bfd1ac8c356a3725750.png" alt="L_2"/> at a distance (<img class="math" src="../../../_images/math/72d811ef459f5cdecd5abda85fb7950d58d13ae6.png" alt="(1 - a_{ecc})\cdot w_{max}"/>) from <img class="math" src="../../../_images/math/c2a2a1f43973aa0d1ad6b8a0fff438ad7729d12b.png" alt="L_0"/>.
-For completeness, it should be mentioned that <img class="math" src="../../../_images/math/8ce9595714288cbb7d1d803a016458158c47eb1e.png" alt="P_2"/> is to be placed in the
-counter-clockwise direction relative to <img class="math" src="../../../_images/math/2c28d4438979ee2ca633eb2bad589e25db7de677.png" alt="P_0"/> and <img class="math" src="../../../_images/math/8b02169c598827978c881f7d874a905a2f33a1c0.png" alt="P_3"/> in the clockwise
-direction relative to <img class="math" src="../../../_images/math/c2a2a1f43973aa0d1ad6b8a0fff438ad7729d12b.png" alt="L_0"/>, as is evident in the figure below.</p>
+<p>This is also shown in figure 11. So <span class="math">P_2</span> is defined as the point on <span class="math">L_2</span> at a
+distance (<span class="math">a_{ecc}\cdot w_{max}</span>) from <span class="math">L_0</span>, while <span class="math">P_3</span> is defined as the
+point on <span class="math">L_2</span> at a distance (<span class="math">(1 - a_{ecc})\cdot w_{max}</span>) from <span class="math">L_0</span>.
+For completeness, it should be mentioned that <span class="math">P_2</span> is to be placed in the
+counter-clockwise direction relative to <span class="math">P_0</span> and <span class="math">P_3</span> in the clockwise
+direction relative to <span class="math">L_0</span>, as is evident in the figure below.</p>
 <div class="figure align-center" id="id12">
 <a class="reference internal image-reference" href="../../../_images/fig_P2_P3.png"><img alt="../../../_images/fig_P2_P3.png" src="../../../_images/fig_P2_P3.png" style="width: 300px;" /></a>
-<p class="caption"><span class="caption-text">Figure 11: Construction of <img class="math" src="../../../_images/math/8ce9595714288cbb7d1d803a016458158c47eb1e.png" alt="P_2"/> and <img class="math" src="../../../_images/math/8b02169c598827978c881f7d874a905a2f33a1c0.png" alt="P_3"/></span></p>
+<p class="caption"><span class="caption-text">Figure 11: Construction of <span class="math">P_2</span> and <span class="math">P_3</span></span></p>
 </div>
 <p><strong>Step 4:  Calculating the spanned angle</strong></p>
-<p>Now it is necessary to calculate the angle <img class="math" src="../../../_images/math/439a2f76e8844e8e43e86942ab1d1e8dfdd566d9.png" alt="\Delta\phi"/> that is spanned by the
-ply piece. This angle is determined by the position of points <img class="math" src="../../../_images/math/8ce9595714288cbb7d1d803a016458158c47eb1e.png" alt="P_2"/> and <img class="math" src="../../../_images/math/8b02169c598827978c881f7d874a905a2f33a1c0.png" alt="P_3"/>.
-However, it would be wrong to take the angular coordinates of <img class="math" src="../../../_images/math/8ce9595714288cbb7d1d803a016458158c47eb1e.png" alt="P_2"/> and <img class="math" src="../../../_images/math/8b02169c598827978c881f7d874a905a2f33a1c0.png" alt="P_3"/>
-and subtract them (<img class="math" src="../../../_images/math/3cdfb12ff3e62aae5f2a9179ecf420ecbf11dc51.png" alt="\Delta\phi \neq \phi_{P2} - \phi_{P3}"/>), because the radii
-<img class="math" src="../../../_images/math/31aabad894811882f5352f5e7f42384e7dd1bdc5.png" alt="s_{P2}"/> and <img class="math" src="../../../_images/math/7b705e3374b9ecbd32c02b4a001ae66f4821188c.png" alt="s_{P3}"/> of these points are not the same.</p>
-<p>Therefore, the points <img class="math" src="../../../_images/math/99aae1030a748448110351fcdad1a276730a133e.png" alt="T_2"/> and <img class="math" src="../../../_images/math/77eeec7821ce583dab140afb8da68063e774b240.png" alt="T_3"/> are constructed first. Point <img class="math" src="../../../_images/math/f66ee544a91c947b99de419ad9d36431e6d16411.png" alt="T_i"/> is
-defined as the point lying on <img class="math" src="../../../_images/math/c2a2a1f43973aa0d1ad6b8a0fff438ad7729d12b.png" alt="L_0"/> at a distance <img class="math" src="../../../_images/math/f81d23155b8ebf152cfb65e56ad1fd5a2a35119b.png" alt="s_{Pi}"/> from the origin.
-Now the two constituent parts of <img class="math" src="../../../_images/math/439a2f76e8844e8e43e86942ab1d1e8dfdd566d9.png" alt="\Delta\phi"/> can be calculated. One part is
-the difference in angular coordinate between <img class="math" src="../../../_images/math/8ce9595714288cbb7d1d803a016458158c47eb1e.png" alt="P_2"/> and <img class="math" src="../../../_images/math/99aae1030a748448110351fcdad1a276730a133e.png" alt="T_2"/>, the other between
-<img class="math" src="../../../_images/math/77eeec7821ce583dab140afb8da68063e774b240.png" alt="T_3"/> and <img class="math" src="../../../_images/math/8b02169c598827978c881f7d874a905a2f33a1c0.png" alt="P_3"/>. This is shown more clearly in figure 12 below.</p>
+<p>Now it is necessary to calculate the angle <span class="math">\Delta\phi</span> that is spanned by the
+ply piece. This angle is determined by the position of points <span class="math">P_2</span> and <span class="math">P_3</span>.
+However, it would be wrong to take the angular coordinates of <span class="math">P_2</span> and <span class="math">P_3</span>
+and subtract them (<span class="math">\Delta\phi \neq \phi_{P2} - \phi_{P3}</span>), because the radii
+<span class="math">s_{P2}</span> and <span class="math">s_{P3}</span> of these points are not the same.</p>
+<p>Therefore, the points <span class="math">T_2</span> and <span class="math">T_3</span> are constructed first. Point <span class="math">T_i</span> is
+defined as the point lying on <span class="math">L_0</span> at a distance <span class="math">s_{Pi}</span> from the origin.
+Now the two constituent parts of <span class="math">\Delta\phi</span> can be calculated. One part is
+the difference in angular coordinate between <span class="math">P_2</span> and <span class="math">T_2</span>, the other between
+<span class="math">T_3</span> and <span class="math">P_3</span>. This is shown more clearly in figure 12 below.</p>
 <div class="math">
-<p><img src="../../../_images/math/6914496fe670e54e1c34023eb2522c56a49ff4d1.png" alt="\Delta\phi_1 &amp;= \phi_{P2} - \phi_{T2} \\
+<p><span class="math">\Delta\phi_1 &amp;= \phi_{P2} - \phi_{T2} \\
 \Delta\phi_2 &amp;= \phi_{T3} - \phi_{P3} \\
-\Delta\phi &amp;= \Delta\phi_1 + \Delta\phi_2"/></p>
+\Delta\phi &amp;= \Delta\phi_1 + \Delta\phi_2</span></p>
 </div><div class="figure align-center" id="id13">
 <a class="reference internal image-reference" href="../../../_images/fig_spanned_angle.png"><img alt="../../../_images/fig_spanned_angle.png" src="../../../_images/fig_spanned_angle.png" style="width: 300px;" /></a>
-<p class="caption"><span class="caption-text">Figure 12: Angle <img class="math" src="../../../_images/math/439a2f76e8844e8e43e86942ab1d1e8dfdd566d9.png" alt="\Delta\phi"/> spanned by ply piece</span></p>
+<p class="caption"><span class="caption-text">Figure 12: Angle <span class="math">\Delta\phi</span> spanned by ply piece</span></p>
 </div>
 <p><strong>Step 5:  Constructing the side lines</strong></p>
-<p>Now the side lines <img class="math" src="../../../_images/math/ff02a26ca2dfd871823a67f7b1b62adf66dcf361.png" alt="L_1"/> and <img class="math" src="../../../_images/math/db0b2709fe7a9c080c98031a519dcad16619a3a4.png" alt="L_3"/> can be constructed by rotating <img class="math" src="../../../_images/math/c2a2a1f43973aa0d1ad6b8a0fff438ad7729d12b.png" alt="L_0"/> around
-the origin. <img class="math" src="../../../_images/math/ff02a26ca2dfd871823a67f7b1b62adf66dcf361.png" alt="L_1"/> is constructed by rotating <img class="math" src="../../../_images/math/c2a2a1f43973aa0d1ad6b8a0fff438ad7729d12b.png" alt="L_0"/> counter-clockwise with angle
-<img class="math" src="../../../_images/math/7768918464f1b4d53feb0bfa66aed93a2f2e816b.png" alt="\Delta\phi_1"/>, <img class="math" src="../../../_images/math/db0b2709fe7a9c080c98031a519dcad16619a3a4.png" alt="L_3"/> is constructed by rotating <img class="math" src="../../../_images/math/c2a2a1f43973aa0d1ad6b8a0fff438ad7729d12b.png" alt="L_0"/> clockwise around angle
-<img class="math" src="../../../_images/math/3925e9a0da44a49b8b1ae1f9858aab98d124e2b6.png" alt="\Delta\phi_2"/> .The intersection point between <img class="math" src="../../../_images/math/ff02a26ca2dfd871823a67f7b1b62adf66dcf361.png" alt="L_1"/> and circle <img class="math" src="../../../_images/math/b7442399db5dac0d97e2692e250a298d334c76d3.png" alt="s_1"/> is
-denoted as <img class="math" src="../../../_images/math/5400d56538ca67e3b54903c43ab4e500baeb2717.png" alt="P_{1a}"/>, the intersection point between <img class="math" src="../../../_images/math/db0b2709fe7a9c080c98031a519dcad16619a3a4.png" alt="L_3"/> and circle <img class="math" src="../../../_images/math/b7442399db5dac0d97e2692e250a298d334c76d3.png" alt="s_1"/> is
-denoted as <img class="math" src="../../../_images/math/8e3febdd9a0cc938ab24ee43d212af9fe5e9818d.png" alt="P_{4a}"/>. All of this is shown in figure 13:</p>
+<p>Now the side lines <span class="math">L_1</span> and <span class="math">L_3</span> can be constructed by rotating <span class="math">L_0</span> around
+the origin. <span class="math">L_1</span> is constructed by rotating <span class="math">L_0</span> counter-clockwise with angle
+<span class="math">\Delta\phi_1</span>, <span class="math">L_3</span> is constructed by rotating <span class="math">L_0</span> clockwise around angle
+<span class="math">\Delta\phi_2</span> .The intersection point between <span class="math">L_1</span> and circle <span class="math">s_1</span> is
+denoted as <span class="math">P_{1a}</span>, the intersection point between <span class="math">L_3</span> and circle <span class="math">s_1</span> is
+denoted as <span class="math">P_{4a}</span>. All of this is shown in figure 13:</p>
 <div class="figure align-center" id="id14">
 <a class="reference internal image-reference" href="../../../_images/fig_side_lines.png"><img alt="../../../_images/fig_side_lines.png" src="../../../_images/fig_side_lines.png" style="width: 400px;" /></a>
-<p class="caption"><span class="caption-text">Figure 13: Constructing the side lines <img class="math" src="../../../_images/math/ff02a26ca2dfd871823a67f7b1b62adf66dcf361.png" alt="L_1"/> and <img class="math" src="../../../_images/math/db0b2709fe7a9c080c98031a519dcad16619a3a4.png" alt="L_3"/></span></p>
+<p class="caption"><span class="caption-text">Figure 13: Constructing the side lines <span class="math">L_1</span> and <span class="math">L_3</span></span></p>
 </div>
 <p><strong>Step 6:  Corners at the inner edge</strong></p>
 <p>Now the inner edge of the polygon is to be defined. First, it is examined which
-point is further from <img class="math" src="../../../_images/math/30dfb4eeb5eb27e6bc7e1bfd1ac8c356a3725750.png" alt="L_2"/>, either <img class="math" src="../../../_images/math/5400d56538ca67e3b54903c43ab4e500baeb2717.png" alt="P_{1a}"/> or <img class="math" src="../../../_images/math/8e3febdd9a0cc938ab24ee43d212af9fe5e9818d.png" alt="P_{4a}"/>. See figure 14, in
-the shown example case the point <img class="math" src="../../../_images/math/8e3febdd9a0cc938ab24ee43d212af9fe5e9818d.png" alt="P_{4a}"/> is the furthest from <img class="math" src="../../../_images/math/30dfb4eeb5eb27e6bc7e1bfd1ac8c356a3725750.png" alt="L_2"/>. The line
-<img class="math" src="../../../_images/math/dfb10073672d82b45677dab99e82ba9321c3d23d.png" alt="L_4"/> is then defined to be parallel to <img class="math" src="../../../_images/math/30dfb4eeb5eb27e6bc7e1bfd1ac8c356a3725750.png" alt="L_2"/> and through this furthest point.
-Then points <img class="math" src="../../../_images/math/4542b29b0bdf886f9a9f13c1c560955031b9af53.png" alt="P_{1b}"/> and <img class="math" src="../../../_images/math/1fd5718d310fdb5e64e28ea497a0186a3eddaa78.png" alt="P_{4b}"/> are defined as the intersection points of <img class="math" src="../../../_images/math/dfb10073672d82b45677dab99e82ba9321c3d23d.png" alt="L_4"/> with,
-respectively, <img class="math" src="../../../_images/math/ff02a26ca2dfd871823a67f7b1b62adf66dcf361.png" alt="L_1"/> and <img class="math" src="../../../_images/math/db0b2709fe7a9c080c98031a519dcad16619a3a4.png" alt="L_3"/>.</p>
+point is further from <span class="math">L_2</span>, either <span class="math">P_{1a}</span> or <span class="math">P_{4a}</span>. See figure 14, in
+the shown example case the point <span class="math">P_{4a}</span> is the furthest from <span class="math">L_2</span>. The line
+<span class="math">L_4</span> is then defined to be parallel to <span class="math">L_2</span> and through this furthest point.
+Then points <span class="math">P_{1b}</span> and <span class="math">P_{4b}</span> are defined as the intersection points of <span class="math">L_4</span> with,
+respectively, <span class="math">L_1</span> and <span class="math">L_3</span>.</p>
 <div class="figure align-center" id="id15">
 <a class="reference internal image-reference" href="../../../_images/fig_constr_L4.png"><img alt="../../../_images/fig_constr_L4.png" src="../../../_images/fig_constr_L4.png" style="width: 400px;" /></a>
-<p class="caption"><span class="caption-text">Figure 14: Constructing <img class="math" src="../../../_images/math/dfb10073672d82b45677dab99e82ba9321c3d23d.png" alt="L_4"/></span></p>
+<p class="caption"><span class="caption-text">Figure 14: Constructing <span class="math">L_4</span></span></p>
 </div>
 <p>There is a special case, which is shown in figure 15. Namely, for some
 combinations of parameters, the previous procedure may lead to polygons
-(<img class="math" src="../../../_images/math/4542b29b0bdf886f9a9f13c1c560955031b9af53.png" alt="P_{1b}"/>, <img class="math" src="../../../_images/math/ffb6b2d28b861becb333cc6a84c0bf14777025b0.png" alt="P_{2}"/>, <img class="math" src="../../../_images/math/7e739bb2f1477c85dd634a73185991b7cc59e13a.png" alt="P_{3}"/>, <img class="math" src="../../../_images/math/1fd5718d310fdb5e64e28ea497a0186a3eddaa78.png" alt="P_{4b}"/>) that are self-intersecting. In this
-case, both <img class="math" src="../../../_images/math/80e2555eb3829b48d1c36da2a8dcf0f82d80c40d.png" alt="P_1"/> and <img class="math" src="../../../_images/math/9534455085fdd48af16576cefa35b468e7bacb46.png" alt="P_4"/> are defined to be equal to the intersection point of
-<img class="math" src="../../../_images/math/ff02a26ca2dfd871823a67f7b1b62adf66dcf361.png" alt="L_1"/> and <img class="math" src="../../../_images/math/db0b2709fe7a9c080c98031a519dcad16619a3a4.png" alt="L_3"/> and the ply piece becomes a triangle. This results in some very
-small areas along circle <img class="math" src="../../../_images/math/b7442399db5dac0d97e2692e250a298d334c76d3.png" alt="s_1"/> being not covered with any ply piece. This is
-deemed acceptable, because the area between <img class="math" src="../../../_images/math/b7442399db5dac0d97e2692e250a298d334c76d3.png" alt="s_1"/> and <img class="math" src="../../../_images/math/3473c14d011d9f1aede5914054e51b46686d5045.png" alt="s_2"/> is not relevant for
+(<span class="math">P_{1b}</span>, <span class="math">P_{2}</span>, <span class="math">P_{3}</span>, <span class="math">P_{4b}</span>) that are self-intersecting. In this
+case, both <span class="math">P_1</span> and <span class="math">P_4</span> are defined to be equal to the intersection point of
+<span class="math">L_1</span> and <span class="math">L_3</span> and the ply piece becomes a triangle. This results in some very
+small areas along circle <span class="math">s_1</span> being not covered with any ply piece. This is
+deemed acceptable, because the area between <span class="math">s_1</span> and <span class="math">s_2</span> is not relevant for
 the finite element model.</p>
 <p>In the normal case of figure 14, where the polygon is not self-intersecting,
-the final locations of <img class="math" src="../../../_images/math/80e2555eb3829b48d1c36da2a8dcf0f82d80c40d.png" alt="P_1"/> and <img class="math" src="../../../_images/math/9534455085fdd48af16576cefa35b468e7bacb46.png" alt="P_4"/> are equal to <img class="math" src="../../../_images/math/4542b29b0bdf886f9a9f13c1c560955031b9af53.png" alt="P_{1b}"/> and <img class="math" src="../../../_images/math/1fd5718d310fdb5e64e28ea497a0186a3eddaa78.png" alt="P_{4b}"/>,
+the final locations of <span class="math">P_1</span> and <span class="math">P_4</span> are equal to <span class="math">P_{1b}</span> and <span class="math">P_{4b}</span>,
 respectively.</p>
 <div class="figure align-center" id="id16">
 <a class="reference internal image-reference" href="../../../_images/fig_triangular_piece.png"><img alt="../../../_images/fig_triangular_piece.png" src="../../../_images/fig_triangular_piece.png" style="width: 250px;" /></a>
@@ -368,18 +370,18 @@ respectively.</p>
 </div>
 <p><strong>Step 7: Final ply piece</strong></p>
 <p>The final shape of the ply piece is shown in figure 16 below. Its shape is
-defined by the four corner points <img class="math" src="../../../_images/math/fc877448813cdfbd83c189175b84acd7d1361187.png" alt="P_i (i = 1...4)"/>. On the circle with radius
-<img class="math" src="../../../_images/math/85df95dc4073dcfb2093d664e01881be9c183d5f.png" alt="s_{\theta nom}"/> (the starting position), the ply piece spans an angle from
-<img class="math" src="../../../_images/math/15f519a61ca78b8a74ef24ae0d0fce838e095041.png" alt="\phi_{nom, min}"/> to <img class="math" src="../../../_images/math/52a17f358eb664e8dc152caffe4bfeb381fe71d1.png" alt="\phi_{nom, max}"/>. These angles can be calculated by:</p>
+defined by the four corner points <span class="math">P_i (i = 1...4)</span>. On the circle with radius
+<span class="math">s_{\theta nom}</span> (the starting position), the ply piece spans an angle from
+<span class="math">\phi_{nom, min}</span> to <span class="math">\phi_{nom, max}</span>. These angles can be calculated by:</p>
 <div class="math">
-<p><img src="../../../_images/math/f31a8ba34044ced8c4fde75451e55f5a58bc0f66.png" alt="\phi_{nom, min} &amp;= \phi_{nom} - \Delta\phi_2 \\
-\phi_{nom, max} &amp;= \phi_{nom} + \Delta\phi_1"/></p>
+<p><span class="math">\phi_{nom, min} &amp;= \phi_{nom} - \Delta\phi_2 \\
+\phi_{nom, max} &amp;= \phi_{nom} + \Delta\phi_1</span></p>
 </div><p>Additionally, the <em>limit angles</em> of the ply piece are defined as the minimal
 and maximum value of the angular coordinate. Since the extreme values are
 always located at the corner points, these can be calculated by:</p>
 <div class="math">
-<p><img src="../../../_images/math/284bbc2f5e6711729186e235ea6eeb98364d1a90.png" alt="\phi_{limit, min} &amp;= \min_i(\phi_{Pi}) \\
-\phi_{limit, max} &amp;= \max_i(\phi_{Pi})"/></p>
+<p><span class="math">\phi_{limit, min} &amp;= \min_i(\phi_{Pi}) \\
+\phi_{limit, max} &amp;= \max_i(\phi_{Pi})</span></p>
 </div><div class="figure align-center" id="id17">
 <a class="reference internal image-reference" href="../../../_images/fig_final_piece.png"><img alt="../../../_images/fig_final_piece.png" src="../../../_images/fig_final_piece.png" style="width: 500px;" /></a>
 <p class="caption"><span class="caption-text">Figure 16: Final ply piece</span></p>
@@ -393,73 +395,73 @@ mainly in the method
 <a class="reference internal" href="../../../modules/cppot/index.html#desicos.cppot.core.ply_model.PlyPieceModel.rebuild" title="desicos.cppot.core.ply_model.PlyPieceModel.rebuild"><code class="xref py py-func docutils literal"><span class="pre">desicos.cppot.core.ply_model.PlyPieceModel.rebuild()</span></code></a>.</p>
 <p>First the required number of ply pieces is determined:</p>
 <div class="math">
-<p><img src="../../../_images/math/393a3c3b97ba79d208ec47ec2f61e2567579cb21.png" alt="n_{pieces} = \frac{\phi_{max}}{\Delta\phi}"/></p>
+<p><span class="math">n_{pieces} = \frac{\phi_{max}}{\Delta\phi}</span></p>
 </div><div class="figure align-center" id="id18">
 <a class="reference internal image-reference" href="../../../_images/fig_continuity.png"><img alt="../../../_images/fig_continuity.png" src="../../../_images/fig_continuity.png" style="width: 600px;" /></a>
 <p class="caption"><span class="caption-text">Figure 17: Continuity problem</span></p>
 </div>
-<p>Generally, <img class="math" src="../../../_images/math/5dc82ae6dae83ad1f2d907201e3919ba66ae40a2.png" alt="n_{pieces}"/> is not an integer, so covering the entire cone with
+<p>Generally, <span class="math">n_{pieces}</span> is not an integer, so covering the entire cone with
 similar pieces would result in a discontinuous model, as shown in figure 17.
 To remedy this problem, a smaller <em>rest</em> piece is added. This rest piece should
-span an angle: (with <img class="math" src="../../../_images/math/9e67a17df91559dcd8b99e84606d01f2dd12b7b2.png" alt="\lfloor x\rfloor"/> denoting the floor function)</p>
+span an angle: (with <span class="math">\lfloor x\rfloor</span> denoting the floor function)</p>
 <div class="math">
-<p><img src="../../../_images/math/3fbc3dd42d76ff70871b3065e0a7c21d37b978b9.png" alt="\Delta\phi_{rest} &amp;= \phi_{max} - \lfloor n_{pieces}\rfloor\Delta\phi \\
+<p><span class="math">\Delta\phi_{rest} &amp;= \phi_{max} - \lfloor n_{pieces}\rfloor\Delta\phi \\
 &amp;= n_{pieces}\Delta\phi - \lfloor n_{pieces}\rfloor\Delta\phi \\
 &amp;= \left(n_{pieces} - \lfloor n_{pieces}\rfloor\right)\Delta\phi \\
-&amp;= f_{rest}\Delta\phi"/></p>
+&amp;= f_{rest}\Delta\phi</span></p>
 </div><p>with</p>
 <div class="math">
-<p><img src="../../../_images/math/01b021a209cccb172ce1e7cec3e3904e382a7bbd.png" alt="f_{rest} = \frac{\Delta\phi_{rest}}{\Delta\phi}
-= n_{pieces} - \lfloor n_{pieces} \rfloor"/></p>
-</div><p>So in words, <img class="math" src="../../../_images/math/a3fdbedde68d9b77d2479dd53f4b93583addb397.png" alt="f_{rest}"/> is the fractional part of <img class="math" src="../../../_images/math/5dc82ae6dae83ad1f2d907201e3919ba66ae40a2.png" alt="n_{pieces}"/>. To construct
+<p><span class="math">f_{rest} = \frac{\Delta\phi_{rest}}{\Delta\phi}
+= n_{pieces} - \lfloor n_{pieces} \rfloor</span></p>
+</div><p>So in words, <span class="math">f_{rest}</span> is the fractional part of <span class="math">n_{pieces}</span>. To construct
 the rest piece, the same procedure is followed as for a normal ply piece.
-However, during step 4, the calculated values of <img class="math" src="../../../_images/math/7768918464f1b4d53feb0bfa66aed93a2f2e816b.png" alt="\Delta\phi_1"/> and
-<img class="math" src="../../../_images/math/3925e9a0da44a49b8b1ae1f9858aab98d124e2b6.png" alt="\Delta\phi_2"/> are multiplied by <img class="math" src="../../../_images/math/a3fdbedde68d9b77d2479dd53f4b93583addb397.png" alt="f_{rest}"/> as stated below. This results in
-a ply piece whose angular span <img class="math" src="../../../_images/math/e8fc8f0add7e0bc8eea26f19acd4ad967b656b2c.png" alt="\Delta\phi_{rest}"/> satisfies the above
-equations. The positions of points <img class="math" src="../../../_images/math/8ce9595714288cbb7d1d803a016458158c47eb1e.png" alt="P_2"/> and <img class="math" src="../../../_images/math/8b02169c598827978c881f7d874a905a2f33a1c0.png" alt="P_3"/> (and, of course, the
+However, during step 4, the calculated values of <span class="math">\Delta\phi_1</span> and
+<span class="math">\Delta\phi_2</span> are multiplied by <span class="math">f_{rest}</span> as stated below. This results in
+a ply piece whose angular span <span class="math">\Delta\phi_{rest}</span> satisfies the above
+equations. The positions of points <span class="math">P_2</span> and <span class="math">P_3</span> (and, of course, the
 calculations in subsequent steps) are adjusted accordingly.</p>
 <div class="math">
-<p><img src="../../../_images/math/8f90b1413d0ae8aff371189c3379cfa7e6c8843e.png" alt="\Delta\phi_{rest,1} &amp;= f_{rest}\Delta\phi_1 \\
+<p><span class="math">\Delta\phi_{rest,1} &amp;= f_{rest}\Delta\phi_1 \\
 \Delta\phi_{rest,2} &amp;= f_{rest}\Delta\phi_2 \\
 \Delta\phi_{rest} &amp;= \Delta\phi_{rest,1} + \Delta\phi_{rest,2}
-= f_{rest}\Delta\phi"/></p>
+= f_{rest}\Delta\phi</span></p>
 </div><p>Now the procedure to cover the entire cone with ply pieces is as follows. The
-first piece is placed at a nominal angle <img class="math" src="../../../_images/math/049897c528c3ce7e86327e7f041f8a9098e132d9.png" alt="\phi_{nom}"/> equal to <img class="math" src="../../../_images/math/77fd1e4528e089fdc9c5d3504efc0a7200de03e1.png" alt="\phi_{offset}"/>.
+first piece is placed at a nominal angle <span class="math">\phi_{nom}</span> equal to <span class="math">\phi_{offset}</span>.
 This is done to allow offsettnig multiple plies with the same nominal fiber
 orientation with respect to each other. This avoids that the ply piece
 edges in multiple plies coincide, which would (unnecessarily) cause weak spots
 in the actual cone. The offset parameter is specified in relative terms
-(0...1), based on this value <img class="math" src="../../../_images/math/77fd1e4528e089fdc9c5d3504efc0a7200de03e1.png" alt="\phi_{offset}"/> is calculated as follows:</p>
+(0...1), based on this value <span class="math">\phi_{offset}</span> is calculated as follows:</p>
 <div class="math">
-<p><img src="../../../_images/math/ecb87515be467af0303561def3c3e47d87ac4252.png" alt="\phi_{offset} = f_{rel,offset}\Delta\phi \\
-{\rm with}\qquad f_{rel,offset} \in [0, 1)"/></p>
+<p><span class="math">\phi_{offset} = f_{rel,offset}\Delta\phi \\
+{\rm with}\qquad f_{rel,offset} \in [0, 1)</span></p>
 </div><p>Ply pieces are then placed in both directions at angular increments of
-<img class="math" src="../../../_images/math/20009de95ff5d66255f15355a75d7b0210cd190a.png" alt="\pm\Delta\phi"/>. Pieces are added as long as they cover some area in the
-angular range <img class="math" src="../../../_images/math/8d788847d6357ab45935b909f849d3f42793b749.png" alt="[0, \phi_{max}]"/>, which is the case if both below-stated
+<span class="math">\pm\Delta\phi</span>. Pieces are added as long as they cover some area in the
+angular range <span class="math">[0, \phi_{max}]</span>, which is the case if both below-stated
 inequalities are satisfied.</p>
 <div class="math">
-<p><img src="../../../_images/math/894abd410788533ca0443d5180e6d996b29e3f63.png" alt="\phi_{limit,min} &amp;\leq \phi_{max} \\
-\phi_{limit,max} &amp;\geq 0"/></p>
+<p><span class="math">\phi_{limit,min} &amp;\leq \phi_{max} \\
+\phi_{limit,max} &amp;\geq 0</span></p>
 </div><p>The possible result of this operation is shown in figure 18. Here the unfolded
 cone is drawn in red, the first ply piece in blue, the other ply pieces in
 green and the nominal angle of each ply piece as a dashed black line. The rest
 piece is inserted right after (in counter-clockwise direction) the first piece
-for which <img class="math" src="../../../_images/math/11c5606cb4f83d91ad52d0207575e05e4116cb7f.png" alt="\phi_{limit,min} &gt; 0"/>. This prevents the rest piece from overlapping
+for which <span class="math">\phi_{limit,min} &gt; 0</span>. This prevents the rest piece from overlapping
 the “cut” in the model, which would add additional complexity to the model.
 Some special handling is needed to set the angular offsets between the rest
 piece and its neighboring pieces. If the nominal angles of the rest piece,
-the previous piece and the next piece are named <img class="math" src="../../../_images/math/a5ba6feef1aaa7f69144d14d8ef580e44235b6ff.png" alt="\phi_{nom,rest}"/>,
-<img class="math" src="../../../_images/math/766aed84bd37b755cdd4faa4e93415071adebfd5.png" alt="\phi_{nom,prev}"/> and <img class="math" src="../../../_images/math/b06d11acf81c775bad8b00d8b1ff58c909954e41.png" alt="\phi_{nom,next}"/>, respectively, their mutual relations
+the previous piece and the next piece are named <span class="math">\phi_{nom,rest}</span>,
+<span class="math">\phi_{nom,prev}</span> and <span class="math">\phi_{nom,next}</span>, respectively, their mutual relations
 are as stated below. Refer also to the figure.</p>
 <div class="math">
-<p><img src="../../../_images/math/48bc891f5f5c19db6698dbbd35f057c2a9c9201d.png" alt="\phi_{nom,rest} - \phi_{nom,prev} &amp;= \Delta\phi_1 + \Delta\phi_{rest,2} \\
-\phi_{nom,next} - \phi_{nom,rest} &amp;= \Delta\phi_{1,rest} + \Delta\phi_2"/></p>
+<p><span class="math">\phi_{nom,rest} - \phi_{nom,prev} &amp;= \Delta\phi_1 + \Delta\phi_{rest,2} \\
+\phi_{nom,next} - \phi_{nom,rest} &amp;= \Delta\phi_{1,rest} + \Delta\phi_2</span></p>
 </div><div class="figure align-center" id="id19">
 <a class="reference internal image-reference" href="../../../_images/fig_all_pieces.png"><img alt="../../../_images/fig_all_pieces.png" src="../../../_images/fig_all_pieces.png" style="width: 700px;" /></a>
 <p class="caption"><span class="caption-text">Figure 18: Covering the cone</span></p>
 </div>
 <p>Note that the model contains a few more ply pieces than the actual cone,
-because the pieces that intersect the cut (<img class="math" src="../../../_images/math/e066a68b39c016316192c313af3a4fb34ab1f94c.png" alt="\phi = 0"/> and <img class="math" src="../../../_images/math/5997f968292bff2835130d044c0d11901e1614bf.png" alt="\phi = \phi_{max}"/>)
+because the pieces that intersect the cut (<span class="math">\phi = 0</span> and <span class="math">\phi = \phi_{max}</span>)
 are represented twice. This is done because it simplifies the implementation,
 while not affecting the results in any way.</p>
 </div>
@@ -469,15 +471,15 @@ while not affecting the results in any way.</p>
 steps are needed.</p>
 <p><strong>Step 1:  Change coordinate system</strong></p>
 <p>First, the coordinates in the global coordinate system have to be transformed
-to the coordinates of the unfolded cone, i.e. <img class="math" src="../../../_images/math/0094385cf4d2bdec8b7be2c6bffa40ab1740a788.png" alt="(\eta, \zeta)"/> and/or
-<img class="math" src="../../../_images/math/ef8ccc3407f353528c904a90d95cec3080df8bfe.png" alt="(s, \phi)"/>. These coordinate transformations have been discussed in a
+to the coordinates of the unfolded cone, i.e. <span class="math">(\eta, \zeta)</span> and/or
+<span class="math">(s, \phi)</span>. These coordinate transformations have been discussed in a
 previous chapter on this page and will not be repeated.</p>
 <p><strong>Step 2:  Find the correct ply piece</strong></p>
 <p>Next, it is necessary to find the ply piece(s) located at the given
 coordinates. This is done by iterating over all ply pieces and then,for each
 ply piece:</p>
 <ul class="simple">
-<li>Quickly check whether <img class="math" src="../../../_images/math/97b2d396336859848bbb97e52033babfa627f59c.png" alt="\phi_{limit,min} \leq \phi \leq \phi_{limit,max}"/>.
+<li>Quickly check whether <span class="math">\phi_{limit,min} \leq \phi \leq \phi_{limit,max}</span>.
 If not, continue.</li>
 <li>Perform the (computationally more expensive) test whether the point is inside
 the polygon that defines this ply piece. In earlier versions the
@@ -490,13 +492,13 @@ the cone at all and <code class="docutils literal"><span class="pre">NaN</span><
 </ul>
 <p><strong>Step 3:  Find the local angle</strong>
 A relation for the local fiber angle can be found, based on the principle that
-the sum of all angles inside a triangle is always equal to <img class="math" src="../../../_images/math/9c0ac8aee783dd6f224563b1a850f9ad269aeaed.png" alt="180^\circ"/>. This
+the sum of all angles inside a triangle is always equal to <span class="math">180^\circ</span>. This
 results in the following equation:</p>
 <div class="math">
-<p><img src="../../../_images/math/a90fffc2ee43c2a827a70da5ba67322a5f75a9c5.png" alt="\theta_{local} = \theta_{nom} - (\phi - \phi_{nom})"/></p>
+<p><span class="math">\theta_{local} = \theta_{nom} - (\phi - \phi_{nom})</span></p>
 </div><p>An example plot of the local fiber angle is shown in the figure below. Note
 that all points within the same ply piece have a constant fiber angle along
-radial lines (<img class="math" src="../../../_images/math/2e5f03515c49f345399eb77eaaf5f2fe9fc664a7.png" alt="\phi = {\rm const}"/>) and that there are significant
+radial lines (<span class="math">\phi = {\rm const}</span>) and that there are significant
 discontinuities between adjacent plies.</p>
 <div class="figure align-center" id="id20">
 <a class="reference internal image-reference" href="../../../_images/fig_orientation.png"><img alt="../../../_images/fig_orientation.png" src="../../../_images/fig_orientation.png" style="width: 750px;" /></a>
@@ -553,8 +555,8 @@ discontinuities between adjacent plies.</p>
       &copy;2012-2015 Desicos Improved Software Team.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.3</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
       
     </div>
 

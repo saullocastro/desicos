@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>GUI for the Cone Ply Piece Optimization Tool &mdash; DESICOS 2.4.7 documentation</title>
+    <title>GUI for the Cone Ply Piece Optimization Tool &#8212; DESICOS 2.4.8 documentation</title>
     
     <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -14,21 +14,23 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.4.7',
+        VERSION:     '2.4.8',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <link rel="top" title="DESICOS 2.4.7 documentation" href="../../../index.html" />
-    <link rel="up" title="Cone Ply Piece Optimization Tool (CPPOT)" href="../index.html" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="Virtual Material Model (VMM)" href="../vmmt/index.html" />
     <link rel="prev" title="Cone Ply Piece Optimization Tool (CPPOT)" href="../index.html" />
    
   <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
@@ -107,7 +109,7 @@ are three different examples for the maximum width shown.</p>
 <a class="reference internal image-reference" href="../../../_images/fig_031.png"><img alt="../../../_images/fig_031.png" src="../../../_images/fig_031.png" style="width: 700px;" /></a>
 <p class="caption"><span class="caption-text">Figure 3: Example of the maximum width</span></p>
 </div>
-<p>The starting position <img class="math" src="../../../_images/math/f8e64f8ad6b55b3d91e24d62ed59a85feb37951a.png" alt="s_{{\Theta}_{nom}}"/> defines at which s-coordinate
+<p>The starting position <span class="math">s_{{\Theta}_{nom}}</span> defines at which s-coordinate
 the nominal fiber angle starts. The smaller the value is,
 the nearer starts the part at the cone vertex. In Figure 4 are two
 different examples shown.</p>
@@ -115,7 +117,7 @@ different examples shown.</p>
 <a class="reference internal image-reference" href="../../../_images/fig_041.png"><img alt="../../../_images/fig_041.png" src="../../../_images/fig_041.png" style="width: 700px;" /></a>
 <p class="caption"><span class="caption-text">Figure 4: Examples of the starting position</span></p>
 </div>
-<p>The fiber angle <img class="math" src="../../../_images/math/67dd091c616f5656e61b01ff10deeda6c6170c56.png" alt="{\Theta}_{nom}"/> is measured between the s-coordinate and
+<p>The fiber angle <span class="math">{\Theta}_{nom}</span> is measured between the s-coordinate and
 the straight lines of the ply piece. In this example the fiber angle lies
 between the lower edge of the unwounded cone area and the upper and longer
 edge of the ply piece. In Figure 5 are examples of different fiber angle
@@ -125,19 +127,19 @@ shown.</p>
 <p class="caption"><span class="caption-text">Figure 5: Examples of different fiber angles</span></p>
 </div>
 <p>The width variation is a different parameter. When a ply piece is constructed,
-the program uses a ‘basic line’ which starts at <img class="math" src="../../../_images/math/f8e64f8ad6b55b3d91e24d62ed59a85feb37951a.png" alt="s_{{\Theta}_{nom}}"/> with
-the fiber angle <img class="math" src="../../../_images/math/f6479197a297e86fd8493f26228dc4bc10ac492d.png" alt="\Theta"/>. The ending edge of the ply piece is always
+the program uses a ‘basic line’ which starts at <span class="math">s_{{\Theta}_{nom}}</span> with
+the fiber angle <span class="math">\Theta</span>. The ending edge of the ply piece is always
 perpendicular to the basic line. The width variation defines the position
 of the vertices of the ply piece polygon on the ending edge relative to
 the basic line.</p>
-<p>For a value of <img class="math" src="../../../_images/math/e46bacba860a252182e83e531c989f91d801f7e5.png" alt="a_w=0"/> the basic line is also the upper edge of the ply
-piece polygon, see Figure 6 (a). When <img class="math" src="../../../_images/math/61771e3d00b5b4927a555220a9ad60adfd16f082.png" alt="a_w"/> is <img class="math" src="../../../_images/math/a7574461aa468f996a76caa1482dfb1b54eca990.png" alt="0.5"/> the basic line is the
+<p>For a value of <span class="math">a_w=0</span> the basic line is also the upper edge of the ply
+piece polygon, see Figure 6 (a). When <span class="math">a_w</span> is <span class="math">0.5</span> the basic line is the
 axis symmetry for the upper and lower ply piece edges (Figure 6 (b)).
-The upper limit of <img class="math" src="../../../_images/math/61771e3d00b5b4927a555220a9ad60adfd16f082.png" alt="a_w"/> is <img class="math" src="../../../_images/math/052a96246ceff25b13b70c1445583ea0981d459f.png" alt="1.0"/> and then the basic line is also the lower
+The upper limit of <span class="math">a_w</span> is <span class="math">1.0</span> and then the basic line is also the lower
 edge of the ply piece (Figure 6 (c)).</p>
-<p>This parameter is important for fiber angles smaller than <img class="math" src="../../../_images/math/c8c74e7a11f582a0d666896f67e3dda199f705a2.png" alt="15°"/>.
-For larger angles the optimum is always <img class="math" src="../../../_images/math/818eaa6c902f110523a8949baedbc4da59083c4f.png" alt="a_{w, opt}=0"/>. For <img class="math" src="../../../_images/math/634bb168c4aed8ab612dfb8c879fc7c2138389ee.png" alt="0°"/> the
-optimum value is <img class="math" src="../../../_images/math/166b169a1c83c883b772e75302438d677be682fb.png" alt="a_w=0.5"/>. This variable can only be used for the Shapes A
+<p>This parameter is important for fiber angles smaller than <span class="math">15°</span>.
+For larger angles the optimum is always <span class="math">a_{w, opt}=0</span>. For <span class="math">0°</span> the
+optimum value is <span class="math">a_w=0.5</span>. This variable can only be used for the Shapes A
 and C.</p>
 <div class="figure" id="id6">
 <a class="reference internal image-reference" href="../../../_images/fig_061.png"><img alt="../../../_images/fig_061.png" src="../../../_images/fig_061.png" style="width: 700px;" /></a>
@@ -168,9 +170,9 @@ in the Menu ‘Tools’ in the menu bar.</p>
 <p>When started, the window in Figure 7 will be opened. On the left side are four
 changeable lines and some further information about the cone geometry. It is
 possible to change the the half-cone angle and the dimensions of the cone. The
-parts between <img class="math" src="../../../_images/math/aa4bf74a883302b5f2daa501b664dfeb67332899.png" alt="r1"/> and <img class="math" src="../../../_images/math/f8f4ef557532aa1b5e82c6326176fed17bb1854f.png" alt="r2"/> and between <img class="math" src="../../../_images/math/8c6a144e1fc6c5e8930e3c54bf402a03b93edfc1.png" alt="r3"/> and <img class="math" src="../../../_images/math/5503550e9c9e0df59a8ead955d37954a8fc1e72f.png" alt="r4"/> are auxiliary
-parts used for cutting and molding the edges of the cone. Between <img class="math" src="../../../_images/math/f8f4ef557532aa1b5e82c6326176fed17bb1854f.png" alt="r2"/> and
-<img class="math" src="../../../_images/math/8c6a144e1fc6c5e8930e3c54bf402a03b93edfc1.png" alt="r3"/> (each with height <img class="math" src="../../../_images/math/5b4dfe819df3c0c09e92d12de54b6910e15f8457.png" alt="H"/>) is the so called <em>free cone area</em>.</p>
+parts between <span class="math">r1</span> and <span class="math">r2</span> and between <span class="math">r3</span> and <span class="math">r4</span> are auxiliary
+parts used for cutting and molding the edges of the cone. Between <span class="math">r2</span> and
+<span class="math">r3</span> (each with height <span class="math">H</span>) is the so called <em>free cone area</em>.</p>
 <p>The algorithm of the ply piece design will try to cover the whole cone, but
 the investigation and evaluation of the fiber angle deviation will be only
 applied to the free cone.</p>
@@ -222,12 +224,12 @@ a csv-file to Excel.</p>
 <h3>Evaluation Parameters<a class="headerlink" href="#evaluation-parameters" title="Permalink to this headline">¶</a></h3>
 <p>There are five different parameters used to evaluate the different shapes of
 the ply pieces:</p>
-<p>The degree of coverage <img class="math" src="../../../_images/math/55125dc3e90847744d7bbc130d0b205218e6730d.png" alt="R_{DoC}"/> is the ratio of the area of a ply piece on
-the free cone area <img class="math" src="../../../_images/math/443bc90bc9a5f31fa5270633fea2b50690b55a6d.png" alt="A_{piece}"/> times the number of pieces per ply <img class="math" src="../../../_images/math/dce84d3a27f1afe395f32b81717f6c5f497cc9df.png" alt="N_{pieces}"/>
-and the free cone area <img class="math" src="../../../_images/math/f344dcb53e52a11abd7cc77c5c0dd20ed4734b1b.png" alt="A_{cone}"/>:</p>
+<p>The degree of coverage <span class="math">R_{DoC}</span> is the ratio of the area of a ply piece on
+the free cone area <span class="math">A_{piece}</span> times the number of pieces per ply <span class="math">N_{pieces}</span>
+and the free cone area <span class="math">A_{cone}</span>:</p>
 <div class="math">
-<p><img src="../../../_images/math/cfeb53f54785693e763db83fe7ff4ce6d63d333f.png" alt="R_{DoC}=\frac{A_{piece} \cdot N_{pieces}}{A_{cone}}"/></p>
-</div><p>The optimal value is <img class="math" src="../../../_images/math/68b1aee57654dd9f629a85c4d1a66ead49125dc5.png" alt="100\%"/>. The value can be higher due to overlapping ply
+<p><span class="math">R_{DoC}=\frac{A_{piece} \cdot N_{pieces}}{A_{cone}}</span></p>
+</div><p>The optimal value is <span class="math">100\%</span>. The value can be higher due to overlapping ply
 pieces.</p>
 <div class="figure" id="id11">
 <a class="reference internal image-reference" href="../../../_images/fig_111.png"><img alt="../../../_images/fig_111.png" src="../../../_images/fig_111.png" style="width: 700px;" /></a>
@@ -235,33 +237,33 @@ pieces.</p>
 </div>
 <p>The effective area of a ply piece is the area in which the fibers have a fiber
 deviation smaller than 2°. This area is used twice in evaluation
-parameters: For the ratio of a single ply piece <img class="math" src="../../../_images/math/fea9e8682bb91288b273dd12f53d800edf5fcbb7.png" alt="R_{A_{eff}}"/> and for the
-ratio for the whole cone <img class="math" src="../../../_images/math/30b28137e88524faca4f6c0173a7b95065be1978.png" alt="R_{\sum{A_{eff}}}"/>, called the ratio of total
+parameters: For the ratio of a single ply piece <span class="math">R_{A_{eff}}</span> and for the
+ratio for the whole cone <span class="math">R_{\sum{A_{eff}}}</span>, called the ratio of total
 effective area.</p>
 <div class="math">
-<p><img src="../../../_images/math/6fb444931e20d6f40734856892175bcd05af9e6f.png" alt="R_{A_{eff}}=\frac{A_{eff}}{A_{piece}}
+<p><span class="math">R_{A_{eff}}=\frac{A_{eff}}{A_{piece}}
 \\
-R_{\sum{A_{eff}}}=\frac{A_{eff} \cdot N_{pieces}}{A_{cone}}"/></p>
+R_{\sum{A_{eff}}}=\frac{A_{eff} \cdot N_{pieces}}{A_{cone}}</span></p>
 </div><p>In the drawings of the ‘Plot Ply Piece’-Tool is the effective area drawn as
-orange polygons. The optimum value is also <img class="math" src="../../../_images/math/68b1aee57654dd9f629a85c4d1a66ead49125dc5.png" alt="100\%"/>, but is achievable only for
+orange polygons. The optimum value is also <span class="math">100\%</span>, but is achievable only for
 very small fiber angles.</p>
 <p>When trapezoidal shapes are used, not all fibers starting at the bottom reach
 the upper edge of the cone. The ratio of continuous fibers estimates the
-amount of continuous fibers. Therefore are two lengths <img class="math" src="../../../_images/math/0d5f810f0f9670cf92390dbe9f3a3e0f77020c52.png" alt="l_{cont,1}"/> and
-<img class="math" src="../../../_images/math/6d9d6530ca6c839533119d1e9864bf33584db95f.png" alt="l_{cont,2}"/> are defined and their ratio calculated:</p>
+amount of continuous fibers. Therefore are two lengths <span class="math">l_{cont,1}</span> and
+<span class="math">l_{cont,2}</span> are defined and their ratio calculated:</p>
 <div class="math">
-<p><img src="../../../_images/math/2bcd5ccc087d3e9cddbf82135eae363e533f651c.png" alt="R_{cont}=\frac{l_{cont,1}}{l_{cont,2}}"/></p>
+<p><span class="math">R_{cont}=\frac{l_{cont,1}}{l_{cont,2}}</span></p>
 </div><div class="figure" id="id12">
 <a class="reference internal image-reference" href="../../../_images/fig_121.png"><img alt="../../../_images/fig_121.png" src="../../../_images/fig_121.png" style="width: 700px;" /></a>
 <p class="caption"><span class="caption-text">Figure 12: Ratio of continuous fibers</span></p>
 </div>
-<p>For the rectangular shape this values should be always <img class="math" src="../../../_images/math/68b1aee57654dd9f629a85c4d1a66ead49125dc5.png" alt="100\%"/>.</p>
+<p>For the rectangular shape this values should be always <span class="math">100\%</span>.</p>
 <p>The ratio of total effectiveness combines all ratios of the single ply pieces:</p>
 <div class="math">
-<p><img src="../../../_images/math/a213eb05dd568bb3555c96fce3916c9f1c5db78b.png" alt="R_{total}=R_{DoC} \cdot R_{A_{eff}} \cdot R_{cont}"/></p>
+<p><span class="math">R_{total}=R_{DoC} \cdot R_{A_{eff}} \cdot R_{cont}</span></p>
 </div><p>This ratio can be thought of the amount of free cone area covered with fibers
 with a fiber deviation smaller than 2° and continuous from top to
-bottom.  The optimum is <img class="math" src="../../../_images/math/68b1aee57654dd9f629a85c4d1a66ead49125dc5.png" alt="100\%"/>.</p>
+bottom.  The optimum is <span class="math">100\%</span>.</p>
 </div>
 </div>
 <div class="section" id="plot-ply-piece-tool">
@@ -283,7 +285,7 @@ and the ply piece.</p>
 effective area of each ply piece are drawn as orange polygons. The blue lines
 are the outer edges of the cone geometry. The green radial lines are the lines
 of the conical coordinate s. The radial angle difference between the lines is
-<img class="math" src="../../../_images/math/cae6e23ca4a9289b87aa487d28890e05c2bbed6e.png" alt="10°"/> in the conical coordinate system.</p>
+<span class="math">10°</span> in the conical coordinate system.</p>
 <p>The image of the ply piece can be saved by clicking the save item in the menu
 bar.</p>
 <div class="figure" id="id14">
@@ -376,8 +378,8 @@ graphs. Uses matplotlib.</li>
       &copy;2012-2015 Desicos Improved Software Team.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.3</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
       
     </div>
 

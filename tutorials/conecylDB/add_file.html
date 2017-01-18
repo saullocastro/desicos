@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Adding New Imperfection Files &mdash; DESICOS 2.4.7 documentation</title>
+    <title>Adding New Imperfection Files &#8212; DESICOS 2.4.8 documentation</title>
     
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -14,21 +14,23 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.4.7',
+        VERSION:     '2.4.8',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <link rel="top" title="DESICOS 2.4.7 documentation" href="../../index.html" />
-    <link rel="up" title="Cone / Cylinder DataBase (desicos.conecylDB)" href="index.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Old / new best fit radii" href="table_old_new.html" />
     <link rel="prev" title="Processing Geometric Imperfection Data" href="processing_measured_imp_data/processing_measured_imp_data.html" />
    
   <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
@@ -44,7 +46,7 @@
   <div class="section" id="adding-new-imperfection-files">
 <span id="add-imperfection-file"></span><h1>Adding New Imperfection Files<a class="headerlink" href="#adding-new-imperfection-files" title="Permalink to this headline">¶</a></h1>
 <p>The recommended format to include a new imperfection in the database is
-using the &#8220;<img class="math" src="../../_images/math/4dc4789b8e2f448615b3e2c2bdc22fb9267f7cd8.png" alt="\theta"/> <img class="math" src="../../_images/math/eb4fcf2ea15c365948abb172ed3693fbc10b3b4a.png" alt="z"/> <img class="math" src="../../_images/math/a359fcc67d4efbcaef5bda404120efef7de1ada3.png" alt="imp"/>&#8221; format, and how to obtain these
+using the &#8220;<span class="math">\theta</span> <span class="math">z</span> <span class="math">imp</span>&#8221; format, and how to obtain these
 files is explained in <a class="reference internal" href="processing_measured_imp_data/processing_measured_imp_data.html#process-raw-files"><span class="std std-ref">here</span></a>.</p>
 <p>Once they are obtained the analyst must add to the folder:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">desicos</span><span class="o">/</span><span class="n">conecylDB</span><span class="o">/</span><span class="n">files</span><span class="o">/</span><span class="n">database</span><span class="o">/</span><span class="n">name</span>
@@ -69,12 +71,12 @@ to. The next sub-sections explain this procedure for mid-suface
 and thickness imperfections.</p>
 <div class="section" id="mid-surface-imperfections-msi">
 <h2>Mid-Surface Imperfections (MSI)<a class="headerlink" href="#mid-surface-imperfections-msi" title="Permalink to this headline">¶</a></h2>
-<p>They come with the sufix <img class="math" src="../../_images/math/233a239d192ed5feed25efe6818df8a1e5bdce86.png" alt="_msi"/> and the final name using the
-new &#8220;<img class="math" src="../../_images/math/4dc4789b8e2f448615b3e2c2bdc22fb9267f7cd8.png" alt="\theta"/> <img class="math" src="../../_images/math/eb4fcf2ea15c365948abb172ed3693fbc10b3b4a.png" alt="z"/> <img class="math" src="../../_images/math/a359fcc67d4efbcaef5bda404120efef7de1ada3.png" alt="imp"/>&#8221; format will be:</p>
+<p>They come with the sufix <span class="math">_msi</span> and the final name using the
+new &#8220;<span class="math">\theta</span> <span class="math">z</span> <span class="math">imp</span>&#8221; format will be:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">desicos</span><span class="o">/</span><span class="n">conecylDB</span><span class="o">/</span><span class="n">files</span><span class="o">/</span><span class="n">database</span><span class="o">/</span><span class="n">name_msi_theta_z_imp</span><span class="o">.</span><span class="n">txt</span>
 </pre></div>
 </div>
-<p>or, using the old &#8220;<img class="math" src="../../_images/math/fcbaa2ea1c6a047f151a45849927929823fc5d88.png" alt="x"/> <img class="math" src="../../_images/math/5a1161c9b9bf6a6addc18ade0f7fe8bb5ce0ba95.png" alt="y"/> <img class="math" src="../../_images/math/eb4fcf2ea15c365948abb172ed3693fbc10b3b4a.png" alt="z"/>&#8221; format:</p>
+<p>or, using the old &#8220;<span class="math">x</span> <span class="math">y</span> <span class="math">z</span>&#8221; format:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">desicos</span><span class="o">/</span><span class="n">conecylDB</span><span class="o">/</span><span class="n">files</span><span class="o">/</span><span class="n">database</span><span class="o">/</span><span class="n">name_msi</span><span class="o">.</span><span class="n">txt</span>
 </pre></div>
 </div>
@@ -92,12 +94,12 @@ database it belongs to, for example:</p>
 </div>
 <div class="section" id="thickness-imperfections-ti">
 <h2>Thickness Imperfections (TI)<a class="headerlink" href="#thickness-imperfections-ti" title="Permalink to this headline">¶</a></h2>
-<p>They come with the sufix <img class="math" src="../../_images/math/adc6de9276f835e0c4e8812eb3a54477a5a80d6f.png" alt="_ti"/> and the final name using the
-new &#8220;<img class="math" src="../../_images/math/4dc4789b8e2f448615b3e2c2bdc22fb9267f7cd8.png" alt="\theta"/> <img class="math" src="../../_images/math/eb4fcf2ea15c365948abb172ed3693fbc10b3b4a.png" alt="z"/> <img class="math" src="../../_images/math/f7dbbc702e08b27d1f1cb3c9b97304d213e9552a.png" alt="thick"/>&#8221; format will be:</p>
+<p>They come with the sufix <span class="math">_ti</span> and the final name using the
+new &#8220;<span class="math">\theta</span> <span class="math">z</span> <span class="math">thick</span>&#8221; format will be:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">desicos</span><span class="o">/</span><span class="n">conecylDB</span><span class="o">/</span><span class="n">files</span><span class="o">/</span><span class="n">database</span><span class="o">/</span><span class="n">name_ti_theta_z_imp</span><span class="o">.</span><span class="n">txt</span>
 </pre></div>
 </div>
-<p>or, using the old &#8220;<img class="math" src="../../_images/math/fcbaa2ea1c6a047f151a45849927929823fc5d88.png" alt="x"/> <img class="math" src="../../_images/math/5a1161c9b9bf6a6addc18ade0f7fe8bb5ce0ba95.png" alt="y"/> <img class="math" src="../../_images/math/eb4fcf2ea15c365948abb172ed3693fbc10b3b4a.png" alt="z"/> <img class="math" src="../../_images/math/f7dbbc702e08b27d1f1cb3c9b97304d213e9552a.png" alt="thick"/>&#8221; format:</p>
+<p>or, using the old &#8220;<span class="math">x</span> <span class="math">y</span> <span class="math">z</span> <span class="math">thick</span>&#8221; format:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">desicos</span><span class="o">/</span><span class="n">conecylDB</span><span class="o">/</span><span class="n">files</span><span class="o">/</span><span class="n">database</span><span class="o">/</span><span class="n">name_ti</span><span class="o">.</span><span class="n">txt</span>
 </pre></div>
 </div>
@@ -163,8 +165,8 @@ database it belongs to, for example:</p>
       &copy;2012-2015 Desicos Improved Software Team.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.3</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
       
     </div>
 

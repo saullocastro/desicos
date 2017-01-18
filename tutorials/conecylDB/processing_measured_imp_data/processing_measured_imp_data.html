@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Processing Geometric Imperfection Data &mdash; DESICOS 2.4.7 documentation</title>
+    <title>Processing Geometric Imperfection Data &#8212; DESICOS 2.4.8 documentation</title>
     
     <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -14,21 +14,23 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.4.7',
+        VERSION:     '2.4.8',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <link rel="top" title="DESICOS 2.4.7 documentation" href="../../../index.html" />
-    <link rel="up" title="Cone / Cylinder DataBase (desicos.conecylDB)" href="../index.html" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="Adding New Imperfection Files" href="../add_file.html" />
     <link rel="prev" title="Dynamic Database" href="../dynamic.html" />
    
   <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
@@ -119,10 +121,10 @@ be executed before.</p>
 </div>
 <p>In order to transform the raw data to the <span class="xref std std-ref">finite element coordinate
 system</span>, the recommended procedure is the function
-<a class="reference internal" href="../../../modules/conecylDB/index.html#desicos.conecylDB.read_write.xyz2thetazimp" title="desicos.conecylDB.read_write.xyz2thetazimp"><code class="xref py py-func docutils literal"><span class="pre">xyz2thetazimp()</span></code></a>, exemplified below. This function converts the &#8220;<img class="math" src="../../../_images/math/fcbaa2ea1c6a047f151a45849927929823fc5d88.png" alt="x"/> <img class="math" src="../../../_images/math/5a1161c9b9bf6a6addc18ade0f7fe8bb5ce0ba95.png" alt="y"/>
-<img class="math" src="../../../_images/math/eb4fcf2ea15c365948abb172ed3693fbc10b3b4a.png" alt="z"/>&#8221; data to a to convert them to a &#8220;<img class="math" src="../../../_images/math/4dc4789b8e2f448615b3e2c2bdc22fb9267f7cd8.png" alt="\theta"/> <img class="math" src="../../../_images/math/eb4fcf2ea15c365948abb172ed3693fbc10b3b4a.png" alt="z"/> <img class="math" src="../../../_images/math/a359fcc67d4efbcaef5bda404120efef7de1ada3.png" alt="imp"/>&#8221; format. This function
-is a wrapper that calls funcion <a class="reference internal" href="../../../modules/conecylDB/index.html#desicos.conecylDB.fit_data.best_fit_cylinder" title="desicos.conecylDB.fit_data.best_fit_cylinder"><code class="xref py py-func docutils literal"><span class="pre">best_fit_cylinder()</span></code></a> or
-<a class="reference internal" href="../../../modules/conecylDB/index.html#desicos.conecylDB.fit_data.best_fit_cone" title="desicos.conecylDB.fit_data.best_fit_cone"><code class="xref py py-func docutils literal"><span class="pre">best_fit_cone()</span></code></a>, where the right coordinate transformation is
+<code class="xref py py-func docutils literal"><span class="pre">xyz2thetazimp()</span></code>, exemplified below. This function converts the &#8220;<span class="math">x</span> <span class="math">y</span>
+<span class="math">z</span>&#8221; data to a to convert them to a &#8220;<span class="math">\theta</span> <span class="math">z</span> <span class="math">imp</span>&#8221; format. This function
+is a wrapper that calls funcion <code class="xref py py-func docutils literal"><span class="pre">best_fit_cylinder()</span></code> or
+<code class="xref py py-func docutils literal"><span class="pre">best_fit_cone()</span></code>, where the right coordinate transformation is
 calculated.</p>
 <p id="best-fit-raw-data"><code class="docutils literal"><span class="pre">best_fit_raw_data.py</span></code></p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -144,7 +146,7 @@ imperfection data is stored in the format:</p>
 <span class="n">thetan</span> <span class="n">zn</span> <span class="n">impn</span>
 </pre></div>
 </div>
-<p>where <code class="docutils literal"><span class="pre">thetai</span></code> and <code class="docutils literal"><span class="pre">zi</span></code> are the coordinates <img class="math" src="../../../_images/math/4dc4789b8e2f448615b3e2c2bdc22fb9267f7cd8.png" alt="\theta"/> and <img class="math" src="../../../_images/math/eb4fcf2ea15c365948abb172ed3693fbc10b3b4a.png" alt="z"/>, while
+<p>where <code class="docutils literal"><span class="pre">thetai</span></code> and <code class="docutils literal"><span class="pre">zi</span></code> are the coordinates <span class="math">\theta</span> and <span class="math">z</span>, while
 <code class="docutils literal"><span class="pre">impi</span></code> represents the imperfection amplitude at this coordinate. An example
 of the transformed imperfection data is given below (first 10 lines), and
 <a class="reference external" href="https://raw.githubusercontent.com/desicos/desicos/master/doc/source/tutorials/conecylDB/processing_measured_imp_data/sample_theta_z_imp.txt">the full output is given here</a>:</p>
@@ -162,7 +164,7 @@ of the transformed imperfection data is given below (first 10 lines), and
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">It is also possible to use <a class="reference internal" href="../../../modules/conecylDB/index.html#desicos.conecylDB.read_write.xyz2thetazimp" title="desicos.conecylDB.read_write.xyz2thetazimp"><code class="xref py py-func docutils literal"><span class="pre">xyz2thetazimp()</span></code></a> in other
+<p class="last">It is also possible to use <code class="xref py py-func docutils literal"><span class="pre">xyz2thetazimp()</span></code> in other
 ways, as detailed in the function&#8217;s documentation</p>
 </div>
 <p>The transformed data can also be visualized in the 3-D domain, which was
@@ -319,10 +321,10 @@ offset of <code class="docutils literal"><span class="pre">-88.5</span></code> d
 </div>
 <div class="section" id="half-cosine-function">
 <h2>Half-Cosine Function<a class="headerlink" href="#half-cosine-function" title="Permalink to this headline">¶</a></h2>
-<p>Function <a class="reference internal" href="../../../modules/conecylDB/index.html#desicos.conecylDB.fit_data.calc_c0" title="desicos.conecylDB.fit_data.calc_c0"><code class="xref py py-func docutils literal"><span class="pre">calc_c0()</span></code></a> is used to interpolate the measured data using
+<p>Function <code class="xref py py-func docutils literal"><span class="pre">calc_c0()</span></code> is used to interpolate the measured data using
 Fourier series. The half-cosine function corresponds to the parameter
 <code class="docutils literal"><span class="pre">funcnum</span> <span class="pre">=</span> <span class="pre">2</span></code>, as can be seen in the function&#8217;s documentation.</p>
-<p>The following script was used to calculate the coefficients <img class="math" src="../../../_images/math/9d2e821b965da254bfd09bd9fdfc1e644cdabe55.png" alt="\{c_0\}"/>. Note
+<p>The following script was used to calculate the coefficients <span class="math">\{c_0\}</span>. Note
 how the angular offset is applied using the <code class="docutils literal"><span class="pre">rotatedeg</span></code> parameter:</p>
 <p><code class="docutils literal"><span class="pre">interpolate_half_cosine.py</span></code></p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -507,41 +509,41 @@ displacement patterns using different approximation levels:</p>
 </pre></div>
 </div>
 <p>which will result in the following figures for <code class="docutils literal"><span class="pre">funcnum=1</span></code>:</p>
-<p><img class="math" src="../../../_images/math/624c3265a78ed2cc633978f63bba190f6097fab7.png" alt="m_0=20"/>, <img class="math" src="../../../_images/math/9ed957cd12caab821285dd028035ca3b9fd8b8c3.png" alt="n_0=30"/>:</p>
+<p><span class="math">m_0=20</span>, <span class="math">n_0=30</span>:</p>
 <div class="figure">
 <img alt="../../../_images/fw0_f1_z25_m_020_n_030.png" src="../../../_images/fw0_f1_z25_m_020_n_030.png" />
 </div>
-<p><img class="math" src="../../../_images/math/8ffb15b4d5a82e92171bc78f8b690a765a087a63.png" alt="m_0=30"/>, <img class="math" src="../../../_images/math/ae914e65f1ea75b391c02a0cf09dcbab0cc4f685.png" alt="n_0=45"/>:</p>
+<p><span class="math">m_0=30</span>, <span class="math">n_0=45</span>:</p>
 <div class="figure">
 <img alt="../../../_images/fw0_f1_z25_m_030_n_045.png" src="../../../_images/fw0_f1_z25_m_030_n_045.png" />
 </div>
-<p><img class="math" src="../../../_images/math/0e7c170e1571536016b20b83f237ec80c169159d.png" alt="m_0=40"/>, <img class="math" src="../../../_images/math/23f9eebdb8e102928951b3fb4d4d9f15ce207ce3.png" alt="n_0=60"/>:</p>
+<p><span class="math">m_0=40</span>, <span class="math">n_0=60</span>:</p>
 <div class="figure">
 <img alt="../../../_images/fw0_f1_z25_m_040_n_060.png" src="../../../_images/fw0_f1_z25_m_040_n_060.png" />
 </div>
-<p><img class="math" src="../../../_images/math/9c6a0d2b42ec07fcff39a1d8b4cf27da5cdf0e9f.png" alt="m_0=50"/>, <img class="math" src="../../../_images/math/4b39b4637efbc5f41f5b60b4b65557beec5c17b1.png" alt="n_0=75"/>:</p>
+<p><span class="math">m_0=50</span>, <span class="math">n_0=75</span>:</p>
 <div class="figure">
 <img alt="../../../_images/fw0_f1_z25_m_050_n_075.png" src="../../../_images/fw0_f1_z25_m_050_n_075.png" />
 </div>
 <p>and for <code class="docutils literal"><span class="pre">funcnum=2</span></code>:</p>
-<p><img class="math" src="../../../_images/math/624c3265a78ed2cc633978f63bba190f6097fab7.png" alt="m_0=20"/>, <img class="math" src="../../../_images/math/9ed957cd12caab821285dd028035ca3b9fd8b8c3.png" alt="n_0=30"/>:</p>
+<p><span class="math">m_0=20</span>, <span class="math">n_0=30</span>:</p>
 <div class="figure">
 <img alt="../../../_images/fw0_f2_z25_m_020_n_030.png" src="../../../_images/fw0_f2_z25_m_020_n_030.png" />
 </div>
-<p><img class="math" src="../../../_images/math/8ffb15b4d5a82e92171bc78f8b690a765a087a63.png" alt="m_0=30"/>, <img class="math" src="../../../_images/math/ae914e65f1ea75b391c02a0cf09dcbab0cc4f685.png" alt="n_0=45"/>:</p>
+<p><span class="math">m_0=30</span>, <span class="math">n_0=45</span>:</p>
 <div class="figure">
 <img alt="../../../_images/fw0_f2_z25_m_030_n_045.png" src="../../../_images/fw0_f2_z25_m_030_n_045.png" />
 </div>
-<p><img class="math" src="../../../_images/math/0e7c170e1571536016b20b83f237ec80c169159d.png" alt="m_0=40"/>, <img class="math" src="../../../_images/math/23f9eebdb8e102928951b3fb4d4d9f15ce207ce3.png" alt="n_0=60"/>:</p>
+<p><span class="math">m_0=40</span>, <span class="math">n_0=60</span>:</p>
 <div class="figure">
 <img alt="../../../_images/fw0_f2_z25_m_040_n_060.png" src="../../../_images/fw0_f2_z25_m_040_n_060.png" />
 </div>
-<p><img class="math" src="../../../_images/math/9c6a0d2b42ec07fcff39a1d8b4cf27da5cdf0e9f.png" alt="m_0=50"/>, <img class="math" src="../../../_images/math/4b39b4637efbc5f41f5b60b4b65557beec5c17b1.png" alt="n_0=75"/>:</p>
+<p><span class="math">m_0=50</span>, <span class="math">n_0=75</span>:</p>
 <div class="figure">
 <img alt="../../../_images/fw0_f2_z25_m_050_n_075.png" src="../../../_images/fw0_f2_z25_m_050_n_075.png" />
 </div>
-<p>It can be seen how the <img class="math" src="../../../_images/math/05342505402760ddea398cf4ac14bf08993c760f.png" alt="w_0"/> function approximates the measured imperfection
-pattern with the increase of <img class="math" src="../../../_images/math/e1d0211f305ad1f379ed4c9fe66c217d32989c99.png" alt="m_0"/> and <img class="math" src="../../../_images/math/e1d0211f305ad1f379ed4c9fe66c217d32989c99.png" alt="m_0"/>. The measured imperfection
+<p>It can be seen how the <span class="math">w_0</span> function approximates the measured imperfection
+pattern with the increase of <span class="math">m_0</span> and <span class="math">m_0</span>. The measured imperfection
 pattern is shown below, and it was plotted after performing the
 inverse-weighted interpolation already described.</p>
 <div class="figure">
@@ -549,7 +551,7 @@ inverse-weighted interpolation already described.</p>
 </div>
 <p>Comparing the results using <code class="docutils literal"><span class="pre">funcnum=1</span></code> and <code class="docutils literal"><span class="pre">funcnum=2</span></code>, one see that
 the latter approaches closer the real measurements, since it relaxes the
-condition <img class="math" src="../../../_images/math/be5f7fe5aa721daffb1552ebb7ef3f8e73e6c583.png" alt="w_0 = 0"/> at the edges.</p>
+condition <span class="math">w_0 = 0</span> at the edges.</p>
 </div>
 </div>
 <div class="section" id="processing-measured-thickness-imperfection-data">
@@ -557,7 +559,7 @@ condition <img class="math" src="../../../_images/math/be5f7fe5aa721daffb1552ebb
 <p>The procedure described for geometric imperfections is also applicable for
 thickness imperfections. The measured imperfection data usually
 comes in a 4 columns format where the thickness measurement is given for each
-spatial position: <img class="math" src="../../../_images/math/79cb7a58f0ba0983a641c9af57385512f181a8d5.png" alt="x_i"/>, <img class="math" src="../../../_images/math/81684209f3f7806a0ce48bb88be4bfff890a2aae.png" alt="y_i"/>, <img class="math" src="../../../_images/math/0842ecdbdf24640b9de99c7f182508ecc1599b2d.png" alt="z_i"/>:</p>
+spatial position: <span class="math">x_i</span>, <span class="math">y_i</span>, <span class="math">z_i</span>:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">x1</span> <span class="n">y1</span> <span class="n">z1</span> <span class="n">thick1</span>
 <span class="n">x2</span> <span class="n">y2</span> <span class="n">z2</span> <span class="n">thick2</span>
 <span class="o">...</span>
@@ -566,8 +568,8 @@ spatial position: <img class="math" src="../../../_images/math/79cb7a58f0ba0983a
 </div>
 <p>The recommended procedure to transform the raw data to the <span class="xref std std-ref">finite
 element coordinate system</span> is the function
-<a class="reference internal" href="../../../modules/conecylDB/index.html#desicos.conecylDB.read_write.xyzthick2thetazthick" title="desicos.conecylDB.read_write.xyzthick2thetazthick"><code class="xref py py-func docutils literal"><span class="pre">xyzthick2thetazthick()</span></code></a>, that also calls internally the
-<a class="reference internal" href="../../../modules/conecylDB/index.html#desicos.conecylDB.fit_data.best_fit_cylinder" title="desicos.conecylDB.fit_data.best_fit_cylinder"><code class="xref py py-func docutils literal"><span class="pre">best_fit_cylinder()</span></code></a> or the <a class="reference internal" href="../../../modules/conecylDB/index.html#desicos.conecylDB.fit_data.best_fit_cone" title="desicos.conecylDB.fit_data.best_fit_cone"><code class="xref py py-func docutils literal"><span class="pre">best_fit_cone()</span></code></a> routines:</p>
+<code class="xref py py-func docutils literal"><span class="pre">xyzthick2thetazthick()</span></code>, that also calls internally the
+<code class="xref py py-func docutils literal"><span class="pre">best_fit_cylinder()</span></code> or the <code class="xref py py-func docutils literal"><span class="pre">best_fit_cone()</span></code> routines:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">desicos.conecylDB.read_write</span> <span class="k">import</span> <span class="n">xyzthick2thetazthick</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">xyzthick2thetazthick</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">alphadeg_measured</span><span class="p">,</span> <span class="n">R_measured</span><span class="p">,</span> <span class="n">H_measured</span><span class="p">,</span>
@@ -629,8 +631,8 @@ in other ways, as detailed in the corresponding documentation</p>
       &copy;2012-2015 Desicos Improved Software Team.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.3</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
       
     </div>
 
