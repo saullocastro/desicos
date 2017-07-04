@@ -1,20 +1,17 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Virtual Material Model (VMM) &#8212; DESICOS 2.4.8 documentation</title>
-    
+    <title>Virtual Material Model (VMM) &#8212; DESICOS 2.4.9 documentation</title>
     <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.4.8',
+        VERSION:     '2.4.9',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -35,7 +32,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
-  <body role="document">
+  <body>
   
 
     <div class="document">
@@ -75,7 +72,7 @@ in which ply piece(s) a given point lies and calculates the local fiber angles
 and thickness.</p>
 <p>This manual is supposed to explain the VMM. The corresponding code is located
 in <a class="reference internal" href="../../../modules/cppot/index.html#module-desicos.cppot.core" title="desicos.cppot.core"><code class="xref py py-mod docutils literal"><span class="pre">desicos.cppot.core</span></code></a>. This material model is used by both the
-Abaqus-plugin (<code class="xref py py-class docutils literal"><span class="pre">desicos.abaqus.imperfections.ppi.PPI</span></code>)
+Abaqus-plugin (<a class="reference internal" href="../../../modules/abaqus/index.html#desicos.abaqus.imperfections.ppi.PPI" title="desicos.abaqus.imperfections.ppi.PPI"><code class="xref py py-class docutils literal"><span class="pre">desicos.abaqus.imperfections.ppi.PPI</span></code></a>)
 and in the separate Cone Ply Piece Optimization Tool (CPPOT).</p>
 </div>
 <div class="section" id="coordinate-systems">
@@ -148,7 +145,7 @@ s_{top} &amp;= \frac{s_{top}}{\sin\alpha} =
 \frac{r_{bot}}{\sin\alpha} - \frac{H}{\cos\alpha}</span></p>
 </div><ul class="simple">
 <li><strong>2D-Cartesian</strong>: Used for geometrical operations on the unfolded cone
-(defining lines, calculating intersection points, ...):</li>
+(defining lines, calculating intersection points, …):</li>
 </ul>
 <div class="math">
 <p><span class="math">\eta, \zeta \in [-\infty,+\infty]</span></p>
@@ -202,7 +199,7 @@ orientation at a later stage.</p>
 <p>In the code, the geometry of the cone is encapsulated in the
 <a class="reference internal" href="../../../modules/cppot/index.html#desicos.cppot.core.geom.ConeGeometry" title="desicos.cppot.core.geom.ConeGeometry"><code class="xref py py-class docutils literal"><span class="pre">desicos.cppot.core.geom.ConeGeometry</span></code></a> class. This class is constructed
 based on a few input parameters, listed below. All other parameters
-(<code class="docutils literal"><span class="pre">s1</span></code> .. <code class="docutils literal"><span class="pre">s4</span></code>, <code class="docutils literal"><span class="pre">rtop</span></code>, ...) are then easily retrieved upon request.</p>
+(<code class="docutils literal"><span class="pre">s1</span></code> .. <code class="docutils literal"><span class="pre">s4</span></code>, <code class="docutils literal"><span class="pre">rtop</span></code>, …) are then easily retrieved upon request.</p>
 <blockquote>
 <div><ul class="simple">
 <li>The bottom radius of the free cone <span class="math">r_{bot}</span> (400 mm in figure 6)</li>
@@ -249,7 +246,7 @@ that has actually been used in the manufacturing of cones.</p>
 <h2>1. Constructing the prototype piece<a class="headerlink" href="#constructing-the-prototype-piece" title="Permalink to this headline">¶</a></h2>
 <p>The construction of a single ply piece will now be described step-by-step.
 Objective is mainly to describe the procedure, not to bother the reader with
-implementation details (e.g. &#8220;How to find the intersection of two lines?&#8221;). For
+implementation details (e.g. “How to find the intersection of two lines?”). For
 the latter, consult the relevant pieces of code. The implementation of the
 procedure described here is contained in the method
 <a class="reference internal" href="../../../modules/cppot/index.html#desicos.cppot.core.ply_model.TrapezPlyPieceModel.construct_single_ply_piece" title="desicos.cppot.core.ply_model.TrapezPlyPieceModel.construct_single_ply_piece"><code class="xref py py-func docutils literal"><span class="pre">desicos.cppot.core.ply_model.TrapezPlyPieceModel.construct_single_ply_piece()</span></code></a>.</p>
@@ -431,7 +428,7 @@ This is done to allow offsettnig multiple plies with the same nominal fiber
 orientation with respect to each other. This avoids that the ply piece
 edges in multiple plies coincide, which would (unnecessarily) cause weak spots
 in the actual cone. The offset parameter is specified in relative terms
-(0...1), based on this value <span class="math">\phi_{offset}</span> is calculated as follows:</p>
+(0…1), based on this value <span class="math">\phi_{offset}</span> is calculated as follows:</p>
 <div class="math">
 <p><span class="math">\phi_{offset} = f_{rel,offset}\Delta\phi \\
 {\rm with}\qquad f_{rel,offset} \in [0, 1)</span></p>
@@ -515,7 +512,7 @@ discontinuities between adjacent plies.</p>
         <div class="sphinxsidebarwrapper">
 <p class="logo">
   <a href="../../../index.html">
-    <img class="logo" src="../../../_static/../logo/desicos.png" alt="Logo"/>
+    <img class="logo" src="../../../_static/../../../logo/desicos.png" alt="Logo"/>
     
   </a>
 </p>
@@ -555,8 +552,8 @@ discontinuities between adjacent plies.</p>
       &copy;2012-2015 Desicos Improved Software Team.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
       
     </div>
 

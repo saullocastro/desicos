@@ -1,0 +1,162 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>desicos.abaqus.utils.geom &#8212; DESICOS 2.4.9 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2.4.9',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for desicos.abaqus.utils.geom</h1><div class="highlight"><pre>
+<span></span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">=============================================</span>
+<span class="sd">Geometries (:mod:`desicos.abaqus.utils.geom`)</span>
+<span class="sd">=============================================</span>
+
+<span class="sd">.. currentmodule:: desicos.abaqus.utils.geom</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1"># These classes were located here in some development versions of the</span>
+<span class="c1"># PPI imperfection and CPPOT tool. Import them here to maintain save/load</span>
+<span class="c1"># compatibility with then-created studies</span>
+<span class="kn">from</span> <span class="nn">desicos.cppot.core.geom</span> <span class="k">import</span> <span class="n">Point2D</span><span class="p">,</span> <span class="n">Line2D</span>
+
+
+<div class="viewcode-block" id="Plane"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.utils.geom.Plane">[docs]</a><span class="k">class</span> <span class="nc">Plane</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Plane object</span>
+
+<span class="sd">    Defined by the attributes:</span>
+
+<span class="sd">    =============  ==========================================================</span>
+<span class="sd">    Attribute      Description</span>
+<span class="sd">    =============  ==========================================================</span>
+<span class="sd">    ``thetadeg``   ``float``, circumferential position in degrees</span>
+<span class="sd">    ``p1``         ``tuple``, a tuple containing the `(X_1, X_2, X_3)`</span>
+<span class="sd">                   coordinates for point 1</span>
+<span class="sd">    ``p2``         ``tuple``, a tuple containing the `(X_1, X_2, X_3)`</span>
+<span class="sd">                   coordinates for point 2</span>
+<span class="sd">    ``p3``         ``tuple``, a tuple containing the `(X_1, X_2, X_3)`</span>
+<span class="sd">                   coordinates for point 3</span>
+<span class="sd">    part           Abaqus Part object corresponding to this plane</span>
+<span class="sd">    feature        Abaqus Part Feature object corresponding to this plane</span>
+<span class="sd">    datum          Abaqus Part Datum object corresponding to this plane</span>
+<span class="sd">    =============  ==========================================================</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thetadeg</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p1</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p2</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p3</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">datum</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">feature</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">part</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="Plane.create"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.utils.geom.Plane.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Creates the plane based on three points</span>
+
+<span class="sd">        The three points must be previously stored in the attributes ``p1``,</span>
+<span class="sd">        ``p2`` and ``p3``.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">feature</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">part</span><span class="o">.</span><span class="n">DatumPlaneByThreePoints</span><span class="p">(</span><span class="n">point1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p1</span><span class="p">,</span>
+                                                         <span class="n">point2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p2</span><span class="p">,</span>
+                                                         <span class="n">point3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p3</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">datum</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">part</span><span class="o">.</span><span class="n">datums</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">feature</span><span class="o">.</span><span class="n">id</span><span class="p">]</span></div>
+
+    <span class="k">def</span> <span class="nf">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">datum</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span></div>
+
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../../../index.html">
+    <img class="logo" src="../../../../_static/../../../logo/desicos.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/index.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/index.html">Tutorials</a></li>
+</ul>
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2012-2015 Desicos Improved Software Team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

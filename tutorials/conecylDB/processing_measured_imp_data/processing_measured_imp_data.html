@@ -1,20 +1,17 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Processing Geometric Imperfection Data &#8212; DESICOS 2.4.8 documentation</title>
-    
+    <title>Processing Geometric Imperfection Data &#8212; DESICOS 2.4.9 documentation</title>
     <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.4.8',
+        VERSION:     '2.4.9',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -35,7 +32,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
-  <body role="document">
+  <body>
   
 
     <div class="document">
@@ -119,12 +116,12 @@ be executed before.</p>
 <div class="figure">
 <img alt="../../../_images/plot_sample_3d.png" src="../../../_images/plot_sample_3d.png" />
 </div>
-<p>In order to transform the raw data to the <span class="xref std std-ref">finite element coordinate
-system</span>, the recommended procedure is the function
-<code class="xref py py-func docutils literal"><span class="pre">xyz2thetazimp()</span></code>, exemplified below. This function converts the &#8220;<span class="math">x</span> <span class="math">y</span>
-<span class="math">z</span>&#8221; data to a to convert them to a &#8220;<span class="math">\theta</span> <span class="math">z</span> <span class="math">imp</span>&#8221; format. This function
-is a wrapper that calls funcion <code class="xref py py-func docutils literal"><span class="pre">best_fit_cylinder()</span></code> or
-<code class="xref py py-func docutils literal"><span class="pre">best_fit_cone()</span></code>, where the right coordinate transformation is
+<p>In order to transform the raw data to the <a class="reference internal" href="../../../modules/abaqus/index.html#figure-conecyl"><span class="std std-ref">finite element coordinate
+system</span></a>, the recommended procedure is the function
+<a class="reference internal" href="../../../modules/conecylDB/index.html#desicos.conecylDB.read_write.xyz2thetazimp" title="desicos.conecylDB.read_write.xyz2thetazimp"><code class="xref py py-func docutils literal"><span class="pre">xyz2thetazimp()</span></code></a>, exemplified below. This function converts the “<span class="math">x</span> <span class="math">y</span>
+<span class="math">z</span>” data to a to convert them to a “<span class="math">\theta</span> <span class="math">z</span> <span class="math">imp</span>” format. This function
+is a wrapper that calls funcion <a class="reference internal" href="../../../modules/conecylDB/index.html#desicos.conecylDB.fit_data.best_fit_cylinder" title="desicos.conecylDB.fit_data.best_fit_cylinder"><code class="xref py py-func docutils literal"><span class="pre">best_fit_cylinder()</span></code></a> or
+<a class="reference internal" href="../../../modules/conecylDB/index.html#desicos.conecylDB.fit_data.best_fit_cone" title="desicos.conecylDB.fit_data.best_fit_cone"><code class="xref py py-func docutils literal"><span class="pre">best_fit_cone()</span></code></a>, where the right coordinate transformation is
 calculated.</p>
 <p id="best-fit-raw-data"><code class="docutils literal"><span class="pre">best_fit_raw_data.py</span></code></p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -164,8 +161,8 @@ of the transformed imperfection data is given below (first 10 lines), and
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">It is also possible to use <code class="xref py py-func docutils literal"><span class="pre">xyz2thetazimp()</span></code> in other
-ways, as detailed in the function&#8217;s documentation</p>
+<p class="last">It is also possible to use <a class="reference internal" href="../../../modules/conecylDB/index.html#desicos.conecylDB.read_write.xyz2thetazimp" title="desicos.conecylDB.read_write.xyz2thetazimp"><code class="xref py py-func docutils literal"><span class="pre">xyz2thetazimp()</span></code></a> in other
+ways, as detailed in the function’s documentation</p>
 </div>
 <p>The transformed data can also be visualized in the 3-D domain, which was
 accomplished using the following script:</p>
@@ -283,8 +280,8 @@ offset of <code class="docutils literal"><span class="pre">-88.5</span></code> d
 
 <span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_ticks</span><span class="p">([</span><span class="o">-</span><span class="n">pi</span><span class="o">*</span><span class="n">R</span><span class="p">,</span> <span class="n">pi</span><span class="o">*</span><span class="n">R</span><span class="p">])</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_ticklabels</span><span class="p">([</span><span class="s1">r&#39;$-\pi$&#39;</span><span class="p">,</span> <span class="s1">r&#39;$\pi$&#39;</span><span class="p">])</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">r&#39;$\theta$ $[rad]$&#39;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_ticklabels</span><span class="p">([</span><span class="sa">r</span><span class="s1">&#39;$-\pi$&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$\pi$&#39;</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\theta$ $[rad]$&#39;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">labelpad</span><span class="o">=-</span><span class="mi">7</span>
 
 <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_ticks</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1219.2</span><span class="p">])</span>
@@ -321,9 +318,9 @@ offset of <code class="docutils literal"><span class="pre">-88.5</span></code> d
 </div>
 <div class="section" id="half-cosine-function">
 <h2>Half-Cosine Function<a class="headerlink" href="#half-cosine-function" title="Permalink to this headline">¶</a></h2>
-<p>Function <code class="xref py py-func docutils literal"><span class="pre">calc_c0()</span></code> is used to interpolate the measured data using
+<p>Function <a class="reference internal" href="../../../modules/conecylDB/index.html#desicos.conecylDB.fit_data.calc_c0" title="desicos.conecylDB.fit_data.calc_c0"><code class="xref py py-func docutils literal"><span class="pre">calc_c0()</span></code></a> is used to interpolate the measured data using
 Fourier series. The half-cosine function corresponds to the parameter
-<code class="docutils literal"><span class="pre">funcnum</span> <span class="pre">=</span> <span class="pre">2</span></code>, as can be seen in the function&#8217;s documentation.</p>
+<code class="docutils literal"><span class="pre">funcnum</span> <span class="pre">=</span> <span class="pre">2</span></code>, as can be seen in the function’s documentation.</p>
 <p>The following script was used to calculate the coefficients <span class="math">\{c_0\}</span>. Note
 how the angular offset is applied using the <code class="docutils literal"><span class="pre">rotatedeg</span></code> parameter:</p>
 <p><code class="docutils literal"><span class="pre">interpolate_half_cosine.py</span></code></p>
@@ -414,8 +411,8 @@ field:</p>
 <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 
 <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_ticks</span><span class="p">([</span><span class="o">-</span><span class="n">pi</span><span class="o">*</span><span class="n">R</span><span class="p">,</span> <span class="n">pi</span><span class="o">*</span><span class="n">R</span><span class="p">])</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_ticklabels</span><span class="p">([</span><span class="s1">r&#39;$-\pi$&#39;</span><span class="p">,</span> <span class="s1">r&#39;$\pi$&#39;</span><span class="p">])</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">r&#39;$\theta$ $[rad]$&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_ticklabels</span><span class="p">([</span><span class="sa">r</span><span class="s1">&#39;$-\pi$&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$\pi$&#39;</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\theta$ $[rad]$&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">labelpad</span> <span class="o">=</span> <span class="o">-</span><span class="mi">7</span>
 
 <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_ticks</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">H</span><span class="p">])</span>
@@ -493,7 +490,7 @@ displacement patterns using different approximation levels:</p>
     <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_ticks</span><span class="p">([</span><span class="o">-</span><span class="n">pi</span><span class="p">,</span> <span class="n">pi</span><span class="p">])</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_ticklabels</span><span class="p">([</span><span class="s1">r&#39;$-\pi$&#39;</span><span class="p">,</span> <span class="s1">r&#39;$\pi$&#39;</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_ticklabels</span><span class="p">([</span><span class="sa">r</span><span class="s1">&#39;$-\pi$&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$\pi$&#39;</span><span class="p">])</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Circumferential Position, $rad$&#39;</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">labelpad</span><span class="o">=-</span><span class="mi">10</span>
 
@@ -566,10 +563,10 @@ spatial position: <span class="math">x_i</span>, <span class="math">y_i</span>, 
 <span class="n">xn</span> <span class="n">yn</span> <span class="n">zn</span> <span class="n">thickn</span>
 </pre></div>
 </div>
-<p>The recommended procedure to transform the raw data to the <span class="xref std std-ref">finite
-element coordinate system</span> is the function
-<code class="xref py py-func docutils literal"><span class="pre">xyzthick2thetazthick()</span></code>, that also calls internally the
-<code class="xref py py-func docutils literal"><span class="pre">best_fit_cylinder()</span></code> or the <code class="xref py py-func docutils literal"><span class="pre">best_fit_cone()</span></code> routines:</p>
+<p>The recommended procedure to transform the raw data to the <a class="reference internal" href="../../../modules/abaqus/index.html#figure-conecyl"><span class="std std-ref">finite
+element coordinate system</span></a> is the function
+<a class="reference internal" href="../../../modules/conecylDB/index.html#desicos.conecylDB.read_write.xyzthick2thetazthick" title="desicos.conecylDB.read_write.xyzthick2thetazthick"><code class="xref py py-func docutils literal"><span class="pre">xyzthick2thetazthick()</span></code></a>, that also calls internally the
+<a class="reference internal" href="../../../modules/conecylDB/index.html#desicos.conecylDB.fit_data.best_fit_cylinder" title="desicos.conecylDB.fit_data.best_fit_cylinder"><code class="xref py py-func docutils literal"><span class="pre">best_fit_cylinder()</span></code></a> or the <a class="reference internal" href="../../../modules/conecylDB/index.html#desicos.conecylDB.fit_data.best_fit_cone" title="desicos.conecylDB.fit_data.best_fit_cone"><code class="xref py py-func docutils literal"><span class="pre">best_fit_cone()</span></code></a> routines:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">desicos.conecylDB.read_write</span> <span class="k">import</span> <span class="n">xyzthick2thetazthick</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">xyzthick2thetazthick</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">alphadeg_measured</span><span class="p">,</span> <span class="n">R_measured</span><span class="p">,</span> <span class="n">H_measured</span><span class="p">,</span>
@@ -591,7 +588,7 @@ in other ways, as detailed in the corresponding documentation</p>
         <div class="sphinxsidebarwrapper">
 <p class="logo">
   <a href="../../../index.html">
-    <img class="logo" src="../../../_static/../logo/desicos.png" alt="Logo"/>
+    <img class="logo" src="../../../_static/../../../logo/desicos.png" alt="Logo"/>
     
   </a>
 </p>
@@ -631,8 +628,8 @@ in other ways, as detailed in the corresponding documentation</p>
       &copy;2012-2015 Desicos Improved Software Team.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
       
     </div>
 

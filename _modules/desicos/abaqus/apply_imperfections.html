@@ -1,0 +1,1004 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>desicos.abaqus.apply_imperfections &#8212; DESICOS 2.4.9 documentation</title>
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.9',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for desicos.abaqus.apply_imperfections</h1><div class="highlight"><pre>
+<span></span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">===============================================================</span>
+<span class="sd">Apply Imperfections (:mod:`desicos.abaqus.apply_imperfections`)</span>
+<span class="sd">===============================================================</span>
+
+<span class="sd">.. currentmodule:: desicos.abaqus.apply_imperfections</span>
+
+<span class="sd">Routines to apply geometric and thickness imperfections into the finite</span>
+<span class="sd">element model.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">random</span> <span class="k">import</span> <span class="n">sample</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="n">cos</span><span class="p">,</span> <span class="n">sin</span><span class="p">,</span> <span class="n">tan</span><span class="p">,</span> <span class="n">arctan2</span><span class="p">,</span> <span class="n">deg2rad</span>
+
+<span class="kn">from</span> <span class="nn">desicos.logger</span> <span class="k">import</span> <span class="n">log</span>
+<span class="kn">from</span> <span class="nn">desicos.constants</span> <span class="k">import</span> <span class="n">FLOAT</span>
+<span class="kn">from</span> <span class="nn">desicos.conecylDB.measured_imp_ms</span> <span class="k">import</span> <span class="n">calc_nodal_translations</span>
+<span class="kn">from</span> <span class="nn">desicos.conecylDB.measured_imp_t</span> <span class="k">import</span> <span class="n">calc_elems_t</span>
+<span class="kn">from</span> <span class="nn">desicos.conecylDB.read_write</span> <span class="k">import</span> <span class="n">read_theta_z_imp</span>
+<span class="kn">from</span> <span class="nn">desicos.conecylDB.interpolate</span> <span class="k">import</span> <span class="n">inv_weighted</span>
+<span class="kn">from</span> <span class="nn">desicos.abaqus.utils</span> <span class="k">import</span> <span class="n">vec_calc_elem_cg</span><span class="p">,</span> <span class="n">index_within_linspace</span>
+
+
+<div class="viewcode-block" id="calc_translations_ABAQUS"><a class="viewcode-back" href="../../../modules/abaqus/index.html#desicos.abaqus.apply_imperfections.calc_translations_ABAQUS">[docs]</a><span class="k">def</span> <span class="nf">calc_translations_ABAQUS</span><span class="p">(</span><span class="n">imperfection_file_name</span><span class="p">,</span>
+                             <span class="n">model_name</span><span class="p">,</span>
+                             <span class="n">part_name</span><span class="p">,</span>
+                             <span class="n">H_model</span><span class="p">,</span>
+                             <span class="n">H_measured</span><span class="p">,</span>
+                             <span class="n">R_model</span><span class="p">,</span>
+                             <span class="n">R_best_fit</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                             <span class="n">semi_angle</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span>
+                             <span class="n">stretch_H</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                             <span class="n">z_offset_bot</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                             <span class="n">rotatedeg</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span>
+                             <span class="n">scaling_factor</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span>
+                             <span class="n">r_TOL</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span>
+                             <span class="n">num_closest_points</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                             <span class="n">power_parameter</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                             <span class="n">num_sec_z</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+                             <span class="n">use_theta_z_format</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                             <span class="n">ignore_bot_h</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                             <span class="n">ignore_top_h</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                             <span class="n">sample_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                             <span class="n">T</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Reads an imperfection file and calculates the nodal translations</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    imperfection_file_name : str</span>
+<span class="sd">        Full path to the imperfection file.</span>
+<span class="sd">    model_name : str</span>
+<span class="sd">        Model name.</span>
+<span class="sd">    part_name : str</span>
+<span class="sd">        Part name.</span>
+<span class="sd">    H_model : float</span>
+<span class="sd">        Total height of the model where the imperfections will be applied to,</span>
+<span class="sd">        considering also eventual resin rings.</span>
+<span class="sd">    H_measured : float</span>
+<span class="sd">        The total height of the measured test specimen, including eventual</span>
+<span class="sd">        resin rings at the edges.</span>
+<span class="sd">    R_model : float</span>
+<span class="sd">        Radius **at the bottom edge** of the model where the imperfections</span>
+<span class="sd">        will be applied to.</span>
+<span class="sd">    R_best_fit : float, optional</span>
+<span class="sd">        Best fit radius obtained with functions :func:`.best_fit_cylinder`</span>
+<span class="sd">        or :func:`.best_fit_cone`.</span>
+<span class="sd">    semi_angle : float, optional</span>
+<span class="sd">        Cone semi-vertex angle in degrees, when applicable.</span>
+<span class="sd">    stretch_H : bool, optional</span>
+<span class="sd">        If the measured imperfection data should be stretched to the current</span>
+<span class="sd">        model (which may happen when ``H_model!=H_measured``.</span>
+<span class="sd">    z_offset_bot : float, optional</span>
+<span class="sd">        It is common to have the measured data not covering the whole test</span>
+<span class="sd">        specimen, and therefore it will be centralized, if a non-centralized</span>
+<span class="sd">        position is desired this parameter can be used for the adjustment.</span>
+<span class="sd">    rotatedeg : float, optional</span>
+<span class="sd">        Rotation angle in degrees telling how much the imperfection pattern</span>
+<span class="sd">        should be rotated about the `X_3` (or `Z`) axis.</span>
+<span class="sd">    scaling_factor : float, optional</span>
+<span class="sd">        A scaling factor that can be used to study the imperfection</span>
+<span class="sd">        sensitivity.</span>
+<span class="sd">    r_TOL : float, optional</span>
+<span class="sd">        Percentage tolerance to ignore noisy data from the measurements.</span>
+<span class="sd">    num_closest_points : int, optional</span>
+<span class="sd">        See :func:`the inverse-weighted interpolation algorithm</span>
+<span class="sd">        &lt;.inv_weighted&gt;`.</span>
+<span class="sd">    power_parameter : float, optional</span>
+<span class="sd">        See :func:`the inverse-weighted interpolation algorithm</span>
+<span class="sd">        &lt;.inv_weighted&gt;`.</span>
+<span class="sd">    num_sec_z : int, optional</span>
+<span class="sd">        Number of spatial sections used to classify the measured data in order</span>
+<span class="sd">        to accelerate the searching algorithms</span>
+<span class="sd">    use_theta_z_format : bool, optional</span>
+<span class="sd">        If the new format `\theta, Z, imp` should be used instead of the old</span>
+<span class="sd">        `X, Y, Z`.</span>
+<span class="sd">    ignore_bot_h : None or float, optional</span>
+<span class="sd">        Used to ignore nodes from the bottom resin ring.</span>
+<span class="sd">    ignore_top_h : None or float, optional</span>
+<span class="sd">        Used to ignore nodes from the top resin ring.</span>
+<span class="sd">    sample_size : int, optional</span>
+<span class="sd">        If the input file containing the measured data is too large it may be</span>
+<span class="sd">        required to limit the sample size in order to avoid memory errors.</span>
+<span class="sd">    T : None or np.ndarray, optional</span>
+<span class="sd">        A transformation matrix (cf. :func:`.transf_matrix`) required when the</span>
+<span class="sd">        mesh is not in the :ref:`default coordinate system &lt;figure_conecyl&gt;`.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">abaqus</span>
+
+    <span class="kn">import</span> <span class="nn">desicos.abaqus.abaqus_functions</span> <span class="k">as</span> <span class="nn">abaqus_functions</span>
+
+    <span class="n">mod</span> <span class="o">=</span> <span class="n">abaqus</span><span class="o">.</span><span class="n">mdb</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="n">model_name</span><span class="p">]</span>
+    <span class="n">part</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="n">part_name</span><span class="p">]</span>
+    <span class="n">part_nodes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">part</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
+    <span class="n">coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">n</span><span class="o">.</span><span class="n">coordinates</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">part_nodes</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">FLOAT</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">T</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">coords</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">coords</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))))</span>
+        <span class="n">coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">tmp</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+        <span class="k">del</span> <span class="n">tmp</span>
+
+    <span class="k">if</span> <span class="n">ignore_bot_h</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">ignore_bot_h</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">ignore_bot_h</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">ignore_bot_h</span>
+            <span class="n">coords</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+            <span class="n">part_nodes</span> <span class="o">=</span> <span class="n">part_nodes</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">ignore_top_h</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">ignore_top_h</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">ignore_top_h</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">H_model</span> <span class="o">-</span> <span class="n">ignore_top_h</span><span class="p">)</span>
+            <span class="n">coords</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+            <span class="n">part_nodes</span> <span class="o">=</span> <span class="n">part_nodes</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">use_theta_z_format</span><span class="p">:</span>
+        <span class="n">d</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">read_theta_z_imp</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">imperfection_file_name</span><span class="p">,</span>
+                                      <span class="n">H_measured</span><span class="o">=</span><span class="n">H_measured</span><span class="p">,</span>
+                                      <span class="n">stretch_H</span><span class="o">=</span><span class="n">stretch_H</span><span class="p">,</span>
+                                      <span class="n">z_offset_bot</span><span class="o">=</span><span class="n">z_offset_bot</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">sample_size</span><span class="p">:</span>
+            <span class="n">num</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">sample_size</span> <span class="o">&lt;</span> <span class="n">num</span><span class="p">:</span>
+                <span class="n">log</span><span class="p">(</span><span class="s1">&#39;Using sample_size=</span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sample_size</span><span class="p">),</span> <span class="n">level</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">sample</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">num</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">sample_size</span><span class="p">)),</span> <span class="p">:]</span>
+
+        <span class="k">if</span> <span class="n">r_TOL</span><span class="p">:</span>
+            <span class="n">max_imp</span> <span class="o">=</span> <span class="n">R_model</span> <span class="o">*</span> <span class="n">r_TOL</span> <span class="o">/</span> <span class="mf">100.</span>
+            <span class="n">imp</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span>
+            <span class="n">cond</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">imp</span> <span class="o">&gt;</span> <span class="n">max_imp</span><span class="p">,</span> <span class="n">imp</span> <span class="o">&lt;</span> <span class="p">(</span><span class="o">-</span><span class="n">max_imp</span><span class="p">))),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">log</span><span class="p">(</span><span class="s1">&#39;Skipping </span><span class="si">{0}</span><span class="s1"> points&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">imp</span><span class="p">[</span><span class="n">cond</span><span class="p">])))</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="n">cond</span><span class="p">),</span> <span class="p">:]</span>
+
+        <span class="n">data3D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">4</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">FLOAT</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">rotatedeg</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">deg2rad</span><span class="p">(</span><span class="n">rotatedeg</span><span class="p">)</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">z</span> <span class="o">*=</span> <span class="n">H_model</span>
+
+        <span class="n">alpharad</span> <span class="o">=</span> <span class="n">deg2rad</span><span class="p">(</span><span class="n">semi_angle</span><span class="p">)</span>
+        <span class="n">tana</span> <span class="o">=</span> <span class="n">tan</span><span class="p">(</span><span class="n">alpharad</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">r_local</span><span class="p">(</span><span class="n">z</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">R_model</span> <span class="o">-</span> <span class="n">z</span><span class="o">*</span><span class="n">tana</span>
+        <span class="n">data3D</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">r_local</span><span class="p">(</span><span class="n">z</span><span class="p">)</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="n">data3D</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">r_local</span><span class="p">(</span><span class="n">z</span><span class="p">)</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="n">data3D</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">z</span>
+        <span class="n">data3D</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span>
+
+        <span class="n">w0</span> <span class="o">=</span> <span class="n">inv_weighted</span><span class="p">(</span><span class="n">data3D</span><span class="p">,</span> <span class="n">coords</span><span class="p">,</span>
+                          <span class="n">num_sub</span> <span class="o">=</span> <span class="n">num_sec_z</span><span class="p">,</span>
+                          <span class="n">col</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+                          <span class="n">ncp</span> <span class="o">=</span> <span class="n">num_closest_points</span><span class="p">,</span>
+                          <span class="n">power_parameter</span> <span class="o">=</span> <span class="n">power_parameter</span><span class="p">)</span>
+
+        <span class="n">thetas</span> <span class="o">=</span> <span class="n">arctan2</span><span class="p">(</span><span class="n">coords</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">coords</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+
+        <span class="n">trans</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">coords</span><span class="p">)</span>
+        <span class="n">trans</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">w0</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">alpharad</span><span class="p">)</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">thetas</span><span class="p">)</span>
+        <span class="n">trans</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">w0</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">alpharad</span><span class="p">)</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">thetas</span><span class="p">)</span>
+        <span class="n">trans</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">w0</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">alpharad</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1">#NOTE perhaps remove this in the future, when the imperfection files</span>
+        <span class="c1">#     are stored as theta, z, amplitude only</span>
+        <span class="n">nodes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">n</span><span class="o">.</span><span class="n">coordinates</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                           <span class="n">n</span><span class="o">.</span><span class="n">coordinates</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                           <span class="n">n</span><span class="o">.</span><span class="n">coordinates</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                           <span class="n">n</span><span class="o">.</span><span class="n">label</span><span class="p">]</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">part_nodes</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">FLOAT</span><span class="p">)</span>
+
+        <span class="c1"># calling translate_nodes function</span>
+        <span class="n">trans</span> <span class="o">=</span> <span class="n">calc_nodal_translations</span><span class="p">(</span>
+                                <span class="n">imperfection_file_name</span><span class="p">,</span>
+                                <span class="n">nodes</span> <span class="o">=</span> <span class="n">nodes</span><span class="p">,</span>
+                                <span class="n">H_model</span> <span class="o">=</span> <span class="n">H_model</span><span class="p">,</span>
+                                <span class="n">H_measured</span> <span class="o">=</span> <span class="n">H_measured</span><span class="p">,</span>
+                                <span class="n">R_model</span> <span class="o">=</span> <span class="n">R_model</span><span class="p">,</span>
+                                <span class="n">R_best_fit</span> <span class="o">=</span> <span class="n">R_best_fit</span><span class="p">,</span>
+                                <span class="n">semi_angle</span> <span class="o">=</span> <span class="n">semi_angle</span><span class="p">,</span>
+                                <span class="n">stretch_H</span> <span class="o">=</span> <span class="n">stretch_H</span><span class="p">,</span>
+                                <span class="n">z_offset_bot</span> <span class="o">=</span> <span class="n">z_offset_bot</span><span class="p">,</span>
+                                <span class="n">rotatedeg</span> <span class="o">=</span> <span class="n">rotatedeg</span><span class="p">,</span>
+                                <span class="n">r_TOL</span> <span class="o">=</span> <span class="n">r_TOL</span><span class="p">,</span>
+                                <span class="n">num_closest_points</span> <span class="o">=</span> <span class="n">num_closest_points</span><span class="p">,</span>
+                                <span class="n">power_parameter</span> <span class="o">=</span> <span class="n">power_parameter</span><span class="p">,</span>
+                                <span class="n">num_sec_z</span> <span class="o">=</span> <span class="n">num_sec_z</span><span class="p">,</span>
+                                <span class="n">sample_size</span> <span class="o">=</span> <span class="n">sample_size</span><span class="p">)</span>
+        <span class="n">trans</span> <span class="o">=</span> <span class="n">trans</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">trans</span></div>
+
+
+<div class="viewcode-block" id="translate_nodes_ABAQUS"><a class="viewcode-back" href="../../../tutorials/abaqus/python_API.html#desicos.abaqus.apply_imperfections.translate_nodes_ABAQUS">[docs]</a><span class="k">def</span> <span class="nf">translate_nodes_ABAQUS</span><span class="p">(</span><span class="n">imperfection_file_name</span><span class="p">,</span>
+                           <span class="n">model_name</span><span class="p">,</span>
+                           <span class="n">part_name</span><span class="p">,</span>
+                           <span class="n">H_model</span><span class="p">,</span>
+                           <span class="n">H_measured</span><span class="p">,</span>
+                           <span class="n">R_model</span><span class="p">,</span>
+                           <span class="n">R_best_fit</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                           <span class="n">semi_angle</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span>
+                           <span class="n">stretch_H</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                           <span class="n">z_offset_bot</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                           <span class="n">rotatedeg</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span>
+                           <span class="n">scaling_factor</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span>
+                           <span class="n">r_TOL</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span>
+                           <span class="n">num_closest_points</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                           <span class="n">power_parameter</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                           <span class="n">num_sec_z</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+                           <span class="n">nodal_translations</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                           <span class="n">use_theta_z_format</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                           <span class="n">ignore_bot_h</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                           <span class="n">ignore_top_h</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                           <span class="n">sample_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                           <span class="n">T</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Translates the nodes in Abaqus based on imperfection data</span>
+
+<span class="sd">    The imperfection amplitude for each node is calculated using an inversed</span>
+<span class="sd">    weight function (see :func:`desicos.conecylDB.interpolate.inv_weighted`).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    imperfection_file_name : str</span>
+<span class="sd">        The full path to the imperfection file, which must be a file with</span>
+<span class="sd">        three columns containing the ``x, y, z`` coordinates when</span>
+<span class="sd">        ``use_theta_z_format=False`` or containing ``x, theta, amplitude``</span>
+<span class="sd">        when ``use_theta_z_format=True``.</span>
+<span class="sd">    model_name : str</span>
+<span class="sd">        Must be a valid key in the dictionary ``mdb.models``, in the</span>
+<span class="sd">        interactive Python inside Abaqus.</span>
+<span class="sd">    part_name : str</span>
+<span class="sd">        Must be a valid key in the dictionary</span>
+<span class="sd">        ``mdb.models[model_name].parts``, in the interactive Python inside</span>
+<span class="sd">        Abaqus.</span>
+<span class="sd">    H_model : float</span>
+<span class="sd">        Total height of the model where the imperfections will be applied to,</span>
+<span class="sd">        considering also eventual resin rings.</span>
+<span class="sd">    H_measured : float</span>
+<span class="sd">        The total height of the measured test specimen, including eventual</span>
+<span class="sd">        resin rings at the edges.</span>
+<span class="sd">    R_model : float</span>
+<span class="sd">        The radius of the current model. In case of cones this should be the</span>
+<span class="sd">        bottom radius.</span>
+<span class="sd">    R_best_fit : float, optional</span>
+<span class="sd">        Best fit radius obtained with functions :func:`.best_fit_cylinder`</span>
+<span class="sd">        or :func:`.best_fit_cone`.</span>
+<span class="sd">    semi_angle : float, optional</span>
+<span class="sd">        The cone semi-vertex angle (a null value indicates that a cylinder is</span>
+<span class="sd">        beeing analyzed).</span>
+<span class="sd">    stretch_H : float, optional</span>
+<span class="sd">        A boolean indicating if the imperfection pattern should be stretched</span>
+<span class="sd">        when applied to the model. The measurement systems usually cannot</span>
+<span class="sd">        obtain data for the whole surface, making it an option to stretch the</span>
+<span class="sd">        data to fit the whole surface. In case ``stretch_H=False`` the</span>
+<span class="sd">        measured data of the extremities will be extruded up to the end of the</span>
+<span class="sd">        domain.</span>
+<span class="sd">    z_offset_bot : float, optional</span>
+<span class="sd">        This parameter allows the analyst to adjust the height of the measured</span>
+<span class="sd">        data about the model, when the measured data is not available for the</span>
+<span class="sd">        whole domain.</span>
+<span class="sd">    rotatedeg : float, optional</span>
+<span class="sd">        Rotation angle in degrees telling how much the imperfection pattern</span>
+<span class="sd">        should be rotated about the `X_3` (or `Z`) axis.</span>
+<span class="sd">    scaling_factor : float, optional</span>
+<span class="sd">        The scaling factor that will multiply the calculated imperfection</span>
+<span class="sd">        amplitude.</span>
+<span class="sd">    r_TOL : float, optional</span>
+<span class="sd">        Parameter to ignore noisy data in the imperfection file, the points</span>
+<span class="sd">        with a radius higher than `r=r_{model} \times (1 + r_{TOL})` will not</span>
+<span class="sd">        be considered in the interpolation.</span>
+<span class="sd">    num_closest_points : int, optional</span>
+<span class="sd">        See :func:`the inverse-weighted interpolation algorithm</span>
+<span class="sd">        &lt;.inv_weighted&gt;`.</span>
+<span class="sd">    power_parameter : int, optional</span>
+<span class="sd">        See :func:`the inverse-weighted interpolation algorithm</span>
+<span class="sd">        &lt;.inv_weighted&gt;`.</span>
+<span class="sd">    num_sec_z : int, optional</span>
+<span class="sd">        Number of cross sections that will be used to classify the points</span>
+<span class="sd">        spatially in the inverse-weighted algorithm.</span>
+<span class="sd">    nodal_translations : None or numpy.ndarray, optional</span>
+<span class="sd">        An array containing the interpolated traslations, which is passed to</span>
+<span class="sd">        avoid repeated calls to the interpolation functions.</span>
+<span class="sd">    use_theta_z_format : bool, optional</span>
+<span class="sd">        A boolean to indicate whether the imperfection file contains ``x, y,</span>
+<span class="sd">        z`` positions or ``theta, z, amplitude``.</span>
+<span class="sd">    ignore_bot_h : None or float, optional</span>
+<span class="sd">        Used to ignore nodes from the bottom resin ring.</span>
+<span class="sd">    ignore_top_h : None or float, optional</span>
+<span class="sd">        Used to ignore nodes from the top resin ring.</span>
+<span class="sd">    sample_size : int, optional</span>
+<span class="sd">        If the input file containing the measured data is too large it may be</span>
+<span class="sd">        required to limit the sample size in order to avoid memory errors.</span>
+<span class="sd">    T : None or np.ndarray, optional</span>
+<span class="sd">        A transformation matrix (cf. :func:`.transf_matrix`) required when the</span>
+<span class="sd">        mesh is not in the :ref:`default coordinate system &lt;figure_conecyl&gt;`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    nodal_translations : numpy.ndarray</span>
+<span class="sd">        A 2-D array containing the translations ``x, y, z`` for each column.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Despite the nodal traslations are returned all the nodes belonging to this</span>
+<span class="sd">    model will already be translated.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">abaqus</span> <span class="k">import</span> <span class="n">mdb</span><span class="p">,</span> <span class="n">session</span>
+
+    <span class="n">mod</span> <span class="o">=</span> <span class="n">mdb</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="n">model_name</span><span class="p">]</span>
+    <span class="n">part</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="n">part_name</span><span class="p">]</span>
+
+    <span class="n">part_nodes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">part</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
+    <span class="n">coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">n</span><span class="o">.</span><span class="n">coordinates</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">part_nodes</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">T</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">coords</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">coords</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))))</span>
+        <span class="n">coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">tmp</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+        <span class="k">del</span> <span class="n">tmp</span>
+
+    <span class="k">if</span> <span class="n">ignore_bot_h</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">ignore_bot_h</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">ignore_bot_h</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">log</span><span class="p">(</span><span class="s1">&#39;Applying ignore_bot_h: ignoring nodes with z &lt;= </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">ignore_bot_h</span><span class="p">))</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">ignore_bot_h</span>
+            <span class="n">coords</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+            <span class="n">part_nodes</span> <span class="o">=</span> <span class="n">part_nodes</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">ignore_top_h</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">ignore_top_h</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">ignore_top_h</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">log</span><span class="p">(</span><span class="s1">&#39;Applying ignore_top_h: ignoring nodes with z &gt;= </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">H_model</span> <span class="o">-</span> <span class="n">ignore_top_h</span><span class="p">))</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">H_model</span> <span class="o">-</span> <span class="n">ignore_top_h</span><span class="p">)</span>
+            <span class="n">coords</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+            <span class="n">part_nodes</span> <span class="o">=</span> <span class="n">part_nodes</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">use_theta_z_format</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">nodal_translations</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">trans</span> <span class="o">=</span> <span class="n">calc_translations_ABAQUS</span><span class="p">(</span>
+                        <span class="n">imperfection_file_name</span> <span class="o">=</span> <span class="n">imperfection_file_name</span><span class="p">,</span>
+                        <span class="n">model_name</span> <span class="o">=</span> <span class="n">model_name</span><span class="p">,</span>
+                        <span class="n">part_name</span> <span class="o">=</span> <span class="n">part_name</span><span class="p">,</span>
+                        <span class="n">H_model</span> <span class="o">=</span> <span class="n">H_model</span><span class="p">,</span>
+                        <span class="n">H_measured</span> <span class="o">=</span> <span class="n">H_measured</span><span class="p">,</span>
+                        <span class="n">R_model</span> <span class="o">=</span> <span class="n">R_model</span><span class="p">,</span>
+                        <span class="n">R_best_fit</span> <span class="o">=</span> <span class="n">R_best_fit</span><span class="p">,</span>
+                        <span class="n">semi_angle</span> <span class="o">=</span> <span class="n">semi_angle</span><span class="p">,</span>
+                        <span class="n">stretch_H</span> <span class="o">=</span> <span class="n">stretch_H</span><span class="p">,</span>
+                        <span class="n">z_offset_bot</span> <span class="o">=</span> <span class="n">z_offset_bot</span><span class="p">,</span>
+                        <span class="n">rotatedeg</span> <span class="o">=</span> <span class="n">rotatedeg</span><span class="p">,</span>
+                        <span class="n">scaling_factor</span> <span class="o">=</span> <span class="n">scaling_factor</span><span class="p">,</span>
+                        <span class="n">r_TOL</span> <span class="o">=</span> <span class="n">r_TOL</span><span class="p">,</span>
+                        <span class="n">num_closest_points</span> <span class="o">=</span> <span class="n">num_closest_points</span><span class="p">,</span>
+                        <span class="n">power_parameter</span> <span class="o">=</span> <span class="n">power_parameter</span><span class="p">,</span>
+                        <span class="n">num_sec_z</span> <span class="o">=</span> <span class="n">num_sec_z</span><span class="p">,</span>
+                        <span class="n">use_theta_z_format</span> <span class="o">=</span> <span class="n">use_theta_z_format</span><span class="p">,</span>
+                        <span class="n">ignore_bot_h</span> <span class="o">=</span> <span class="n">ignore_bot_h</span><span class="p">,</span>
+                        <span class="n">ignore_top_h</span> <span class="o">=</span> <span class="n">ignore_top_h</span><span class="p">,</span>
+                        <span class="n">sample_size</span> <span class="o">=</span> <span class="n">sample_size</span><span class="p">,</span>
+                        <span class="n">T</span> <span class="o">=</span> <span class="n">T</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">trans</span> <span class="o">=</span> <span class="n">nodal_translations</span>
+
+        <span class="c1"># applying translations</span>
+        <span class="n">viewport</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">viewports</span><span class="p">[</span><span class="n">session</span><span class="o">.</span><span class="n">currentViewportName</span><span class="p">]</span>
+        <span class="n">log</span><span class="p">(</span><span class="s1">&#39;Applying new nodal positions in ABAQUS CAE to model </span><span class="si">{0}</span><span class="s1"> ...&#39;</span><span class="o">.</span>
+            <span class="nb">format</span><span class="p">(</span><span class="n">model_name</span><span class="p">))</span>
+        <span class="n">log</span><span class="p">(</span><span class="s1">&#39;    (using a scaling factor of </span><span class="si">{0}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">scaling_factor</span><span class="p">))</span>
+
+        <span class="n">new_coords</span> <span class="o">=</span> <span class="n">coords</span> <span class="o">+</span> <span class="n">trans</span><span class="o">*</span><span class="n">scaling_factor</span>
+
+        <span class="k">if</span> <span class="n">T</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">Tinv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+            <span class="n">Tinv</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">T</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">T</span>
+            <span class="n">Tinv</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">T</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">]</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">new_coords</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">new_coords</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))))</span>
+            <span class="n">new_coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">Tinv</span><span class="p">,</span> <span class="n">tmp</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+            <span class="k">del</span> <span class="n">tmp</span>
+
+        <span class="n">meshNodeArray</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">sequenceFromLabels</span><span class="p">(</span>
+                            <span class="p">[</span><span class="n">n</span><span class="o">.</span><span class="n">label</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">part_nodes</span><span class="p">])</span>
+        <span class="n">new_coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">new_coords</span><span class="p">)</span>
+        <span class="n">part</span><span class="o">.</span><span class="n">editNode</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="n">part_nodes</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">coordinates</span><span class="o">=</span><span class="n">new_coords</span><span class="p">)</span>
+
+        <span class="n">log</span><span class="p">(</span><span class="s1">&#39;Application of new nodal positions finished!&#39;</span><span class="p">)</span>
+
+        <span class="n">ra</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">rootAssembly</span>
+        <span class="n">viewport</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">displayedObject</span><span class="o">=</span><span class="n">ra</span><span class="p">)</span>
+        <span class="n">ra</span><span class="o">.</span><span class="n">regenerate</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">trans</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">nodes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">n</span><span class="o">.</span><span class="n">coordinates</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                           <span class="n">n</span><span class="o">.</span><span class="n">coordinates</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                           <span class="n">n</span><span class="o">.</span><span class="n">coordinates</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                           <span class="n">n</span><span class="o">.</span><span class="n">label</span><span class="p">]</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">part_nodes</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">FLOAT</span><span class="p">)</span>
+
+        <span class="c1"># calling translate_nodes function</span>
+        <span class="k">if</span> <span class="n">nodal_translations</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">nodal_translations</span> <span class="o">=</span> <span class="n">calc_translations_ABAQUS</span><span class="p">(</span>
+                         <span class="n">imperfection_file_name</span> <span class="o">=</span> <span class="n">imperfection_file_name</span><span class="p">,</span>
+                         <span class="n">model_name</span> <span class="o">=</span> <span class="n">model_name</span><span class="p">,</span>
+                         <span class="n">part_name</span> <span class="o">=</span> <span class="n">part_name</span><span class="p">,</span>
+                         <span class="n">H_model</span> <span class="o">=</span> <span class="n">H_model</span><span class="p">,</span>
+                         <span class="n">H_measured</span> <span class="o">=</span> <span class="n">H_measured</span><span class="p">,</span>
+                         <span class="n">R_model</span> <span class="o">=</span> <span class="n">R_model</span><span class="p">,</span>
+                         <span class="n">R_best_fit</span> <span class="o">=</span> <span class="n">R_best_fit</span><span class="p">,</span>
+                         <span class="n">semi_angle</span> <span class="o">=</span> <span class="n">semi_angle</span><span class="p">,</span>
+                         <span class="n">stretch_H</span> <span class="o">=</span> <span class="n">stretch_H</span><span class="p">,</span>
+                         <span class="n">z_offset_bot</span> <span class="o">=</span> <span class="n">z_offset_bot</span><span class="p">,</span>
+                         <span class="n">rotatedeg</span> <span class="o">=</span> <span class="n">rotatedeg</span><span class="p">,</span>
+                         <span class="n">scaling_factor</span> <span class="o">=</span> <span class="n">scaling_factor</span><span class="p">,</span>
+                         <span class="n">r_TOL</span> <span class="o">=</span> <span class="n">r_TOL</span><span class="p">,</span>
+                         <span class="n">num_closest_points</span> <span class="o">=</span> <span class="n">num_closest_points</span><span class="p">,</span>
+                         <span class="n">power_parameter</span> <span class="o">=</span> <span class="n">power_parameter</span><span class="p">,</span>
+                         <span class="n">num_sec_z</span> <span class="o">=</span> <span class="n">num_sec_z</span><span class="p">,</span>
+                         <span class="n">use_theta_z_format</span> <span class="o">=</span> <span class="n">use_theta_z_format</span><span class="p">,</span>
+                         <span class="n">ignore_bot_h</span> <span class="o">=</span> <span class="n">ignore_bot_h</span><span class="p">,</span>
+                         <span class="n">ignore_top_h</span> <span class="o">=</span> <span class="n">ignore_top_h</span><span class="p">,</span>
+                         <span class="n">sample_size</span> <span class="o">=</span> <span class="n">sample_size</span><span class="p">,</span>
+                         <span class="n">T</span> <span class="o">=</span> <span class="n">T</span><span class="p">)</span>
+
+        <span class="c1"># applying translations</span>
+        <span class="n">viewport</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">viewports</span><span class="p">[</span><span class="n">session</span><span class="o">.</span><span class="n">currentViewportName</span><span class="p">]</span>
+        <span class="n">log</span><span class="p">(</span><span class="s1">&#39;Applying new nodal positions in ABAQUS CAE for model </span><span class="si">{0}</span><span class="s1"> ...&#39;</span><span class="o">.</span>
+            <span class="nb">format</span><span class="p">(</span><span class="n">model_name</span><span class="p">))</span>
+        <span class="n">log</span><span class="p">(</span><span class="s1">&#39;    (using a scaling factor of </span><span class="si">{0}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">scaling_factor</span><span class="p">))</span>
+
+        <span class="n">trans</span> <span class="o">=</span> <span class="n">nodal_translations</span>
+
+        <span class="n">new_coords</span> <span class="o">=</span> <span class="n">coords</span> <span class="o">+</span> <span class="n">trans</span><span class="o">*</span><span class="n">scaling_factor</span>
+
+        <span class="k">if</span> <span class="n">T</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">Tinv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+            <span class="n">Tinv</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">T</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">T</span>
+            <span class="n">Tinv</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">T</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">]</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">new_coords</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">new_coords</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))))</span>
+            <span class="n">new_coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">Tinv</span><span class="p">,</span> <span class="n">tmp</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+            <span class="k">del</span> <span class="n">tmp</span>
+
+        <span class="n">meshNodeArray</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">sequenceFromLabels</span><span class="p">(</span>
+                            <span class="p">[</span><span class="n">n</span><span class="o">.</span><span class="n">label</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">part_nodes</span><span class="p">])</span>
+        <span class="n">new_coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">new_coords</span><span class="p">)</span>
+        <span class="n">part</span><span class="o">.</span><span class="n">editNode</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="n">meshNodeArray</span><span class="p">,</span> <span class="n">coordinates</span><span class="o">=</span><span class="n">new_coords</span><span class="p">)</span>
+
+        <span class="n">log</span><span class="p">(</span><span class="s1">&#39;Application of new nodal positions finished!&#39;</span><span class="p">)</span>
+        <span class="c1"># regenerating ra</span>
+        <span class="n">ra</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">rootAssembly</span>
+        <span class="n">viewport</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">displayedObject</span><span class="o">=</span><span class="n">ra</span><span class="p">)</span>
+        <span class="n">ra</span><span class="o">.</span><span class="n">regenerate</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">nodal_translations</span></div>
+
+
+<div class="viewcode-block" id="translate_nodes_ABAQUS_c0"><a class="viewcode-back" href="../../../tutorials/abaqus/python_API.html#desicos.abaqus.apply_imperfections.translate_nodes_ABAQUS_c0">[docs]</a><span class="k">def</span> <span class="nf">translate_nodes_ABAQUS_c0</span><span class="p">(</span><span class="n">m0</span><span class="p">,</span> <span class="n">n0</span><span class="p">,</span> <span class="n">c0</span><span class="p">,</span> <span class="n">funcnum</span><span class="p">,</span>
+                              <span class="n">model_name</span><span class="p">,</span>
+                              <span class="n">part_name</span><span class="p">,</span>
+                              <span class="n">H_model</span><span class="p">,</span>
+                              <span class="n">semi_angle</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span>
+                              <span class="n">scaling_factor</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span>
+                              <span class="n">fem_meridian_bot2top</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                              <span class="n">ignore_bot_h</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                              <span class="n">ignore_top_h</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                              <span class="n">T</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Translates the nodes in Abaqus based on a Fourier series</span>
+
+<span class="sd">    The Fourier Series can be a half-sine, half-cosine or a complete Fourier</span>
+<span class="sd">    Series as detailed in :func:`desicos.conecylDB.fit_data.calc_c0`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    m0 : int</span>
+<span class="sd">        Number of terms along the `x` coordinate.</span>
+<span class="sd">    n0 : int</span>
+<span class="sd">        Number of terms along the `\theta` coordinate.</span>
+<span class="sd">    c0 : numpy.ndarray</span>
+<span class="sd">        The coefficients that will give the imperfection pattern.</span>
+<span class="sd">    funcnum : int</span>
+<span class="sd">        The function type, as detailed in</span>
+<span class="sd">        :func:`desicos.conecylDB.fit_data.calc_c0`.</span>
+<span class="sd">    model_name : str</span>
+<span class="sd">        Must be a valid key in the dictionary ``mdb.models``, in the</span>
+<span class="sd">        interactive Python inside Abaqus.</span>
+<span class="sd">    part_name : str</span>
+<span class="sd">        Must be a valid key in the dictionary</span>
+<span class="sd">        ``mdb.models[model_name].parts``, in the interactive Python inside</span>
+<span class="sd">        Abaqus.</span>
+<span class="sd">    H_model : float</span>
+<span class="sd">        Total height of the model where the imperfections will be applied to,</span>
+<span class="sd">        considering also eventual resin rings.</span>
+<span class="sd">    semi_angle : float, optional</span>
+<span class="sd">        The cone semi-vertex angle (a null value indicates that a cylinder is</span>
+<span class="sd">        beeing analyzed).</span>
+<span class="sd">    scaling_factor : float, optional</span>
+<span class="sd">        The scaling factor that will multiply ``c0`` when applying the</span>
+<span class="sd">        imperfections.</span>
+<span class="sd">    fem_meridian_bot2top : bool, optional</span>
+<span class="sd">        A boolean indicating if the finite element has the `x` axis starting</span>
+<span class="sd">        at the bottom or at the top.</span>
+<span class="sd">    ignore_bot_h : None or float, optional</span>
+<span class="sd">        Used to ignore nodes from the bottom resin ring.</span>
+<span class="sd">    ignore_top_h : None or float, optional</span>
+<span class="sd">        Used to ignore nodes from the top resin ring.</span>
+<span class="sd">    T : None or np.ndarray, optional</span>
+<span class="sd">        A transformation matrix (cf. :func:`.transf_matrix`) required when the</span>
+<span class="sd">        mesh is not in the :ref:`default coordinate system &lt;figure_conecyl&gt;`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    nodal_translations : numpy.ndarray</span>
+<span class="sd">        A 2-D array containing the translations ``x, y, z`` for each column.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Despite the nodal traslations are returned all the nodes belonging to this</span>
+<span class="sd">    model will be already translated.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">abaqus</span> <span class="k">import</span> <span class="n">mdb</span><span class="p">,</span> <span class="n">session</span>
+
+    <span class="kn">from</span> <span class="nn">desicos.conecylDB</span> <span class="k">import</span> <span class="n">fit_data</span>
+
+    <span class="n">log</span><span class="p">(</span><span class="s1">&#39;Calculating imperfection amplitudes for model </span><span class="si">{0}</span><span class="s1"> ...</span><span class="se">\n\t</span><span class="s1">&#39;</span><span class="o">.</span>
+        <span class="nb">format</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span> <span class="o">+</span>
+        <span class="s1">&#39;(using a scaling factor of </span><span class="si">{0}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">scaling_factor</span><span class="p">))</span>
+    <span class="n">c0</span> <span class="o">=</span> <span class="n">c0</span><span class="o">*</span><span class="n">scaling_factor</span>
+    <span class="n">mod</span> <span class="o">=</span> <span class="n">mdb</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="n">model_name</span><span class="p">]</span>
+    <span class="n">part</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="n">part_name</span><span class="p">]</span>
+
+    <span class="n">part_nodes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">part</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
+    <span class="n">coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">n</span><span class="o">.</span><span class="n">coordinates</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">part_nodes</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">T</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">coords</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">coords</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))))</span>
+        <span class="n">coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">tmp</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+        <span class="k">del</span> <span class="n">tmp</span>
+
+    <span class="k">if</span> <span class="n">ignore_bot_h</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">ignore_bot_h</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">ignore_bot_h</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">log</span><span class="p">(</span><span class="s1">&#39;Applying ignore_bot_h: ignoring nodes with z &lt;= </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">ignore_bot_h</span><span class="p">))</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">ignore_bot_h</span>
+            <span class="n">coords</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+            <span class="n">part_nodes</span> <span class="o">=</span> <span class="n">part_nodes</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">ignore_top_h</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">ignore_top_h</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">ignore_top_h</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">log</span><span class="p">(</span><span class="s1">&#39;Applying ignore_top_h: ignoring nodes with z &gt;= </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">H_model</span> <span class="o">-</span> <span class="n">ignore_top_h</span><span class="p">))</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">H_model</span> <span class="o">-</span> <span class="n">ignore_top_h</span><span class="p">)</span>
+            <span class="n">coords</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+            <span class="n">part_nodes</span> <span class="o">=</span> <span class="n">part_nodes</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">ignore_bot_h</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ignore_bot_h</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">ignore_top_h</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ignore_top_h</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">H_eff</span> <span class="o">=</span> <span class="n">H_model</span> <span class="o">-</span> <span class="p">(</span><span class="n">ignore_bot_h</span> <span class="o">+</span> <span class="n">ignore_top_h</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">fem_meridian_bot2top</span><span class="p">:</span>
+        <span class="n">xs_norm</span> <span class="o">=</span> <span class="p">(</span><span class="n">coords</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span><span class="o">-</span><span class="n">ignore_bot_h</span><span class="p">)</span><span class="o">/</span><span class="n">H_eff</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">xs_norm</span> <span class="o">=</span> <span class="p">(</span><span class="n">H_eff</span><span class="o">-</span><span class="p">(</span><span class="n">coords</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span><span class="o">-</span><span class="n">ignore_bot_h</span><span class="p">))</span><span class="o">/</span><span class="n">H_eff</span>
+
+    <span class="n">thetas</span> <span class="o">=</span> <span class="n">arctan2</span><span class="p">(</span><span class="n">coords</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">coords</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+
+    <span class="n">alpharad</span> <span class="o">=</span> <span class="n">deg2rad</span><span class="p">(</span><span class="n">semi_angle</span><span class="p">)</span>
+    <span class="n">w0</span> <span class="o">=</span> <span class="n">fit_data</span><span class="o">.</span><span class="n">fw0</span><span class="p">(</span><span class="n">m0</span><span class="p">,</span> <span class="n">n0</span><span class="p">,</span> <span class="n">c0</span><span class="p">,</span> <span class="n">xs_norm</span><span class="p">,</span> <span class="n">thetas</span><span class="p">,</span> <span class="n">funcnum</span><span class="p">)</span>
+    <span class="n">nodal_translations</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">coords</span><span class="p">)</span>
+    <span class="n">nodal_translations</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">w0</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">alpharad</span><span class="p">)</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">thetas</span><span class="p">)</span>
+    <span class="n">nodal_translations</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">w0</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">alpharad</span><span class="p">)</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">thetas</span><span class="p">)</span>
+    <span class="n">nodal_translations</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">w0</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">alpharad</span><span class="p">)</span>
+
+    <span class="n">log</span><span class="p">(</span><span class="s1">&#39;Calculation of imperfection amplitudes finished!&#39;</span><span class="p">)</span>
+
+    <span class="c1"># applying translations</span>
+    <span class="n">viewport</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">viewports</span><span class="p">[</span><span class="n">session</span><span class="o">.</span><span class="n">currentViewportName</span><span class="p">]</span>
+    <span class="n">log</span><span class="p">(</span><span class="s1">&#39;Applying new nodal positions in ABAQUS CAE to model </span><span class="si">{0}</span><span class="s1"> ...&#39;</span><span class="o">.</span>
+        <span class="nb">format</span><span class="p">(</span><span class="n">model_name</span><span class="p">))</span>
+    <span class="n">log</span><span class="p">(</span><span class="s1">&#39;    (using a scaling factor of </span><span class="si">{0}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">scaling_factor</span><span class="p">))</span>
+
+    <span class="n">new_coords</span> <span class="o">=</span> <span class="n">coords</span> <span class="o">+</span> <span class="n">nodal_translations</span>
+
+    <span class="k">if</span> <span class="n">T</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">Tinv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+        <span class="n">Tinv</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">T</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">Tinv</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">T</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">]</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">new_coords</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">new_coords</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))))</span>
+        <span class="n">new_coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">Tinv</span><span class="p">,</span> <span class="n">tmp</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+        <span class="k">del</span> <span class="n">tmp</span>
+
+    <span class="n">meshNodeArray</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">sequenceFromLabels</span><span class="p">(</span>
+                        <span class="p">[</span><span class="n">n</span><span class="o">.</span><span class="n">label</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">part_nodes</span><span class="p">])</span>
+    <span class="n">new_coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">new_coords</span><span class="p">)</span>
+    <span class="n">part</span><span class="o">.</span><span class="n">editNode</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="n">meshNodeArray</span><span class="p">,</span> <span class="n">coordinates</span><span class="o">=</span><span class="n">new_coords</span><span class="p">)</span>
+
+    <span class="n">log</span><span class="p">(</span><span class="s1">&#39;Application of new nodal positions finished!&#39;</span><span class="p">)</span>
+
+    <span class="n">ra</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">rootAssembly</span>
+    <span class="n">viewport</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">displayedObject</span><span class="o">=</span><span class="n">ra</span><span class="p">)</span>
+    <span class="n">ra</span><span class="o">.</span><span class="n">regenerate</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">nodal_translations</span></div>
+
+
+<div class="viewcode-block" id="change_thickness_ABAQUS"><a class="viewcode-back" href="../../../modules/abaqus/index.html#desicos.abaqus.apply_imperfections.change_thickness_ABAQUS">[docs]</a><span class="k">def</span> <span class="nf">change_thickness_ABAQUS</span><span class="p">(</span><span class="n">imperfection_file_name</span><span class="p">,</span>
+                            <span class="n">model_name</span><span class="p">,</span>
+                            <span class="n">part_name</span><span class="p">,</span>
+                            <span class="n">stack</span><span class="p">,</span>
+                            <span class="n">t_model</span><span class="p">,</span>
+                            <span class="n">t_measured</span><span class="p">,</span>
+                            <span class="n">H_model</span><span class="p">,</span>
+                            <span class="n">H_measured</span><span class="p">,</span>
+                            <span class="n">R_model</span><span class="p">,</span>
+                            <span class="n">R_best_fit</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                            <span class="n">number_of_sets</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                            <span class="n">semi_angle</span> <span class="o">=</span> <span class="mf">0.</span><span class="p">,</span>
+                            <span class="n">stretch_H</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                            <span class="n">z_offset_bot</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                            <span class="n">scaling_factor</span> <span class="o">=</span> <span class="mf">1.</span><span class="p">,</span>
+                            <span class="n">num_closest_points</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+                            <span class="n">power_parameter</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+                            <span class="n">num_sec_z</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+                            <span class="n">elems_t</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                            <span class="n">t_set</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                            <span class="n">use_theta_z_format</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Applies a given thickness imperfection to the finite element model</span>
+
+<span class="sd">    Assumes that a percentage variation of the laminate thickness can be</span>
+<span class="sd">    represented by the same percentage veriation of each ply, i.e., each</span>
+<span class="sd">    ply thickness is varied in order to reflect a given measured thickness</span>
+<span class="sd">    imperfection field.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    imperfection_file_name : str</span>
+<span class="sd">        Full path to the imperfection file.</span>
+<span class="sd">    model_name : str</span>
+<span class="sd">        Model name.</span>
+<span class="sd">    part_name : str</span>
+<span class="sd">        Part name.</span>
+<span class="sd">    stack : list</span>
+<span class="sd">        The stacking sequence of the current model with each angle given in</span>
+<span class="sd">        degrees.</span>
+<span class="sd">    t_model : float</span>
+<span class="sd">        The nominal shell thickness of the current model.</span>
+<span class="sd">    t_measured : float</span>
+<span class="sd">        The nominal thickness of the measured specimen.</span>
+<span class="sd">    H_model : float</span>
+<span class="sd">        Total height of the model where the imperfections will be applied to,</span>
+<span class="sd">        considering also eventual resin rings.</span>
+<span class="sd">    H_measured : float</span>
+<span class="sd">        The total height of the measured test specimen, including eventual</span>
+<span class="sd">        resin rings at the edges.</span>
+<span class="sd">    R_model : float</span>
+<span class="sd">        Radius **at the bottom edge** of the model where the imperfections</span>
+<span class="sd">        will be applied to.</span>
+<span class="sd">    R_best_fit : float, optional</span>
+<span class="sd">        Best fit radius obtained with functions :func:`.best_fit_cylinder`</span>
+<span class="sd">        or :func:`.best_fit_cone`.</span>
+<span class="sd">    number_of_sets : int, optional</span>
+<span class="sd">        Defines in how many levels the thicknesses should be divided. If</span>
+<span class="sd">        ``None`` it will be based on the input file, and if the threshold</span>
+<span class="sd">        of ``100`` is exceeded, ``10`` sections are used.</span>
+<span class="sd">    semi_angle : float, optional</span>
+<span class="sd">        Cone semi-vertex angle in degrees, when applicable.</span>
+<span class="sd">    stretch_H : bool, optional</span>
+<span class="sd">        If the measured imperfection data should be stretched to the current</span>
+<span class="sd">        model (which may happen when ``H_model!=H_measured``.</span>
+<span class="sd">    z_offset_bot : float, optional</span>
+<span class="sd">        It is common to have the measured data not covering the whole test</span>
+<span class="sd">        specimen, and therefore it will be centralized, if a non-centralized</span>
+<span class="sd">        position is desired this parameter can be used for the adjustment.</span>
+<span class="sd">    scaling_factor : float, optional</span>
+<span class="sd">        A scaling factor that can be used to study the imperfection</span>
+<span class="sd">        sensitivity.</span>
+<span class="sd">    num_closest_points : int, optional</span>
+<span class="sd">        See :func:`the inverse-weighted interpolation algorithm</span>
+<span class="sd">        &lt;.inv_weighted&gt;`.</span>
+<span class="sd">    power_parameter : float, optional</span>
+<span class="sd">        See :func:`the inverse-weighted interpolation algorithm</span>
+<span class="sd">        &lt;.inv_weighted&gt;`.</span>
+<span class="sd">    num_sec_z : int, optional</span>
+<span class="sd">        Number of spatial sections used to classify the measured data in order</span>
+<span class="sd">        to accelerate the searching algorithms</span>
+<span class="sd">    elems_t : np.ndarray, optional</span>
+<span class="sd">        Interpolated thickness for each element. Can be used to avoid the same</span>
+<span class="sd">        interpolation to be performed twice.</span>
+<span class="sd">    t_set : set, optional</span>
+<span class="sd">        A ``set`` object containing the unique thicknesses that will be used</span>
+<span class="sd">        to create the new properties.</span>
+<span class="sd">    use_theta_z_format : bool, optional</span>
+<span class="sd">        If the new format `\theta, Z, imp` should be used instead of the old</span>
+<span class="sd">        `X, Y, Z`.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">abaqus</span> <span class="k">import</span> <span class="n">mdb</span>
+
+    <span class="kn">import</span> <span class="nn">desicos.abaqus.abaqus_functions</span> <span class="k">as</span> <span class="nn">abaqus_functions</span>
+
+    <span class="n">mod</span> <span class="o">=</span> <span class="n">mdb</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="n">model_name</span><span class="p">]</span>
+    <span class="n">part</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="n">part_name</span><span class="p">]</span>
+    <span class="n">part_cyl_csys</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="s1">&#39;part_cyl_csys&#39;</span><span class="p">]</span>
+    <span class="n">part_cyl_csys</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">datums</span><span class="p">[</span><span class="n">part_cyl_csys</span><span class="o">.</span><span class="n">id</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">use_theta_z_format</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">elems_t</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">t_set</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">log</span><span class="p">(</span><span class="s1">&#39;Reading coordinates for elements...&#39;</span><span class="p">)</span>
+            <span class="n">elements</span> <span class="o">=</span> <span class="n">vec_calc_elem_cg</span><span class="p">(</span><span class="n">part</span><span class="o">.</span><span class="n">elements</span><span class="p">)</span>
+
+            <span class="n">log</span><span class="p">(</span><span class="s1">&#39;Coordinates for elements read!&#39;</span><span class="p">)</span>
+            <span class="n">d</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">read_theta_z_imp</span><span class="p">(</span><span class="n">path</span> <span class="o">=</span> <span class="n">imperfection_file_name</span><span class="p">,</span>
+                                          <span class="n">H_measured</span> <span class="o">=</span> <span class="n">H_measured</span><span class="p">,</span>
+                                          <span class="n">stretch_H</span> <span class="o">=</span> <span class="n">stretch_H</span><span class="p">,</span>
+                                          <span class="n">z_offset_bot</span> <span class="o">=</span> <span class="n">z_offset_bot</span><span class="p">)</span>
+
+            <span class="n">data3D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">4</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">FLOAT</span><span class="p">)</span>
+            <span class="n">z</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="n">z</span> <span class="o">*=</span> <span class="n">H_model</span>
+
+            <span class="n">alpharad</span> <span class="o">=</span> <span class="n">deg2rad</span><span class="p">(</span><span class="n">semi_angle</span><span class="p">)</span>
+            <span class="n">tana</span> <span class="o">=</span> <span class="n">tan</span><span class="p">(</span><span class="n">alpharad</span><span class="p">)</span>
+            <span class="k">def</span> <span class="nf">r_local</span><span class="p">(</span><span class="n">z</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">R_model</span> <span class="o">-</span> <span class="n">z</span><span class="o">*</span><span class="n">tana</span>
+            <span class="n">data3D</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">r_local</span><span class="p">(</span><span class="n">z</span><span class="p">)</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+            <span class="n">data3D</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">r_local</span><span class="p">(</span><span class="n">z</span><span class="p">)</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+            <span class="n">data3D</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">z</span>
+            <span class="n">data3D</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span>
+
+            <span class="n">ans</span> <span class="o">=</span> <span class="n">inv_weighted</span><span class="p">(</span><span class="n">data3D</span><span class="p">,</span> <span class="n">elements</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span>
+                               <span class="n">num_sub</span> <span class="o">=</span> <span class="n">num_sec_z</span><span class="p">,</span>
+                               <span class="n">col</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+                               <span class="n">ncp</span> <span class="o">=</span> <span class="n">num_closest_points</span><span class="p">,</span>
+                               <span class="n">power_parameter</span> <span class="o">=</span> <span class="n">power_parameter</span><span class="p">)</span>
+
+            <span class="n">t_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">ans</span><span class="p">)</span>
+            <span class="n">t_set</span><span class="o">.</span><span class="n">discard</span><span class="p">(</span><span class="mf">0.</span><span class="p">)</span> <span class="c1">#TODO why inv_weighted returns an array with 0.</span>
+            <span class="n">elems_t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">elements</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">2</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">FLOAT</span><span class="p">)</span>
+            <span class="n">elems_t</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">elements</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">]</span>
+            <span class="n">elems_t</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">ans</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">log</span><span class="p">(</span><span class="s1">&#39;Thickness differences already calculated!&#39;</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">elems_t</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">t_set</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># reading elements data</span>
+            <span class="n">log</span><span class="p">(</span><span class="s1">&#39;Reading coordinates for elements...&#39;</span><span class="p">)</span>
+            <span class="n">elements</span> <span class="o">=</span> <span class="n">vec_calc_elem_cg</span><span class="p">(</span><span class="n">part</span><span class="o">.</span><span class="n">elements</span><span class="p">)</span>
+            <span class="n">log</span><span class="p">(</span><span class="s1">&#39;Coordinates for elements read!&#39;</span><span class="p">)</span>
+            <span class="c1"># calling translate_nodes function</span>
+            <span class="n">elems_t</span><span class="p">,</span> <span class="n">t_set</span> <span class="o">=</span> <span class="n">calc_elems_t</span><span class="p">(</span>
+                                <span class="n">imperfection_file_name</span><span class="p">,</span>
+                                <span class="n">nodes</span> <span class="o">=</span> <span class="n">elements</span><span class="p">,</span>
+                                <span class="n">t_model</span> <span class="o">=</span> <span class="n">t_model</span><span class="p">,</span>
+                                <span class="n">t_measured</span> <span class="o">=</span> <span class="n">t_measured</span><span class="p">,</span>
+                                <span class="n">H_model</span> <span class="o">=</span> <span class="n">H_model</span><span class="p">,</span>
+                                <span class="n">H_measured</span> <span class="o">=</span> <span class="n">H_measured</span><span class="p">,</span>
+                                <span class="n">R_model</span> <span class="o">=</span> <span class="n">R_model</span><span class="p">,</span>
+                                <span class="n">R_best_fit</span> <span class="o">=</span> <span class="n">R_best_fit</span><span class="p">,</span>
+                                <span class="n">semi_angle</span> <span class="o">=</span> <span class="n">semi_angle</span><span class="p">,</span>
+                                <span class="n">stretch_H</span> <span class="o">=</span> <span class="n">stretch_H</span><span class="p">,</span>
+                                <span class="n">z_offset_bot</span> <span class="o">=</span> <span class="n">z_offset_bot</span><span class="p">,</span>
+                                <span class="n">num_closest_points</span> <span class="o">=</span> <span class="n">num_closest_points</span><span class="p">,</span>
+                                <span class="n">power_parameter</span> <span class="o">=</span> <span class="n">power_parameter</span><span class="p">,</span>
+                                <span class="n">num_sec_z</span> <span class="o">=</span> <span class="n">num_sec_z</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">log</span><span class="p">(</span><span class="s1">&#39;Thickness differences already calculated!&#39;</span><span class="p">)</span>
+    <span class="c1"># creating sets</span>
+    <span class="n">t_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">max_len_t_set</span> <span class="o">=</span> <span class="mi">100</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">t_set</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">max_len_t_set</span> <span class="ow">and</span> <span class="n">number_of_sets</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="n">number_of_sets</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="n">log</span><span class="p">(</span><span class="s1">&#39;More than </span><span class="si">{0:d}</span><span class="s1"> different thicknesses measured!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">max_len_t_set</span><span class="p">))</span>
+        <span class="n">log</span><span class="p">(</span><span class="s1">&#39;Forcing a number_of_sets = </span><span class="si">{0:d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">number_of_sets</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">number_of_sets</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">number_of_sets</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">number_of_sets</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">t_set</span><span class="p">)</span>
+        <span class="n">t_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">t_set</span><span class="p">)</span>
+        <span class="n">t_list</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">t_min</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">t_set</span><span class="p">)</span>
+        <span class="n">t_max</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">t_set</span><span class="p">)</span>
+        <span class="n">t_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">t_min</span><span class="p">,</span> <span class="n">t_max</span><span class="p">,</span> <span class="n">number_of_sets</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+
+    <span class="c1"># grouping elements</span>
+    <span class="n">sets_ids</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">t_list</span><span class="p">))]</span>
+    <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">elems_t</span><span class="p">:</span>
+        <span class="n">elem_id</span><span class="p">,</span> <span class="n">t</span> <span class="o">=</span> <span class="n">entry</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="n">index_within_linspace</span><span class="p">(</span><span class="n">t_list</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+        <span class="n">sets_ids</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">elem_id</span><span class="p">))</span>
+    <span class="c1"># putting elements in sets</span>
+    <span class="n">original_layup</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">compositeLayups</span><span class="p">[</span><span class="s1">&#39;CompositePlate&#39;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">set_ids</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sets_ids</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">set_ids</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># since t_set_norm * t_model &lt;&gt; t_set originally measured</span>
+            <span class="c1"># there may be empty set_ids at the end</span>
+            <span class="k">continue</span>
+        <span class="n">elements</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">elements</span><span class="o">.</span><span class="n">sequenceFromLabels</span><span class="p">(</span><span class="n">labels</span><span class="o">=</span><span class="n">set_ids</span><span class="p">)</span>
+        <span class="n">suffix</span> <span class="o">=</span> <span class="s1">&#39;measured_imp_t_</span><span class="si">{0:03d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="n">set_name</span> <span class="o">=</span> <span class="s1">&#39;Set_&#39;</span> <span class="o">+</span> <span class="n">suffix</span>
+        <span class="n">log</span><span class="p">(</span><span class="s1">&#39;Creating set (</span><span class="si">{0: 7d}</span><span class="s1"> elements): </span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="nb">len</span><span class="p">(</span><span class="n">set_ids</span><span class="p">),</span> <span class="n">set_name</span><span class="p">))</span>
+        <span class="n">part</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="n">set_name</span><span class="p">,</span> <span class="n">elements</span> <span class="o">=</span> <span class="n">elements</span><span class="p">)</span>
+        <span class="n">region</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">sets</span><span class="p">[</span><span class="n">set_name</span><span class="p">]</span>
+        <span class="n">layup_name</span> <span class="o">=</span> <span class="s1">&#39;CLayup_&#39;</span> <span class="o">+</span> <span class="n">suffix</span>
+        <span class="n">t_diff</span> <span class="o">=</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">t_list</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">-</span> <span class="n">t_model</span><span class="p">)</span> <span class="o">*</span> <span class="n">scaling_factor</span>
+        <span class="n">t_scaling_factor</span> <span class="o">=</span> <span class="p">(</span><span class="n">t_model</span> <span class="o">+</span> <span class="n">t_diff</span><span class="p">)</span><span class="o">/</span><span class="n">t_model</span>
+
+        <span class="k">def</span> <span class="nf">modify_ply</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;thickness&#39;</span><span class="p">]</span> <span class="o">*=</span> <span class="n">t_scaling_factor</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;region&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">region</span>
+            <span class="k">return</span> <span class="n">kwargs</span>
+
+        <span class="n">layup</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">CompositeLayup</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">layup_name</span><span class="p">,</span>
+                                    <span class="n">objectToCopy</span><span class="o">=</span><span class="n">original_layup</span><span class="p">)</span>
+        <span class="n">layup</span><span class="o">.</span><span class="n">resume</span><span class="p">()</span>
+        <span class="n">abaqus_functions</span><span class="o">.</span><span class="n">modify_composite_layup</span><span class="p">(</span><span class="n">part</span><span class="o">=</span><span class="n">part</span><span class="p">,</span>
+            <span class="n">layup_name</span><span class="o">=</span><span class="n">layup_name</span><span class="p">,</span> <span class="n">modify_func</span><span class="o">=</span><span class="n">modify_ply</span><span class="p">)</span>
+    <span class="c1"># suppress needed to put the new properties to the input file</span>
+    <span class="n">original_layup</span><span class="o">.</span><span class="n">suppress</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">elems_t</span><span class="p">,</span> <span class="n">t_set</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">cc</span> <span class="o">=</span> <span class="n">stds</span><span class="p">[</span><span class="s1">&#39;desicos_study&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">ccs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">cc</span><span class="o">.</span><span class="n">created_model</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">cc</span><span class="o">.</span><span class="n">create_model</span><span class="p">()</span>
+    <span class="n">part_nodes</span> <span class="o">=</span> <span class="n">mdb</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="n">cc</span><span class="o">.</span><span class="n">model_name</span><span class="p">]</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="n">cc</span><span class="o">.</span><span class="n">part_name_shell</span><span class="p">]</span><span class="o">.</span><span class="n">nodes</span>
+    <span class="n">coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">n</span><span class="o">.</span><span class="n">coordinates</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">part_nodes</span><span class="p">])</span>
+
+    <span class="n">sf</span> <span class="o">=</span> <span class="mi">100</span>
+
+    <span class="n">path</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;C:\clones\desicos\desicos\conecylDB\files\dlr\degenhardt_2010_z20\degenhardt_2010_z20_msi_theta_z_imp.txt&#39;</span>
+    <span class="n">H_measured</span> <span class="o">=</span> <span class="mf">510.</span>
+    <span class="n">H_model</span> <span class="o">=</span> <span class="mf">510.</span>
+    <span class="n">d</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">read_theta_z_imp</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">,</span>
+                                  <span class="n">H_measured</span><span class="o">=</span><span class="n">H_measured</span><span class="p">,</span>
+                                  <span class="n">stretch_H</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                  <span class="n">z_offset_bot</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="n">log</span><span class="p">(</span><span class="s1">&#39;init sample&#39;</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">sample</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="mi">10000</span><span class="p">))</span>
+    <span class="n">log</span><span class="p">(</span><span class="s1">&#39;end sample&#39;</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])]</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">data</span><span class="p">[</span><span class="o">-</span><span class="mi">3000</span><span class="p">:],</span> <span class="n">data</span><span class="p">[:],</span> <span class="n">data</span><span class="p">[:</span><span class="mi">3000</span><span class="p">]))</span>
+    <span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">/=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+
+
+    <span class="n">mesh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">coords</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">2</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">FLOAT</span><span class="p">)</span>
+    <span class="n">mesh</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">arctan2</span><span class="p">(</span><span class="n">coords</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">coords</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+    <span class="n">mesh</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span>
+    <span class="n">mesh_norm</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">mesh_norm</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">/=</span> <span class="n">mesh_norm</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+    <span class="n">mesh_norm</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">/=</span> <span class="n">mesh_norm</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+
+    <span class="kn">import</span> <span class="nn">desicos.conecylDB.interpolate</span>
+    <span class="n">reload</span><span class="p">(</span><span class="n">desicos</span><span class="o">.</span><span class="n">conecylDB</span><span class="o">.</span><span class="n">interpolate</span><span class="p">)</span>
+    <span class="n">ans</span> <span class="o">=</span> <span class="n">desicos</span><span class="o">.</span><span class="n">conecylDB</span><span class="o">.</span><span class="n">interpolate</span><span class="o">.</span><span class="n">inv_weighted</span><span class="p">(</span>
+            <span class="n">data</span><span class="p">,</span> <span class="n">mesh_norm</span><span class="p">,</span> <span class="n">num_sub</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ncp</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">power_parameter</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
+
+    <span class="n">alpharad</span> <span class="o">=</span> <span class="n">deg2rad</span><span class="p">(</span><span class="mf">0.</span><span class="p">)</span>
+    <span class="n">trans</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">coords</span><span class="p">)</span>
+    <span class="n">trans</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">ans</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">mesh</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">alpharad</span><span class="p">)</span>
+    <span class="n">trans</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">ans</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">mesh</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">alpharad</span><span class="p">)</span>
+    <span class="n">trans</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">ans</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">alpharad</span><span class="p">)</span>
+
+    <span class="n">meshNodeArray</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">sequenceFromLabels</span><span class="p">(</span>
+                        <span class="p">[</span><span class="n">n</span><span class="o">.</span><span class="n">label</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">part_nodes</span><span class="p">])</span>
+    <span class="n">cc</span><span class="o">.</span><span class="n">part</span><span class="o">.</span><span class="n">editNode</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="n">meshNodeArray</span><span class="p">,</span>
+                  <span class="n">coordinates</span><span class="o">=</span><span class="p">(</span><span class="n">coords</span> <span class="o">+</span> <span class="n">trans</span><span class="o">*</span><span class="mi">100</span><span class="p">))</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../../index.html">
+    <img class="logo" src="../../../_static/../../../logo/desicos.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/index.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/index.html">Tutorials</a></li>
+</ul>
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2012-2015 Desicos Improved Software Team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

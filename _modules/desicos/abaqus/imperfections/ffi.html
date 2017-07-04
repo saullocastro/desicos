@@ -1,0 +1,340 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>desicos.abaqus.imperfections.ffi &#8212; DESICOS 2.4.9 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2.4.9',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for desicos.abaqus.imperfections.ffi</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">desicos.logger</span> <span class="k">import</span> <span class="n">warn</span>
+<span class="kn">from</span> <span class="nn">.imperfection</span> <span class="k">import</span> <span class="n">Imperfection</span>
+
+<div class="viewcode-block" id="FFI"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.ffi.FFI">[docs]</a><span class="k">class</span> <span class="nc">FFI</span><span class="p">(</span><span class="n">Imperfection</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Fiber Fraction Imperfection</span>
+
+<span class="sd">    Thickness variations are generally caused by a varying amount of matrix,</span>
+<span class="sd">    while the amount of fibers remains constant. Thus, the actual fiber volume</span>
+<span class="sd">    fraction is higher in thinner sections of the material. This imperfection</span>
+<span class="sd">    aims to include that effect in the model, by adjusting the material</span>
+<span class="sd">    properties.</span>
+
+<span class="sd">    =====================  ==================================================</span>
+<span class="sd">    Attributes             Description</span>
+<span class="sd">    =====================  ==================================================</span>
+<span class="sd">    nominal_vf             ``float``, nominal fiber volume fraction</span>
+<span class="sd">    E_matrix               ``float``, Young&#39;s modulus of the matrix material</span>
+<span class="sd">    nu_matrix              ``float``, Poisson&#39;s ratio of the matrix material</span>
+<span class="sd">    use_ti                 ``bool``, if ``True``, create varying material</span>
+<span class="sd">                           properties according to the thickness imperfection</span>
+<span class="sd">                           data (if present).</span>
+<span class="sd">    global_sf              ``float`` or ``None``, global scaling factor to</span>
+<span class="sd">                           apply to the material thickness. Set to ``None``</span>
+<span class="sd">                           to disable. The global scaling may be overridden</span>
+<span class="sd">                           by a thickness imperfection, if ``use_ti`` (see</span>
+<span class="sd">                           above) is ``True``.</span>
+<span class="sd">    created                ``bool``, ``True`` after the imperfection has been</span>
+<span class="sd">                           created.</span>
+<span class="sd">    =====================  ==================================================</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nominal_vf</span><span class="p">,</span> <span class="n">E_matrix</span><span class="p">,</span> <span class="n">nu_matrix</span><span class="p">,</span> <span class="n">use_ti</span><span class="p">,</span> <span class="n">global_sf</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">FFI</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nominal_vf</span> <span class="o">=</span> <span class="n">nominal_vf</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">E_matrix</span> <span class="o">=</span> <span class="n">E_matrix</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nu_matrix</span> <span class="o">=</span> <span class="n">nu_matrix</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">use_ti</span> <span class="o">=</span> <span class="n">use_ti</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">global_sf</span> <span class="o">=</span> <span class="n">global_sf</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;FFI&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xaxis</span> <span class="o">=</span> <span class="s1">&#39;scaling_factor&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xaxis_label</span> <span class="o">=</span> <span class="s1">&#39;Global thickness scaling factor, -&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">created</span> <span class="o">=</span> <span class="kc">False</span>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">scaling_factor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mf">1.0</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_sf</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_sf</span>
+
+
+    <span class="k">def</span> <span class="nf">rebuild</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_sf</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;FFI_SF_</span><span class="si">%05d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="mi">100</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">global_sf</span><span class="p">)))</span>
+
+
+<div class="viewcode-block" id="FFI.calc_amplitude"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.ffi.FFI.calc_amplitude">[docs]</a>    <span class="k">def</span> <span class="nf">calc_amplitude</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculates the imperfection amplitude</span>
+
+<span class="sd">        Amplitude measured as the biggest thickness difference between</span>
+<span class="sd">        the actual and nominal layup thickness of the Cone/Cylinder,</span>
+<span class="sd">        considering only the layups that have this imperfection applied.</span>
+
+<span class="sd">        .. note:: Must be called from Abaqus.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        max_amp : float</span>
+<span class="sd">            Maximum absolute imperfection amplitude.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">conecyl</span>
+        <span class="n">max_amp</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">cc_total_t</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">cc</span><span class="o">.</span><span class="n">plyts</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_sf</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">max_amp</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">global_sf</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">cc_total_t</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_ti</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">abaqus</span> <span class="k">import</span> <span class="n">mdb</span>
+
+            <span class="n">part</span> <span class="o">=</span> <span class="n">mdb</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="n">cc</span><span class="o">.</span><span class="n">model_name</span><span class="p">]</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="n">cc</span><span class="o">.</span><span class="n">part_name_shell</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">layup</span> <span class="ow">in</span> <span class="n">part</span><span class="o">.</span><span class="n">compositeLayups</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">layup</span><span class="o">.</span><span class="n">suppressed</span><span class="p">:</span>
+                    <span class="n">layup_t</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">thickness</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">layup</span><span class="o">.</span><span class="n">plies</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+                    <span class="n">max_amp</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">max_amp</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">layup_t</span> <span class="o">-</span> <span class="n">cc_total_t</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">amplitude</span> <span class="o">=</span> <span class="n">max_amp</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">amplitude</span></div>
+
+
+<div class="viewcode-block" id="FFI.calc_scaled_laminaprop"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.ffi.FFI.calc_scaled_laminaprop">[docs]</a>    <span class="k">def</span> <span class="nf">calc_scaled_laminaprop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">laminaprop</span><span class="p">,</span> <span class="n">scaling_factor</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculate material properties of a lamina with a scaled thickness.</span>
+
+<span class="sd">        Calculates the new lamina properties, if a given material (lamina)</span>
+<span class="sd">        is scaled in thickness by a given factor. The new material properties</span>
+<span class="sd">        are calculated from the properties of the fiber and the matrix, using</span>
+<span class="sd">        the composition rule (for E11 and nu12) and the corrected composition</span>
+<span class="sd">        rule (for E22, G12, G13 and G23).</span>
+
+<span class="sd">        The matrix properties are to be supplied by the user. The fiber</span>
+<span class="sd">        properties are calculated based on the original (nominal) lamina</span>
+<span class="sd">        properties, using the inverse of the respective composition rule.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        laminaprop : tuple</span>
+<span class="sd">            Material properties (E11, E12, nu12, G12, G13, G23) of the lamina</span>
+<span class="sd">            at the nominal thickness</span>
+<span class="sd">        scaling_factor : float</span>
+<span class="sd">            Scaling factor that is to be applied to the ply thickness. The</span>
+<span class="sd">            total amount of fibers is assumed to remain constant, thus the</span>
+<span class="sd">            actual fiber volume fraction is inversely proportional to this</span>
+<span class="sd">            scaling factor.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        new_laminaprop : tuple</span>
+<span class="sd">            Lamina properties of the lamina with a scaled thickness</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">laminaprop</span><span class="p">)</span> <span class="o">==</span> <span class="mi">6</span>
+        <span class="n">E_m</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">E_matrix</span><span class="p">)</span>
+        <span class="n">nu_m</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nu_matrix</span><span class="p">)</span>
+        <span class="n">G_m</span> <span class="o">=</span> <span class="n">E_m</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.</span><span class="o">*</span><span class="p">(</span><span class="mf">1.</span><span class="o">+</span><span class="n">nu_m</span><span class="p">))</span>
+        <span class="n">vf_nom</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nominal_vf</span><span class="p">)</span>
+        <span class="n">vf</span> <span class="o">=</span> <span class="n">vf_nom</span> <span class="o">/</span> <span class="n">scaling_factor</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mf">0.</span> <span class="o">&lt;</span> <span class="n">vf</span> <span class="o">&lt;</span> <span class="mf">1.</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">((</span><span class="s1">&#39;Invalid scaling factor </span><span class="si">{0:.2f}</span><span class="s1"> for Fiber&#39;</span> <span class="o">+</span>
+                <span class="s1">&#39;Fraction Imperfection, resulting fiber volume fraction&#39;</span> <span class="o">+</span>
+                <span class="s1">&#39; (</span><span class="si">{1:.2f}</span><span class="s1">) is out of range 0..1)&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">scaling_factor</span><span class="p">,</span> <span class="n">vf</span><span class="p">))</span>
+
+        <span class="c1"># Composition rule to obtain material properties,</span>
+        <span class="c1"># based on fiber and matrix data</span>
+        <span class="c1"># There are two different rules, one for longitudinal properties</span>
+        <span class="c1"># (E11, nu12) and one for transversal props (E22, G12, G13, G23)</span>
+        <span class="k">def</span> <span class="nf">compL</span><span class="p">(</span><span class="n">X_f</span><span class="p">,</span> <span class="n">X_m</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">vf</span><span class="o">*</span><span class="n">X_f</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">vf</span><span class="p">)</span><span class="o">*</span><span class="n">X_m</span>
+        <span class="k">def</span> <span class="nf">compT</span><span class="p">(</span><span class="n">X_f</span><span class="p">,</span> <span class="n">X_m</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">X_m</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">vf</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">X_m</span><span class="o">/</span><span class="n">X_f</span><span class="p">))</span>
+        <span class="n">comp_rule</span> <span class="o">=</span> <span class="p">(</span><span class="n">compL</span><span class="p">,</span> <span class="n">compT</span><span class="p">,</span> <span class="n">compL</span><span class="p">,</span> <span class="n">compT</span><span class="p">,</span> <span class="n">compT</span><span class="p">,</span> <span class="n">compT</span><span class="p">)</span>
+
+        <span class="c1"># Inverse composition rule to obtain fiber properties,</span>
+        <span class="c1"># based on nominal laminate properties and matrix data</span>
+        <span class="k">def</span> <span class="nf">invL</span><span class="p">(</span><span class="n">X_nom</span><span class="p">,</span> <span class="n">X_m</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">X_nom</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">vf_nom</span><span class="p">)</span><span class="o">*</span><span class="n">X_m</span><span class="p">)</span> <span class="o">/</span> <span class="n">vf_nom</span>
+        <span class="k">def</span> <span class="nf">invT</span><span class="p">(</span><span class="n">X_nom</span><span class="p">,</span> <span class="n">X_m</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">X_m</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">vf_nom</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">X_m</span><span class="o">/</span><span class="n">X_nom</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">vf_nom</span><span class="p">)))</span>
+        <span class="n">inv_comp_rule</span> <span class="o">=</span> <span class="p">(</span><span class="n">invL</span><span class="p">,</span> <span class="n">invT</span><span class="p">,</span> <span class="n">invL</span><span class="p">,</span> <span class="n">invT</span><span class="p">,</span> <span class="n">invT</span><span class="p">,</span> <span class="n">invT</span><span class="p">)</span>
+
+        <span class="n">matrix_prop</span> <span class="o">=</span> <span class="p">(</span><span class="n">E_m</span><span class="p">,</span> <span class="n">E_m</span><span class="p">,</span> <span class="n">nu_m</span><span class="p">,</span> <span class="n">G_m</span><span class="p">,</span> <span class="n">G_m</span><span class="p">,</span> <span class="n">G_m</span><span class="p">)</span>
+        <span class="n">fiber_prop</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">X_nom</span><span class="p">,</span> <span class="n">X_m</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span><span class="p">,</span> <span class="n">X_nom</span><span class="p">,</span> <span class="n">X_m</span> <span class="ow">in</span>
+            <span class="nb">zip</span><span class="p">(</span><span class="n">inv_comp_rule</span><span class="p">,</span> <span class="n">laminaprop</span><span class="p">,</span> <span class="n">matrix_prop</span><span class="p">))</span>
+        <span class="n">new_laminaprop</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">X_f</span><span class="p">,</span> <span class="n">X_m</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span><span class="p">,</span> <span class="n">X_f</span><span class="p">,</span> <span class="n">X_m</span> <span class="ow">in</span>
+            <span class="nb">zip</span><span class="p">(</span><span class="n">comp_rule</span><span class="p">,</span> <span class="n">fiber_prop</span><span class="p">,</span> <span class="n">matrix_prop</span><span class="p">))</span>
+
+        <span class="n">DEBUG_STRING</span> <span class="o">=</span> <span class="s1">&#39;E11=</span><span class="si">{0:.2f}</span><span class="s1">, E22=</span><span class="si">{1:.2f}</span><span class="s1">, nu12 = </span><span class="si">{2:.2f}</span><span class="s1">,&#39;</span> <span class="o">+</span>\
+            <span class="s1">&#39; G12=</span><span class="si">{3:.2f}</span><span class="s1">, G13=</span><span class="si">{4:.2f}</span><span class="s1">, G23=</span><span class="si">{5:.2f}</span><span class="s1">&#39;</span>
+        <span class="n">to_check</span> <span class="o">=</span> <span class="p">[(</span><span class="n">laminaprop</span><span class="p">,</span> <span class="s1">&#39;nominal laminate&#39;</span><span class="p">),</span>
+                    <span class="p">(</span><span class="n">matrix_prop</span><span class="p">,</span> <span class="s1">&#39;matrix&#39;</span><span class="p">),</span>
+                    <span class="p">(</span><span class="n">fiber_prop</span><span class="p">,</span> <span class="s1">&#39;calculated fiber&#39;</span><span class="p">),</span>
+                    <span class="p">(</span><span class="n">new_laminaprop</span><span class="p">,</span> <span class="s1">&#39;imperfect laminate&#39;</span><span class="p">)]</span>
+        <span class="k">for</span> <span class="n">prop</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">to_check</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">all</span><span class="p">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">prop</span><span class="p">)</span> <span class="ow">and</span> <span class="n">prop</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.5</span><span class="p">):</span>
+                <span class="n">mat_str</span> <span class="o">=</span> <span class="n">DEBUG_STRING</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">prop</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">((</span><span class="s1">&#39;One or more invalid value(s) for </span><span class="si">{0}</span><span class="s1">&#39;</span> <span class="o">+</span>
+                    <span class="s1">&#39; properties:</span><span class="se">\n</span><span class="si">{1}</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">mat_str</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">new_laminaprop</span></div>
+
+
+    <span class="k">def</span> <span class="nf">_update_material</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">suffix</span><span class="p">,</span> <span class="n">scaling_factor</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">abaqus</span> <span class="k">import</span> <span class="n">mdb</span>
+
+        <span class="n">cc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">conecyl</span>
+        <span class="n">mod</span> <span class="o">=</span> <span class="n">mdb</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="n">cc</span><span class="o">.</span><span class="n">model_name</span><span class="p">]</span>
+
+        <span class="n">warned</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">laminaprop</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">cc</span><span class="o">.</span><span class="n">laminapropKeys</span><span class="p">,</span> <span class="n">cc</span><span class="o">.</span><span class="n">laminaprops</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">laminaprop</span><span class="p">)</span> <span class="o">==</span> <span class="mi">6</span><span class="p">:</span>
+                <span class="n">new_laminaprop</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_scaled_laminaprop</span><span class="p">(</span><span class="n">laminaprop</span><span class="p">,</span> <span class="n">scaling_factor</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">warned</span><span class="p">:</span>
+                    <span class="n">warn</span><span class="p">((</span><span class="s1">&#39;Invalid number of lamina properties for material&#39;</span> <span class="o">+</span>
+                        <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">, or material is isotropic. Fiber Fraction&#39;</span> <span class="o">+</span>
+                        <span class="s1">&#39; Imperfection is not applied.&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+                    <span class="n">warned</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+                <span class="n">new_laminaprop</span> <span class="o">=</span> <span class="n">laminaprop</span>
+            <span class="n">new_mat</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">Material</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="n">suffix</span><span class="p">),</span>
+                                   <span class="n">objectToCopy</span><span class="o">=</span><span class="n">mod</span><span class="o">.</span><span class="n">materials</span><span class="p">[</span><span class="n">name</span><span class="p">])</span>
+            <span class="n">new_mat</span><span class="o">.</span><span class="n">elastic</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="p">(</span><span class="n">new_laminaprop</span><span class="p">,))</span>
+
+
+<div class="viewcode-block" id="FFI.create"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.ffi.FFI.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Actually create the imperfection</span>
+
+<span class="sd">        .. note:: Must be called from Abaqus.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">abaqus</span> <span class="k">import</span> <span class="n">mdb</span>
+        <span class="kn">from</span> <span class="nn">desicos.abaqus.abaqus_functions</span> <span class="k">import</span> <span class="n">modify_composite_layup</span>
+
+        <span class="n">cc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">conecyl</span>
+        <span class="n">part</span> <span class="o">=</span> <span class="n">mdb</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="n">cc</span><span class="o">.</span><span class="n">model_name</span><span class="p">]</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="n">cc</span><span class="o">.</span><span class="n">part_name_shell</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_sf</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">MAT_SUFFIX</span> <span class="o">=</span> <span class="s1">&#39;_scaled&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_update_material</span><span class="p">(</span><span class="n">MAT_SUFFIX</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_sf</span><span class="p">)</span>
+            <span class="k">def</span> <span class="nf">modify_mat_thick</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
+                <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;thickness&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cc</span><span class="o">.</span><span class="n">plyts</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_sf</span>
+                <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;material&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cc</span><span class="o">.</span><span class="n">laminapropKeys</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">+</span> <span class="n">MAT_SUFFIX</span>
+                <span class="k">return</span> <span class="n">kwargs</span>
+            <span class="n">modify_composite_layup</span><span class="p">(</span><span class="n">part</span><span class="p">,</span> <span class="s1">&#39;CompositePlate&#39;</span><span class="p">,</span> <span class="n">modify_mat_thick</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_after_tis</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">created</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="FFI.update_after_tis"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.ffi.FFI.update_after_tis">[docs]</a>    <span class="k">def</span> <span class="nf">update_after_tis</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Call this function after the thickness imperfection(s) are applied,</span>
+<span class="sd">        to modify the material properties as well, if needed.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_ti</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="kn">from</span> <span class="nn">abaqus</span> <span class="k">import</span> <span class="n">mdb</span>
+        <span class="kn">from</span> <span class="nn">desicos.abaqus.abaqus_functions</span> <span class="k">import</span> <span class="n">modify_composite_layup</span>
+
+        <span class="n">cc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">conecyl</span>
+        <span class="n">part</span> <span class="o">=</span> <span class="n">mdb</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="n">cc</span><span class="o">.</span><span class="n">model_name</span><span class="p">]</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="n">cc</span><span class="o">.</span><span class="n">part_name_shell</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">layup_name</span> <span class="ow">in</span> <span class="n">part</span><span class="o">.</span><span class="n">compositeLayups</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">layup_name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;CLayup_&#39;</span><span class="p">):</span>
+                <span class="n">layup</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">compositeLayups</span><span class="p">[</span><span class="n">layup_name</span><span class="p">]</span>
+                <span class="n">thickness</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">thickness</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">layup</span><span class="o">.</span><span class="n">plies</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+                <span class="n">scaling_factor</span> <span class="o">=</span> <span class="n">thickness</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">cc</span><span class="o">.</span><span class="n">plyts</span><span class="p">)</span>
+                <span class="n">suffix</span> <span class="o">=</span> <span class="n">layup_name</span><span class="p">[</span><span class="o">-</span><span class="mi">6</span><span class="p">:]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_update_material</span><span class="p">(</span><span class="n">suffix</span><span class="p">,</span> <span class="n">scaling_factor</span><span class="p">)</span>
+                <span class="k">def</span> <span class="nf">modify_material</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
+                    <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;material&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cc</span><span class="o">.</span><span class="n">laminapropKeys</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">+</span> <span class="n">suffix</span>
+                    <span class="k">return</span> <span class="n">kwargs</span>
+                <span class="n">modify_composite_layup</span><span class="p">(</span><span class="n">part</span><span class="p">,</span> <span class="n">layup_name</span><span class="p">,</span> <span class="n">modify_material</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../../../index.html">
+    <img class="logo" src="../../../../_static/../../../logo/desicos.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/index.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/index.html">Tutorials</a></li>
+</ul>
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2012-2015 Desicos Improved Software Team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

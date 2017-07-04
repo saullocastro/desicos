@@ -1,0 +1,350 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>desicos.conecylDB.conecylDB &#8212; DESICOS 2.4.9 documentation</title>
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.9',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for desicos.conecylDB.conecylDB</h1><div class="highlight"><pre>
+<span></span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Conecyl Data-Base (:mod:`desicos.conecylDB.conecylDB`)</span>
+<span class="sd">======================================================</span>
+
+<span class="sd">.. currentmodule:: desicos.conecylDB.conecylDB</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">from</span> <span class="nn">desicos.logger</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">.ccs</span> <span class="k">import</span> <span class="n">ccs</span> <span class="k">as</span> <span class="n">default_ccs</span>
+<span class="kn">from</span> <span class="nn">.allowables</span> <span class="k">import</span> <span class="n">allowables</span> <span class="k">as</span> <span class="n">default_allowables</span>
+<span class="kn">from</span> <span class="nn">.laminaprops</span> <span class="k">import</span> <span class="n">laminaprops</span> <span class="k">as</span> <span class="n">default_laminaprops</span>
+<span class="kn">from</span> <span class="nn">desicos.constants</span> <span class="k">import</span> <span class="n">DESHOME</span>
+
+
+<span class="n">DBHOME</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESHOME</span><span class="p">,</span> <span class="s1">&#39;conecylDB&#39;</span><span class="p">)</span>
+
+<span class="n">databases</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DBHOME</span><span class="p">,</span> <span class="s1">&#39;databases.json&#39;</span><span class="p">)))</span>
+
+<span class="n">localDB_path</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DBHOME</span><span class="p">,</span> <span class="s1">&#39;localDB_path.json&#39;</span><span class="p">)))</span>
+
+<span class="n">local_ccs_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">localDB_path</span><span class="p">,</span> <span class="s1">&#39;ccs.json&#39;</span><span class="p">)</span>
+<span class="n">local_laminaprops_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">localDB_path</span><span class="p">,</span> <span class="s1">&#39;laminaprops.json&#39;</span><span class="p">)</span>
+<span class="n">local_allowables_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">localDB_path</span><span class="p">,</span> <span class="s1">&#39;allowables.json&#39;</span><span class="p">)</span>
+<span class="n">which_path</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;ccs&#39;</span><span class="p">:</span> <span class="n">local_ccs_path</span><span class="p">,</span>
+              <span class="s1">&#39;laminaprops&#39;</span><span class="p">:</span> <span class="n">local_laminaprops_path</span><span class="p">,</span>
+              <span class="s1">&#39;allowables&#39;</span><span class="p">:</span> <span class="n">local_allowables_path</span><span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">_myload</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">({},</span> <span class="n">f</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="n">error</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> could not be loaded!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+            <span class="k">return</span> <span class="p">{}</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="c1"># Tuples are converted to lists during saving, fix that</span>
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">((</span><span class="n">k</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+
+
+<span class="k">def</span> <span class="nf">_mydump</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+        <span class="k">return</span> <span class="mi">0</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">error</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> could not be dumped in </span><span class="si">{1}</span><span class="s1">!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">path</span><span class="p">))</span>
+        <span class="k">return</span> <span class="mi">1</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">localDB_path</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">localDB_path</span><span class="p">)</span>
+        <span class="n">_mydump</span><span class="p">({},</span> <span class="n">local_ccs_path</span><span class="p">)</span>
+        <span class="n">_mydump</span><span class="p">({},</span> <span class="n">local_laminaprops_path</span><span class="p">)</span>
+        <span class="n">_mydump</span><span class="p">({},</span> <span class="n">local_allowables_path</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">error</span><span class="p">(</span><span class="s1">&#39;localDB not found and not created!&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="fetch"><a class="viewcode-back" href="../../../modules/conecylDB/index.html#desicos.conecylDB.conecylDB.fetch">[docs]</a><span class="k">def</span> <span class="nf">fetch</span><span class="p">(</span><span class="n">which</span><span class="p">,</span> <span class="n">local_only</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Fetches a dictionary from the database</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    which : str</span>
+<span class="sd">        A string that can be: ``ccs``, ``laminaprops``, ``allowables``.</span>
+<span class="sd">    local_only : bool, optional</span>
+<span class="sd">        If only the local data-base should be considered.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">which_path</span><span class="p">[</span><span class="n">which</span><span class="p">]</span>
+    <span class="n">local</span> <span class="o">=</span> <span class="n">_myload</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">local_only</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">local</span>
+    <span class="k">if</span> <span class="n">which</span><span class="o">==</span><span class="s1">&#39;ccs&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">default_ccs</span><span class="o">.</span><span class="n">items</span><span class="p">())</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">local</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span>
+    <span class="k">elif</span> <span class="n">which</span><span class="o">==</span><span class="s1">&#39;laminaprops&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">default_laminaprops</span><span class="o">.</span><span class="n">items</span><span class="p">())</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">local</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span>
+    <span class="k">elif</span> <span class="n">which</span><span class="o">==</span><span class="s1">&#39;allowables&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">default_allowables</span><span class="o">.</span><span class="n">items</span><span class="p">())</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">local</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> is an invalid option to fetch&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">which</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="update_imps"><a class="viewcode-back" href="../../../modules/conecylDB/index.html#desicos.conecylDB.conecylDB.update_imps">[docs]</a><span class="k">def</span> <span class="nf">update_imps</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Returns the updated imperfection definitions from the data-base</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    out : tuple</span>
+<span class="sd">        A tuple containing the updated dictionaries with useful data form</span>
+<span class="sd">        the data-base. In the description below ``key`` corresponds to a</span>
+<span class="sd">        ``ccs`` entry of the database:</span>
+
+<span class="sd">        - ``imps``: contains the full path of an imperfection file</span>
+<span class="sd">          corresponding to ``key``, accessed doing ``imp[key][&#39;msi&#39;]`` or</span>
+<span class="sd">          ``imp[key][&#39;ti&#39;]``</span>
+<span class="sd">        - ``imps_theta_z``: similar to ``imps``</span>
+<span class="sd">        - ``t_measured``: contains the measured shell thickness for a</span>
+<span class="sd">          correponding entry access doing ``t_measured[key]``</span>
+<span class="sd">        - ``R_best_fit``</span>
+<span class="sd">        - ``H_measured``</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ccs</span> <span class="o">=</span> <span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;ccs&#39;</span><span class="p">)</span>
+    <span class="n">imps</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">imps_theta_z</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">t_measured</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">R_best_fit</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">H_measured</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">cc</span> <span class="ow">in</span> <span class="n">ccs</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+        <span class="n">imp</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="s1">&#39;msi&#39;</span> <span class="ow">in</span> <span class="n">cc</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">db</span> <span class="o">=</span> <span class="n">cc</span><span class="p">[</span><span class="s1">&#39;database&#39;</span><span class="p">]</span>
+            <span class="n">imp</span> <span class="o">=</span> <span class="n">cc</span><span class="p">[</span><span class="s1">&#39;msi&#39;</span><span class="p">]</span>
+
+            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DBHOME</span><span class="p">,</span> <span class="s1">&#39;files&#39;</span><span class="p">,</span> <span class="n">db</span><span class="p">,</span> <span class="n">imp</span><span class="p">,</span> <span class="n">imp</span> <span class="o">+</span> <span class="s1">&#39;_msi.txt&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">imp</span> <span class="ow">in</span> <span class="n">imps</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                    <span class="n">imps</span><span class="p">[</span><span class="n">imp</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="n">imps</span><span class="p">[</span><span class="n">imp</span><span class="p">][</span><span class="s1">&#39;msi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">path</span>
+
+            <span class="n">path_theta_z</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DBHOME</span><span class="p">,</span> <span class="s1">&#39;files&#39;</span><span class="p">,</span> <span class="n">db</span><span class="p">,</span> <span class="n">imp</span><span class="p">,</span>
+                                        <span class="n">imp</span> <span class="o">+</span> <span class="s1">&#39;_msi_theta_z_imp.txt&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">path_theta_z</span><span class="p">):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">imp</span> <span class="ow">in</span> <span class="n">imps_theta_z</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                    <span class="n">imps_theta_z</span><span class="p">[</span><span class="n">imp</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="n">imps_theta_z</span><span class="p">[</span><span class="n">imp</span><span class="p">][</span><span class="s1">&#39;msi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">path_theta_z</span>
+
+        <span class="k">if</span> <span class="s1">&#39;ti&#39;</span> <span class="ow">in</span> <span class="n">cc</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">db</span> <span class="o">=</span> <span class="n">cc</span><span class="p">[</span><span class="s1">&#39;database&#39;</span><span class="p">]</span>
+            <span class="n">imp</span> <span class="o">=</span> <span class="n">cc</span><span class="p">[</span><span class="s1">&#39;ti&#39;</span><span class="p">]</span>
+
+            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DBHOME</span><span class="p">,</span> <span class="s1">&#39;files&#39;</span><span class="p">,</span> <span class="n">db</span><span class="p">,</span> <span class="n">imp</span><span class="p">,</span> <span class="n">imp</span> <span class="o">+</span> <span class="s1">&#39;_ti.txt&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">imp</span> <span class="ow">in</span> <span class="n">imps</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                    <span class="n">imps</span><span class="p">[</span><span class="n">imp</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="n">imps</span><span class="p">[</span><span class="n">imp</span><span class="p">][</span><span class="s1">&#39;ti&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">path</span>
+
+            <span class="n">path_theta_z</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DBHOME</span><span class="p">,</span> <span class="s1">&#39;files&#39;</span><span class="p">,</span> <span class="n">db</span><span class="p">,</span> <span class="n">imp</span><span class="p">,</span>
+                                        <span class="n">imp</span> <span class="o">+</span> <span class="s1">&#39;_ti_theta_z_thick.txt&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">path_theta_z</span><span class="p">):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">imp</span> <span class="ow">in</span> <span class="n">imps_theta_z</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                    <span class="n">imps_theta_z</span><span class="p">[</span><span class="n">imp</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="n">imps_theta_z</span><span class="p">[</span><span class="n">imp</span><span class="p">][</span><span class="s1">&#39;ti&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">path_theta_z</span>
+
+        <span class="k">if</span> <span class="n">imp</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;lamt&#39;</span> <span class="ow">in</span> <span class="n">cc</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">t_measured</span><span class="p">[</span><span class="n">imp</span><span class="p">]</span> <span class="o">=</span> <span class="n">cc</span><span class="p">[</span><span class="s1">&#39;lamt&#39;</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">plyts</span> <span class="o">=</span> <span class="n">cc</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;plyts&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">cc</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;plyt&#39;</span><span class="p">)])</span>
+                <span class="n">stack</span> <span class="o">=</span> <span class="n">cc</span><span class="p">[</span><span class="s1">&#39;stack&#39;</span><span class="p">]</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">plyts</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">stack</span><span class="p">):</span>
+                    <span class="n">t_measured</span><span class="p">[</span><span class="n">imp</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">plyts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">stack</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">t_measured</span><span class="p">[</span><span class="n">imp</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">plyts</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="s1">&#39;R_best_fit&#39;</span> <span class="ow">in</span> <span class="n">cc</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">R_best_fit</span><span class="p">[</span><span class="n">imp</span><span class="p">]</span> <span class="o">=</span> <span class="n">cc</span><span class="p">[</span><span class="s1">&#39;R_best_fit&#39;</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">R_best_fit</span><span class="p">[</span><span class="n">imp</span><span class="p">]</span> <span class="o">=</span> <span class="n">cc</span><span class="p">[</span><span class="s1">&#39;rbot&#39;</span><span class="p">]</span>
+
+            <span class="n">H_measured</span><span class="p">[</span><span class="n">imp</span><span class="p">]</span> <span class="o">=</span> <span class="n">cc</span><span class="p">[</span><span class="s1">&#39;H&#39;</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">imps</span><span class="p">,</span> <span class="n">imps_theta_z</span><span class="p">,</span> <span class="n">t_measured</span><span class="p">,</span> <span class="n">R_best_fit</span><span class="p">,</span> <span class="n">H_measured</span></div>
+
+
+<div class="viewcode-block" id="save"><a class="viewcode-back" href="../../../modules/conecylDB/index.html#desicos.conecylDB.conecylDB.save">[docs]</a><span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="n">which</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Save an entry to the dynamic database.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    which : str</span>
+<span class="sd">        A string that can be: ``ccs``, ``laminaprops``, ``allowables``.</span>
+<span class="sd">    name : str</span>
+<span class="sd">        The name of the new entry.</span>
+<span class="sd">    value : object</span>
+<span class="sd">        The object that will be stored in the dictionary pointed by ``which``</span>
+<span class="sd">        under the key given by ``name``.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">which_path</span><span class="p">[</span><span class="n">which</span><span class="p">]</span>
+    <span class="n">local</span> <span class="o">=</span> <span class="n">_myload</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">local</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> </span><span class="si">{1}</span><span class="s1"> already exists in the localDB&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">which</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">msg</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">local</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="n">fail</span> <span class="o">=</span> <span class="n">_mydump</span><span class="p">(</span><span class="n">local</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">fail</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> </span><span class="si">{1}</span><span class="s1"> included in localDB&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">which</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="n">log</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> </span><span class="si">{1}</span><span class="s1"> could not be included in the localDB&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                  <span class="n">which</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">msg</span></div>
+
+
+<div class="viewcode-block" id="delete"><a class="viewcode-back" href="../../../modules/conecylDB/index.html#desicos.conecylDB.conecylDB.delete">[docs]</a><span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="n">which</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Delete an entry to the dynamic database.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    which : str</span>
+<span class="sd">        A string that can be: ``ccs``, ``laminaprops``, ``allowables``.</span>
+<span class="sd">    name : str</span>
+<span class="sd">        The name of the new entry.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">which_path</span><span class="p">[</span><span class="n">which</span><span class="p">]</span>
+    <span class="n">local</span> <span class="o">=</span> <span class="n">_myload</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">local</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> </span><span class="si">{1}</span><span class="s1"> does not exist in the localDB&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">which</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">msg</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">local</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">fail</span> <span class="o">=</span> <span class="n">_mydump</span><span class="p">(</span><span class="n">local</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">fail</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> </span><span class="si">{1}</span><span class="s1"> deleted from the localDB&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">which</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="n">log</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> </span><span class="si">{1}</span><span class="s1"> could not be deleted from the localDB&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                  <span class="n">which</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">msg</span></div>
+
+<span class="n">imps</span><span class="p">,</span> <span class="n">imps_theta_z</span><span class="p">,</span> <span class="n">t_measured</span><span class="p">,</span> <span class="n">R_best_fit</span><span class="p">,</span> <span class="n">H_measured</span> <span class="o">=</span> <span class="n">update_imps</span><span class="p">()</span>
+
+<span class="c1">#TODO put in a better way</span>
+<span class="n">imperfection_amplitudes</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;degenhardt_2010_z15&#39;</span><span class="p">:</span><span class="mf">1.6061230827442536</span><span class="p">,</span>
+            <span class="s1">&#39;degenhardt_2010_z17&#39;</span><span class="p">:</span><span class="mf">1.3932307190764155</span><span class="p">,</span>
+            <span class="s1">&#39;degenhardt_2010_z18&#39;</span><span class="p">:</span><span class="mf">1.0072464212485135</span><span class="p">,</span>
+            <span class="s1">&#39;degenhardt_2010_z20&#39;</span><span class="p">:</span><span class="mf">0.76342116164039231</span><span class="p">,</span>
+            <span class="s1">&#39;degenhardt_2010_z21&#39;</span><span class="p">:</span><span class="mf">1.7115336984360101</span><span class="p">,</span>
+            <span class="s1">&#39;degenhardt_2010_z22&#39;</span><span class="p">:</span><span class="mf">0.63145023895181396</span><span class="p">,</span>
+            <span class="s1">&#39;degenhardt_2010_z23&#39;</span><span class="p">:</span><span class="mf">0.70746632120089115</span><span class="p">,</span>
+            <span class="s1">&#39;degenhardt_2010_z24&#39;</span><span class="p">:</span><span class="mf">0.80310340376595235</span><span class="p">,</span>
+            <span class="s1">&#39;degenhardt_2010_z25&#39;</span><span class="p">:</span><span class="mf">0.63168845856972267</span><span class="p">,</span>
+            <span class="s1">&#39;degenhardt_2010_z26&#39;</span><span class="p">:</span><span class="mf">0.68114518609623675</span><span class="p">,</span>
+            <span class="s1">&#39;zimmermann_1992_z33&#39;</span><span class="p">:</span><span class="mf">1.0575795310555065</span> <span class="p">}</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../../index.html">
+    <img class="logo" src="../../../_static/../../../logo/desicos.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/index.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/index.html">Tutorials</a></li>
+</ul>
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2012-2015 Desicos Improved Software Team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

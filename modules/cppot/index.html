@@ -1,20 +1,17 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Cone Ply Piece Optimization Tool (desicos.cppot) &#8212; DESICOS 2.4.8 documentation</title>
-    
+    <title>Cone Ply Piece Optimization Tool (desicos.cppot) &#8212; DESICOS 2.4.9 documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.4.8',
+        VERSION:     '2.4.9',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,7 +23,7 @@
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="prev" title="&lt;no title&gt;" href="../conecylDB/index.html" />
+    <link rel="prev" title="Cone / Cylinder DataBase (desicos.conecylDB)" href="../conecylDB/index.html" />
    
   <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
   
@@ -34,7 +31,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
-  <body role="document">
+  <body>
   
 
     <div class="document">
@@ -164,7 +161,7 @@ material that is present during manufacturing.</td>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>cc</strong> : <code class="xref py py-class docutils literal"><span class="pre">ConeCyl</span></code></p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>cc</strong> : <a class="reference internal" href="../abaqus/index.html#desicos.abaqus.conecyl.conecyl.ConeCyl" title="desicos.abaqus.conecyl.conecyl.ConeCyl"><code class="xref py py-class docutils literal"><span class="pre">ConeCyl</span></code></a></p>
 <blockquote>
 <div><p>Existing cone to use. Must be a cone, i.e. alpha &gt; 0.</p>
 </div></blockquote>
@@ -292,7 +289,7 @@ The latter normalization constraint is enforced in <code class="docutils literal
 <tr class="row-even"><td><a class="reference internal" href="#desicos.cppot.core.geom.Line2D.angle" title="desicos.cppot.core.geom.Line2D.angle"><code class="xref py py-obj docutils literal"><span class="pre">angle</span></code></a>()</td>
 <td>Calculate the angle of this line with respect to the x-axis</td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">count</span></code>(...)</td>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">count</span></code>(…)</td>
 <td></td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#desicos.cppot.core.geom.Line2D.direction" title="desicos.cppot.core.geom.Line2D.direction"><code class="xref py py-obj docutils literal"><span class="pre">direction</span></code></a>()</td>
@@ -307,7 +304,7 @@ The latter normalization constraint is enforced in <code class="docutils literal
 <tr class="row-odd"><td><a class="reference internal" href="#desicos.cppot.core.geom.Line2D.from_points" title="desicos.cppot.core.geom.Line2D.from_points"><code class="xref py py-obj docutils literal"><span class="pre">from_points</span></code></a>(point1,&nbsp;point2)</td>
 <td>Class method, constructs a line based on two points</td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">index</span></code>((value,&nbsp;[start,&nbsp;...)</td>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">index</span></code>((value,&nbsp;[start,&nbsp;…)</td>
 <td>Raises ValueError if the value is not present.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#desicos.cppot.core.geom.Line2D.intersection_circle_near" title="desicos.cppot.core.geom.Line2D.intersection_circle_near"><code class="xref py py-obj docutils literal"><span class="pre">intersection_circle_near</span></code></a>(radius,&nbsp;near_point)</td>
@@ -638,7 +635,7 @@ pre-multiplying by a scalar.</p>
 <tr class="row-odd"><td><a class="reference internal" href="#desicos.cppot.core.geom.Point2D.angle" title="desicos.cppot.core.geom.Point2D.angle"><code class="xref py py-obj docutils literal"><span class="pre">angle</span></code></a>()</td>
 <td>Calculate the angle of this point in polar coordinates</td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">count</span></code>(...)</td>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">count</span></code>(…)</td>
 <td></td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#desicos.cppot.core.geom.Point2D.distance" title="desicos.cppot.core.geom.Point2D.distance"><code class="xref py py-obj docutils literal"><span class="pre">distance</span></code></a>(other)</td>
@@ -647,7 +644,7 @@ pre-multiplying by a scalar.</p>
 <tr class="row-even"><td><a class="reference internal" href="#desicos.cppot.core.geom.Point2D.from_polar" title="desicos.cppot.core.geom.Point2D.from_polar"><code class="xref py py-obj docutils literal"><span class="pre">from_polar</span></code></a>(norm,&nbsp;angle)</td>
 <td>Class method, creates a point from polar coordinates</td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">index</span></code>((value,&nbsp;[start,&nbsp;...)</td>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">index</span></code>((value,&nbsp;[start,&nbsp;…)</td>
 <td>Raises ValueError if the value is not present.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#desicos.cppot.core.geom.Point2D.norm" title="desicos.cppot.core.geom.Point2D.norm"><code class="xref py py-obj docutils literal"><span class="pre">norm</span></code></a>()</td>
@@ -767,13 +764,13 @@ the underlying implementation.</p>
 <tr class="row-even"><td><a class="reference internal" href="#desicos.cppot.core.geom.Polygon2D.contains_point" title="desicos.cppot.core.geom.Polygon2D.contains_point"><code class="xref py py-obj docutils literal"><span class="pre">contains_point</span></code></a>(point)</td>
 <td>Determine if a point is inside or outside the polygon</td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">count</span></code>(...)</td>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">count</span></code>(…)</td>
 <td></td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#desicos.cppot.core.geom.Polygon2D.get_closed_line" title="desicos.cppot.core.geom.Polygon2D.get_closed_line"><code class="xref py py-obj docutils literal"><span class="pre">get_closed_line</span></code></a>([num_points])</td>
 <td>Get a closed line that can be used to plot this polygon.</td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">index</span></code>((value,&nbsp;[start,&nbsp;...)</td>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">index</span></code>((value,&nbsp;[start,&nbsp;…)</td>
 <td>Raises ValueError if the value is not present.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#desicos.cppot.core.geom.Polygon2D.points" title="desicos.cppot.core.geom.Polygon2D.points"><code class="xref py py-obj docutils literal"><span class="pre">points</span></code></a>()</td>
@@ -818,7 +815,7 @@ the underlying implementation.</p>
 </tbody>
 </table>
 <p class="rubric">Notes</p>
-<p>The &#8216;Ray casting&#8217; algorithm is used, since the &#8216;interior angle&#8217;
+<p>The ‘Ray casting’ algorithm is used, since the ‘interior angle’
 algorithm was found to be very slow.</p>
 <p>This method has not been verified to work correctly for special cases,
 such as the point being (almost) exactly on a vertex or line.</p>
@@ -933,7 +930,7 @@ While taking care of all the (mod 2pi)-issues.</p>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>in_range</strong> : bool</p>
 <blockquote class="last">
-<div><p>True iff the given angle is in range min_angle...max_angle</p>
+<div><p>True iff the given angle is in range min_angle…max_angle</p>
 </div></blockquote>
 </td>
 </tr>
@@ -1049,7 +1046,7 @@ if not supplied to the constructor.</td>
 </table>
 <p class="rubric">Notes</p>
 <p>On the nominal circle (radius <code class="docutils literal"><span class="pre">starting_position</span></code>), this ply piece occupies
-the range <code class="docutils literal"><span class="pre">phi_nom_min</span></code>...``phi_nom_max``.</p>
+the range <code class="docutils literal"><span class="pre">phi_nom_min</span></code>…``phi_nom_max``.</p>
 <p>For all points in this ply piece, the inequality
 <code class="docutils literal"><span class="pre">phi_limit_min</span> <span class="pre">&lt;=</span> <span class="pre">phi</span> <span class="pre">&lt;=</span> <span class="pre">phi_limit_max</span></code> should hold.</p>
 <p class="rubric">Methods</p>
@@ -1323,7 +1320,7 @@ piece is used.</p>
 <p><strong>max_angle_dev</strong> : float, optional</p>
 <blockquote>
 <div><p>Maximum deviation from the nominal fiber angle to consider
-the material &#8216;effective&#8217;. In degrees.</p>
+the material ‘effective’. In degrees.</p>
 </div></blockquote>
 </td>
 </tr>
@@ -1416,7 +1413,7 @@ unfolded cone.</p>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>num_pieces</strong> : float</p>
 <blockquote class="last">
 <div><p>The number of needed pieces, as a float. The fractional part
-indicates the size of the &#8216;rest piece&#8217; that is needed.</p>
+indicates the size of the ‘rest piece’ that is needed.</p>
 </div></blockquote>
 </td>
 </tr>
@@ -1649,7 +1646,7 @@ clicking on the <code class="docutils literal"><span class="pre">Click_me.pyw</s
         <div class="sphinxsidebarwrapper">
 <p class="logo">
   <a href="../../index.html">
-    <img class="logo" src="../../_static/../logo/desicos.png" alt="Logo"/>
+    <img class="logo" src="../../_static/../../../logo/desicos.png" alt="Logo"/>
     
   </a>
 </p>
@@ -1689,8 +1686,8 @@ clicking on the <code class="docutils literal"><span class="pre">Click_me.pyw</s
       &copy;2012-2015 Desicos Improved Software Team.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
       
     </div>
 

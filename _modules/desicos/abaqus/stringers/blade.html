@@ -1,0 +1,327 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>desicos.abaqus.stringers.blade &#8212; DESICOS 2.4.9 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2.4.9',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for desicos.abaqus.stringers.blade</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="n">sin</span><span class="p">,</span> <span class="n">cos</span>
+
+<span class="kn">from</span> <span class="nn">desicos.abaqus.stringers</span> <span class="k">import</span> <span class="n">Stringer</span>
+
+
+<div class="viewcode-block" id="BladeComposite"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.stringers.blade.BladeComposite">[docs]</a><span class="k">class</span> <span class="nc">BladeComposite</span><span class="p">(</span><span class="n">Stringer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Blade stringer using composite properties</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    thetadeg : float</span>
+<span class="sd">        Circumferential position in degrees.</span>
+<span class="sd">    wbot : float</span>
+<span class="sd">        Flange width at the bottom edge.</span>
+<span class="sd">    wtop : float</span>
+<span class="sd">        Flange width at the top edge.</span>
+<span class="sd">    stack : list</span>
+<span class="sd">        Laminate stacking sequence.</span>
+<span class="sd">    plyts : list</span>
+<span class="sd">        Ply thicknesses.</span>
+<span class="sd">    laminaprops : list</span>
+<span class="sd">        The properties for each lamina.</span>
+<span class="sd">    numel_flange : int, optional</span>
+<span class="sd">        The number of elements along the width.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thetadeg</span><span class="p">,</span> <span class="n">wbot</span><span class="p">,</span> <span class="n">wtop</span><span class="p">,</span> <span class="n">stack</span><span class="p">,</span> <span class="n">plyts</span><span class="p">,</span> <span class="n">laminaprops</span><span class="p">,</span>
+                 <span class="n">numel_flange</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thetadeg</span> <span class="o">=</span> <span class="n">thetadeg</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wbot</span> <span class="o">=</span> <span class="n">wbot</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wtop</span> <span class="o">=</span> <span class="n">wtop</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stack</span> <span class="o">=</span> <span class="n">stack</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plyts</span> <span class="o">=</span> <span class="n">plyts</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">laminaprops</span> <span class="o">=</span> <span class="n">laminaprops</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">numel_flange</span> <span class="o">=</span> <span class="n">numel_flange</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">thetadegs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">thetadeg</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1">#TODO</span>
+        <span class="c1"># for each stringer create a method that will create its part and</span>
+        <span class="c1"># translate at the Assembly level already. The part name should be the</span>
+        <span class="c1"># stringer name added by an identification number</span>
+        <span class="c1"># probably it will be easier to handle the identification number by</span>
+        <span class="c1"># creating a StringerConfiguration class, analogously to the</span>
+        <span class="c1"># imperfection configuration class</span>
+
+        <span class="kn">from</span> <span class="nn">regionToolset</span> <span class="k">import</span> <span class="n">Region</span>
+        <span class="kn">from</span> <span class="nn">abaqus</span> <span class="k">import</span> <span class="n">mdb</span><span class="p">,</span> <span class="n">session</span>
+        <span class="kn">from</span> <span class="nn">abaqusConstants</span> <span class="k">import</span> <span class="p">(</span><span class="n">STANDALONE</span><span class="p">,</span> <span class="n">THREE_D</span><span class="p">,</span> <span class="n">DEFORMABLE_BODY</span><span class="p">,</span>
+                                     <span class="n">FIXED</span><span class="p">,</span> <span class="n">QUAD</span><span class="p">,</span> <span class="n">STRUCTURED</span><span class="p">,</span> <span class="n">ON</span><span class="p">,</span> <span class="n">XZPLANE</span><span class="p">,</span>
+                                     <span class="n">CARTESIAN</span><span class="p">,</span> <span class="n">LAMINA</span><span class="p">,</span> <span class="n">COMPUTED</span><span class="p">,</span>
+                                     <span class="n">SURFACE_TO_SURFACE</span><span class="p">,</span> <span class="n">OFF</span><span class="p">)</span>
+        <span class="kn">from</span> <span class="nn">desicos.abaqus</span> <span class="k">import</span> <span class="n">abaqus_functions</span>
+
+        <span class="n">cc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stringerconf</span><span class="o">.</span><span class="n">conecyl</span>
+        <span class="n">mod</span> <span class="o">=</span> <span class="n">mdb</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="n">cc</span><span class="o">.</span><span class="n">model_name</span><span class="p">]</span>
+        <span class="n">vp</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">viewports</span><span class="p">[</span><span class="n">session</span><span class="o">.</span><span class="n">currentViewportName</span><span class="p">]</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">part_name</span> <span class="ow">in</span> <span class="n">mod</span><span class="o">.</span><span class="n">parts</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">if</span> <span class="s1">&#39;Stringer&#39;</span> <span class="ow">in</span> <span class="n">part_name</span><span class="p">:</span>
+                <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;StringerBladeComposite_</span><span class="si">{0:02d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">count</span><span class="p">)</span>
+
+        <span class="n">thetarad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">thetadeg</span><span class="p">)</span>
+        <span class="n">L</span> <span class="o">=</span> <span class="n">cc</span><span class="o">.</span><span class="n">L</span>
+        <span class="n">sina</span> <span class="o">=</span> <span class="n">sin</span><span class="p">(</span><span class="n">cc</span><span class="o">.</span><span class="n">alpharad</span><span class="p">)</span>
+        <span class="n">cosa</span> <span class="o">=</span> <span class="n">cos</span><span class="p">(</span><span class="n">cc</span><span class="o">.</span><span class="n">alpharad</span><span class="p">)</span>
+        <span class="n">rbot</span> <span class="o">=</span> <span class="n">cc</span><span class="o">.</span><span class="n">rbot</span>
+        <span class="n">wbot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wbot</span>
+        <span class="n">wtop</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wtop</span>
+
+        <span class="n">point1</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">point2</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">wbot</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">point3</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">L</span><span class="o">*</span><span class="n">sina</span> <span class="o">-</span> <span class="n">wtop</span><span class="p">,</span> <span class="n">L</span><span class="o">*</span><span class="n">cosa</span><span class="p">)</span>
+        <span class="n">point4</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">L</span><span class="o">*</span><span class="n">sina</span><span class="p">,</span> <span class="n">L</span><span class="o">*</span><span class="n">cosa</span><span class="p">)</span>
+
+        <span class="c1"># creating part</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">ConstrainedSketch</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;__profile__&#39;</span><span class="p">,</span> <span class="n">sheetSize</span><span class="o">=</span><span class="n">L</span><span class="p">)</span>
+        <span class="n">g</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">geometry</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">vertices</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">dimensions</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">constraints</span>
+        <span class="n">s</span><span class="o">.</span><span class="n">setPrimaryObject</span><span class="p">(</span><span class="n">option</span><span class="o">=</span><span class="n">STANDALONE</span><span class="p">)</span>
+        <span class="n">s</span><span class="o">.</span><span class="n">Line</span><span class="p">(</span><span class="n">point1</span><span class="o">=</span><span class="n">point1</span><span class="p">,</span> <span class="n">point2</span><span class="o">=</span><span class="n">point2</span><span class="p">)</span>
+        <span class="n">s</span><span class="o">.</span><span class="n">Line</span><span class="p">(</span><span class="n">point1</span><span class="o">=</span><span class="n">point2</span><span class="p">,</span> <span class="n">point2</span><span class="o">=</span><span class="n">point3</span><span class="p">)</span>
+        <span class="n">s</span><span class="o">.</span><span class="n">Line</span><span class="p">(</span><span class="n">point1</span><span class="o">=</span><span class="n">point3</span><span class="p">,</span> <span class="n">point2</span><span class="o">=</span><span class="n">point4</span><span class="p">)</span>
+        <span class="n">s</span><span class="o">.</span><span class="n">Line</span><span class="p">(</span><span class="n">point1</span><span class="o">=</span><span class="n">point4</span><span class="p">,</span> <span class="n">point2</span><span class="o">=</span><span class="n">point1</span><span class="p">)</span>
+        <span class="n">part</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">Part</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">dimensionality</span><span class="o">=</span><span class="n">THREE_D</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="n">DEFORMABLE_BODY</span><span class="p">)</span>
+        <span class="n">part</span><span class="o">.</span><span class="n">BaseShell</span><span class="p">(</span><span class="n">sketch</span><span class="o">=</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">s</span><span class="o">.</span><span class="n">unsetPrimaryObject</span><span class="p">()</span>
+        <span class="n">vp</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">displayedObject</span><span class="o">=</span><span class="n">part</span><span class="p">)</span>
+        <span class="k">del</span> <span class="n">mod</span><span class="o">.</span><span class="n">sketches</span><span class="p">[</span><span class="s1">&#39;__profile__&#39;</span><span class="p">]</span>
+
+        <span class="c1"># partitioning along the meridian</span>
+        <span class="k">for</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">cc</span><span class="o">.</span><span class="n">pts</span><span class="p">:</span>
+            <span class="n">plane</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">DatumPlaneByPrincipalPlane</span><span class="p">(</span>
+                            <span class="n">principalPlane</span><span class="o">=</span><span class="n">XZPLANE</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="n">pt</span><span class="o">*</span><span class="n">cc</span><span class="o">.</span><span class="n">H</span><span class="p">)</span>
+            <span class="n">part</span><span class="o">.</span><span class="n">PartitionFaceByDatumPlane</span><span class="p">(</span><span class="n">datumPlane</span><span class="o">=</span><span class="n">part</span><span class="o">.</span><span class="n">datums</span><span class="p">[</span><span class="n">plane</span><span class="o">.</span><span class="n">id</span><span class="p">],</span>
+                        <span class="n">faces</span><span class="o">=</span><span class="n">part</span><span class="o">.</span><span class="n">faces</span><span class="p">)</span>
+
+        <span class="c1"># material properties</span>
+        <span class="n">same_laminaprop</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">for</span> <span class="n">laminaprop</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">laminaprops</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">laminaprop</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">laminaprops</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="n">same_lamiaprop</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">break</span>
+        <span class="n">material_type</span> <span class="o">=</span> <span class="n">LAMINA</span>
+        <span class="k">if</span> <span class="n">same_laminaprop</span><span class="p">:</span>
+            <span class="n">mat_name</span> <span class="o">=</span> <span class="s1">&#39;MatStringer_</span><span class="si">{0:02d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">count</span><span class="p">)</span>
+            <span class="n">mat_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">mat_name</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">laminaprops</span><span class="p">]</span>
+            <span class="n">myMat</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">Material</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">mat_name</span><span class="p">)</span>
+            <span class="n">myMat</span><span class="o">.</span><span class="n">Elastic</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="p">(</span><span class="n">laminaprop</span><span class="p">,),</span> <span class="nb">type</span><span class="o">=</span><span class="n">material_type</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">mat_names</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">laminaprop</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">laminaprops</span><span class="p">):</span>
+                <span class="n">mat_name</span> <span class="o">=</span> <span class="s1">&#39;MatStringer_</span><span class="si">{0:02d}</span><span class="s1">_ply_</span><span class="si">{0:02d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">count</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">mat_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mat_name</span><span class="p">)</span>
+                <span class="n">myMat</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">Material</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">mat_name</span><span class="p">)</span>
+                <span class="n">myMat</span><span class="o">.</span><span class="n">Elastic</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="p">(</span><span class="n">laminaprop</span><span class="p">,),</span> <span class="nb">type</span><span class="o">=</span><span class="n">material_type</span><span class="p">)</span>
+        <span class="n">csys_name</span> <span class="o">=</span> <span class="s1">&#39;CsysStringer_</span><span class="si">{0:02d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">count</span><span class="p">)</span>
+        <span class="n">csys</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">DatumCsysByThreePoints</span><span class="p">(</span><span class="n">point1</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="n">L</span><span class="o">*</span><span class="n">sina</span><span class="p">,</span> <span class="n">L</span><span class="o">*</span><span class="n">cosa</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                <span class="n">point2</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="n">wbot</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="n">csys_name</span><span class="p">,</span> <span class="n">coordSysType</span><span class="o">=</span><span class="n">CARTESIAN</span><span class="p">,</span>
+                <span class="n">origin</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
+        <span class="n">csys_datum</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">datums</span><span class="p">[</span><span class="n">csys</span><span class="o">.</span><span class="n">id</span><span class="p">]</span>
+        <span class="n">abaqus_functions</span><span class="o">.</span><span class="n">create_composite_layup</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="s1">&#39;LayupStringer_</span><span class="si">{0:02d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">count</span><span class="p">),</span>
+                <span class="n">stack</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stack</span><span class="p">,</span> <span class="n">plyts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">plyts</span><span class="p">,</span> <span class="n">mat_names</span><span class="o">=</span><span class="n">mat_names</span><span class="p">,</span>
+                <span class="n">part</span><span class="o">=</span><span class="n">part</span><span class="p">,</span> <span class="n">part_csys</span><span class="o">=</span><span class="n">csys_datum</span><span class="p">,</span>
+                <span class="n">region</span><span class="o">=</span><span class="n">Region</span><span class="p">(</span><span class="n">faces</span><span class="o">=</span><span class="n">part</span><span class="o">.</span><span class="n">faces</span><span class="p">),</span> <span class="n">axis_normal</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+        <span class="c1"># meshing part</span>
+        <span class="c1"># flange</span>
+        <span class="n">edge</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">edges</span><span class="o">.</span><span class="n">findAt</span><span class="p">((</span><span class="o">-</span><span class="n">wbot</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">))</span>
+        <span class="n">part</span><span class="o">.</span><span class="n">seedEdgeByNumber</span><span class="p">(</span><span class="n">edges</span><span class="o">=</span><span class="p">(</span><span class="n">edge</span><span class="p">,),</span> <span class="n">number</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">numel_flange</span><span class="p">,</span>
+                              <span class="n">constraint</span><span class="o">=</span><span class="n">FIXED</span><span class="p">)</span>
+        <span class="c1"># meridian</span>
+        <span class="n">coords</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.99</span><span class="p">,</span> <span class="mi">100</span><span class="p">):</span>
+            <span class="n">Li</span> <span class="o">=</span> <span class="n">f</span><span class="o">*</span><span class="n">L</span>
+            <span class="n">coords</span><span class="o">.</span><span class="n">append</span><span class="p">(((</span><span class="o">-</span><span class="n">Li</span><span class="o">*</span><span class="n">sina</span><span class="p">,</span> <span class="n">Li</span><span class="o">*</span><span class="n">cosa</span><span class="p">,</span> <span class="mf">0.</span><span class="p">),))</span>
+        <span class="n">edges</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">edges</span><span class="o">.</span><span class="n">findAt</span><span class="p">(</span><span class="o">*</span><span class="n">coords</span><span class="p">)</span>
+        <span class="n">part</span><span class="o">.</span><span class="n">seedEdgeBySize</span><span class="p">(</span><span class="n">edges</span><span class="o">=</span><span class="n">edges</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">cc</span><span class="o">.</span><span class="n">mesh_size</span><span class="p">,</span>
+                            <span class="n">constraint</span><span class="o">=</span><span class="n">FIXED</span><span class="p">)</span>
+        <span class="n">part</span><span class="o">.</span><span class="n">setMeshControls</span><span class="p">(</span><span class="n">regions</span><span class="o">=</span><span class="n">part</span><span class="o">.</span><span class="n">faces</span><span class="p">,</span> <span class="n">elemShape</span><span class="o">=</span><span class="n">QUAD</span><span class="p">,</span>
+                             <span class="n">technique</span><span class="o">=</span><span class="n">STRUCTURED</span><span class="p">)</span>
+        <span class="n">part</span><span class="o">.</span><span class="n">generateMesh</span><span class="p">()</span>
+
+        <span class="c1"># assemblying part</span>
+        <span class="n">ra</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">rootAssembly</span>
+        <span class="n">ra</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">part</span><span class="o">=</span><span class="n">part</span><span class="p">,</span> <span class="n">dependent</span><span class="o">=</span><span class="n">ON</span><span class="p">)</span>
+        <span class="n">ra</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">instanceList</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,),</span>
+                  <span class="n">axisPoint</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span>
+                  <span class="n">axisDirection</span><span class="o">=</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span>
+                  <span class="n">angle</span><span class="o">=</span><span class="mf">90.0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">thetadeg</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">ra</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">instanceList</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,),</span>
+                      <span class="n">axisPoint</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span>
+                      <span class="n">axisDirection</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>
+                      <span class="n">angle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">thetadeg</span><span class="p">)</span>
+        <span class="n">ra</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">instanceList</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,),</span>
+                     <span class="n">vector</span><span class="o">=</span><span class="p">(</span><span class="n">rbot</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">thetarad</span><span class="p">),</span> <span class="n">rbot</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">thetarad</span><span class="p">),</span> <span class="mf">0.</span><span class="p">))</span>
+        <span class="n">vp</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">displayedObject</span><span class="o">=</span><span class="n">ra</span><span class="p">)</span>
+
+        <span class="c1"># tieing stringer to the shell surface</span>
+        <span class="n">inst_shell</span> <span class="o">=</span> <span class="n">ra</span><span class="o">.</span><span class="n">instances</span><span class="p">[</span><span class="s1">&#39;INST_SHELL&#39;</span><span class="p">]</span>
+        <span class="n">side2Faces1</span> <span class="o">=</span> <span class="n">inst_shell</span><span class="o">.</span><span class="n">faces</span>
+        <span class="n">region1</span> <span class="o">=</span> <span class="n">Region</span><span class="p">(</span><span class="n">side2Faces</span><span class="o">=</span><span class="n">side2Faces1</span><span class="p">)</span>
+        <span class="n">inst_stringer_faces</span> <span class="o">=</span> <span class="n">ra</span><span class="o">.</span><span class="n">instances</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">faces</span>
+        <span class="n">region2</span> <span class="o">=</span> <span class="n">Region</span><span class="p">(</span><span class="n">side2Faces</span><span class="o">=</span><span class="n">inst_stringer_faces</span><span class="p">)</span>
+        <span class="n">tie_name</span> <span class="o">=</span> <span class="s1">&#39;TieStringer_</span><span class="si">{0:02d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">count</span><span class="p">)</span>
+        <span class="n">mod</span><span class="o">.</span><span class="n">Tie</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">tie_name</span><span class="p">,</span> <span class="n">master</span><span class="o">=</span><span class="n">region1</span><span class="p">,</span> <span class="n">slave</span><span class="o">=</span><span class="n">region2</span><span class="p">,</span>
+                <span class="n">positionToleranceMethod</span><span class="o">=</span><span class="n">COMPUTED</span><span class="p">,</span> <span class="n">adjust</span><span class="o">=</span><span class="n">OFF</span><span class="p">,</span>
+                <span class="n">tieRotations</span><span class="o">=</span><span class="n">ON</span><span class="p">,</span> <span class="n">constraintEnforcement</span><span class="o">=</span><span class="n">SURFACE_TO_SURFACE</span><span class="p">,</span>
+                <span class="n">thickness</span><span class="o">=</span><span class="n">ON</span><span class="p">)</span>
+
+        <span class="c1"># output request</span>
+        <span class="n">hist_name</span> <span class="o">=</span> <span class="s1">&#39;HistoryOutStringer_</span><span class="si">{0:02d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">count</span><span class="p">)</span>
+        <span class="n">mod</span><span class="o">.</span><span class="n">FieldOutputRequest</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">hist_name</span><span class="p">,</span> <span class="n">createStepName</span><span class="o">=</span><span class="n">cc</span><span class="o">.</span><span class="n">step1Name</span><span class="p">,</span>
+                               <span class="n">variables</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;U&#39;</span><span class="p">,))</span></div>
+
+
+<div class="viewcode-block" id="BladeIsotropic"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.stringers.blade.BladeIsotropic">[docs]</a><span class="k">class</span> <span class="nc">BladeIsotropic</span><span class="p">(</span><span class="n">BladeComposite</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Blade stringer using isotropic properties</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    thetadeg : float</span>
+<span class="sd">        Circumferential position in degrees.</span>
+<span class="sd">    wbot : float</span>
+<span class="sd">        Flange width at the bottom edge.</span>
+<span class="sd">    wtop : float</span>
+<span class="sd">        Flange width at the top edge.</span>
+<span class="sd">    h : float</span>
+<span class="sd">        Stringer thickness</span>
+<span class="sd">    E : float</span>
+<span class="sd">        Young Modulus</span>
+<span class="sd">    nu : float</span>
+<span class="sd">        Poisson&#39;s ratio</span>
+<span class="sd">    numel_flange : int, optional</span>
+<span class="sd">        The number of elements along the width.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thetadeg</span><span class="p">,</span> <span class="n">wbot</span><span class="p">,</span> <span class="n">wtop</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">nu</span><span class="p">,</span> <span class="n">numel_flange</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thetadeg</span> <span class="o">=</span> <span class="n">thetadeg</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wbot</span> <span class="o">=</span> <span class="n">wbot</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wtop</span> <span class="o">=</span> <span class="n">wtop</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stack</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plyts</span> <span class="o">=</span> <span class="p">[</span><span class="n">h</span><span class="p">]</span>
+        <span class="n">G</span> <span class="o">=</span> <span class="n">E</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">nu</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">laminaprops</span> <span class="o">=</span> <span class="p">[(</span><span class="n">E</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">nu</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">G</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">numel_flange</span> <span class="o">=</span> <span class="n">numel_flange</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">desicos.abaqus.stringers.stringerconf</span> <span class="k">import</span> <span class="n">StringerConf</span>
+    <span class="n">laminaprops</span> <span class="o">=</span> <span class="p">[(</span><span class="mf">142.5e3</span>  <span class="p">,</span>   <span class="mf">8.7e3</span><span class="p">,</span>  <span class="mf">0.28</span><span class="p">,</span>   <span class="mf">5.1e3</span><span class="p">,</span>   <span class="mf">5.1e3</span><span class="p">,</span>    <span class="mf">5.1e3</span><span class="p">)</span> <span class="k">for</span>
+            <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)]</span>
+    <span class="n">plyts</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.125</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)]</span>
+    <span class="n">stack</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="o">+</span><span class="mi">45</span><span class="p">,</span> <span class="o">-</span><span class="mi">45</span><span class="p">,</span> <span class="o">-</span><span class="mi">45</span><span class="p">,</span> <span class="o">+</span><span class="mi">45</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">thetadeg</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">90</span><span class="p">]:</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">BladeComposite</span><span class="p">(</span><span class="n">thetadeg</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="n">stack</span><span class="p">,</span> <span class="n">plyts</span><span class="p">,</span> <span class="n">laminaprops</span><span class="p">)</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">BladeIsotropic</span><span class="p">(</span><span class="n">thetadeg</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">2100.</span><span class="p">,</span> <span class="mf">0.33</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+        <span class="n">b</span><span class="o">.</span><span class="n">stringer_conf</span> <span class="o">=</span> <span class="n">StringerConf</span><span class="p">()</span>
+        <span class="n">b</span><span class="o">.</span><span class="n">stringer_conf</span><span class="o">.</span><span class="n">conecyl</span> <span class="o">=</span> <span class="n">stds</span><span class="p">[</span><span class="s1">&#39;desicos_study&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">ccs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">b</span><span class="o">.</span><span class="n">create</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../../../index.html">
+    <img class="logo" src="../../../../_static/../../../logo/desicos.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/index.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/index.html">Tutorials</a></li>
+</ul>
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2012-2015 Desicos Improved Software Team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

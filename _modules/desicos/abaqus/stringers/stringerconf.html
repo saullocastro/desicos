@@ -1,0 +1,177 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>desicos.abaqus.stringers.stringerconf &#8212; DESICOS 2.4.9 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2.4.9',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for desicos.abaqus.stringers.stringerconf</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
+
+<div class="viewcode-block" id="StringerConf"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.stringers.stringerconf.StringerConf">[docs]</a><span class="k">class</span> <span class="nc">StringerConf</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Stringer configuration class</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conecyl</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stringers</span> <span class="o">=</span> <span class="p">[]</span>
+
+
+<div class="viewcode-block" id="StringerConf.add_blade_composite"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.stringers.stringerconf.StringerConf.add_blade_composite">[docs]</a>    <span class="k">def</span> <span class="nf">add_blade_composite</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thetadeg</span><span class="p">,</span> <span class="n">wbot</span><span class="p">,</span> <span class="n">wtop</span><span class="p">,</span> <span class="n">stack</span><span class="p">,</span> <span class="n">plyts</span><span class="p">,</span>
+            <span class="n">laminaprops</span><span class="p">,</span> <span class="n">numel_flange</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add a composite blade stringer</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        thetadeg : float</span>
+<span class="sd">            Circumferential position in degrees.</span>
+<span class="sd">        wbot : float</span>
+<span class="sd">            Flange width at the bottom edge.</span>
+<span class="sd">        wtop : float</span>
+<span class="sd">            Flange width at the top edge.</span>
+<span class="sd">        stack : list</span>
+<span class="sd">            Laminate stacking sequence.</span>
+<span class="sd">        plyts : list</span>
+<span class="sd">            Ply thicknesses.</span>
+<span class="sd">        laminaprops : list</span>
+<span class="sd">            The properties for each lamina.</span>
+<span class="sd">        numel_flange : int, optional</span>
+<span class="sd">            The number of elements along the width.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">blade</span> <span class="k">import</span> <span class="n">BladeComposite</span>
+
+        <span class="n">stringer</span> <span class="o">=</span> <span class="n">BladeComposite</span><span class="p">(</span><span class="n">thetadeg</span><span class="o">=</span><span class="n">thetadeg</span><span class="p">,</span> <span class="n">wbot</span><span class="o">=</span><span class="n">wbot</span><span class="p">,</span> <span class="n">wtop</span><span class="o">=</span><span class="n">wtop</span><span class="p">,</span>
+                <span class="n">stack</span><span class="o">=</span><span class="n">stack</span><span class="p">,</span> <span class="n">plyts</span><span class="o">=</span><span class="n">plyts</span><span class="p">,</span> <span class="n">laminaprops</span><span class="o">=</span><span class="n">laminaprops</span><span class="p">,</span>
+                <span class="n">numel_flange</span><span class="o">=</span><span class="n">numel_flange</span><span class="p">)</span>
+        <span class="n">stringer</span><span class="o">.</span><span class="n">stringerconf</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stringers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">stringer</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="StringerConf.add_blade_isotropic"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.stringers.stringerconf.StringerConf.add_blade_isotropic">[docs]</a>    <span class="k">def</span> <span class="nf">add_blade_isotropic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thetadeg</span><span class="p">,</span> <span class="n">wbot</span><span class="p">,</span> <span class="n">wtop</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">nu</span><span class="p">,</span>
+                            <span class="n">numel_flange</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add an isotropic blade stringer</span>
+
+<span class="sd">        Implemented as a special case of the composite stringer for</span>
+<span class="sd">        isotropic material.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        thetadeg : float</span>
+<span class="sd">            Circumferential position in degrees.</span>
+<span class="sd">        wbot : float</span>
+<span class="sd">            Flange width at the bottom edge.</span>
+<span class="sd">        wtop : float</span>
+<span class="sd">            Flange width at the top edge.</span>
+<span class="sd">        h : float</span>
+<span class="sd">            Stringer thickness</span>
+<span class="sd">        E : float</span>
+<span class="sd">            Young Modulus</span>
+<span class="sd">        nu : float</span>
+<span class="sd">            Poisson&#39;s ratio</span>
+<span class="sd">        numel_flange : int, optional</span>
+<span class="sd">            The number of elements along the width.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">.blade</span> <span class="k">import</span> <span class="n">BladeIsotropic</span>
+
+        <span class="n">stringer</span> <span class="o">=</span> <span class="n">BladeIsotropic</span><span class="p">(</span><span class="n">thetadeg</span><span class="o">=</span><span class="n">thetadeg</span><span class="p">,</span> <span class="n">wbot</span><span class="o">=</span><span class="n">wbot</span><span class="p">,</span> <span class="n">wtop</span><span class="o">=</span><span class="n">wtop</span><span class="p">,</span>
+                <span class="n">h</span><span class="o">=</span><span class="n">h</span><span class="p">,</span> <span class="n">E</span><span class="o">=</span><span class="n">E</span><span class="p">,</span> <span class="n">nu</span><span class="o">=</span><span class="n">nu</span><span class="p">,</span> <span class="n">numel_flange</span><span class="o">=</span><span class="n">numel_flange</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stringers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">stringer</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">stringer</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">stringers</span><span class="p">:</span>
+            <span class="n">stringer</span><span class="o">.</span><span class="n">create</span><span class="p">()</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../../../index.html">
+    <img class="logo" src="../../../../_static/../../../logo/desicos.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/index.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/index.html">Tutorials</a></li>
+</ul>
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2012-2015 Desicos Improved Software Team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

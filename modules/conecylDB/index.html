@@ -1,20 +1,17 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>&lt;no title&gt; &#8212; DESICOS 2.4.8 documentation</title>
-    
+    <title>Cone / Cylinder DataBase (desicos.conecylDB) &#8212; DESICOS 2.4.9 documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.4.8',
+        VERSION:     '2.4.9',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -34,7 +31,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
-  <body role="document">
+  <body>
   
 
     <div class="document">
@@ -42,7 +39,1285 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  
+  <span class="target" id="module-desicos.conecylDB"><span id="module-conecyldb"></span></span><div class="section" id="cone-cylinder-database-desicos-conecyldb">
+<h1>Cone / Cylinder DataBase (<a class="reference internal" href="#module-desicos.conecylDB" title="desicos.conecylDB"><code class="xref py py-mod docutils literal"><span class="pre">desicos.conecylDB</span></code></a>)<a class="headerlink" href="#cone-cylinder-database-desicos-conecyldb" title="Permalink to this headline">¶</a></h1>
+<p>The <code class="docutils literal"><span class="pre">desicos.conecylDB</span></code> module includes all the information about cones
+and cylinders required to reproduce structures that were investigated
+by many publications and in the context of DESICOS.</p>
+<p>It also includes the tools necessary to work with the Imperfection
+DataBase.  Unfortunately, the files composing this database cannot be made
+available with the repository, but all the tools required to post process
+an imperfection file had been made available.</p>
+<span class="target" id="module-desicos.conecylDB.conecylDB"></span><div class="section" id="conecyl-data-base-desicos-conecyldb-conecyldb">
+<h2>Conecyl Data-Base (<a class="reference internal" href="#module-desicos.conecylDB.conecylDB" title="desicos.conecylDB.conecylDB"><code class="xref py py-mod docutils literal"><span class="pre">desicos.conecylDB.conecylDB</span></code></a>)<a class="headerlink" href="#conecyl-data-base-desicos-conecyldb-conecyldb" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="desicos.conecylDB.conecylDB.delete">
+<code class="descclassname">desicos.conecylDB.conecylDB.</code><code class="descname">delete</code><span class="sig-paren">(</span><em>which</em>, <em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/conecylDB/conecylDB.html#delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.conecylDB.conecylDB.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete an entry to the dynamic database.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>which</strong> : str</p>
+<blockquote>
+<div><p>A string that can be: <code class="docutils literal"><span class="pre">ccs</span></code>, <code class="docutils literal"><span class="pre">laminaprops</span></code>, <code class="docutils literal"><span class="pre">allowables</span></code>.</p>
+</div></blockquote>
+<p><strong>name</strong> : str</p>
+<blockquote class="last">
+<div><p>The name of the new entry.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="desicos.conecylDB.conecylDB.fetch">
+<code class="descclassname">desicos.conecylDB.conecylDB.</code><code class="descname">fetch</code><span class="sig-paren">(</span><em>which</em>, <em>local_only=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/conecylDB/conecylDB.html#fetch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.conecylDB.conecylDB.fetch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetches a dictionary from the database</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>which</strong> : str</p>
+<blockquote>
+<div><p>A string that can be: <code class="docutils literal"><span class="pre">ccs</span></code>, <code class="docutils literal"><span class="pre">laminaprops</span></code>, <code class="docutils literal"><span class="pre">allowables</span></code>.</p>
+</div></blockquote>
+<p><strong>local_only</strong> : bool, optional</p>
+<blockquote class="last">
+<div><p>If only the local data-base should be considered.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="desicos.conecylDB.conecylDB.save">
+<code class="descclassname">desicos.conecylDB.conecylDB.</code><code class="descname">save</code><span class="sig-paren">(</span><em>which</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/conecylDB/conecylDB.html#save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.conecylDB.conecylDB.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save an entry to the dynamic database.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>which</strong> : str</p>
+<blockquote>
+<div><p>A string that can be: <code class="docutils literal"><span class="pre">ccs</span></code>, <code class="docutils literal"><span class="pre">laminaprops</span></code>, <code class="docutils literal"><span class="pre">allowables</span></code>.</p>
+</div></blockquote>
+<p><strong>name</strong> : str</p>
+<blockquote>
+<div><p>The name of the new entry.</p>
+</div></blockquote>
+<p><strong>value</strong> : object</p>
+<blockquote class="last">
+<div><p>The object that will be stored in the dictionary pointed by <code class="docutils literal"><span class="pre">which</span></code>
+under the key given by <code class="docutils literal"><span class="pre">name</span></code>.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="desicos.conecylDB.conecylDB.update_imps">
+<code class="descclassname">desicos.conecylDB.conecylDB.</code><code class="descname">update_imps</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/conecylDB/conecylDB.html#update_imps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.conecylDB.conecylDB.update_imps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the updated imperfection definitions from the data-base</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>out</strong> : tuple</p>
+<blockquote class="last">
+<div><p>A tuple containing the updated dictionaries with useful data form
+the data-base. In the description below <code class="docutils literal"><span class="pre">key</span></code> corresponds to a
+<code class="docutils literal"><span class="pre">ccs</span></code> entry of the database:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">imps</span></code>: contains the full path of an imperfection file
+corresponding to <code class="docutils literal"><span class="pre">key</span></code>, accessed doing <code class="docutils literal"><span class="pre">imp[key]['msi']</span></code> or
+<code class="docutils literal"><span class="pre">imp[key]['ti']</span></code></li>
+<li><code class="docutils literal"><span class="pre">imps_theta_z</span></code>: similar to <code class="docutils literal"><span class="pre">imps</span></code></li>
+<li><code class="docutils literal"><span class="pre">t_measured</span></code>: contains the measured shell thickness for a
+correponding entry access doing <code class="docutils literal"><span class="pre">t_measured[key]</span></code></li>
+<li><code class="docutils literal"><span class="pre">R_best_fit</span></code></li>
+<li><code class="docutils literal"><span class="pre">H_measured</span></code></li>
+</ul>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<span class="target" id="module-desicos.conecylDB.ccs"></span><div class="section" id="cone-cylinders-desicos-conecyldb-ccs">
+<h2>Cone/Cylinders (<a class="reference internal" href="#module-desicos.conecylDB.ccs" title="desicos.conecylDB.ccs"><code class="xref py py-mod docutils literal"><span class="pre">desicos.conecylDB.ccs</span></code></a>)<a class="headerlink" href="#cone-cylinders-desicos-conecyldb-ccs" title="Permalink to this headline">¶</a></h2>
+<p>This static database stores all entries in the dictionary <code class="docutils literal"><span class="pre">ccs</span></code> which can be
+imported as:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">desicos.conecylDB.ccs</span> <span class="k">import</span> <span class="n">ccs</span>
+</pre></div>
+</div>
+<p>More entries can be added here if one wishes to update the static database.</p>
+<p>The entries shown in the Plug-In for Abaqus are those with the corresponding
+keys listed in <code class="docutils literal"><span class="pre">include_in_GUI</span></code>.</p>
+</div>
+<span class="target" id="module-desicos.conecylDB.laminaprops"></span><div class="section" id="lamina-elastic-properties-desicos-conecyldb-laminaprops">
+<h2>Lamina Elastic Properties (<a class="reference internal" href="#module-desicos.conecylDB.laminaprops" title="desicos.conecylDB.laminaprops"><code class="xref py py-mod docutils literal"><span class="pre">desicos.conecylDB.laminaprops</span></code></a>)<a class="headerlink" href="#lamina-elastic-properties-desicos-conecyldb-laminaprops" title="Permalink to this headline">¶</a></h2>
+<p>This static database stores all entries in the dictionary <code class="docutils literal"><span class="pre">laminaprops</span></code>
+which can be imported as:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">desicos.conecylDB.laminaprops</span> <span class="k">import</span> <span class="n">laminaprops</span>
+</pre></div>
+</div>
+<p>In the dictionary <code class="docutils literal"><span class="pre">laminaprops</span></code> each entry is stored as a tuple:</p>
+<ul class="simple">
+<li>orthotropic material: (<span class="math">E_{11}</span>, <span class="math">E_{22}</span>, <span class="math">\nu_{12}</span>, <span class="math">G_{12}</span>,
+<span class="math">G_{13}</span>, <span class="math">G_{23}</span>)</li>
+<li>isotropic material: (<span class="math">E</span>, <span class="math">E</span>, <span class="math">\nu</span>)</li>
+</ul>
+<p>More entries can be added here if one wishes to update the static database.</p>
+</div>
+<span class="target" id="module-desicos.conecylDB.allowables"></span><div class="section" id="lamina-allowables-desicos-conecyldb-allowables">
+<h2>Lamina Allowables (<a class="reference internal" href="#module-desicos.conecylDB.allowables" title="desicos.conecylDB.allowables"><code class="xref py py-mod docutils literal"><span class="pre">desicos.conecylDB.allowables</span></code></a>)<a class="headerlink" href="#lamina-allowables-desicos-conecyldb-allowables" title="Permalink to this headline">¶</a></h2>
+<p>This static database stores all entries in the dictionary <code class="docutils literal"><span class="pre">allowables</span></code>
+which can be imported as:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">desicos.conecylDB.allowables</span> <span class="k">import</span> <span class="n">allowables</span>
+</pre></div>
+</div>
+<p>In the dictionary <code class="docutils literal"><span class="pre">allowables</span></code> each entry is stored as a tuple:</p>
+<ul class="simple">
+<li>(<span class="math">{S_{11}}_T</span>, <span class="math">{S_{11}}_C</span>, <span class="math">{S_{22}}_T</span>, <span class="math">{S_{22}}_C</span>, <span class="math">S_{12}</span>, <span class="math">S_{13}</span>)</li>
+</ul>
+<p>where <span class="math">C</span> and <span class="math">T</span> stand for compression or tensile allowables. More
+entries can be added here if one wishes to update the static database.</p>
+</div>
+<span class="target" id="module-desicos.conecylDB.fit_data"></span><div class="section" id="fitting-data-desicos-conecyldb-fit-data">
+<h2>Fitting Data (<a class="reference internal" href="#module-desicos.conecylDB.fit_data" title="desicos.conecylDB.fit_data"><code class="xref py py-mod docutils literal"><span class="pre">desicos.conecylDB.fit_data</span></code></a>)<a class="headerlink" href="#fitting-data-desicos-conecyldb-fit-data" title="Permalink to this headline">¶</a></h2>
+<p>This module includes functions used to fit measured imperfection data.</p>
+<dl class="function">
+<dt id="desicos.conecylDB.fit_data.best_fit_cone">
+<code class="descclassname">desicos.conecylDB.fit_data.</code><code class="descname">best_fit_cone</code><span class="sig-paren">(</span><em>path</em>, <em>H</em>, <em>alphadeg</em>, <em>R_expected=10.0</em>, <em>save=True</em>, <em>errorRtol=1e-09</em>, <em>maxNumIter=1000</em>, <em>sample_size=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/conecylDB/fit_data.html#best_fit_cone"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.conecylDB.fit_data.best_fit_cone" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit a best cone for a given set of measured data</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">NOT IMPLEMENTED YET</p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="desicos.conecylDB.fit_data.best_fit_cylinder">
+<code class="descclassname">desicos.conecylDB.fit_data.</code><code class="descname">best_fit_cylinder</code><span class="sig-paren">(</span><em>path</em>, <em>H</em>, <em>R_expected=10.0</em>, <em>save=True</em>, <em>errorRtol=1e-09</em>, <em>maxNumIter=1000</em>, <em>sample_size=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/conecylDB/fit_data.html#best_fit_cylinder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.conecylDB.fit_data.best_fit_cylinder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit a best cylinder for a given set of measured data</p>
+<p>The coordinate transformation which must be performed in order to adjust
+the raw data to the finite element coordinate system is illustrated below:</p>
+<div class="figure">
+<a class="reference internal image-reference" href="../../_images/coord_sys_trans.png"><img alt="../../_images/coord_sys_trans.png" src="../../_images/coord_sys_trans.png" style="width: 400px;" /></a>
+</div>
+<p>This transformation can be represented in matrix form as:</p>
+<div class="math">
+<p><span class="math">[T] = \begin{bmatrix}
+cos(\beta) &amp;  sin(\alpha)sin(\beta) &amp; -cos(\alpha)sin(\beta) &amp; \Delta x_0
+\\
+         0 &amp;            cos(\alpha) &amp;            sin(\alpha) &amp; \Delta y_0
+\\
+sin(\beta) &amp; -sin(\alpha)cos(\beta) &amp;  cos(\alpha)cos(\beta) &amp; \Delta z_0
+\\
+      \end{bmatrix}</span></p>
+</div><p>Note that <strong>five</strong> variables are unknowns:</p>
+<ul class="simple">
+<li>the rotation angles <span class="math">\alpha</span> and <span class="math">\beta</span></li>
+<li>the three components of the translation <span class="math">\Delta x_0</span>, <span class="math">\Delta y_0</span> and
+<span class="math">\Delta z_0</span></li>
+</ul>
+<p>The five unknowns are calculated iteratively in a non-linear least-sqares
+problem (solved with <code class="docutils literal"><span class="pre">scipy.optimize.leastsq</span></code>), where the measured data
+is transformed to the reference coordinate system and there compared with
+a reference cylinder in order to compute the residual error using:</p>
+<div class="math">
+<p><span class="math">\begin{Bmatrix} x_{ref} \\ y_{ref} \\ z_{ref} \end{Bmatrix} =
+[T]
+\begin{Bmatrix} x_m \\ y_m \\ z_m \\ 1 \end{Bmatrix}
+\\
+Error = \sqrt{(\Delta r)^2 + (\Delta z)^2}</span></p>
+</div><p>where:</p>
+<ul>
+<li><p class="first"><span class="math">x_m</span>, <span class="math">y_m</span> and <span class="math">z_m</span> are the data coordinates in the data coordinate
+system</p>
+</li>
+<li><p class="first"><span class="math">x_{ref}</span> <span class="math">x_{ref}</span> are the data coordinates in the <a class="reference internal" href="../abaqus/index.html#figure-conecyl"><span class="std std-ref">reference
+coordinate system</span></a></p>
+</li>
+<li><p class="first"><span class="math">\Delta r</span> and <span class="math">\Delta z</span> are defined as:</p>
+<blockquote>
+<div><div class="math">
+<p><span class="math">\Delta r = R - \sqrt{x_{ref}^2 + y_{ref}^2}
+\\
+\Delta z = \begin{cases}
+                -z_{ref}, &amp; \text{if } z_{ref} &lt; 0 \\
+                       0, &amp; \text{if } 0 &lt;= z_{ref} &lt;= H \\
+             z_{ref} - H, &amp; \text{if } z_{ref} &gt; H \\
+           \end{cases}</span></p>
+</div></div></blockquote>
+</li>
+</ul>
+<p>Since the measured data may have an unknown radius <span class="math">R</span>, the solution of
+these equations has to be performed iteratively with one additional
+external loop in order to update <span class="math">R</span>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>path</strong> : str or np.ndarray</p>
+<blockquote>
+<div><p>The path of the file containing the data. Can be a full path using
+<code class="docutils literal"><span class="pre">r&quot;C:\Temp\inputfile.txt&quot;</span></code>, for example.
+The input file must have 3 columns “<span class="math">x</span> <span class="math">y</span> <span class="math">z</span>” expressed
+in Cartesian coordinates.</p>
+<p>This input can also be a <code class="docutils literal"><span class="pre">np.ndarray</span></code> object, with <span class="math">x</span>, <span class="math">y</span>, <span class="math">z</span>
+in each corresponding column.</p>
+</div></blockquote>
+<p><strong>H</strong> : float</p>
+<blockquote>
+<div><p>The nominal height of the cylinder.</p>
+</div></blockquote>
+<p><strong>R_expected</strong> : float, optional</p>
+<blockquote>
+<div><p>The nominal radius of the cylinder, used as a first guess to find
+the best-fit radius (<code class="docutils literal"><span class="pre">R_best_fit</span></code>). Note that if not specified more
+iterations may be required.</p>
+</div></blockquote>
+<p><strong>save</strong> : bool, optional</p>
+<blockquote>
+<div><p>Whether to save an <code class="docutils literal"><span class="pre">&quot;output_best_fit.txt&quot;</span></code> in the working directory.</p>
+</div></blockquote>
+<p><strong>errorRtol</strong> : float, optional</p>
+<blockquote>
+<div><p>The error tolerance for the best-fit radius to stop the iterations.</p>
+</div></blockquote>
+<p><strong>maxNumIter</strong> : int, optional</p>
+<blockquote>
+<div><p>The maximum number of iterations for the best-fit radius.</p>
+</div></blockquote>
+<p><strong>sample_size</strong> : int, optional</p>
+<blockquote>
+<div><p>If the input file containing the measured data is too big it may
+be convenient to use only a sample of it in order to calculate the
+best fit.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>out</strong> : dict</p>
+<blockquote class="last">
+<div><p>A Python dictionary with the entries:</p>
+<dl class="docutils">
+<dt><code class="docutils literal"><span class="pre">out['R_best_fit']</span></code> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">The best-fit radius of the input sample.</p>
+</dd>
+<dt><code class="docutils literal"><span class="pre">out['T']</span></code> <span class="classifier-delimiter">:</span> <span class="classifier">np.ndarray</span></dt>
+<dd><p class="first last">The transformation matrix as a <span class="math">3 \times 4</span> 2-D array. This matrix
+does the transformation: input_pts –&gt; output_pts.</p>
+</dd>
+<dt><code class="docutils literal"><span class="pre">out['Tinv']</span></code> <span class="classifier-delimiter">:</span> <span class="classifier">np.ndarray</span></dt>
+<dd><p class="first last">The inverse transformation matrix as a <span class="math">3 \times 4</span> 2-D array.
+This matrix does the transformation: output_pts –&gt; input_pts.</p>
+</dd>
+<dt><code class="docutils literal"><span class="pre">out['input_pts']</span></code> <span class="classifier-delimiter">:</span> <span class="classifier">np.ndarray</span></dt>
+<dd><p class="first last">The input points in a <span class="math">3 \times N</span> 2-D array.</p>
+</dd>
+<dt><code class="docutils literal"><span class="pre">out['output_pts']</span></code> <span class="classifier-delimiter">:</span> <span class="classifier">np.ndarray</span></dt>
+<dd><p class="first last">The transformed points in a <span class="math">3 \times N</span> 2-D array.</p>
+</dd>
+</dl>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<ol class="arabic simple">
+<li>General usage</li>
+</ol>
+<p>For a given cylinder with expected radius and height of <code class="docutils literal"><span class="pre">R_expected</span></code> and
+<code class="docutils literal"><span class="pre">H</span></code>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">desicos.conecylDB.fit_data</span> <span class="k">import</span> <span class="n">best_fit_cylinder</span>
+
+<span class="n">out</span> <span class="o">=</span> <span class="n">best_fit_cylinder</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">H</span><span class="o">=</span><span class="n">H</span><span class="p">,</span> <span class="n">R_expected</span><span class="o">=</span><span class="n">R_expected</span><span class="p">)</span>
+<span class="n">R_best_fit</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="s1">&#39;R_best_fit&#39;</span><span class="p">]</span>
+<span class="n">T</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="s1">&#39;T&#39;</span><span class="p">]</span>
+<span class="n">Tinv</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="s1">&#39;Tinv&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li>Using the transformation matrices <code class="docutils literal"><span class="pre">T</span></code> and <code class="docutils literal"><span class="pre">Tinv</span></code></li>
+</ol>
+<p>For a given input data with <span class="math">x, y, z</span> positions in each line:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s1">&#39;input_file.txt&#39;</span><span class="p">,</span> <span class="n">unpack</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>the transformation could be obtained with:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">xnew</span><span class="p">,</span> <span class="n">ynew</span><span class="p">,</span> <span class="n">znew</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">x</span><span class="p">))))</span>
+</pre></div>
+</div>
+<p>and the inverse transformation:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">Tinv</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">xnew</span><span class="p">,</span> <span class="n">ynew</span><span class="p">,</span> <span class="n">znew</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">xnew</span><span class="p">))))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="desicos.conecylDB.fit_data.calc_c0">
+<code class="descclassname">desicos.conecylDB.fit_data.</code><code class="descname">calc_c0</code><span class="sig-paren">(</span><em>path</em>, <em>m0=50</em>, <em>n0=50</em>, <em>funcnum=2</em>, <em>fem_meridian_bot2top=True</em>, <em>rotatedeg=None</em>, <em>filter_m0=None</em>, <em>filter_n0=None</em>, <em>sample_size=None</em>, <em>maxmem=8</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/conecylDB/fit_data.html#calc_c0"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.conecylDB.fit_data.calc_c0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the coefficients that best fit the <span class="math">w_0</span> imperfection</p>
+<p>The measured data will be fit using one of the following functions,
+selected using the <code class="docutils literal"><span class="pre">funcnum</span></code> parameter:</p>
+<ol class="arabic simple">
+<li>Half-Sine Function</li>
+</ol>
+<div class="math">
+<p><span class="math">w_0 = \sum_{i=1}^{m_0}{ \sum_{j=0}^{n_0}{
+         {c_0}_{ij}^a sin{b_z} sin{b_\theta}
+        +{c_0}_{ij}^b sin{b_z} cos{b_\theta} }}</span></p>
+</div><ol class="arabic simple" start="2">
+<li>Half-Cosine Function (default)</li>
+</ol>
+<div class="math">
+<p><span class="math">w_0 = \sum_{i=0}^{m_0}{ \sum_{j=0}^{n_0}{
+        {c_0}_{ij}^a cos{b_z} sin{b_\theta}
+        +{c_0}_{ij}^b cos{b_z} cos{b_\theta} }}</span></p>
+</div><ol class="arabic simple" start="3">
+<li>Complete Fourier Series</li>
+</ol>
+<div class="math">
+<p><span class="math">w_0 = \sum_{i=0}^{m_0}{ \sum_{j=0}^{n_0}{
+         {c_0}_{ij}^a sin{b_z} sin{b_\theta}
+        +{c_0}_{ij}^b sin{b_z} cos{b_\theta}
+        +{c_0}_{ij}^c cos{b_z} sin{b_\theta}
+        +{c_0}_{ij}^d cos{b_z} cos{b_\theta} }}</span></p>
+</div><p>where:</p>
+<div class="math">
+<p><span class="math">b_z = i \pi \frac z H_{points}
+
+b_\theta = j \theta</span></p>
+</div><p>where <span class="math">H_{points}</span> represents the difference between the maximum and
+the minimum <span class="math">z</span> values in the imperfection file.</p>
+<p>The approximation can be written in matrix form as:</p>
+<div class="math">
+<p><span class="math">w_0 = [g] \{c_0\}</span></p>
+</div><p>where <span class="math">[g]</span> carries the base functions and <span class="math">{c_0}</span> the respective
+amplitudes. The solution consists on finding the best <span class="math">{c_0}</span> that
+minimizes the least-square error between the measured imperfection pattern
+and the <span class="math">w_0</span> function.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>path</strong> : str or np.ndarray</p>
+<blockquote>
+<div><p>The path of the file containing the data. Can be a full path using
+<code class="docutils literal"><span class="pre">r&quot;C:\Temp\inputfile.txt&quot;</span></code>, for example.
+The input file must have 3 columns “<span class="math">\theta</span> <span class="math">z</span> <span class="math">imp</span>” expressed
+in Cartesian coordinates.</p>
+<p>This input can also be a <code class="docutils literal"><span class="pre">np.ndarray</span></code> object, with
+<span class="math">\theta</span>, <span class="math">z</span>, <span class="math">imp</span> in each corresponding column.</p>
+</div></blockquote>
+<p><strong>m0</strong> : int</p>
+<blockquote>
+<div><p>Number of terms along the meridian (<span class="math">z</span>).</p>
+</div></blockquote>
+<p><strong>n0</strong> : int</p>
+<blockquote>
+<div><p>Number of terms along the circumference (<span class="math">\theta</span>).</p>
+</div></blockquote>
+<p><strong>funcnum</strong> : int, optional</p>
+<blockquote>
+<div><p>As explained above, selects the base functions used for
+the approximation.</p>
+</div></blockquote>
+<p><strong>fem_meridian_bot2top</strong> : bool, optional</p>
+<blockquote>
+<div><p>A boolean indicating if the finite element has the <span class="math">x</span> axis starting
+at the bottom or at the top.</p>
+</div></blockquote>
+<p><strong>rotatedeg</strong> : float or None, optional</p>
+<blockquote>
+<div><p>Rotation angle in degrees telling how much the imperfection pattern
+should be rotated about the <span class="math">X_3</span> (or <span class="math">Z</span>) axis.</p>
+</div></blockquote>
+<p><strong>filter_m0</strong> : list, optional</p>
+<blockquote>
+<div><p>The values of <code class="docutils literal"><span class="pre">m0</span></code> that should be filtered (see <a class="reference internal" href="#desicos.conecylDB.fit_data.filter_c0" title="desicos.conecylDB.fit_data.filter_c0"><code class="xref py py-func docutils literal"><span class="pre">filter_c0()</span></code></a>).</p>
+</div></blockquote>
+<p><strong>filter_n0</strong> : list, optional</p>
+<blockquote>
+<div><p>The values of <code class="docutils literal"><span class="pre">n0</span></code> that should be filtered (see <a class="reference internal" href="#desicos.conecylDB.fit_data.filter_c0" title="desicos.conecylDB.fit_data.filter_c0"><code class="xref py py-func docutils literal"><span class="pre">filter_c0()</span></code></a>).</p>
+</div></blockquote>
+<p><strong>sample_size</strong> : int or None, optional</p>
+<blockquote>
+<div><p>An in  specifying how many points of the imperfection file should
+be used. If <code class="docutils literal"><span class="pre">None</span></code> is used all points file will be used in the
+computations.</p>
+</div></blockquote>
+<p><strong>maxmem</strong> : int, optional</p>
+<blockquote>
+<div><p>Maximum RAM memory in GB allowed to compute the base functions.
+The <code class="docutils literal"><span class="pre">scipy.interpolate.lstsq</span></code> will go beyond this limit.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>out</strong> : np.ndarray</p>
+<blockquote class="last">
+<div><p>A 1-D array with the best-fit coefficients.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>If a similar imperfection pattern is expected along the meridian and along
+the circumference, the analyst can use an optimized relation between
+<code class="docutils literal"><span class="pre">m0</span></code> and <code class="docutils literal"><span class="pre">n0</span></code> in order to achieve a higher accuracy for a given
+computational cost, as proposed by Castro et al. (2014):</p>
+<div class="math">
+<p><span class="math">n_0 = m_0 \frac{\pi(R_{bot}+R_{top})}{2H}</span></p>
+</div></dd></dl>
+
+<dl class="function">
+<dt id="desicos.conecylDB.fit_data.fa">
+<code class="descclassname">desicos.conecylDB.fit_data.</code><code class="descname">fa</code><span class="sig-paren">(</span><em>m0</em>, <em>n0</em>, <em>zs_norm</em>, <em>thetas</em>, <em>funcnum=2</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/conecylDB/fit_data.html#fa"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.conecylDB.fit_data.fa" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the matrix with the base functions for <span class="math">w_0</span></p>
+<p>The calculated matrix is directly used to calculate the <span class="math">w_0</span> displacement
+field, when the corresponding coefficients <span class="math">c_0</span> are known, through:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">fa</span><span class="p">(</span><span class="n">m0</span><span class="p">,</span> <span class="n">n0</span><span class="p">,</span> <span class="n">zs_norm</span><span class="p">,</span> <span class="n">thetas</span><span class="p">,</span> <span class="n">funcnum</span><span class="p">)</span>
+<span class="n">w0</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">c0</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>m0</strong> : int</p>
+<blockquote>
+<div><p>The number of terms along the meridian.</p>
+</div></blockquote>
+<p><strong>n0</strong> : int</p>
+<blockquote>
+<div><p>The number of terms along the circumference.</p>
+</div></blockquote>
+<p><strong>zs_norm</strong> : np.ndarray</p>
+<blockquote>
+<div><p>The normalized <span class="math">z</span> coordinates (from 0. to 1.) used to compute
+the base functions.</p>
+</div></blockquote>
+<p><strong>thetas</strong> : np.ndarray</p>
+<blockquote>
+<div><p>The angles in radians representing the circumferential positions.</p>
+</div></blockquote>
+<p><strong>funcnum</strong> : int, optional</p>
+<blockquote class="last">
+<div><p>The function used for the approximation (see function <a class="reference internal" href="#desicos.conecylDB.fit_data.calc_c0" title="desicos.conecylDB.fit_data.calc_c0"><code class="xref py py-func docutils literal"><span class="pre">calc_c0()</span></code></a>)</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="desicos.conecylDB.fit_data.filter_c0">
+<code class="descclassname">desicos.conecylDB.fit_data.</code><code class="descname">filter_c0</code><span class="sig-paren">(</span><em>m0</em>, <em>n0</em>, <em>c0</em>, <em>filter_m0</em>, <em>filter_n0</em>, <em>funcnum=2</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/conecylDB/fit_data.html#filter_c0"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.conecylDB.fit_data.filter_c0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply filter to the imperfection coefficients <span class="math">\{c_0\}</span></p>
+<p>A filter consists on removing some frequencies that are known to be
+related to rigid body modes or spurious measurement noise. The frequencies
+to be removed should be passed through inputs <code class="docutils literal"><span class="pre">filter_m0</span></code> and
+<code class="docutils literal"><span class="pre">filter_n0</span></code>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>m0</strong> : int</p>
+<blockquote>
+<div><p>The number of terms along the meridian.</p>
+</div></blockquote>
+<p><strong>n0</strong> : int</p>
+<blockquote>
+<div><p>The number of terms along the circumference.</p>
+</div></blockquote>
+<p><strong>c0</strong> : np.ndarray</p>
+<blockquote>
+<div><p>The coefficients of the imperfection pattern.</p>
+</div></blockquote>
+<p><strong>filter_m0</strong> : list</p>
+<blockquote>
+<div><p>The values of <code class="docutils literal"><span class="pre">m0</span></code> that should be filtered.</p>
+</div></blockquote>
+<p><strong>filter_n0</strong> : list</p>
+<blockquote>
+<div><p>The values of <code class="docutils literal"><span class="pre">n0</span></code> that should be filtered.</p>
+</div></blockquote>
+<p><strong>funcnum</strong> : int, optional</p>
+<blockquote>
+<div><p>The function used for the approximation (see function <a class="reference internal" href="#desicos.conecylDB.fit_data.calc_c0" title="desicos.conecylDB.fit_data.calc_c0"><code class="xref py py-func docutils literal"><span class="pre">calc_c0()</span></code></a>)</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>c0_filtered</strong> : np.ndarray</p>
+<blockquote class="last">
+<div><p>The filtered coefficients of the imperfection pattern.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="desicos.conecylDB.fit_data.fw0">
+<code class="descclassname">desicos.conecylDB.fit_data.</code><code class="descname">fw0</code><span class="sig-paren">(</span><em>m0</em>, <em>n0</em>, <em>c0</em>, <em>xs_norm</em>, <em>ts</em>, <em>funcnum=2</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/conecylDB/fit_data.html#fw0"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.conecylDB.fit_data.fw0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the imperfection field <span class="math">w_0</span> for a given input</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>m0</strong> : int</p>
+<blockquote>
+<div><p>The number of terms along the meridian.</p>
+</div></blockquote>
+<p><strong>n0</strong> : int</p>
+<blockquote>
+<div><p>The number of terms along the circumference.</p>
+</div></blockquote>
+<p><strong>c0</strong> : np.ndarray</p>
+<blockquote>
+<div><p>The coefficients of the imperfection pattern.</p>
+</div></blockquote>
+<p><strong>xs_norm</strong> : np.ndarray</p>
+<blockquote>
+<div><p>The meridian coordinate (<span class="math">x</span>) normalized to be between <code class="docutils literal"><span class="pre">0.</span></code> and
+<code class="docutils literal"><span class="pre">1.</span></code>.</p>
+</div></blockquote>
+<p><strong>ts</strong> : np.ndarray</p>
+<blockquote>
+<div><p>The angles in radians representing the circumferential coordinate
+(<span class="math">\theta</span>).</p>
+</div></blockquote>
+<p><strong>funcnum</strong> : int, optional</p>
+<blockquote>
+<div><p>The function used for the approximation (see function <a class="reference internal" href="#desicos.conecylDB.fit_data.calc_c0" title="desicos.conecylDB.fit_data.calc_c0"><code class="xref py py-func docutils literal"><span class="pre">calc_c0()</span></code></a>)</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>w0s</strong> : np.ndarray</p>
+<blockquote class="last">
+<div><p>An array with the same shape of <code class="docutils literal"><span class="pre">xs_norm</span></code> containing the calculated
+imperfections.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>The inputs <code class="docutils literal"><span class="pre">xs_norm</span></code> and <code class="docutils literal"><span class="pre">ts</span></code> must be of the same size.</p>
+<p>The inputs must satisfy <code class="docutils literal"><span class="pre">c0.shape[0]</span> <span class="pre">==</span> <span class="pre">size*m0*n0</span></code>, where:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">size=2</span></code> if <code class="docutils literal"><span class="pre">funcnum==1</span> <span class="pre">or</span> <span class="pre">funcnum==2</span></code></li>
+<li><code class="docutils literal"><span class="pre">size=4</span></code> if <code class="docutils literal"><span class="pre">funcnum==3</span></code></li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="desicos.conecylDB.fit_data.transf_matrix">
+<code class="descclassname">desicos.conecylDB.fit_data.</code><code class="descname">transf_matrix</code><span class="sig-paren">(</span><em>alphadeg</em>, <em>betadeg</em>, <em>gammadeg</em>, <em>x0</em>, <em>y0</em>, <em>z0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/conecylDB/fit_data.html#transf_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.conecylDB.fit_data.transf_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the transformation matrix</p>
+<p>The transformation matrix <span class="math">[T]</span> is used to transform a set of points
+from one coordinate system to another.</p>
+<p>Many routines in the <code class="docutils literal"><span class="pre">desicos</span></code> require a transformation matrix when
+the coordinate system is different than <a class="reference internal" href="../abaqus/index.html#figure-conecyl"><span class="std std-ref">the default one</span></a>. In such cases the angles <span class="math">\alpha, \beta, \gamma</span> and
+the translations <span class="math">\Delta x_0, \Delta y_0, \Delta z_0</span> represent how
+the user’s coordinate system differs from the default.</p>
+<div class="math">
+<p><span class="math">[T] = \begin{bmatrix}
+cos(\beta)cos(\gamma) &amp;
+sin(\alpha)sin(\beta)cos(\gamma) + cos(\alpha)sin(\gamma) &amp;
+sin(\alpha)sin(\gamma) - cos(\alpha)sin(\beta)cos(\gamma) &amp;
+\Delta x_0
+\\
+-cos(\beta)sin(\gamma) &amp;
+cos(\alpha)cos(\gamma) - sin(\alpha)sin(\beta)sin(\gamma)&amp;
+sin(\alpha)cos(\gamma) + cos(\alpha)sin(\beta)sin(\gamma) &amp;
+\Delta y_0
+\\
+sin(\beta) &amp;
+-sin(\alpha)cos(\beta) &amp;
+cos(\alpha)cos(\beta) &amp;
+\Delta z_0
+\\
+      \end{bmatrix}</span></p>
+</div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>alphadeg</strong> : float</p>
+<blockquote>
+<div><p>Rotation around the x axis, in degrees.</p>
+</div></blockquote>
+<p><strong>betadeg</strong> : float</p>
+<blockquote>
+<div><p>Rotation around the y axis, in degrees.</p>
+</div></blockquote>
+<p><strong>gammadeg</strong> : float</p>
+<blockquote>
+<div><p>Rotation around the z axis, in degrees.</p>
+</div></blockquote>
+<p><strong>x0</strong> : float</p>
+<blockquote>
+<div><p>Translation along the x axis.</p>
+</div></blockquote>
+<p><strong>y0</strong> : float</p>
+<blockquote>
+<div><p>Translation along the y axis.</p>
+</div></blockquote>
+<p><strong>z0</strong> : float</p>
+<blockquote>
+<div><p>Translation along the z axis.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>T</strong> : np.ndarray</p>
+<blockquote class="last">
+<div><p>The 3 by 4 transformation matrix.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<span class="target" id="module-desicos.conecylDB.interpolate"></span><div class="section" id="interpolate-desicos-conecyldb-interpolate">
+<h2>Interpolate (<a class="reference internal" href="#module-desicos.conecylDB.interpolate" title="desicos.conecylDB.interpolate"><code class="xref py py-mod docutils literal"><span class="pre">desicos.conecylDB.interpolate</span></code></a>)<a class="headerlink" href="#interpolate-desicos-conecyldb-interpolate" title="Permalink to this headline">¶</a></h2>
+<p>This module includes some interpolation utilities that will be used in other
+modules.</p>
+<dl class="function">
+<dt id="desicos.conecylDB.interpolate.interp">
+<code class="descclassname">desicos.conecylDB.interpolate.</code><code class="descname">interp</code><span class="sig-paren">(</span><em>x</em>, <em>xp</em>, <em>fp</em>, <em>left=None</em>, <em>right=None</em>, <em>period=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/conecylDB/interpolate.html#interp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.conecylDB.interpolate.interp" title="Permalink to this definition">¶</a></dt>
+<dd><p>One-dimensional linear interpolation</p>
+<p>Returns the one-dimensional piecewise linear interpolant to a function
+with given values at discrete data-points.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>x</strong> : array_like</p>
+<blockquote>
+<div><p>The x-coordinates of the interpolated values.</p>
+</div></blockquote>
+<p><strong>xp</strong> : 1-D sequence of floats</p>
+<blockquote>
+<div><p>The x-coordinates of the data points, must be increasing if argument
+<code class="docutils literal"><span class="pre">period</span></code> is not specified. Otherwise, <code class="docutils literal"><span class="pre">xp</span></code> is internally sorted
+after normalizing the periodic boundaries with <code class="docutils literal"><span class="pre">xp</span> <span class="pre">=</span> <span class="pre">xp</span> <span class="pre">%</span> <span class="pre">period</span></code>.</p>
+</div></blockquote>
+<p><strong>fp</strong> : 1-D sequence of floats</p>
+<blockquote>
+<div><p>The y-coordinates of the data points, same length as <code class="docutils literal"><span class="pre">xp</span></code>.</p>
+</div></blockquote>
+<p><strong>left</strong> : float, optional</p>
+<blockquote>
+<div><p>Value to return for <code class="docutils literal"><span class="pre">x</span> <span class="pre">&lt;</span> <span class="pre">xp[0]</span></code>, default is <code class="docutils literal"><span class="pre">fp[0]</span></code>.</p>
+</div></blockquote>
+<p><strong>right</strong> : float, optional</p>
+<blockquote>
+<div><p>Value to return for <code class="docutils literal"><span class="pre">x</span> <span class="pre">&gt;</span> <span class="pre">xp[-1]</span></code>, default is <code class="docutils literal"><span class="pre">fp[-1]</span></code>.</p>
+</div></blockquote>
+<p><strong>period</strong> : float, optional</p>
+<blockquote>
+<div><p>A period for the x-coordinates. This parameter allows the proper
+interpolation of angular x-coordinates. Parameters <code class="docutils literal"><span class="pre">left</span></code> and
+<code class="docutils literal"><span class="pre">right</span></code> are ignored if <code class="docutils literal"><span class="pre">period</span></code> is specified.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>y</strong> : {float, ndarray}</p>
+<blockquote>
+<div><p>The interpolated values, same shape as <code class="docutils literal"><span class="pre">x</span></code>.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><strong>ValueError</strong></p>
+<blockquote class="last">
+<div><p>If <code class="docutils literal"><span class="pre">xp</span></code> and <code class="docutils literal"><span class="pre">fp</span></code> have different length
+If <code class="docutils literal"><span class="pre">xp</span></code> or <code class="docutils literal"><span class="pre">fp</span></code> are not 1-D sequences
+If <code class="docutils literal"><span class="pre">period==0</span></code></p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Does not check that the x-coordinate sequence <code class="docutils literal"><span class="pre">xp</span></code> is increasing.
+If <code class="docutils literal"><span class="pre">xp</span></code> is not increasing, the results are nonsense.
+A simple check for increasing is:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">xp</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">xp</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fp</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">interp</span><span class="p">(</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">xp</span><span class="p">,</span> <span class="n">fp</span><span class="p">)</span>
+<span class="go">1.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">interp</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">2.72</span><span class="p">,</span> <span class="mf">3.14</span><span class="p">],</span> <span class="n">xp</span><span class="p">,</span> <span class="n">fp</span><span class="p">)</span>
+<span class="go">array([ 3. ,  3. ,  2.5 ,  0.56,  0. ])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">UNDEF</span> <span class="o">=</span> <span class="o">-</span><span class="mf">99.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">interp</span><span class="p">(</span><span class="mf">3.14</span><span class="p">,</span> <span class="n">xp</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="n">UNDEF</span><span class="p">)</span>
+<span class="go">-99.0</span>
+</pre></div>
+</div>
+<p>Plot an interpolant to the sine function:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xvals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">yinterp</span> <span class="o">=</span> <span class="n">interp</span><span class="p">(</span><span class="n">xvals</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
+<span class="go">[&lt;matplotlib.lines.Line2D object at 0x...&gt;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xvals</span><span class="p">,</span> <span class="n">yinterp</span><span class="p">,</span> <span class="s1">&#39;-x&#39;</span><span class="p">)</span>
+<span class="go">[&lt;matplotlib.lines.Line2D object at 0x...&gt;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Interpolation with periodic x-coordinates:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">180</span><span class="p">,</span> <span class="o">-</span><span class="mi">170</span><span class="p">,</span> <span class="o">-</span><span class="mi">185</span><span class="p">,</span> <span class="mi">185</span><span class="p">,</span> <span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">365</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xp</span> <span class="o">=</span> <span class="p">[</span><span class="mi">190</span><span class="p">,</span> <span class="o">-</span><span class="mi">190</span><span class="p">,</span> <span class="mi">350</span><span class="p">,</span> <span class="o">-</span><span class="mi">350</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fp</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">interp</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">xp</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">period</span><span class="o">=</span><span class="mi">360</span><span class="p">)</span>
+<span class="go">array([7.5, 5., 8.75, 6.25, 3., 3.25, 3.5, 3.75])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="desicos.conecylDB.interpolate.interp_theta_z_imp">
+<code class="descclassname">desicos.conecylDB.interpolate.</code><code class="descname">interp_theta_z_imp</code><span class="sig-paren">(</span><em>data</em>, <em>mesh</em>, <em>alphadeg</em>, <em>H_measured</em>, <em>H_model</em>, <em>R_bottom</em>, <em>stretch_H=False</em>, <em>z_offset_bot=None</em>, <em>rotatedeg=0.0</em>, <em>num_sub=10</em>, <em>ncp=5</em>, <em>power_parameter=2</em>, <em>ignore_bot_h=None</em>, <em>ignore_top_h=None</em>, <em>T=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/conecylDB/interpolate.html#interp_theta_z_imp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.conecylDB.interpolate.interp_theta_z_imp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interpolates a data set in the <span class="math">\theta, z, imp</span> format</p>
+<p>This function uses the inverse-weighted algorithm (<a class="reference internal" href="#desicos.conecylDB.interpolate.inv_weighted" title="desicos.conecylDB.interpolate.inv_weighted"><code class="xref py py-func docutils literal"><span class="pre">inv_weighted()</span></code></a>).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>data</strong> : str or numpy.ndarray, shape (N, 3)</p>
+<blockquote>
+<div><p>The data or an array containing the imperfection file in the <span class="math">(\theta,
+Z, imp)</span> format.</p>
+</div></blockquote>
+<p><strong>mesh</strong> : numpy.ndarray, shape (M, 3)</p>
+<blockquote>
+<div><p>The mesh coordinates <span class="math">(x, y, z)</span> where the values will be interpolated
+to.</p>
+</div></blockquote>
+<p><strong>alphadeg</strong> : float</p>
+<blockquote>
+<div><p>The cone semi-vertex angle in degrees.</p>
+</div></blockquote>
+<p><strong>H_measured</strong> : float</p>
+<blockquote>
+<div><p>The total height of the measured test specimen, including eventual
+resin rings at the edges.</p>
+</div></blockquote>
+<p><strong>H_model</strong> : float</p>
+<blockquote>
+<div><p>The total height of the new model, including eventual resin rings at
+the edges.</p>
+</div></blockquote>
+<p><strong>R_bottom</strong> : float</p>
+<blockquote>
+<div><p>The radius of the model taken at the bottom edge.</p>
+</div></blockquote>
+<p><strong>stretch_H</strong> : bool, optional</p>
+<blockquote>
+<div><p>Tells if the height of the measured points, which is usually smaller
+than the height of the test specimen, should be stretched to fill
+the whole test specimen. If not, the points will be placed in the
+middle or using the offset given by <code class="docutils literal"><span class="pre">z_offset_bot</span></code> and the
+area not covered by the measured points will be interpolated
+using the closest available points (the imperfection
+pattern will look like there was an extrusion close to the edges).</p>
+</div></blockquote>
+<p><strong>z_offset_bot</strong> : float, optional</p>
+<blockquote>
+<div><p>The offset that should be used from the bottom of the measured points
+to the bottom of the test specimen.</p>
+</div></blockquote>
+<p><strong>rotatedeg</strong> : float, optional</p>
+<blockquote>
+<div><p>Rotation angle in degrees telling how much the imperfection pattern
+should be rotated about the <span class="math">X_3</span> (or <span class="math">Z</span>) axis.</p>
+</div></blockquote>
+<p><strong>num_sub</strong> : int, optional</p>
+<blockquote>
+<div><p>The number of sub-sets used during the interpolation. The points
+are divided in sub-sets to increase the algorithm’s efficiency.</p>
+</div></blockquote>
+<p><strong>ncp</strong> : int, optional</p>
+<blockquote>
+<div><p>Number of closest points used in the inverse-weighted interpolation.</p>
+</div></blockquote>
+<p><strong>power_parameter</strong> : float, optional</p>
+<blockquote>
+<div><p>Power of inverse weighted interpolation function.</p>
+</div></blockquote>
+<p><strong>ignore_bot_h</strong> : None or float, optional</p>
+<blockquote>
+<div><p>Nodes close to the bottom edge are ignored according to this
+meridional distance.</p>
+</div></blockquote>
+<p><strong>ignore_top_h</strong> : None or float, optional</p>
+<blockquote>
+<div><p>Nodes close to the top edge are ignored according to this meridional
+distance.</p>
+</div></blockquote>
+<p><strong>T</strong> : None or np.ndarray, optional</p>
+<blockquote>
+<div><p>A transformation matrix (cf. <a class="reference internal" href="#desicos.conecylDB.fit_data.transf_matrix" title="desicos.conecylDB.fit_data.transf_matrix"><code class="xref py py-func docutils literal"><span class="pre">transf_matrix()</span></code></a>) required when the
+mesh is not in the <a class="reference internal" href="../abaqus/index.html#figure-conecyl"><span class="std std-ref">default coordinate system</span></a>.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>ans</strong> : numpy.ndarray</p>
+<blockquote class="last">
+<div><p>An array with M elements containing the interpolated values.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="desicos.conecylDB.interpolate.inv_weighted">
+<code class="descclassname">desicos.conecylDB.interpolate.</code><code class="descname">inv_weighted</code><span class="sig-paren">(</span><em>data</em>, <em>mesh</em>, <em>num_sub</em>, <em>col</em>, <em>ncp=5</em>, <em>power_parameter=2</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/conecylDB/interpolate.html#inv_weighted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.conecylDB.interpolate.inv_weighted" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interpolates the values taken at one group of points into
+another using an inverse-weighted algorithm</p>
+<p>In the inverse-weighted algorithm a number of <span class="math">n_{CP}</span> measured points
+of the input parameter <code class="docutils literal"><span class="pre">data</span></code> that are closest to a given node in
+the input parameter <code class="docutils literal"><span class="pre">mesh</span></code> are found and the imperfection value of
+this node (represented by the normal displacement <span class="math">{w_0}_{node}</span>) is
+calculated as follows:</p>
+<div class="math">
+<p><span class="math">{w_0}_{node} = \frac{\sum_{i}^{n_{CP}}{{w_0}_i\frac{1}{w_i}}}
+                    {\sum_{i}^{n_{CP}}{\frac{1}{w_i}}}</span></p>
+</div><p>where <span class="math">w_i</span> is the inverse weight of each measured point, calculated as:</p>
+<div class="math">
+<p><span class="math">w_i = \left[(x_{node}-x_i)^2+(y_{node}-y_i)^2+(z_{node}-z_i)^2
+      \right]^p</span></p>
+</div><p>with <span class="math">p</span> being a power parameter that when increased will increase the
+relative influence of a closest point.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>data</strong> : numpy.ndarray, shape (N, ndim+1)</p>
+<blockquote>
+<div><p>The data or an array containing the imperfection file. The values
+to be interpolated must be in the last column.</p>
+</div></blockquote>
+<p><strong>mesh</strong> : numpy.ndarray, shape (M, ndim)</p>
+<blockquote>
+<div><p>The new coordinates where the values will be interpolated to.</p>
+</div></blockquote>
+<p><strong>num_sub</strong> : int</p>
+<blockquote>
+<div><p>The number of sub-sets used during the interpolation. The points
+are divided in sub-sets to increase the algorithm’s efficiency.</p>
+</div></blockquote>
+<p><strong>col</strong> : int</p>
+<blockquote>
+<div><p>The index of the column to be used in order to divide the data
+in sub-sets. Note that the first column index is <code class="docutils literal"><span class="pre">0</span></code>.</p>
+</div></blockquote>
+<p><strong>ncp</strong> : int, optional</p>
+<blockquote>
+<div><p>Number of closest points used in the inverse-weighted interpolation.</p>
+</div></blockquote>
+<p><strong>power_parameter</strong> : float, optional</p>
+<blockquote>
+<div><p>Power of inverse weighted interpolation function.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>ans</strong> : numpy.ndarray</p>
+<blockquote class="last">
+<div><p>A 1-D array with the interpolated values. The size of this array
+is <code class="docutils literal"><span class="pre">mesh.shape[0]</span></code>.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<span class="target" id="module-desicos.conecylDB.read_write"></span><div class="section" id="read-write-desicos-conecyldb-read-write">
+<h2>Read/Write (<a class="reference internal" href="#module-desicos.conecylDB.read_write" title="desicos.conecylDB.read_write"><code class="xref py py-mod docutils literal"><span class="pre">desicos.conecylDB.read_write</span></code></a>)<a class="headerlink" href="#read-write-desicos-conecyldb-read-write" title="Permalink to this headline">¶</a></h2>
+<p>This module includes functions to read and write imperfection files.</p>
+<dl class="function">
+<dt id="desicos.conecylDB.read_write.read_theta_z_imp">
+<code class="descclassname">desicos.conecylDB.read_write.</code><code class="descname">read_theta_z_imp</code><span class="sig-paren">(</span><em>path</em>, <em>H_measured=None</em>, <em>stretch_H=False</em>, <em>z_offset_bot=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/conecylDB/read_write.html#read_theta_z_imp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.conecylDB.read_write.read_theta_z_imp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read an imperfection file in the format <span class="math">\theta</span>, <span class="math">z</span>, imperfection.</p>
+<p>Where the angles <span class="math">\theta</span> are given in radians.</p>
+<p>Example of input file:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">theta1</span> <span class="n">z1</span> <span class="n">imp1</span>
+<span class="n">theta2</span> <span class="n">z2</span> <span class="n">imp2</span>
+<span class="o">...</span>
+<span class="n">thetan</span> <span class="n">zn</span> <span class="n">impn</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>path</strong> : str or np.ndarray</p>
+<blockquote>
+<div><p>The path to the imperfection file, or a <code class="docutils literal"><span class="pre">np.ndarray</span></code>, with
+three columns.</p>
+</div></blockquote>
+<p><strong>H_measured</strong> : float, optional</p>
+<blockquote>
+<div><p>The total height of the measured test specimen, including eventual
+resin rings at the edges.</p>
+</div></blockquote>
+<p><strong>stretch_H</strong> : bool, optional</p>
+<blockquote>
+<div><p>Tells if the height of the measured points, which is usually smaller
+than the height of the test specimen, should be stretched to fill
+the whole test specimen. If not, the points will be placed in the
+middle or using the offset given by <code class="docutils literal"><span class="pre">z_offset_bot</span></code> and the
+area not covered by the measured points will be interpolated
+using the closest available points (the imperfection
+pattern will look like there was an extrusion close to the edges).</p>
+</div></blockquote>
+<p><strong>z_offset_bot</strong> : float, optional</p>
+<blockquote>
+<div><p>The offset that should be used from the bottom of the measured points
+to the bottom of the test specimen.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>mps</strong> : np.ndarray</p>
+<blockquote>
+<div><p>A 2-D array with <span class="math">\theta</span>, <span class="math">z</span>, <span class="math">value</span> in the first, second
+and third columns, respectively.</p>
+</div></blockquote>
+<p><strong>offset_mps</strong> : np.ndarray</p>
+<blockquote>
+<div><p>A 2-D array similar to <code class="docutils literal"><span class="pre">mps</span></code> but offset according to place the
+measured data according to the inputs given.</p>
+</div></blockquote>
+<p><strong>norm_mps</strong> : np.ndarray</p>
+<blockquote class="last">
+<div><p>A 2-D array similar to <code class="docutils literal"><span class="pre">mps</span></code> but normalized in <span class="math">z</span> by the height.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="desicos.conecylDB.read_write.read_xyz">
+<code class="descclassname">desicos.conecylDB.read_write.</code><code class="descname">read_xyz</code><span class="sig-paren">(</span><em>path</em>, <em>alphadeg_measured=None</em>, <em>R_best_fit=None</em>, <em>H_measured=None</em>, <em>stretch_H=False</em>, <em>z_offset_bot=None</em>, <em>r_TOL=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/conecylDB/read_write.html#read_xyz"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.conecylDB.read_write.read_xyz" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read an imperfection file in the format <span class="math">x</span>, <span class="math">y</span>, <span class="math">z</span>.</p>
+<p>Example of input file:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">x1</span> <span class="n">y1</span> <span class="n">z1</span>
+<span class="n">x2</span> <span class="n">y2</span> <span class="n">z2</span>
+<span class="o">...</span>
+<span class="n">xn</span> <span class="n">yn</span> <span class="n">zn</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>path</strong> : str or np.ndarray</p>
+<blockquote>
+<div><p>The path to the imperfection file, or a <code class="docutils literal"><span class="pre">np.ndarray</span></code>, with
+three columns.</p>
+</div></blockquote>
+<p><strong>alphadeg_measured</strong> : float, optional</p>
+<blockquote>
+<div><p>The semi-vertex angle of the measured sample.</p>
+</div></blockquote>
+<p><strong>R_best_fit</strong> : float, optional</p>
+<blockquote>
+<div><p>Best fit radius obtained with functions <a class="reference internal" href="#desicos.conecylDB.fit_data.best_fit_cylinder" title="desicos.conecylDB.fit_data.best_fit_cylinder"><code class="xref py py-func docutils literal"><span class="pre">best_fit_cylinder()</span></code></a>
+or <code class="xref py py-func docutils literal"><span class="pre">best_fit_cone()</span></code>.</p>
+</div></blockquote>
+<p><strong>H_measured</strong> : float, optional</p>
+<blockquote>
+<div><p>The total height of the measured test specimen, including eventual
+resin rings at the edges.</p>
+</div></blockquote>
+<p><strong>stretch_H</strong> : bool, optional</p>
+<blockquote>
+<div><p>Tells if the height of the measured points, which is usually smaller
+than the height of the test specimen, should be stretched to fill
+the whole test specimen. If not, the points will be placed in the
+middle or using the offset given by <code class="docutils literal"><span class="pre">z_offset_bot</span></code> and the
+area not covered by the measured points will be interpolated
+using the closest available points (the imperfection
+pattern will look like there was an extrusion close to the edges).</p>
+</div></blockquote>
+<p><strong>z_offset_bot</strong> : float, optional</p>
+<blockquote>
+<div><p>The offset that should be used from the bottom of the measured points
+to the bottom of the test specimen.</p>
+</div></blockquote>
+<p><strong>r_TOL</strong> : float, optional</p>
+<blockquote>
+<div><p>The tolerance used to ignore points farer than <code class="docutils literal"><span class="pre">r_TOL*R_best_fit</span></code>,
+given in percent.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>mps</strong> : np.ndarray</p>
+<blockquote>
+<div><p>A 2-D array with <span class="math">x</span>, <span class="math">y</span>, <span class="math">z</span> in the first, second
+and third columns, respectively.</p>
+</div></blockquote>
+<p><strong>offset_mps</strong> : np.ndarray</p>
+<blockquote>
+<div><p>A 2-D array similar to <code class="docutils literal"><span class="pre">mps</span></code> but with the z coordinates offset
+according to the inputs given.</p>
+</div></blockquote>
+<p><strong>norm_mps</strong> : np.ndarray</p>
+<blockquote class="last">
+<div><p>A 2-D array similar to <code class="docutils literal"><span class="pre">mps</span></code> but normalized in <span class="math">z</span> by the height
+and in <span class="math">x</span> and <span class="math">y</span> by the radius.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="desicos.conecylDB.read_write.xyz2thetazimp">
+<code class="descclassname">desicos.conecylDB.read_write.</code><code class="descname">xyz2thetazimp</code><span class="sig-paren">(</span><em>path</em>, <em>alphadeg_measured</em>, <em>H_measured</em>, <em>R_expected=10.0</em>, <em>use_best_fit=True</em>, <em>sample_size=None</em>, <em>best_fit_output=False</em>, <em>errorRtol=1e-09</em>, <em>stretch_H=False</em>, <em>z_offset_bot=None</em>, <em>r_TOL=1.0</em>, <em>clip_bottom=None</em>, <em>clip_top=None</em>, <em>save=True</em>, <em>fmt='%1.6f'</em>, <em>rotatedeg=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/conecylDB/read_write.html#xyz2thetazimp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.conecylDB.read_write.xyz2thetazimp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transforms an imperfection file from the format “<span class="math">x</span> <span class="math">y</span> <span class="math">z</span>”
+to the format “<span class="math">\theta</span> <span class="math">z</span> <span class="math">imp</span>“.</p>
+<p>The input file:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">x1</span> <span class="n">y1</span> <span class="n">z1</span>
+<span class="n">x2</span> <span class="n">y2</span> <span class="n">z2</span>
+<span class="o">...</span>
+<span class="n">xn</span> <span class="n">yn</span> <span class="n">zn</span>
+</pre></div>
+</div>
+<p>Is transformed to a file:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">theta1</span> <span class="n">z1</span> <span class="n">imp1</span>
+<span class="n">theta2</span> <span class="n">z2</span> <span class="n">imp2</span>
+<span class="o">...</span>
+<span class="n">thetan</span> <span class="n">zn</span> <span class="n">impn</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>path</strong> : str</p>
+<blockquote>
+<div><p>The path to the imperfection file.</p>
+</div></blockquote>
+<p><strong>alphadeg_measured</strong> : float</p>
+<blockquote>
+<div><p>The semi-vertex angle of the measured sample (it is <code class="docutils literal"><span class="pre">0.</span></code> for a
+cylinder).</p>
+</div></blockquote>
+<p><strong>H_measured</strong> : float</p>
+<blockquote>
+<div><p>The total height of the measured test specimen, including eventual
+resin rings at the edges.</p>
+</div></blockquote>
+<p><strong>R_expected</strong> : float, optional</p>
+<blockquote>
+<div><p>If <code class="docutils literal"><span class="pre">use_best_fit==True</span></code> this will be used as a first estimative that
+can reduce the number of iterations up to convergence of the best fit
+algorithms. If <code class="docutils literal"><span class="pre">use_best_fit==False</span></code> this will be considered the
+<code class="docutils literal"><span class="pre">R_best_fit</span></code>.</p>
+</div></blockquote>
+<p><strong>use_best_fit</strong> : bool, optional</p>
+<blockquote>
+<div><p>If <code class="docutils literal"><span class="pre">True</span></code> it overwrites the values for: <code class="docutils literal"><span class="pre">R_expected</span></code> (for
+cylinders and cones) and <code class="docutils literal"><span class="pre">z_offset_bot</span></code> (for cones), which are
+automatically determined with functions <a class="reference internal" href="#desicos.conecylDB.fit_data.best_fit_cylinder" title="desicos.conecylDB.fit_data.best_fit_cylinder"><code class="xref py py-func docutils literal"><span class="pre">best_fit_cylinder()</span></code></a> and
+<a class="reference internal" href="#desicos.conecylDB.fit_data.best_fit_cone" title="desicos.conecylDB.fit_data.best_fit_cone"><code class="xref py py-func docutils literal"><span class="pre">best_fit_cone()</span></code></a>.</p>
+</div></blockquote>
+<p><strong>best_fit_output</strong> : bool, optional</p>
+<blockquote>
+<div><p>If the output from the best fit routines should be also returned. In
+case <code class="docutils literal"><span class="pre">True</span></code> the output of this function will be a tuple with
+<code class="docutils literal"><span class="pre">(mps,</span> <span class="pre">out)</span></code>. For a description of <code class="docutils literal"><span class="pre">out</span></code> see
+<a class="reference internal" href="#desicos.conecylDB.fit_data.best_fit_cylinder" title="desicos.conecylDB.fit_data.best_fit_cylinder"><code class="xref py py-func docutils literal"><span class="pre">best_fit_cylinder()</span></code></a>.</p>
+</div></blockquote>
+<p><strong>errorRtol</strong> : float, optional</p>
+<blockquote>
+<div><p>The error tolerance for the best-fit radius to stop the iterations.</p>
+</div></blockquote>
+<p><strong>sample_size</strong> : int, optional</p>
+<blockquote>
+<div><p>If the input file containing the measured data is too large it may
+become convenient to use only a sample of it in order to calculate
+the best fit.</p>
+</div></blockquote>
+<p><strong>z_offset_bot</strong> : float, optional</p>
+<blockquote>
+<div><p>The offset that should be used from the bottom of the measured points
+to the bottom of the test specimen.</p>
+</div></blockquote>
+<p><strong>r_TOL</strong> : float, optional</p>
+<blockquote>
+<div><p>The tolerance used to ignore points farer than <code class="docutils literal"><span class="pre">r_TOL*R_best_fit</span></code>,
+given in percent.</p>
+</div></blockquote>
+<p><strong>clip_bottom</strong> : float, optional</p>
+<blockquote>
+<div><p>How much of the measured points close to the bottom edge should be
+cut off, convenient to remove spurious measured data. Example: if
+the minimum <code class="docutils literal"><span class="pre">z</span></code> coordinate of the measured points is <code class="docutils literal"><span class="pre">25.4</span></code>
+and <code class="docutils literal"><span class="pre">clip_bottom=10.</span></code>, all points with <code class="docutils literal"><span class="pre">z&lt;=35.4</span></code> will be
+ignored.</p>
+</div></blockquote>
+<p><strong>clip_top</strong> : float, optional</p>
+<blockquote>
+<div><p>Same as <code class="docutils literal"><span class="pre">clip_bottom</span></code>, but applicable to the points close to the
+top edge.</p>
+</div></blockquote>
+<p><strong>save</strong> : bool, optional</p>
+<blockquote>
+<div><p>If the returned array <code class="docutils literal"><span class="pre">mps</span></code> should also be saved to a <code class="docutils literal"><span class="pre">.txt</span></code> file.</p>
+</div></blockquote>
+<p><strong>fmt</strong> : str or sequence of strs, optional</p>
+<blockquote>
+<div><p>See <code class="docutils literal"><span class="pre">np.savetxt()</span></code> documentation for more details.</p>
+</div></blockquote>
+<p><strong>rotatedeg</strong> : float or None, optional</p>
+<blockquote>
+<div><p>Rotation angle in degrees telling how much the imperfection pattern
+should be rotated about the <span class="math">X_3</span> (or <span class="math">Z</span>) axis.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>mps</strong> : np.ndarray</p>
+<blockquote>
+<div><p>A 2-D array with <span class="math">\theta</span>, <span class="math">z</span>, <span class="math">imp</span> in the first, second
+and third columns, respectively.</p>
+</div></blockquote>
+<p><strong>mps, out</strong> : np.ndarray, dict</p>
+<blockquote class="last">
+<div><p>If <code class="docutils literal"><span class="pre">best_fit_output==True</span></code> it returns <code class="docutils literal"><span class="pre">(mps,</span> <span class="pre">out)</span></code> as described
+above.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="desicos.conecylDB.read_write.xyzthick2thetazthick">
+<code class="descclassname">desicos.conecylDB.read_write.</code><code class="descname">xyzthick2thetazthick</code><span class="sig-paren">(</span><em>path</em>, <em>alphadeg_measured</em>, <em>H_measured</em>, <em>R_expected=10.0</em>, <em>use_best_fit=True</em>, <em>sample_size=None</em>, <em>stretch_H=False</em>, <em>z_offset_bot=None</em>, <em>r_TOL=1.0</em>, <em>save=True</em>, <em>fmt='%1.6f'</em>, <em>rotatedeg=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/conecylDB/read_write.html#xyzthick2thetazthick"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.conecylDB.read_write.xyzthick2thetazthick" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transforms an imperfection file from the format: “<span class="math">x</span> <span class="math">y</span> <span class="math">z</span> <span class="math">thick</span>”
+to the format “<span class="math">\theta</span> <span class="math">z</span> <span class="math">thick</span>“.</p>
+<p>The input file:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">x1</span> <span class="n">y1</span> <span class="n">z1</span> <span class="n">thick1</span>
+<span class="n">x2</span> <span class="n">y2</span> <span class="n">z2</span> <span class="n">thick2</span>
+<span class="o">...</span>
+<span class="n">xn</span> <span class="n">yn</span> <span class="n">zn</span> <span class="n">thickn</span>
+</pre></div>
+</div>
+<p>Is transformed in a file:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">theta1</span> <span class="n">z1</span> <span class="n">thick1</span>
+<span class="n">theta2</span> <span class="n">z2</span> <span class="n">thick2</span>
+<span class="o">...</span>
+<span class="n">thetan</span> <span class="n">zn</span> <span class="n">thickn</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>path</strong> : str</p>
+<blockquote>
+<div><p>The path to the imperfection file.</p>
+</div></blockquote>
+<p><strong>alphadeg_measured</strong> : float</p>
+<blockquote>
+<div><p>The semi-vertex angle of the measured sample (it is <code class="docutils literal"><span class="pre">0.</span></code> for a
+cylinder).</p>
+</div></blockquote>
+<p><strong>H_measured</strong> : float</p>
+<blockquote>
+<div><p>The total height of the measured test specimen, including eventual
+resin rings at the edges.</p>
+</div></blockquote>
+<p><strong>R_expected</strong> : float, optional</p>
+<blockquote>
+<div><p>If <code class="docutils literal"><span class="pre">use_best_fit</span> <span class="pre">is</span> <span class="pre">True</span></code> this will be used as a first estimative that
+can reduce the number of iterations up to convergence of the best fit
+algorithms. If <code class="docutils literal"><span class="pre">use_best_fit</span> <span class="pre">is</span> <span class="pre">False</span></code> this will be considered the
+<code class="docutils literal"><span class="pre">R_best_fit</span></code>.</p>
+</div></blockquote>
+<p><strong>use_best_fit</strong> : bool, optional</p>
+<blockquote>
+<div><p>If <code class="docutils literal"><span class="pre">True</span></code> it overwrites the values for: <code class="docutils literal"><span class="pre">R_expected</span></code> (for
+cylinders and cones) and <code class="docutils literal"><span class="pre">z_offset_bot</span></code> (for cones), which are
+automatically determined with functions <a class="reference internal" href="#desicos.conecylDB.fit_data.best_fit_cylinder" title="desicos.conecylDB.fit_data.best_fit_cylinder"><code class="xref py py-func docutils literal"><span class="pre">best_fit_cylinder()</span></code></a> and
+<a class="reference internal" href="#desicos.conecylDB.fit_data.best_fit_cone" title="desicos.conecylDB.fit_data.best_fit_cone"><code class="xref py py-func docutils literal"><span class="pre">best_fit_cone()</span></code></a>.</p>
+</div></blockquote>
+<p><strong>sample_size</strong> : int, optional</p>
+<blockquote>
+<div><p>If the input file containing the measured data is too large it may
+become convenient to use only a sample of it in order to calculate
+the best fit.</p>
+</div></blockquote>
+<p><strong>z_offset_bot</strong> : float, optional</p>
+<blockquote>
+<div><p>The offset that should be used from the bottom of the measured points
+to the bottom of the test specimen.</p>
+</div></blockquote>
+<p><strong>r_TOL</strong> : float, optional</p>
+<blockquote>
+<div><p>The tolerance used to ignore points farer than <code class="docutils literal"><span class="pre">r_TOL*R_best_fit</span></code>,
+given in percent.</p>
+</div></blockquote>
+<p><strong>save</strong> : bool, optional</p>
+<blockquote>
+<div><p>If the returned array <code class="docutils literal"><span class="pre">mps</span></code> should also be saved to a <code class="docutils literal"><span class="pre">.txt</span></code> file.</p>
+</div></blockquote>
+<p><strong>fmt</strong> : str or sequence of strs, optional</p>
+<blockquote>
+<div><p>See <code class="docutils literal"><span class="pre">np.savetxt()</span></code> documentation for more details.</p>
+</div></blockquote>
+<p><strong>rotatedeg</strong> : float or None, optional</p>
+<blockquote>
+<div><p>Rotation angle in degrees telling how much the imperfection pattern
+should be rotated about the <span class="math">X_3</span> (or <span class="math">Z</span>) axis.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>mps</strong> : np.ndarray</p>
+<blockquote class="last">
+<div><p>A 2-D array with <span class="math">\theta</span>, <span class="math">z</span>, <span class="math">imp</span> in the first, second
+and third columns, respectively.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
 
           </div>
         </div>
@@ -51,7 +1326,7 @@
         <div class="sphinxsidebarwrapper">
 <p class="logo">
   <a href="../../index.html">
-    <img class="logo" src="../../_static/../logo/desicos.png" alt="Logo"/>
+    <img class="logo" src="../../_static/../../../logo/desicos.png" alt="Logo"/>
     
   </a>
 </p>
@@ -66,9 +1341,9 @@
 
 
 <h3>Navigation</h3>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../index.html">Modules</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Modules</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
 </ul>
 
@@ -91,8 +1366,8 @@
       &copy;2012-2015 Desicos Improved Software Team.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
       
     </div>
 

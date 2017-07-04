@@ -1,0 +1,412 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>desicos.abaqus.imperfections.msi &#8212; DESICOS 2.4.9 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2.4.9',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for desicos.abaqus.imperfections.msi</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">desicos.logger</span> <span class="k">import</span> <span class="n">warn</span>
+<span class="kn">from</span> <span class="nn">desicos.conecylDB</span> <span class="k">import</span> <span class="n">update_imps</span>
+<span class="kn">from</span> <span class="nn">desicos.abaqus.constants</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">desicos.abaqus.apply_imperfections</span> <span class="k">import</span> <span class="p">(</span><span class="n">calc_translations_ABAQUS</span><span class="p">,</span>
+                                                <span class="n">translate_nodes_ABAQUS</span><span class="p">,</span>
+                                                <span class="n">translate_nodes_ABAQUS_c0</span><span class="p">)</span>
+<div class="viewcode-block" id="calc_msi_amplitude"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.msi.calc_msi_amplitude">[docs]</a><span class="k">def</span> <span class="nf">calc_msi_amplitude</span><span class="p">(</span><span class="n">cc</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Calculates the mid-surface imperfection of a ConeCyl model</span>
+
+<span class="sd">    .. note:: Must be called from Abaqus.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cc : ConeCyl object</span>
+<span class="sd">        The :class:`.ConeCyl` object already</span>
+<span class="sd">    force : bool, optional</span>
+<span class="sd">        Does not the check if the finite element model is already created.</span>
+
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    max_amp : float</span>
+<span class="sd">        The maximum absolute amplitude.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">force</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">cc</span><span class="o">.</span><span class="n">created_model</span><span class="p">:</span>
+        <span class="n">warn</span><span class="p">(</span><span class="s1">&#39;The finite element for the input ConeCyl object is not created&#39;</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="kn">from</span> <span class="nn">abaqus</span> <span class="k">import</span> <span class="n">mdb</span>
+
+    <span class="n">part</span> <span class="o">=</span> <span class="n">mdb</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="n">cc</span><span class="o">.</span><span class="n">model_name</span><span class="p">]</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="n">cc</span><span class="o">.</span><span class="n">part_name_shell</span><span class="p">]</span>
+    <span class="n">coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">n</span><span class="o">.</span><span class="n">coordinates</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">part</span><span class="o">.</span><span class="n">nodes</span><span class="p">])</span>
+    <span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">zs</span> <span class="o">=</span> <span class="n">coords</span><span class="o">.</span><span class="n">T</span>
+    <span class="n">node_rs</span> <span class="o">=</span> <span class="p">(</span><span class="n">xs</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">ys</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mf">0.5</span>
+    <span class="n">pts</span> <span class="o">=</span> <span class="n">zs</span><span class="o">/</span><span class="n">cc</span><span class="o">.</span><span class="n">H</span>
+    <span class="n">rs</span><span class="p">,</span> <span class="n">zs</span> <span class="o">=</span> <span class="n">cc</span><span class="o">.</span><span class="n">r_z_from_pt</span><span class="p">(</span><span class="n">pts</span><span class="p">)</span>
+    <span class="n">amps</span> <span class="o">=</span> <span class="p">(</span><span class="n">node_rs</span> <span class="o">-</span> <span class="n">rs</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">cc</span><span class="o">.</span><span class="n">alpharad</span><span class="p">)</span>
+    <span class="n">max_amp</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">absolute</span><span class="p">(</span><span class="n">amps</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">max_amp</span></div>
+
+<div class="viewcode-block" id="MSI"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.msi.MSI">[docs]</a><span class="k">class</span> <span class="nc">MSI</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Mid-Surface Imperfection</span>
+
+<span class="sd">    The imperfections are applied using both an inverse-weighted</span>
+<span class="sd">    interpolation algorithm, detailed in :func:`.inv_weighted`, or a</span>
+<span class="sd">    continuous fitting function, detailed in :func:`.calc_c0`.</span>
+
+<span class="sd">    The following attributes of the :class:`.MSI` object control the</span>
+<span class="sd">    inverse-weighted algorithm:</span>
+
+<span class="sd">    ===================  =====================================================</span>
+<span class="sd">    Attribute            Description</span>
+<span class="sd">    ===================  =====================================================</span>
+<span class="sd">    ``ncp``              ``int``, number of closest points</span>
+<span class="sd">    ``power_parameter``  ``float``, power parameter</span>
+<span class="sd">    ``num_sec_z``        ``int``, number of sections used to spatially</span>
+<span class="sd">                         classify the measured points in order to</span>
+<span class="sd">                         accelerate the searching routines</span>
+<span class="sd">    ``r_TOL``            ``float``, percentage tolerance to ignore noisy</span>
+<span class="sd">                         data, for example, when ``r_TOL=1.`` the points</span>
+<span class="sd">                         with a radius `r &gt; 1.1 R_{bot}`</span>
+<span class="sd">    ===================  =====================================================</span>
+
+<span class="sd">    Additional attributes are used to apply the imperfection into the</span>
+<span class="sd">    finite element model when the inverse-weighted algorithm is selected.</span>
+
+<span class="sd">    ======================  ==================================================</span>
+<span class="sd">    Attribute               Description</span>
+<span class="sd">    ======================  ==================================================</span>
+<span class="sd">    ``imp_ms``              ``str``, an entry in the imperfection database,</span>
+<span class="sd">                            if an entry with this string key is found, it</span>
+<span class="sd">                            will overwrite the parameters: ``path,</span>
+<span class="sd">                            R_best_fit, H_measured``</span>
+<span class="sd">    ``path``                ``str``, full path to the imperfection file</span>
+<span class="sd">    ``use_theta_z_format``  ``bool``, if the imperfection file is in the</span>
+<span class="sd">                            `\theta, Z, imp` or in the `X, Y, Z` format</span>
+<span class="sd">    ``R_measured``          ``float``, best fit radius obtained with</span>
+<span class="sd">                            functions :func:`.best_fit_cylinder` or</span>
+<span class="sd">                            :func:`.best_fit_cone`</span>
+<span class="sd">    ``H_measured``          ``float``, height of the specimen for which the</span>
+<span class="sd">                            imperfection file corresponds to</span>
+<span class="sd">    ``scaling_factor``      ``float``, a scaling factor that is applied to</span>
+<span class="sd">                            the imperfection amplitude</span>
+<span class="sd">    ``sample_size``         Avoids a memory overflow during runtime for</span>
+<span class="sd">                            large imperfection files</span>
+<span class="sd">    ``rotatedeg``           ``float``, rotation angle in degrees telling</span>
+<span class="sd">                            how much the imperfection pattern should be</span>
+<span class="sd">                            rotated about the `X_3` (or `Z`) axis.</span>
+<span class="sd">    ======================  ==================================================</span>
+
+<span class="sd">    The following attributes of the :class:`.MSI` object control the</span>
+<span class="sd">    continuous function-based algorithm:</span>
+
+<span class="sd">    ===================  =====================================================</span>
+<span class="sd">    Attribute            Description</span>
+<span class="sd">    ===================  =====================================================</span>
+<span class="sd">    ``c0``               ``np.ndarray``, coefficients giving the amplitude of</span>
+<span class="sd">                         each term in the approximation function given by</span>
+<span class="sd">                         ``funcnum``. If specified overwrites even ``imp_ms``</span>
+
+<span class="sd">                         .. note:: The coefficients ``c0`` must be calculated</span>
+<span class="sd">                                   already considering ``rotatedeg`` using</span>
+<span class="sd">                                   function :func:`.calc_c0`</span>
+
+<span class="sd">    ``m0``               ``int``, number of terms along the meridional</span>
+<span class="sd">                         coordinate</span>
+<span class="sd">    ``n0``               ``int``, number of terms alog the circumferential</span>
+<span class="sd">                         coordinate</span>
+<span class="sd">    ``funcnum``          ``int``, the base function used for the</span>
+<span class="sd">                         approximation, as detailed in :func:`.calc_c0`</span>
+<span class="sd">    ``scaling_factor``   ``float``, a scaling factor that is applied to</span>
+<span class="sd">                         the imperfection amplitude</span>
+<span class="sd">    ===================  =====================================================</span>
+
+<span class="sd">    Additional parameters that govern how the imperfection pattern will look</span>
+<span class="sd">    like in the finite element model:</span>
+
+<span class="sd">    ===================  =====================================================</span>
+<span class="sd">    Attribute            Description</span>
+<span class="sd">    ===================  =====================================================</span>
+<span class="sd">    ``ignore_bot_h``     Used to ignore nodes from the bottom resin ring. The</span>
+<span class="sd">                         default value ``True`` will automatically obtain the</span>
+<span class="sd">                         resin ring dimensions. Set to ``False`` or ``None``</span>
+<span class="sd">                         if an imperfection pattern &quot;extruded&quot; to both edges</span>
+<span class="sd">                         is the desired behavior</span>
+<span class="sd">    ``ignore_top_h``     Similar to ``ignore_bot_h``, but for the top edge.</span>
+<span class="sd">    ``stretch_H``        If the measured imperfection does not cover the whole</span>
+<span class="sd">                         height it will be stretched. If</span>
+<span class="sd">                         ``stretch_H is True``, ``ignore_bot_h`` and</span>
+<span class="sd">                         ``ignore_top_h`` are automatically set to ``False``</span>
+<span class="sd">    ===================  =====================================================</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">MSI</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;msi&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">index</span>  <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">imp_ms</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stretch_H</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">r_TOL</span> <span class="o">=</span> <span class="mf">1.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ncp</span> <span class="o">=</span> <span class="mi">5</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rotatedeg</span> <span class="o">=</span> <span class="mf">0.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">power_parameter</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_sec_z</span> <span class="o">=</span> <span class="mi">100</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scaling_factor</span> <span class="o">=</span> <span class="mf">1.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">use_theta_z_format</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c0</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">m0</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n0</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">funcnum</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">H_measured</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">R_best_fit</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ignore_bot_h</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ignore_top_h</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sample_size</span> <span class="o">=</span> <span class="mi">2000000</span>
+        <span class="c1">#TODO: include z_offset_bottom to calculate ignore_bot_h and</span>
+        <span class="c1">#      ignore_top_h</span>
+        <span class="c1"># plotting options</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xaxis</span> <span class="o">=</span> <span class="s1">&#39;scaling_factor&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xaxis_label</span> <span class="o">=</span> <span class="s1">&#39;Scaling factor&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nodal_translations</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">created</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thetadegs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pts</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span> <span class="nf">__setstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attrs</span><span class="p">):</span>
+        <span class="c1"># Old versions had a bug where self.xaxis was set to &#39;amplitude&#39;</span>
+        <span class="c1"># Fix that during loading</span>
+        <span class="k">if</span> <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;xaxis&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;amplitude&#39;</span><span class="p">:</span>
+            <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;xaxis&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;scaling_factor&#39;</span>
+            <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;xaxis_label&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Scaling factor&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">attrs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">rebuild</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">cc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">conecyl</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;MSI_</span><span class="si">{0:02d}</span><span class="s1">_SF_</span><span class="si">{1:05d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+                    <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="mi">100</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">scaling_factor</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thetadegs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pts</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">imps</span><span class="p">,</span> <span class="n">imps_theta_z</span><span class="p">,</span> <span class="n">t_measured</span><span class="p">,</span> <span class="n">R_best_fit</span><span class="p">,</span> <span class="n">H_measured</span> <span class="o">=</span> <span class="n">update_imps</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_theta_z_format</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">imp_ms</span> <span class="ow">in</span> <span class="n">imps_theta_z</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">imps_theta_z</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">imp_ms</span><span class="p">][</span><span class="s1">&#39;msi&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">imp_ms</span> <span class="ow">in</span> <span class="n">imps</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">imps</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">imp_ms</span><span class="p">][</span><span class="s1">&#39;msi&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">imp_ms</span> <span class="ow">in</span> <span class="n">H_measured</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">H_measured</span> <span class="o">=</span> <span class="n">H_measured</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">imp_ms</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">imp_ms</span> <span class="ow">in</span> <span class="n">R_best_fit</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">R_best_fit</span> <span class="o">=</span> <span class="n">R_best_fit</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">imp_ms</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stretch_H</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ignore_bot_h</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ignore_top_h</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ignore_bot_h</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">cc</span><span class="o">.</span><span class="n">resin_add_BIR</span> <span class="ow">or</span> <span class="n">cc</span><span class="o">.</span><span class="n">resin_add_BOR</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ignore_bot_h</span> <span class="o">=</span> <span class="n">cc</span><span class="o">.</span><span class="n">resin_bot_h</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ignore_bot_h</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ignore_top_h</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">cc</span><span class="o">.</span><span class="n">resin_add_TIR</span> <span class="ow">or</span> <span class="n">cc</span><span class="o">.</span><span class="n">resin_add_TOR</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ignore_top_h</span> <span class="o">=</span> <span class="n">cc</span><span class="o">.</span><span class="n">resin_top_h</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ignore_top_h</span> <span class="o">=</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="MSI.calc_amplitude"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.msi.MSI.calc_amplitude">[docs]</a>    <span class="k">def</span> <span class="nf">calc_amplitude</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculates the geometric imperfection of the finite element model</span>
+
+<span class="sd">        .. note:: Must be called from Abaqus.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        max_amp : float</span>
+<span class="sd">            The maximum absolute amplitude.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">created</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">calc_msi_amplitude</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">conecyl</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Mid-surface imperfection not created&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MSI.create"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.msi.MSI.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Applies the mid-surface imperfection in the finite element model</span>
+
+<span class="sd">        .. note:: Must be called from Abaqus.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        force : bool, optional</span>
+<span class="sd">            Creates the imperfection even when it is already created</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">abaqus</span> <span class="k">import</span> <span class="n">mdb</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">created</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">force</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">created</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">create</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span>
+        <span class="n">cc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">conecyl</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">c0</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nodal_translations</span> <span class="o">=</span> <span class="n">translate_nodes_ABAQUS</span><span class="p">(</span>
+                              <span class="n">imperfection_file_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span>
+                              <span class="n">model_name</span> <span class="o">=</span> <span class="n">cc</span><span class="o">.</span><span class="n">model_name</span><span class="p">,</span>
+                              <span class="n">part_name</span> <span class="o">=</span> <span class="n">cc</span><span class="o">.</span><span class="n">part_name_shell</span><span class="p">,</span>
+                              <span class="n">H_model</span> <span class="o">=</span> <span class="n">cc</span><span class="o">.</span><span class="n">H</span><span class="p">,</span>
+                              <span class="n">H_measured</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">H_measured</span><span class="p">,</span>
+                              <span class="n">R_model</span> <span class="o">=</span> <span class="n">cc</span><span class="o">.</span><span class="n">rbot</span><span class="p">,</span>
+                              <span class="n">R_best_fit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">R_best_fit</span><span class="p">,</span>
+                              <span class="n">semi_angle</span> <span class="o">=</span> <span class="n">cc</span><span class="o">.</span><span class="n">alphadeg</span><span class="p">,</span>
+                              <span class="n">stretch_H</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stretch_H</span><span class="p">,</span>
+                              <span class="n">rotatedeg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotatedeg</span><span class="p">,</span>
+                              <span class="n">scaling_factor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scaling_factor</span><span class="p">,</span>
+                              <span class="n">r_TOL</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_TOL</span><span class="p">,</span>
+                              <span class="n">num_closest_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ncp</span><span class="p">,</span>
+                              <span class="n">power_parameter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">power_parameter</span><span class="p">,</span>
+                              <span class="n">num_sec_z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_sec_z</span><span class="p">,</span>
+                              <span class="n">nodal_translations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodal_translations</span><span class="p">,</span>
+                              <span class="n">use_theta_z_format</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_theta_z_format</span><span class="p">,</span>
+                              <span class="n">ignore_bot_h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ignore_bot_h</span><span class="p">,</span>
+                              <span class="n">ignore_top_h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ignore_top_h</span><span class="p">,</span>
+                              <span class="n">sample_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_size</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotatedeg</span><span class="p">:</span>
+                <span class="n">warn</span><span class="p">(</span><span class="s1">&#39;&quot;rotatedeg != 0&quot;, be sure you included this effect &#39;</span> <span class="o">+</span>
+                     <span class="s1">&#39;when calculating &quot;c0&quot;&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nodal_translations</span> <span class="o">=</span> <span class="n">translate_nodes_ABAQUS_c0</span><span class="p">(</span>
+                              <span class="n">m0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">m0</span><span class="p">,</span>
+                              <span class="n">n0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n0</span><span class="p">,</span>
+                              <span class="n">c0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">c0</span><span class="p">,</span>
+                              <span class="n">funcnum</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">funcnum</span><span class="p">,</span>
+                              <span class="n">model_name</span> <span class="o">=</span> <span class="n">cc</span><span class="o">.</span><span class="n">model_name</span><span class="p">,</span>
+                              <span class="n">part_name</span> <span class="o">=</span> <span class="n">cc</span><span class="o">.</span><span class="n">part_name_shell</span><span class="p">,</span>
+                              <span class="n">H_model</span> <span class="o">=</span> <span class="n">cc</span><span class="o">.</span><span class="n">H</span><span class="p">,</span>
+                              <span class="n">semi_angle</span> <span class="o">=</span> <span class="n">cc</span><span class="o">.</span><span class="n">alphadeg</span><span class="p">,</span>
+                              <span class="n">scaling_factor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scaling_factor</span><span class="p">,</span>
+                              <span class="n">fem_meridian_bot2top</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                              <span class="n">ignore_bot_h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ignore_bot_h</span><span class="p">,</span>
+                              <span class="n">ignore_top_h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ignore_top_h</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">created</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> amplitude = </span><span class="si">%f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_amplitude</span><span class="p">()))</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodal_translations</span></div>
+
+
+    <span class="k">def</span> <span class="nf">print_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">filename</span><span class="p">:</span>
+            <span class="n">cc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">conecyl</span><span class="o">.</span><span class="n">study_dir</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;.txt&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Writing output file &quot;</span><span class="si">%s</span><span class="s1">&quot; ...&#39;</span> <span class="o">%</span> <span class="n">filename</span><span class="p">)</span>
+        <span class="n">keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodal_translations</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="n">keys</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+        <span class="n">outfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+            <span class="n">original_coords</span> <span class="o">=</span> <span class="n">nodes_dict</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+            <span class="n">translations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodal_translations</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+            <span class="n">new_coords</span> <span class="o">=</span> <span class="n">original_coords</span> <span class="o">+</span> <span class="n">translations</span> <span class="o">*</span> <span class="n">scaling_factor</span>
+            <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%d</span><span class="s1"> </span><span class="si">%f</span><span class="s1"> </span><span class="si">%f</span><span class="s1"> </span><span class="si">%f</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">new_coords</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                                <span class="n">new_coords</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                                                <span class="n">new_coords</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+        <span class="n">outfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../../../index.html">
+    <img class="logo" src="../../../../_static/../../../logo/desicos.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/index.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/index.html">Tutorials</a></li>
+</ul>
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2012-2015 Desicos Improved Software Team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
