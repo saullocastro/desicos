@@ -1,6 +1,8 @@
+from __future__ import absolute_import
+
 import numpy as np
 
-from imperfection import Imperfection
+from .imperfection import Imperfection
 
 class Axisymmetric(Imperfection):
     """Axisymmetric Imperfection

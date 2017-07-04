@@ -25,5 +25,6 @@ User Interface (GUI) or using the Python API.
     :members:
 
 """
-import conecyl
-import imperfections
+from __future__ import absolute_import
+from . import conecyl
+from . import imperfections

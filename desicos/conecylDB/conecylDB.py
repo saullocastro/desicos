@@ -5,14 +5,14 @@ Conecyl Data-Base (:mod:`desicos.conecylDB.conecylDB`)
 .. currentmodule:: desicos.conecylDB.conecylDB
 
 """
+from __future__ import absolute_import
 import json
 import os
 
 from desicos.logger import *
-from ccs import ccs as default_ccs
-from allowables import allowables as default_allowables
-from laminaprops import laminaprops as default_laminaprops
-from ccs import include_in_GUI
+from .ccs import ccs as default_ccs
+from .allowables import allowables as default_allowables
+from .laminaprops import laminaprops as default_laminaprops
 from desicos.constants import DESHOME
 
 
@@ -41,7 +41,7 @@ def _myload(path):
     with open(path) as f:
         data = json.load(f)
     # Tuples are converted to lists during saving, fix that
-    return dict((k, tuple(v) if isinstance(v, list) else v) for k,v in data.iteritems())
+    return dict((k, tuple(v) if isinstance(v, list) else v) for k,v in data.items())
 
 
 def _mydump(obj, path):
@@ -79,11 +79,11 @@ def fetch(which, local_only=False):
     if local_only:
         return local
     if which=='ccs':
-        return dict(default_ccs.items() + local.items())
+        return dict(list(default_ccs.items()) + list(local.items()))
     elif which=='laminaprops':
-        return dict(default_laminaprops.items() + local.items())
+        return dict(list(default_laminaprops.items()) + list(local.items()))
     elif which=='allowables':
-        return dict(default_allowables.items() + local.items())
+        return dict(list(default_allowables.items()) + list(local.items()))
     else:
         raise ValueError('{0} is an invalid option to fetch'.format(which))
 
@@ -156,7 +156,7 @@ def update_imps():
             else:
                 plyts = cc.get('plyts', [cc.get('plyt')])
                 stack = cc['stack']
-                if len(plyts) <> len(stack):
+                if len(plyts) != len(stack):
                     t_measured[imp] = sum(plyts[0] for i in stack)
                 else:
                     t_measured[imp] = sum(i for i in plyts)

@@ -8,6 +8,7 @@ This module includes some interpolation utilities that will be used in other
 modules.
 
 """
+from __future__ import absolute_import
 from collections import Iterable
 
 import numpy as np
@@ -15,7 +16,7 @@ from numpy import sin, cos, tan
 
 from desicos.logger import *
 from desicos.constants import FLOAT
-from read_write import read_theta_z_imp
+from .read_write import read_theta_z_imp
 
 
 def inv_weighted(data, mesh, num_sub, col, ncp=5, power_parameter=2):
@@ -410,5 +411,5 @@ if __name__=='__main__':
                   [4., 4.],
                   [5., 5.]])
 
-    print inv_weighted(a, b, num_sub=1, col=1, ncp=10)
+    print(inv_weighted(a, b, num_sub=1, col=1, ncp=10))
 

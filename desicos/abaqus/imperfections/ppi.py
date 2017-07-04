@@ -1,6 +1,7 @@
+from __future__ import absolute_import
+
 import numpy as np
 
-from imperfection import Imperfection
 from desicos.constants import TOL
 from desicos.abaqus.utils import vec_calc_elem_cg
 from desicos.cppot.core.geom import ConeGeometry
@@ -9,6 +10,7 @@ from desicos.cppot.core.ply_model import TrapezPlyPieceModel
 # PPI imperfection and CPPOT tool. Import it here (though it is not needed
 # per se) to maintain save/load compatibility with then-created studies
 from desicos.cppot.core.ply_model import PlyPiece
+from .imperfection import Imperfection
 
 
 class PPI(Imperfection):

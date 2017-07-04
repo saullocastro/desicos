@@ -1,10 +1,11 @@
+from __future__ import absolute_import
 import os
 
 import numpy as np
 from numpy import sin, cos
 
-import geom
 from desicos.abaqus.constants import *
+from . import geom
 
 
 def add2list(lst, value, tol=TOL):
@@ -192,14 +193,14 @@ def empirical_P1_isotropic(r, t, E, nu):
     taken from Wang et al. (2008). An empirical formula for the critical
     perturbation load
     """
-    if r/t <  300: print 'WARNING - r/t ratio smaller than 300'
-    if r/t > 2000: print 'WARNING - r/t ratio bigger than 2000'
+    if r/t <  300: print('WARNING - r/t ratio smaller than 300')
+    if r/t > 2000: print('WARNING - r/t ratio bigger than 2000')
     if 0 < t and t < 0.8:
 
         return 0.81 * E*t**3 /(12*(1-nu**2)*r**0.8)
 
     elif  0.8 <= t:
-        if t > 1.5: print 'WARNING - thickness beyond 1.5'
+        if t > 1.5: print('WARNING - thickness beyond 1.5')
 
         return 0.69 * E*t**3 /(12*(1-nu**2)*r**0.8)
 

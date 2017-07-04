@@ -101,5 +101,6 @@ The ConeCyl Class
     :members:
 
 """
-from conecyl import *
+from __future__ import absolute_import
+from .conecyl import *
 

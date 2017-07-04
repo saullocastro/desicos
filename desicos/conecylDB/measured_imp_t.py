@@ -12,12 +12,12 @@ def read_file(file_name,
               H_measured = None,
               stretch_H  = False,
               z_offset_bot = None):
-    print 'Reading imperfection file: %s ...' % file_name
+    print('Reading imperfection file: %s ...' % file_name)
     # user warnings
     if stretch_H:
         if z_offset_bot:
-            print 'WARNING! Because of the stretch_H option,'
-            print '         consider setting z_offset_bot to None'
+            print('WARNING! Because of the stretch_H option,')
+            print('         consider setting z_offset_bot to None')
     # reading the imperfection file
     mps = np.loadtxt(file_name, dtype=FLOAT)
     t_set = set(mps[:, 3])
@@ -29,8 +29,8 @@ def read_file(file_name,
     # applying user inputs
     if not H_measured:
         H_measured = H_points
-        print 'WARNING! The cylinder height of the measured points ' +\
-              'assumed to be %1.2f' % H_measured
+        print('WARNING! The cylinder height of the measured points ' +
+              'assumed to be %1.2f' % H_measured)
     t_av = t_measured
     if not t_measured:
         t_av = np.average(mps[:, 3])
@@ -41,12 +41,12 @@ def read_file(file_name,
         else:
             z_offset_bot = (H_measured - H_points) / 2.
     offset_z = z_offset_bot - z_min
-    print 'H_points       :', H_points
-    print 'H_measured     :', H_measured
-    print 'z_min          :', z_min
-    print 'z_max          :', z_max
-    print 'offset_z       :', offset_z
-    print 't_av           :', t_av
+    print('H_points       :', H_points)
+    print('H_measured     :', H_measured)
+    print('z_min          :', z_min)
+    print('z_max          :', z_max)
+    print('offset_z       :', offset_z)
+    print('t_av           :', t_av)
     norm_mps = mps.copy()
     norm_mps[:, 0] /= R_best_fit
     norm_mps[:, 1] /= R_best_fit
@@ -80,7 +80,7 @@ def calc_elems_t(imperfection_file_name,
                                    H_measured    = H_measured,
                                    stretch_H     = stretch_H,
                                    z_offset_bot    = z_offset_bot)
-    print 'Calculating new thicknesses...'
+    print('Calculating new thicknesses...')
     t_set = set([t*t_model for t in t_set_norm])
     R_top = R_model - np.tan(np.deg2rad(semi_angle)) * H_model
     semi_angle = abs(semi_angle)
@@ -105,7 +105,7 @@ def calc_elems_t(imperfection_file_name,
             num_sec_z +=1
             sec_size = int(nodes.shape[0]/num_sec_z)
             if sec_size**2*10 <= mem_entries:
-                print 'WARNING - new sec_size %d' % sec_size
+                print('WARNING - new sec_size %d' % sec_size)
                 break
     ncp = num_closest_points
     nodes = nodes[np.argsort(nodes[:, 2])]
@@ -117,8 +117,8 @@ def calc_elems_t(imperfection_file_name,
         i_inf = sec_size*i
         i_sup = sec_size*(i+1)
         if i % limit == 0:
-            print '\t processed % 7d out of % 7d entries' %\
-                  (min(i_sup, nodes.shape[0]), nodes.shape[0])
+            print('\t processed % 7d out of % 7d entries' %
+                  (min(i_sup, nodes.shape[0]), nodes.shape[0]))
         sub_nodes = nodes[i_inf : i_sup]
         if not np.any(sub_nodes):
             continue
@@ -154,7 +154,7 @@ def calc_elems_t(imperfection_file_name,
         elems_t[i_inf:i_sup, 1] = (
                         np.sum(thicks_ncp*weight, axis=1)/total_weight)
     elems_t = elems_t[np.argsort(elems_t[:, 1])]
-    print 'New thicknesses calculated!'
+    print('New thicknesses calculated!')
 
     return elems_t, t_set
 

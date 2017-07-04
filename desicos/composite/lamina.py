@@ -5,12 +5,13 @@ Composite Lamina Module (:mod:`desicos.composite.lamina`)
 .. currentmodule:: desicos.composite.lamina
 
 """
+from __future__ import absolute_import
 import numpy as np
 from numpy import cos, sin
 
 from desicos.constants import FLOAT
-from matlamina import MatLamina
 from desicos.logger import *
+from .matlamina import MatLamina
 
 class Lamina(object):
     r"""

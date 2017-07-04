@@ -8,11 +8,12 @@ Utilities Abaqus (:mod:`desicos.abaqus.abaqus_functions`)
 Includes all utilities functions that must be executed from Abaqus.
 
 """
+from __future__ import absolute_import
 import math
 
 import numpy as np
 
-from constants import (TOL, FLOAT, COLORS, COLOR_WHINE, COLOR_DARK_BLUE,
+from .constants import (TOL, FLOAT, COLORS, COLOR_WHINE, COLOR_DARK_BLUE,
         COLOR_BLACK)
 
 
@@ -157,7 +158,7 @@ def set_default_view(cc):
             FREE, UNIFORM, CONTINUOUS, ON, OFF)
     odb=cc.attach_results()
     if not odb:
-        print 'No .odb file found for %s!' % cc.jobname
+        print('No .odb file found for %s!' % cc.jobname)
         return
     dtm=odb.rootAssembly.datumCsyses[
               'ASSEMBLY__T-INSTANCECYLINDER-CSYSCYLINDER']
@@ -230,8 +231,8 @@ def edit_keywords(mod, text, before_pattern=None, insert=False):
                 index=i-1
                 break
         if index is None:
-            print 'WARNING - *edit_keywords failed !'
-            print '          %s pattern not found !' % before_pattern
+            print('WARNING - *edit_keywords failed !')
+            print('          %s pattern not found !' % before_pattern)
             #TODO better error handling here...
     if insert:
         mod.keywordBlock.insert(index, text)
@@ -324,7 +325,7 @@ def create_composite_layup(name, stack, plyts, mat_names, region, part,
 
 def create_isotropic_section(name, mat_names, region, part, model,T,Sect_name,OFFTS):
     """Creates an isotropic section
-   
+
     """
 
     from abaqusConstants import (MIDDLE_SURFACE, FROM_SECTION, SHELL, ON, OFF,
@@ -332,23 +333,23 @@ def create_isotropic_section(name, mat_names, region, part, model,T,Sect_name,OF
             AXIS_1, AXIS_2, AXIS_3, SPECIFY_THICKNESS, SPECIFY_ORIENT,NO_IDEALIZATION,
             SINGLE_VALUE)
 
-    model.HomogeneousShellSection(name=name, 
-        preIntegrate=OFF, material=mat_names[0], 
-        thicknessType=UNIFORM, thickness=T, thicknessField='', 
-        idealization=NO_IDEALIZATION, poissonDefinition=DEFAULT, 
-        thicknessModulus=None, temperature=GRADIENT, useDensity=OFF, 
+    model.HomogeneousShellSection(name=name,
+        preIntegrate=OFF, material=mat_names[0],
+        thicknessType=UNIFORM, thickness=T, thicknessField='',
+        idealization=NO_IDEALIZATION, poissonDefinition=DEFAULT,
+        thicknessModulus=None, temperature=GRADIENT, useDensity=OFF,
         integrationRule=SIMPSON, numIntPts=5)
 
     region = region
     if OFFTS==0.0:
-        part.SectionAssignment(region=region, sectionName=Sect_name, 
-                               offset=OFFTS,offsetType=MIDDLE_SURFACE, 
-                               offsetField='', 
+        part.SectionAssignment(region=region, sectionName=Sect_name,
+                               offset=OFFTS,offsetType=MIDDLE_SURFACE,
+                               offsetField='',
                                thicknessAssignment=FROM_SECTION)
     else:
-        part.SectionAssignment(region=region, sectionName=Sect_name, 
-                               offset=OFFTS,offsetType=SINGLE_VALUE, 
-                               offsetField='', 
+        part.SectionAssignment(region=region, sectionName=Sect_name,
+                               offset=OFFTS,offsetType=SINGLE_VALUE,
+                               offsetField='',
                                thicknessAssignment=FROM_SECTION)
 
 def modify_composite_layup(part, layup_name, modify_func):

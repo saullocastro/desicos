@@ -1,7 +1,9 @@
+from __future__ import absolute_import
+
 import numpy as np
 
-from imperfection import Imperfection
 from desicos.logger import warn
+from .imperfection import Imperfection
 
 class FFI(Imperfection):
     r"""Fiber Fraction Imperfection

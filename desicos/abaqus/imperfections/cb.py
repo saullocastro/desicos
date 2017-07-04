@@ -1,9 +1,11 @@
+from __future__ import absolute_import
+
 import numpy as np
 from numpy import sin, cos
 
-from imperfection import Imperfection
 from desicos.abaqus.constants import *
 from desicos.logger import warn
+from .imperfection import Imperfection
 
 class CBamp(Imperfection):
     """Constant Amplitude Perturbation Buckle

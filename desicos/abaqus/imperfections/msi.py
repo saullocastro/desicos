@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+
 import os
 
 import numpy as np
@@ -286,7 +288,7 @@ class MSI(object):
                               ignore_bot_h = self.ignore_bot_h,
                               ignore_top_h = self.ignore_top_h)
         self.created = True
-        print '%s amplitude = %f' % (self.name, self.calc_amplitude())
+        print('%s amplitude = %f' % (self.name, self.calc_amplitude()))
 
         return self.nodal_translations
 
@@ -295,7 +297,7 @@ class MSI(object):
         if not filename:
             cc = self.impconf.conecyl.study_dir
             filename = os.path.join(cc, self.name + '.txt')
-        print 'Writing output file "%s" ...' % filename
+        print('Writing output file "%s" ...' % filename)
         keys = self.nodal_translations.keys()
         keys.sort()
         outfile = open(filename, 'w')

@@ -1,19 +1,20 @@
+from __future__ import absolute_import
 import os
 
 import numpy as np
 
 from desicos.logger import *
-from uneven_edges import Shim, UnevenBottomEdge, UnevenTopEdge
-from axisymmetric import Axisymmetric
-from dimple import Dimple
-from pload import PLoad
-from cb import CBamp
-from lbmi import LBMI
-from msi import MSI
-from ti import TI
-from cutout import Cutout
-from ppi import PPI
-from ffi import FFI
+from .uneven_edges import Shim, UnevenBottomEdge, UnevenTopEdge
+from .axisymmetric import Axisymmetric
+from .dimple import Dimple
+from .pload import PLoad
+from .cb import CBamp
+from .lbmi import LBMI
+from .msi import MSI
+from .ti import TI
+from .cutout import Cutout
+from .ppi import PPI
+from .ffi import FFI
 
 
 class ImpConf(object):

@@ -1,7 +1,10 @@
+from __future__ import absolute_import
+
 import numpy as np
 
 from desicos.abaqus.apply_imperfections import change_thickness_ABAQUS
 from desicos.conecylDB import update_imps
+
 
 class TI(object):
     """Thickness Imperfection
@@ -137,7 +140,7 @@ class TI(object):
         from desicos.abaqus.abaqus_functions import set_colors_ti
         set_colors_ti(cc)
         self.created = True
-        print '%s amplitude = %f' % (self.name, self.calc_amplitude())
+        print('%s amplitude = %f' % (self.name, self.calc_amplitude()))
         ffi = self.impconf.ffi
         if ffi is not None and ffi.created:
             # There is already a FFI, let it know about us

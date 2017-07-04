@@ -14,4 +14,5 @@ Includes all utilities functions that can be executed without Abaqus.
     :members:
 
 """
-from utils import *
+from __future__ import absolute_import
+from .utils import *

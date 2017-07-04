@@ -5,10 +5,11 @@ Composite Laminate Module (:mod:`desicos.composite.laminate`)
 .. currentmodule:: desicos.composite.laminate
 
 """
+from __future__ import absolute_import
 import numpy as np
 
-from lamina import Lamina
-from matlamina import read_laminaprop
+from .lamina import Lamina
+from .matlamina import read_laminaprop
 from desicos.constants import FLOAT
 from desicos.logger import *
 

@@ -36,4 +36,5 @@ an imperfection file had been made available.
     :members:
 
 """
-from conecylDB import *
+from __future__ import absolute_import
+from .conecylDB import *

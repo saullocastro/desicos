@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+
 from desicos.abaqus.utils import cyl2rec
 
 class Imperfection(object):

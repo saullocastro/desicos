@@ -102,15 +102,16 @@ Fiber Fraction Imperfection (:mod:`desicos.abaqus.imperfections.ffi`)
     :members:
 
 """
-from impconf import ImpConf
-from imperfection import Imperfection
-import axisymmetric
-import dimple
-import pload
-import lbmi
-import msi
-import ti
-import uneven_edges
-import cutout
-import ppi
-import ffi
+from __future__ import absolute_import
+from .impconf import ImpConf
+from .imperfection import Imperfection
+from . import axisymmetric
+from . import dimple
+from . import pload
+from . import lbmi
+from . import msi
+from . import ti
+from . import uneven_edges
+from . import cutout
+from . import ppi
+from . import ffi
