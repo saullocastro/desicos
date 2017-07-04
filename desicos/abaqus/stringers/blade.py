@@ -48,13 +48,13 @@ class BladeComposite(Stringer):
         # creating a StringerConfiguration class, analogously to the
         # imperfection configuration class
 
-        from desicos.abaqus import abaqus_functions
         from regionToolset import Region
         from abaqus import mdb, session
         from abaqusConstants import (STANDALONE, THREE_D, DEFORMABLE_BODY,
                                      FIXED, QUAD, STRUCTURED, ON, XZPLANE,
                                      CARTESIAN, LAMINA, COMPUTED,
                                      SURFACE_TO_SURFACE, OFF)
+        from desicos.abaqus import abaqus_functions
 
         cc = self.stringerconf.conecyl
         mod = mdb.models[cc.model_name]
@@ -70,7 +70,6 @@ class BladeComposite(Stringer):
         sina = sin(cc.alpharad)
         cosa = cos(cc.alpharad)
         rbot = cc.rbot
-        rtop = cc.rtop
         wbot = self.wbot
         wtop = self.wtop
 

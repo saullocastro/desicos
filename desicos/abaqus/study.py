@@ -8,7 +8,7 @@ Abaqus Study (:mod:`desicos.abaqus.study`)
 """
 import os
 import shutil
-import cPickle
+import pickle
 import __main__
 
 import numpy as np
@@ -80,13 +80,13 @@ class Study(object):
         if path=='':
             path = os.path.join(self.tmp_dir, self.name + '.study')
         with open(path, 'wb') as pfile:
-            cPickle.dump(self, file=pfile, protocol=cPickle.HIGHEST_PROTOCOL)
+            pickle.dump(self, file=pfile, protocol=pickle.HIGHEST_PROTOCOL)
 
     def load(self, path=''):
         if path == '':
             path = os.path.join(self.tmp_dir, self.name + '.study')
         pfile = open(path, 'rb')
-        new_std = cPickle.load(pfile)
+        new_std = pickle.load(pfile)
         pfile.close()
         return new_std
 

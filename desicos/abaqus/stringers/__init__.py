@@ -41,6 +41,8 @@ Blade Stringers (:mod:`desicos.abaqus.stringers.blade`)
     :members:
 
 """
-from stringer import Stringer
-from stringerconf import StringerConf
-from blade import BladeComposite, BladeIsotropic
+from __future__ import absolute_import
+
+from .stringer import Stringer
+from .stringerconf import StringerConf
+from .blade import BladeComposite, BladeIsotropic

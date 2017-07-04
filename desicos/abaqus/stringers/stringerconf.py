@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+
 class StringerConf(object):
     """Stringer configuration class
 
@@ -63,7 +65,7 @@ class StringerConf(object):
             The number of elements along the width.
 
         """
-        from blade import BladeIsotropic
+        from .blade import BladeIsotropic
 
         stringer = BladeIsotropic(thetadeg=thetadeg, wbot=wbot, wtop=wtop,
                 h=h, E=E, nu=nu, numel_flange=numel_flange)
