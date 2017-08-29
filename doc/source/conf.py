@@ -44,7 +44,7 @@ master_doc = 'index'
 
 # General substitutions.
 project = 'DESICOS'
-copyright = '2012-2015 Desicos Improved Software Team'
+copyright = '2012-2017 Desicos Improved Software Team'
 
 # The default replacements for |version| and |release|, also used in various
 # other places throughout the built documents.
