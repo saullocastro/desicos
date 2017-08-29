@@ -31,7 +31,7 @@ class StringerConf(object):
             The number of elements along the width.
 
         """
-        from blade import BladeComposite
+        from .blade import BladeComposite
 
         stringer = BladeComposite(thetadeg=thetadeg, wbot=wbot, wtop=wtop,
                 stack=stack, plyts=plyts, laminaprops=laminaprops,
