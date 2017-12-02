@@ -15,6 +15,7 @@ import numpy as np
 
 from .constants import (TOL, FLOAT, COLORS, COLOR_WHINE, COLOR_DARK_BLUE,
         COLOR_BLACK)
+from . import utils
 
 
 def configure_session():
@@ -409,8 +410,8 @@ def createDiscreteField(mod, odb, step_name, frame_num):
     list_ids=[]
     list_dof_values=[]
     for data in datas:
-        list_ids += [data[0] for i in xrange(6)]
-        for dof in xrange(1,7):
+        list_ids += [data[0] for i in range(6)]
+        for dof in range(1,7):
             list_dof_values += [float(dof), data[1][dof-1]]
     tuple_ids=tuple(list_ids)
     tuple_dof_values=tuple(list_dof_values)
@@ -440,6 +441,8 @@ def create_sketch_plane(cc, entity):
 
     """
     from abaqus import mdb
+
+    from .utils import geom
 
     part = mdb.models[cc.model_name].parts[cc.part_name_shell]
     for plane in cc.sketch_planes:
@@ -515,7 +518,7 @@ def printLBmodes():
                                 resolution=DPI_1200,
                                 shadingQuality=EXTRA_FINE)
     session.printOptions.setValues(reduceColors=False)
-    for i in xrange(1,51):
+    for i in range(1,51):
         vp.odbDisplay.setFrame(step=0, frame=i)
         session.printToFile(fileName='mode %02d.png'%i,
                              format=PNG,

@@ -102,9 +102,9 @@ html_last_updated_fmt = '%b %d, %Y'
 html_theme = 'alabaster'
 
 if html_theme == 'classic':
-    latex_logo = '../logo/desicos.png'
-    html_logo = '../logo/desicos.png'
-    html_favicon = '../logo/desicos.png'
+    latex_logo = 'desicos.png'
+    html_logo = 'desicos.png'
+    html_favicon = 'desicos.png'
     html_theme_options = {
         'collapsiblesidebar': False,
         'relbarbgcolor': '#2f441e',
@@ -131,7 +131,7 @@ elif html_theme == 'sphinxdoc':
 
 elif html_theme == 'alabaster':
     html_theme_options = {
-        'logo': '../../../logo/desicos.png',
+        'logo': 'desicos.png',
         'logo_name': False,
         'logo_text_align': None,
         'github_user': 'desicos',
@@ -160,7 +160,7 @@ elif html_theme == 'bizstyle':
 elif html_theme == 'scipy':
     # clone from https://github.com/scipy/scipy-sphinx-theme
     html_theme_path = ['../../../scipy-sphinx-theme/_theme']
-    html_logo = '../logo/desicos.png'
+    html_logo = 'desicos.png'
     html_theme_options = {
         'edit_link': False,
         'sidebar': 'left',

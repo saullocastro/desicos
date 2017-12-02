@@ -79,11 +79,11 @@ samples. This module is contained inside the "stochastic" folder.
 
 More information in:
 
-https://github.com/desicos/desicos/blob/master/doc/source/firstEx.rst
+https://github.com/desicos/desicos/blob/master/doc/source/tutorials/stochastic/firstEx.rst
 
 Known issues:
 
-https://github.com/desicos/desicos/blob/master/doc/source/overview.rst
+https://github.com/desicos/desicos/blob/master/doc/source/tutorials/stochastic/overview.rst
 
 Cone Ply Piece Optimization Tool (cppot)
 ========================================

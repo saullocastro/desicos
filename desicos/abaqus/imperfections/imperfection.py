@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 
+from desicos.abaqus.abaqus_functions import create_sketch_plane
 from desicos.abaqus.utils import cyl2rec
 
 class Imperfection(object):
@@ -20,7 +21,7 @@ class Imperfection(object):
         self.sketch_plane = None
 
     def create_sketch_plane(self):
-        self.sketch_plane = utils.create_sketch_plane(self.impconf.conecyl,
+        self.sketch_plane = create_sketch_plane(self.impconf.conecyl,
                                                       self)
     def get_xyz(self):
         r, z = self.impconf.conecyl.r_z_from_pt(self.pt)

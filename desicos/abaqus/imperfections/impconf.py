@@ -3,7 +3,7 @@ import os
 
 import numpy as np
 
-from desicos.logger import *
+from desicos.logger import warn
 from .uneven_edges import Shim, UnevenBottomEdge, UnevenTopEdge
 from .axisymmetric import Axisymmetric
 from .dimple import Dimple
@@ -35,9 +35,9 @@ class ImpConf(object):
 
     The imperfections are grouped in the attributes detailed below.
 
-    ================== ======================================================
+    ================== ========================================================
     Attributes         Description
-    ================== ======================================================
+    ================== ========================================================
     uneven_bottom_edge :class:`.UnevenBottomEdge` object
     uneven_top_edge    :class:`.UnevenTopEdge` object
     ploads             ``list`` of :class:`.PLoad` (Perturbation Load) objects
@@ -56,7 +56,7 @@ class ImpConf(object):
                        ``None`` if not set
     ffi                :class:`.FFI` (Fiber Fraction Imperfection) object or
                        ``None`` if not set
-    ================== ======================================================
+    ================== ========================================================
 
     """
     def __init__(self):
@@ -532,9 +532,11 @@ class ImpConf(object):
         extra_height : float
             Extra height above and below the cone height (`cc.H`) to consider
             in the ply placement model.
+
         Returns
         -------
         ppi : :class:`.PPI` object.
+
         """
         if self.ppi is not None:
             warn('PPI object already set, overriding...')

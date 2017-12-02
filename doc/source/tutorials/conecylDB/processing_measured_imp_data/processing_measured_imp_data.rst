@@ -167,44 +167,44 @@ which will result in the following figures for ``funcnum=1``:
 
 `m_0=20`, `n_0=30`:
 
-.. figure:: ..\..\..\..\figures\modules\conecylDB\fit_data\fw0_f1_z25_m_020_n_030.png
+.. figure:: ../../../../figures/modules/conecylDB/fit_data/fw0_f1_z25_m_020_n_030.png
 
 `m_0=30`, `n_0=45`:
 
-.. figure:: ..\..\..\..\figures\modules\conecylDB\fit_data\fw0_f1_z25_m_030_n_045.png
+.. figure:: ../../../../figures/modules/conecylDB/fit_data/fw0_f1_z25_m_030_n_045.png
 
 `m_0=40`, `n_0=60`:
 
-.. figure:: ..\..\..\..\figures\modules\conecylDB\fit_data\fw0_f1_z25_m_040_n_060.png
+.. figure:: ../../../../figures/modules/conecylDB/fit_data/fw0_f1_z25_m_040_n_060.png
 
 `m_0=50`, `n_0=75`:
 
-.. figure:: ..\..\..\..\figures\modules\conecylDB\fit_data\fw0_f1_z25_m_050_n_075.png
+.. figure:: ../../../../figures/modules/conecylDB/fit_data/fw0_f1_z25_m_050_n_075.png
 
 and for ``funcnum=2``:
 
 `m_0=20`, `n_0=30`:
 
-.. figure:: ..\..\..\..\figures\modules\conecylDB\fit_data\fw0_f2_z25_m_020_n_030.png
+.. figure:: ../../../../figures/modules/conecylDB/fit_data/fw0_f2_z25_m_020_n_030.png
 
 `m_0=30`, `n_0=45`:
 
-.. figure:: ..\..\..\..\figures\modules\conecylDB\fit_data\fw0_f2_z25_m_030_n_045.png
+.. figure:: ../../../../figures/modules/conecylDB/fit_data/fw0_f2_z25_m_030_n_045.png
 
 `m_0=40`, `n_0=60`:
 
-.. figure:: ..\..\..\..\figures\modules\conecylDB\fit_data\fw0_f2_z25_m_040_n_060.png
+.. figure:: ../../../../figures/modules/conecylDB/fit_data/fw0_f2_z25_m_040_n_060.png
 
 `m_0=50`, `n_0=75`:
 
-.. figure:: ..\..\..\..\figures\modules\conecylDB\fit_data\fw0_f2_z25_m_050_n_075.png
+.. figure:: ../../../../figures/modules/conecylDB/fit_data/fw0_f2_z25_m_050_n_075.png
 
 It can be seen how the `w_0` function approximates the measured imperfection
 pattern with the increase of `m_0` and `m_0`. The measured imperfection
 pattern is shown below, and it was plotted after performing the
 inverse-weighted interpolation already described.
 
-.. figure:: ..\..\..\..\figures\modules\conecylDB\fit_data\measured_z25.png
+.. figure:: ../../../../figures/modules/conecylDB/fit_data/measured_z25.png
 
 Comparing the results using ``funcnum=1`` and ``funcnum=2``, one see that
 the latter approaches closer the real measurements, since it relaxes the

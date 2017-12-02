@@ -31,7 +31,7 @@ def create_prescribed_displacements(cc, mode=1):
         if cc.read_outputs():
             u, ur = read_displacements(cc, mode)
         else:
-            print 'ERROR - The linear buckling load outputs could not be read!'
+            print('ERROR - The linear buckling load outputs could not be read!')
             return False
     instance = cc.mod.rootAssembly.instances['InstanceCylinder']
     bot_top_nodes = [n.id for n in cc.cross_sections[0].nodes +\
@@ -52,5 +52,5 @@ def create_prescribed_displacements(cc, mode=1):
 
 def run_LB_read_PDs(std):
     for mode in range(1, NUM_LB_MODES+1):
-        print 'RSM - reading buckling mode %02d' % mode
+        print('RSM - reading buckling mode %02d' % mode)
         create_prescribed_displacements(std.ccs[1], mode)

@@ -9,7 +9,6 @@ from desicos.cppot.core.ply_model import TrapezPlyPieceModel
 # The PlyPiece class was located here in some development versions of the
 # PPI imperfection and CPPOT tool. Import it here (though it is not needed
 # per se) to maintain save/load compatibility with then-created studies
-from desicos.cppot.core.ply_model import PlyPiece
 from .imperfection import Imperfection
 
 
@@ -21,13 +20,14 @@ class PPI(Imperfection):
     which varies with the location on the cone. This imperfection can be used
     to include that effect in the simulation.
 
-    =====================  ==================================================
+    =====================  ====================================================
     Attributes             Description
-    =====================  ==================================================
+    =====================  ====================================================
     ``info``               ``list`` with info about the layup of this cone.
                            Length of the list should be at least equal to the
                            number of plies. Each entry is a ``dict``,
                            containing:
+
                             - ``starting_position``: ``float``, Radius in the
                               flattened cone ((s, phi)-coordinate system)
                               where the origin line (L0) of the basic ply
@@ -47,10 +47,11 @@ class PPI(Imperfection):
                                 a) 0.5 if ``cc.stack[i] == 0``
                                 b) 0.0 if ``cc.stack[i] > 0``
                                 c) 1.0 if ``cc.stack[i] < 0``
+
     ``extra_height``       ``float``, extra height above and below the cone
                            height (`cc.H`) to consider in the ply placement
                            model.
-    =====================  ==================================================
+    =====================  ====================================================
 
     Notes
     -----
@@ -267,7 +268,7 @@ class PPI(Imperfection):
         if cylindrical:
             return r, theta, z
         else:
-            return r*cos(theta), r*sin(theta), z
+            return r*np.cos(theta), r*np.sin(theta), z
 
     def get_ply_lines(self, ply_index, center_theta_zero=True):
         """Obtain a series of lines that can be used to draw all ply pieces.

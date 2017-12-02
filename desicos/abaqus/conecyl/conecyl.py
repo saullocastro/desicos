@@ -6,7 +6,7 @@ import numpy as np
 
 import desicos.conecylDB as conecylDB
 from desicos.logger import log, warn, error
-from desicos.abaqus.constants import *
+from desicos.abaqus.constants import TMP_DIR
 from desicos.composite.laminate import read_stack
 from desicos.conecylDB import fetch
 from desicos.abaqus.utils import make_uniform_cells
@@ -100,6 +100,7 @@ class ConeCyl(object):
                            common functions like ``cos``, ``sin``, ``tan``,
                            ``acos``, ``asin``, ``atan``, ``pow`` and constants
                            like ``pi``, ``e`` etc can be used. Example::
+
                                cc.Nxxtop = "cos(Th)+sin(Th)"
 
                            .. note:: If ``Nxxtop`` is not given, the formula:
@@ -107,6 +108,7 @@ class ConeCyl(object):
                                      .. math::
                                            {N_{xx}}_{top} = \frac{F_C}{2 \pi
                                            R_{top} cos(\alpha)}
+
                                      will be adopted, where `F_C` is the
                                      ``axial_load`` attribute
 
@@ -131,6 +133,7 @@ class ConeCyl(object):
                            will have no imperfection and only an unitary axial
                            load applied at the top edge
     =====================  ====================================================
+
     .. note:: The routines automatically determine whether the load should be
               distributed or applied in a reference point based on the defined
               boundary conditions
@@ -424,6 +427,7 @@ class ConeCyl(object):
             cc : :class:`.ConeCyl` object with the updated properties.
 
         """
+        import desicos.abaqus.imperfections as imperfections
         if name_DB != '':
             self.name_DB = name_DB
         ccs = conecylDB.ccs.ccs
