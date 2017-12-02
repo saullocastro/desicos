@@ -172,9 +172,9 @@ which can be imported as:</p>
 </div>
 <p>In the dictionary <code class="docutils literal"><span class="pre">laminaprops</span></code> each entry is stored as a tuple:</p>
 <ul class="simple">
-<li>orthotropic material: (<span class="math">E_{11}</span>, <span class="math">E_{22}</span>, <span class="math">\nu_{12}</span>, <span class="math">G_{12}</span>,
-<span class="math">G_{13}</span>, <span class="math">G_{23}</span>)</li>
-<li>isotropic material: (<span class="math">E</span>, <span class="math">E</span>, <span class="math">\nu</span>)</li>
+<li>orthotropic material: (<img class="math" src="../../_images/math/fdcbb201e389fc8f73127a016316bead36b697b1.png" alt="E_{11}"/>, <img class="math" src="../../_images/math/5f731f116be0713425260aca3d746270c00e284f.png" alt="E_{22}"/>, <img class="math" src="../../_images/math/83e45ba52d3708027970128e3d15886fa566ea2d.png" alt="\nu_{12}"/>, <img class="math" src="../../_images/math/1e2869a44a431469c43dde748e64167067271de4.png" alt="G_{12}"/>,
+<img class="math" src="../../_images/math/e976018c1317be2f7f956b8ba2527238f1b2e641.png" alt="G_{13}"/>, <img class="math" src="../../_images/math/7cf2be0def6aca5d0c9c3de97ff9b4a8ec5df8d2.png" alt="G_{23}"/>)</li>
+<li>isotropic material: (<img class="math" src="../../_images/math/4b6222b865b812d2a59368cd1629eed6b54454d5.png" alt="E"/>, <img class="math" src="../../_images/math/4b6222b865b812d2a59368cd1629eed6b54454d5.png" alt="E"/>, <img class="math" src="../../_images/math/ca3b8fa4180eee2dfc3af9d13fae1da451cd2c31.png" alt="\nu"/>)</li>
 </ul>
 <p>More entries can be added here if one wishes to update the static database.</p>
 </div>
@@ -187,9 +187,9 @@ which can be imported as:</p>
 </div>
 <p>In the dictionary <code class="docutils literal"><span class="pre">allowables</span></code> each entry is stored as a tuple:</p>
 <ul class="simple">
-<li>(<span class="math">{S_{11}}_T</span>, <span class="math">{S_{11}}_C</span>, <span class="math">{S_{22}}_T</span>, <span class="math">{S_{22}}_C</span>, <span class="math">S_{12}</span>, <span class="math">S_{13}</span>)</li>
+<li>(<img class="math" src="../../_images/math/ee83dca5c9725f45d787f2e19adb8e90a0aa585d.png" alt="{S_{11}}_T"/>, <img class="math" src="../../_images/math/bb96eec7e4ecdda3f82dc72e05bc9277c8e7ade3.png" alt="{S_{11}}_C"/>, <img class="math" src="../../_images/math/dd07179a67e9cf1a5af9431d54860076a043178c.png" alt="{S_{22}}_T"/>, <img class="math" src="../../_images/math/a090d3ddf98b38937498541f4c0e394c60313a4e.png" alt="{S_{22}}_C"/>, <img class="math" src="../../_images/math/074a7487e0107b2b1e60a6b3293a5edc1d76828d.png" alt="S_{12}"/>, <img class="math" src="../../_images/math/3e1d134621b0b15269442cd1b818c812881f9066.png" alt="S_{13}"/>)</li>
 </ul>
-<p>where <span class="math">C</span> and <span class="math">T</span> stand for compression or tensile allowables. More
+<p>where <img class="math" src="../../_images/math/afce44aa7c55836ca9345404c22fc7b599d2ed84.png" alt="C"/> and <img class="math" src="../../_images/math/f2d283a2071f9d043c9e0b0f794a8880fa0d3ce9.png" alt="T"/> stand for compression or tensile allowables. More
 entries can be added here if one wishes to update the static database.</p>
 </div>
 <span class="target" id="module-desicos.conecylDB.fit_data"></span><div class="section" id="fitting-data-desicos-conecyldb-fit-data">
@@ -216,54 +216,54 @@ the raw data to the finite element coordinate system is illustrated below:</p>
 </div>
 <p>This transformation can be represented in matrix form as:</p>
 <div class="math">
-<p><span class="math">[T] = \begin{bmatrix}
+<p><img src="../../_images/math/bdd5c118097765ff9449c345358b5393b62b0e34.png" alt="[T] = \begin{bmatrix}
 cos(\beta) &amp;  sin(\alpha)sin(\beta) &amp; -cos(\alpha)sin(\beta) &amp; \Delta x_0
 \\
          0 &amp;            cos(\alpha) &amp;            sin(\alpha) &amp; \Delta y_0
 \\
 sin(\beta) &amp; -sin(\alpha)cos(\beta) &amp;  cos(\alpha)cos(\beta) &amp; \Delta z_0
 \\
-      \end{bmatrix}</span></p>
+      \end{bmatrix}"/></p>
 </div><p>Note that <strong>five</strong> variables are unknowns:</p>
 <ul class="simple">
-<li>the rotation angles <span class="math">\alpha</span> and <span class="math">\beta</span></li>
-<li>the three components of the translation <span class="math">\Delta x_0</span>, <span class="math">\Delta y_0</span> and
-<span class="math">\Delta z_0</span></li>
+<li>the rotation angles <img class="math" src="../../_images/math/877d234f4cec6974ce218fc2e975a486a7972dfd.png" alt="\alpha"/> and <img class="math" src="../../_images/math/410a9d0df9c135dd73b269cba7ef04dcfd932b1f.png" alt="\beta"/></li>
+<li>the three components of the translation <img class="math" src="../../_images/math/b139b4bfe7e8d166866d3df7524bc4b5c4bbcfc2.png" alt="\Delta x_0"/>, <img class="math" src="../../_images/math/27c2bc62f81db77fb4cab45e8b90451747dc6f8b.png" alt="\Delta y_0"/> and
+<img class="math" src="../../_images/math/82ce06b79ed088aaf4b6e54860f761f3d996526f.png" alt="\Delta z_0"/></li>
 </ul>
 <p>The five unknowns are calculated iteratively in a non-linear least-sqares
 problem (solved with <code class="docutils literal"><span class="pre">scipy.optimize.leastsq</span></code>), where the measured data
 is transformed to the reference coordinate system and there compared with
 a reference cylinder in order to compute the residual error using:</p>
 <div class="math">
-<p><span class="math">\begin{Bmatrix} x_{ref} \\ y_{ref} \\ z_{ref} \end{Bmatrix} =
+<p><img src="../../_images/math/e167ee2238d8202a5cd1491429e808c4c0d21029.png" alt="\begin{Bmatrix} x_{ref} \\ y_{ref} \\ z_{ref} \end{Bmatrix} =
 [T]
 \begin{Bmatrix} x_m \\ y_m \\ z_m \\ 1 \end{Bmatrix}
 \\
-Error = \sqrt{(\Delta r)^2 + (\Delta z)^2}</span></p>
+Error = \sqrt{(\Delta r)^2 + (\Delta z)^2}"/></p>
 </div><p>where:</p>
 <ul>
-<li><p class="first"><span class="math">x_m</span>, <span class="math">y_m</span> and <span class="math">z_m</span> are the data coordinates in the data coordinate
+<li><p class="first"><img class="math" src="../../_images/math/fb6ddc562b1e2002758974918abe27a6ec1b5c23.png" alt="x_m"/>, <img class="math" src="../../_images/math/a723a03c583c3f40937e64547a75a3e5696ccc34.png" alt="y_m"/> and <img class="math" src="../../_images/math/02249dc7cc68794499abf0415864afb617df54a5.png" alt="z_m"/> are the data coordinates in the data coordinate
 system</p>
 </li>
-<li><p class="first"><span class="math">x_{ref}</span> <span class="math">x_{ref}</span> are the data coordinates in the <a class="reference internal" href="../abaqus/index.html#figure-conecyl"><span class="std std-ref">reference
+<li><p class="first"><img class="math" src="../../_images/math/06a896d3fa3c8abd09cf75a8778a65ac55b9ba36.png" alt="x_{ref}"/> <img class="math" src="../../_images/math/06a896d3fa3c8abd09cf75a8778a65ac55b9ba36.png" alt="x_{ref}"/> are the data coordinates in the <a class="reference internal" href="../abaqus/index.html#figure-conecyl"><span class="std std-ref">reference
 coordinate system</span></a></p>
 </li>
-<li><p class="first"><span class="math">\Delta r</span> and <span class="math">\Delta z</span> are defined as:</p>
+<li><p class="first"><img class="math" src="../../_images/math/2b39036dc8392ebdedb7e33a3b4dc9c630266dcd.png" alt="\Delta r"/> and <img class="math" src="../../_images/math/8c1a7061a6a26cf6bbb53392039d2034fd9050fa.png" alt="\Delta z"/> are defined as:</p>
 <blockquote>
 <div><div class="math">
-<p><span class="math">\Delta r = R - \sqrt{x_{ref}^2 + y_{ref}^2}
+<p><img src="../../_images/math/3f7a679d7f4f55da52f45c5786875fe4c2e5d623.png" alt="\Delta r = R - \sqrt{x_{ref}^2 + y_{ref}^2}
 \\
 \Delta z = \begin{cases}
                 -z_{ref}, &amp; \text{if } z_{ref} &lt; 0 \\
                        0, &amp; \text{if } 0 &lt;= z_{ref} &lt;= H \\
              z_{ref} - H, &amp; \text{if } z_{ref} &gt; H \\
-           \end{cases}</span></p>
+           \end{cases}"/></p>
 </div></div></blockquote>
 </li>
 </ul>
-<p>Since the measured data may have an unknown radius <span class="math">R</span>, the solution of
+<p>Since the measured data may have an unknown radius <img class="math" src="../../_images/math/a00254b18ffa992f0ef19f6e6e095b83c8f85e94.png" alt="R"/>, the solution of
 these equations has to be performed iteratively with one additional
-external loop in order to update <span class="math">R</span>.</p>
+external loop in order to update <img class="math" src="../../_images/math/a00254b18ffa992f0ef19f6e6e095b83c8f85e94.png" alt="R"/>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -272,9 +272,9 @@ external loop in order to update <span class="math">R</span>.</p>
 <blockquote>
 <div><p>The path of the file containing the data. Can be a full path using
 <code class="docutils literal"><span class="pre">r&quot;C:\Temp\inputfile.txt&quot;</span></code>, for example.
-The input file must have 3 columns “<span class="math">x</span> <span class="math">y</span> <span class="math">z</span>” expressed
+The input file must have 3 columns “<img class="math" src="../../_images/math/a59f68a4202623bb859a7093f0316bf466e6f75d.png" alt="x"/> <img class="math" src="../../_images/math/276f7e256cbddeb81eee42e1efc348f3cb4ab5f8.png" alt="y"/> <img class="math" src="../../_images/math/683f2dd9129a91d21aaf1c04afa6f78b39d4cb0a.png" alt="z"/>” expressed
 in Cartesian coordinates.</p>
-<p>This input can also be a <code class="docutils literal"><span class="pre">np.ndarray</span></code> object, with <span class="math">x</span>, <span class="math">y</span>, <span class="math">z</span>
+<p>This input can also be a <code class="docutils literal"><span class="pre">np.ndarray</span></code> object, with <img class="math" src="../../_images/math/a59f68a4202623bb859a7093f0316bf466e6f75d.png" alt="x"/>, <img class="math" src="../../_images/math/276f7e256cbddeb81eee42e1efc348f3cb4ab5f8.png" alt="y"/>, <img class="math" src="../../_images/math/683f2dd9129a91d21aaf1c04afa6f78b39d4cb0a.png" alt="z"/>
 in each corresponding column.</p>
 </div></blockquote>
 <p><strong>H</strong> : float</p>
@@ -315,18 +315,18 @@ best fit.</p>
 <dd><p class="first last">The best-fit radius of the input sample.</p>
 </dd>
 <dt><code class="docutils literal"><span class="pre">out['T']</span></code> <span class="classifier-delimiter">:</span> <span class="classifier">np.ndarray</span></dt>
-<dd><p class="first last">The transformation matrix as a <span class="math">3 \times 4</span> 2-D array. This matrix
+<dd><p class="first last">The transformation matrix as a <img class="math" src="../../_images/math/87548c10dbc43bcab1be7ccd435f36fdd34d8e06.png" alt="3 \times 4"/> 2-D array. This matrix
 does the transformation: input_pts –&gt; output_pts.</p>
 </dd>
 <dt><code class="docutils literal"><span class="pre">out['Tinv']</span></code> <span class="classifier-delimiter">:</span> <span class="classifier">np.ndarray</span></dt>
-<dd><p class="first last">The inverse transformation matrix as a <span class="math">3 \times 4</span> 2-D array.
+<dd><p class="first last">The inverse transformation matrix as a <img class="math" src="../../_images/math/87548c10dbc43bcab1be7ccd435f36fdd34d8e06.png" alt="3 \times 4"/> 2-D array.
 This matrix does the transformation: output_pts –&gt; input_pts.</p>
 </dd>
 <dt><code class="docutils literal"><span class="pre">out['input_pts']</span></code> <span class="classifier-delimiter">:</span> <span class="classifier">np.ndarray</span></dt>
-<dd><p class="first last">The input points in a <span class="math">3 \times N</span> 2-D array.</p>
+<dd><p class="first last">The input points in a <img class="math" src="../../_images/math/10429ca59cff60e11f95473164859a3c720a3c49.png" alt="3 \times N"/> 2-D array.</p>
 </dd>
 <dt><code class="docutils literal"><span class="pre">out['output_pts']</span></code> <span class="classifier-delimiter">:</span> <span class="classifier">np.ndarray</span></dt>
-<dd><p class="first last">The transformed points in a <span class="math">3 \times N</span> 2-D array.</p>
+<dd><p class="first last">The transformed points in a <img class="math" src="../../_images/math/10429ca59cff60e11f95473164859a3c720a3c49.png" alt="3 \times N"/> 2-D array.</p>
 </dd>
 </dl>
 </div></blockquote>
@@ -351,7 +351,7 @@ This matrix does the transformation: output_pts –&gt; input_pts.</p>
 <ol class="arabic simple" start="2">
 <li>Using the transformation matrices <code class="docutils literal"><span class="pre">T</span></code> and <code class="docutils literal"><span class="pre">Tinv</span></code></li>
 </ol>
-<p>For a given input data with <span class="math">x, y, z</span> positions in each line:</p>
+<p>For a given input data with <img class="math" src="../../_images/math/625d14b33d5a7d080acca5de29d591279297872a.png" alt="x, y, z"/> positions in each line:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s1">&#39;input_file.txt&#39;</span><span class="p">,</span> <span class="n">unpack</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -368,46 +368,46 @@ This matrix does the transformation: output_pts –&gt; input_pts.</p>
 <dl class="function">
 <dt id="desicos.conecylDB.fit_data.calc_c0">
 <code class="descclassname">desicos.conecylDB.fit_data.</code><code class="descname">calc_c0</code><span class="sig-paren">(</span><em>path</em>, <em>m0=50</em>, <em>n0=50</em>, <em>funcnum=2</em>, <em>fem_meridian_bot2top=True</em>, <em>rotatedeg=None</em>, <em>filter_m0=None</em>, <em>filter_n0=None</em>, <em>sample_size=None</em>, <em>maxmem=8</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/conecylDB/fit_data.html#calc_c0"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.conecylDB.fit_data.calc_c0" title="Permalink to this definition">¶</a></dt>
-<dd><p>Find the coefficients that best fit the <span class="math">w_0</span> imperfection</p>
+<dd><p>Find the coefficients that best fit the <img class="math" src="../../_images/math/faafb19d9d95d41a5554bd1b8d8ca2e16a89935d.png" alt="w_0"/> imperfection</p>
 <p>The measured data will be fit using one of the following functions,
 selected using the <code class="docutils literal"><span class="pre">funcnum</span></code> parameter:</p>
 <ol class="arabic simple">
 <li>Half-Sine Function</li>
 </ol>
 <div class="math">
-<p><span class="math">w_0 = \sum_{i=1}^{m_0}{ \sum_{j=0}^{n_0}{
+<p><img src="../../_images/math/b0b58b74760ced3e0617bd88907bcd34b1079b12.png" alt="w_0 = \sum_{i=1}^{m_0}{ \sum_{j=0}^{n_0}{
          {c_0}_{ij}^a sin{b_z} sin{b_\theta}
-        +{c_0}_{ij}^b sin{b_z} cos{b_\theta} }}</span></p>
+        +{c_0}_{ij}^b sin{b_z} cos{b_\theta} }}"/></p>
 </div><ol class="arabic simple" start="2">
 <li>Half-Cosine Function (default)</li>
 </ol>
 <div class="math">
-<p><span class="math">w_0 = \sum_{i=0}^{m_0}{ \sum_{j=0}^{n_0}{
+<p><img src="../../_images/math/c487ef6b6862921a789dd741302cdcb2d953e1c7.png" alt="w_0 = \sum_{i=0}^{m_0}{ \sum_{j=0}^{n_0}{
         {c_0}_{ij}^a cos{b_z} sin{b_\theta}
-        +{c_0}_{ij}^b cos{b_z} cos{b_\theta} }}</span></p>
+        +{c_0}_{ij}^b cos{b_z} cos{b_\theta} }}"/></p>
 </div><ol class="arabic simple" start="3">
 <li>Complete Fourier Series</li>
 </ol>
 <div class="math">
-<p><span class="math">w_0 = \sum_{i=0}^{m_0}{ \sum_{j=0}^{n_0}{
+<p><img src="../../_images/math/9236af8f0527022a87c85daa722ca58220eb6f85.png" alt="w_0 = \sum_{i=0}^{m_0}{ \sum_{j=0}^{n_0}{
          {c_0}_{ij}^a sin{b_z} sin{b_\theta}
         +{c_0}_{ij}^b sin{b_z} cos{b_\theta}
         +{c_0}_{ij}^c cos{b_z} sin{b_\theta}
-        +{c_0}_{ij}^d cos{b_z} cos{b_\theta} }}</span></p>
+        +{c_0}_{ij}^d cos{b_z} cos{b_\theta} }}"/></p>
 </div><p>where:</p>
 <div class="math">
-<p><span class="math">b_z = i \pi \frac z H_{points}
+<p><img src="../../_images/math/ebf62454e8a370d5a9fa1223f024cd787996a988.png" alt="b_z = i \pi \frac z H_{points}
 
-b_\theta = j \theta</span></p>
-</div><p>where <span class="math">H_{points}</span> represents the difference between the maximum and
-the minimum <span class="math">z</span> values in the imperfection file.</p>
+b_\theta = j \theta"/></p>
+</div><p>where <img class="math" src="../../_images/math/e7238b44b1df71343b092e1726b33ef53bd22153.png" alt="H_{points}"/> represents the difference between the maximum and
+the minimum <img class="math" src="../../_images/math/683f2dd9129a91d21aaf1c04afa6f78b39d4cb0a.png" alt="z"/> values in the imperfection file.</p>
 <p>The approximation can be written in matrix form as:</p>
 <div class="math">
-<p><span class="math">w_0 = [g] \{c_0\}</span></p>
-</div><p>where <span class="math">[g]</span> carries the base functions and <span class="math">{c_0}</span> the respective
-amplitudes. The solution consists on finding the best <span class="math">{c_0}</span> that
+<p><img src="../../_images/math/75aff8622f4428cde1113e570259f32c3f0dafe2.png" alt="w_0 = [g] \{c_0\}"/></p>
+</div><p>where <img class="math" src="../../_images/math/72aa64102be7a2d5fc1a5b769af6ef565523e484.png" alt="[g]"/> carries the base functions and <img class="math" src="../../_images/math/db391b86d266f6b3ad0bd25dd9b18c9f3b95c37f.png" alt="{c_0}"/> the respective
+amplitudes. The solution consists on finding the best <img class="math" src="../../_images/math/db391b86d266f6b3ad0bd25dd9b18c9f3b95c37f.png" alt="{c_0}"/> that
 minimizes the least-square error between the measured imperfection pattern
-and the <span class="math">w_0</span> function.</p>
+and the <img class="math" src="../../_images/math/faafb19d9d95d41a5554bd1b8d8ca2e16a89935d.png" alt="w_0"/> function.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -416,18 +416,18 @@ and the <span class="math">w_0</span> function.</p>
 <blockquote>
 <div><p>The path of the file containing the data. Can be a full path using
 <code class="docutils literal"><span class="pre">r&quot;C:\Temp\inputfile.txt&quot;</span></code>, for example.
-The input file must have 3 columns “<span class="math">\theta</span> <span class="math">z</span> <span class="math">imp</span>” expressed
+The input file must have 3 columns “<img class="math" src="../../_images/math/3be04d4207434584251f6921820c24ac9fa8c6f1.png" alt="\theta"/> <img class="math" src="../../_images/math/683f2dd9129a91d21aaf1c04afa6f78b39d4cb0a.png" alt="z"/> <img class="math" src="../../_images/math/2051460041a8834469c5b0637df98f8bc0836056.png" alt="imp"/>” expressed
 in Cartesian coordinates.</p>
 <p>This input can also be a <code class="docutils literal"><span class="pre">np.ndarray</span></code> object, with
-<span class="math">\theta</span>, <span class="math">z</span>, <span class="math">imp</span> in each corresponding column.</p>
+<img class="math" src="../../_images/math/3be04d4207434584251f6921820c24ac9fa8c6f1.png" alt="\theta"/>, <img class="math" src="../../_images/math/683f2dd9129a91d21aaf1c04afa6f78b39d4cb0a.png" alt="z"/>, <img class="math" src="../../_images/math/2051460041a8834469c5b0637df98f8bc0836056.png" alt="imp"/> in each corresponding column.</p>
 </div></blockquote>
 <p><strong>m0</strong> : int</p>
 <blockquote>
-<div><p>Number of terms along the meridian (<span class="math">z</span>).</p>
+<div><p>Number of terms along the meridian (<img class="math" src="../../_images/math/683f2dd9129a91d21aaf1c04afa6f78b39d4cb0a.png" alt="z"/>).</p>
 </div></blockquote>
 <p><strong>n0</strong> : int</p>
 <blockquote>
-<div><p>Number of terms along the circumference (<span class="math">\theta</span>).</p>
+<div><p>Number of terms along the circumference (<img class="math" src="../../_images/math/3be04d4207434584251f6921820c24ac9fa8c6f1.png" alt="\theta"/>).</p>
 </div></blockquote>
 <p><strong>funcnum</strong> : int, optional</p>
 <blockquote>
@@ -436,13 +436,13 @@ the approximation.</p>
 </div></blockquote>
 <p><strong>fem_meridian_bot2top</strong> : bool, optional</p>
 <blockquote>
-<div><p>A boolean indicating if the finite element has the <span class="math">x</span> axis starting
+<div><p>A boolean indicating if the finite element has the <img class="math" src="../../_images/math/a59f68a4202623bb859a7093f0316bf466e6f75d.png" alt="x"/> axis starting
 at the bottom or at the top.</p>
 </div></blockquote>
 <p><strong>rotatedeg</strong> : float or None, optional</p>
 <blockquote>
 <div><p>Rotation angle in degrees telling how much the imperfection pattern
-should be rotated about the <span class="math">X_3</span> (or <span class="math">Z</span>) axis.</p>
+should be rotated about the <img class="math" src="../../_images/math/d2f7e91d2812e21e755633c53252f816f6598415.png" alt="X_3"/> (or <img class="math" src="../../_images/math/bcb2457ac9d8995a4f34d57cadac7ecbbe58f3bd.png" alt="Z"/>) axis.</p>
 </div></blockquote>
 <p><strong>filter_m0</strong> : list, optional</p>
 <blockquote>
@@ -479,15 +479,15 @@ the circumference, the analyst can use an optimized relation between
 <code class="docutils literal"><span class="pre">m0</span></code> and <code class="docutils literal"><span class="pre">n0</span></code> in order to achieve a higher accuracy for a given
 computational cost, as proposed by Castro et al. (2014):</p>
 <div class="math">
-<p><span class="math">n_0 = m_0 \frac{\pi(R_{bot}+R_{top})}{2H}</span></p>
+<p><img src="../../_images/math/40fdff97d656f4d60c8b4c0b67a6dec13e44aa71.png" alt="n_0 = m_0 \frac{\pi(R_{bot}+R_{top})}{2H}"/></p>
 </div></dd></dl>
 
 <dl class="function">
 <dt id="desicos.conecylDB.fit_data.fa">
 <code class="descclassname">desicos.conecylDB.fit_data.</code><code class="descname">fa</code><span class="sig-paren">(</span><em>m0</em>, <em>n0</em>, <em>zs_norm</em>, <em>thetas</em>, <em>funcnum=2</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/conecylDB/fit_data.html#fa"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.conecylDB.fit_data.fa" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculates the matrix with the base functions for <span class="math">w_0</span></p>
-<p>The calculated matrix is directly used to calculate the <span class="math">w_0</span> displacement
-field, when the corresponding coefficients <span class="math">c_0</span> are known, through:</p>
+<dd><p>Calculates the matrix with the base functions for <img class="math" src="../../_images/math/faafb19d9d95d41a5554bd1b8d8ca2e16a89935d.png" alt="w_0"/></p>
+<p>The calculated matrix is directly used to calculate the <img class="math" src="../../_images/math/faafb19d9d95d41a5554bd1b8d8ca2e16a89935d.png" alt="w_0"/> displacement
+field, when the corresponding coefficients <img class="math" src="../../_images/math/871e0834b8b6f132c00a57acee8b4c8fb2eb2c77.png" alt="c_0"/> are known, through:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">fa</span><span class="p">(</span><span class="n">m0</span><span class="p">,</span> <span class="n">n0</span><span class="p">,</span> <span class="n">zs_norm</span><span class="p">,</span> <span class="n">thetas</span><span class="p">,</span> <span class="n">funcnum</span><span class="p">)</span>
 <span class="n">w0</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">c0</span><span class="p">)</span>
 </pre></div>
@@ -506,7 +506,7 @@ field, when the corresponding coefficients <span class="math">c_0</span> are kno
 </div></blockquote>
 <p><strong>zs_norm</strong> : np.ndarray</p>
 <blockquote>
-<div><p>The normalized <span class="math">z</span> coordinates (from 0. to 1.) used to compute
+<div><p>The normalized <img class="math" src="../../_images/math/683f2dd9129a91d21aaf1c04afa6f78b39d4cb0a.png" alt="z"/> coordinates (from 0. to 1.) used to compute
 the base functions.</p>
 </div></blockquote>
 <p><strong>thetas</strong> : np.ndarray</p>
@@ -526,7 +526,7 @@ the base functions.</p>
 <dl class="function">
 <dt id="desicos.conecylDB.fit_data.filter_c0">
 <code class="descclassname">desicos.conecylDB.fit_data.</code><code class="descname">filter_c0</code><span class="sig-paren">(</span><em>m0</em>, <em>n0</em>, <em>c0</em>, <em>filter_m0</em>, <em>filter_n0</em>, <em>funcnum=2</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/conecylDB/fit_data.html#filter_c0"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.conecylDB.fit_data.filter_c0" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply filter to the imperfection coefficients <span class="math">\{c_0\}</span></p>
+<dd><p>Apply filter to the imperfection coefficients <img class="math" src="../../_images/math/a8a3fa29c52d18ae44077c7ce24e64ba07410dab.png" alt="\{c_0\}"/></p>
 <p>A filter consists on removing some frequencies that are known to be
 related to rigid body modes or spurious measurement noise. The frequencies
 to be removed should be passed through inputs <code class="docutils literal"><span class="pre">filter_m0</span></code> and
@@ -574,7 +574,7 @@ to be removed should be passed through inputs <code class="docutils literal"><sp
 <dl class="function">
 <dt id="desicos.conecylDB.fit_data.fw0">
 <code class="descclassname">desicos.conecylDB.fit_data.</code><code class="descname">fw0</code><span class="sig-paren">(</span><em>m0</em>, <em>n0</em>, <em>c0</em>, <em>xs_norm</em>, <em>ts</em>, <em>funcnum=2</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/conecylDB/fit_data.html#fw0"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.conecylDB.fit_data.fw0" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculates the imperfection field <span class="math">w_0</span> for a given input</p>
+<dd><p>Calculates the imperfection field <img class="math" src="../../_images/math/faafb19d9d95d41a5554bd1b8d8ca2e16a89935d.png" alt="w_0"/> for a given input</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -593,13 +593,13 @@ to be removed should be passed through inputs <code class="docutils literal"><sp
 </div></blockquote>
 <p><strong>xs_norm</strong> : np.ndarray</p>
 <blockquote>
-<div><p>The meridian coordinate (<span class="math">x</span>) normalized to be between <code class="docutils literal"><span class="pre">0.</span></code> and
+<div><p>The meridian coordinate (<img class="math" src="../../_images/math/a59f68a4202623bb859a7093f0316bf466e6f75d.png" alt="x"/>) normalized to be between <code class="docutils literal"><span class="pre">0.</span></code> and
 <code class="docutils literal"><span class="pre">1.</span></code>.</p>
 </div></blockquote>
 <p><strong>ts</strong> : np.ndarray</p>
 <blockquote>
 <div><p>The angles in radians representing the circumferential coordinate
-(<span class="math">\theta</span>).</p>
+(<img class="math" src="../../_images/math/3be04d4207434584251f6921820c24ac9fa8c6f1.png" alt="\theta"/>).</p>
 </div></blockquote>
 <p><strong>funcnum</strong> : int, optional</p>
 <blockquote>
@@ -629,14 +629,14 @@ imperfections.</p>
 <dt id="desicos.conecylDB.fit_data.transf_matrix">
 <code class="descclassname">desicos.conecylDB.fit_data.</code><code class="descname">transf_matrix</code><span class="sig-paren">(</span><em>alphadeg</em>, <em>betadeg</em>, <em>gammadeg</em>, <em>x0</em>, <em>y0</em>, <em>z0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/conecylDB/fit_data.html#transf_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.conecylDB.fit_data.transf_matrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates the transformation matrix</p>
-<p>The transformation matrix <span class="math">[T]</span> is used to transform a set of points
+<p>The transformation matrix <img class="math" src="../../_images/math/d5a53b47b024b25fbc10f25912b52a7d5d6e34f1.png" alt="[T]"/> is used to transform a set of points
 from one coordinate system to another.</p>
 <p>Many routines in the <code class="docutils literal"><span class="pre">desicos</span></code> require a transformation matrix when
-the coordinate system is different than <a class="reference internal" href="../abaqus/index.html#figure-conecyl"><span class="std std-ref">the default one</span></a>. In such cases the angles <span class="math">\alpha, \beta, \gamma</span> and
-the translations <span class="math">\Delta x_0, \Delta y_0, \Delta z_0</span> represent how
+the coordinate system is different than <a class="reference internal" href="../abaqus/index.html#figure-conecyl"><span class="std std-ref">the default one</span></a>. In such cases the angles <img class="math" src="../../_images/math/265fe9a8f3dcb1437779616fa19680935d040922.png" alt="\alpha, \beta, \gamma"/> and
+the translations <img class="math" src="../../_images/math/2a9eb9a1349937a40b5493cb311924d43ac027f1.png" alt="\Delta x_0, \Delta y_0, \Delta z_0"/> represent how
 the user’s coordinate system differs from the default.</p>
 <div class="math">
-<p><span class="math">[T] = \begin{bmatrix}
+<p><img src="../../_images/math/c73c20c3d7f9057cadfd30c4070b2b471f7d3115.png" alt="[T] = \begin{bmatrix}
 cos(\beta)cos(\gamma) &amp;
 sin(\alpha)sin(\beta)cos(\gamma) + cos(\alpha)sin(\gamma) &amp;
 sin(\alpha)sin(\gamma) - cos(\alpha)sin(\beta)cos(\gamma) &amp;
@@ -652,7 +652,7 @@ sin(\beta) &amp;
 cos(\alpha)cos(\beta) &amp;
 \Delta z_0
 \\
-      \end{bmatrix}</span></p>
+      \end{bmatrix}"/></p>
 </div><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -799,7 +799,7 @@ A simple check for increasing is:</p>
 <dl class="function">
 <dt id="desicos.conecylDB.interpolate.interp_theta_z_imp">
 <code class="descclassname">desicos.conecylDB.interpolate.</code><code class="descname">interp_theta_z_imp</code><span class="sig-paren">(</span><em>data</em>, <em>mesh</em>, <em>alphadeg</em>, <em>H_measured</em>, <em>H_model</em>, <em>R_bottom</em>, <em>stretch_H=False</em>, <em>z_offset_bot=None</em>, <em>rotatedeg=0.0</em>, <em>num_sub=10</em>, <em>ncp=5</em>, <em>power_parameter=2</em>, <em>ignore_bot_h=None</em>, <em>ignore_top_h=None</em>, <em>T=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/conecylDB/interpolate.html#interp_theta_z_imp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.conecylDB.interpolate.interp_theta_z_imp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Interpolates a data set in the <span class="math">\theta, z, imp</span> format</p>
+<dd><p>Interpolates a data set in the <img class="math" src="../../_images/math/73653f0560face0e96ae5c997c8b97af0e73a397.png" alt="\theta, z, imp"/> format</p>
 <p>This function uses the inverse-weighted algorithm (<a class="reference internal" href="#desicos.conecylDB.interpolate.inv_weighted" title="desicos.conecylDB.interpolate.inv_weighted"><code class="xref py py-func docutils literal"><span class="pre">inv_weighted()</span></code></a>).</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -807,12 +807,12 @@ A simple check for increasing is:</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>data</strong> : str or numpy.ndarray, shape (N, 3)</p>
 <blockquote>
-<div><p>The data or an array containing the imperfection file in the <span class="math">(\theta,
-Z, imp)</span> format.</p>
+<div><p>The data or an array containing the imperfection file in the <img class="math" src="../../_images/math/005e25819a936d4654396651b6088990af40b6dc.png" alt="(\theta,
+Z, imp)"/> format.</p>
 </div></blockquote>
 <p><strong>mesh</strong> : numpy.ndarray, shape (M, 3)</p>
 <blockquote>
-<div><p>The mesh coordinates <span class="math">(x, y, z)</span> where the values will be interpolated
+<div><p>The mesh coordinates <img class="math" src="../../_images/math/e06af680d255bd734ce2f362bc335a39afeb0e6c.png" alt="(x, y, z)"/> where the values will be interpolated
 to.</p>
 </div></blockquote>
 <p><strong>alphadeg</strong> : float</p>
@@ -851,7 +851,7 @@ to the bottom of the test specimen.</p>
 <p><strong>rotatedeg</strong> : float, optional</p>
 <blockquote>
 <div><p>Rotation angle in degrees telling how much the imperfection pattern
-should be rotated about the <span class="math">X_3</span> (or <span class="math">Z</span>) axis.</p>
+should be rotated about the <img class="math" src="../../_images/math/d2f7e91d2812e21e755633c53252f816f6598415.png" alt="X_3"/> (or <img class="math" src="../../_images/math/bcb2457ac9d8995a4f34d57cadac7ecbbe58f3bd.png" alt="Z"/>) axis.</p>
 </div></blockquote>
 <p><strong>num_sub</strong> : int, optional</p>
 <blockquote>
@@ -898,19 +898,19 @@ mesh is not in the <a class="reference internal" href="../abaqus/index.html#figu
 <code class="descclassname">desicos.conecylDB.interpolate.</code><code class="descname">inv_weighted</code><span class="sig-paren">(</span><em>data</em>, <em>mesh</em>, <em>num_sub</em>, <em>col</em>, <em>ncp=5</em>, <em>power_parameter=2</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/conecylDB/interpolate.html#inv_weighted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.conecylDB.interpolate.inv_weighted" title="Permalink to this definition">¶</a></dt>
 <dd><p>Interpolates the values taken at one group of points into
 another using an inverse-weighted algorithm</p>
-<p>In the inverse-weighted algorithm a number of <span class="math">n_{CP}</span> measured points
+<p>In the inverse-weighted algorithm a number of <img class="math" src="../../_images/math/3c833d4b47e675327e014e29e9f3ec365383743e.png" alt="n_{CP}"/> measured points
 of the input parameter <code class="docutils literal"><span class="pre">data</span></code> that are closest to a given node in
 the input parameter <code class="docutils literal"><span class="pre">mesh</span></code> are found and the imperfection value of
-this node (represented by the normal displacement <span class="math">{w_0}_{node}</span>) is
+this node (represented by the normal displacement <img class="math" src="../../_images/math/3c6c6a8b264aec0e1d5369e3229998de0f46761f.png" alt="{w_0}_{node}"/>) is
 calculated as follows:</p>
 <div class="math">
-<p><span class="math">{w_0}_{node} = \frac{\sum_{i}^{n_{CP}}{{w_0}_i\frac{1}{w_i}}}
-                    {\sum_{i}^{n_{CP}}{\frac{1}{w_i}}}</span></p>
-</div><p>where <span class="math">w_i</span> is the inverse weight of each measured point, calculated as:</p>
+<p><img src="../../_images/math/d8cb29eee08072c62b9a12eb6711f57a1b2e1ebc.png" alt="{w_0}_{node} = \frac{\sum_{i}^{n_{CP}}{{w_0}_i\frac{1}{w_i}}}
+                    {\sum_{i}^{n_{CP}}{\frac{1}{w_i}}}"/></p>
+</div><p>where <img class="math" src="../../_images/math/1caac5f874f508b298a9b1dcf65af7fe3823f9cc.png" alt="w_i"/> is the inverse weight of each measured point, calculated as:</p>
 <div class="math">
-<p><span class="math">w_i = \left[(x_{node}-x_i)^2+(y_{node}-y_i)^2+(z_{node}-z_i)^2
-      \right]^p</span></p>
-</div><p>with <span class="math">p</span> being a power parameter that when increased will increase the
+<p><img src="../../_images/math/6d4a013242e37832e12b87755b05ae1ac4c211f7.png" alt="w_i = \left[(x_{node}-x_i)^2+(y_{node}-y_i)^2+(z_{node}-z_i)^2
+      \right]^p"/></p>
+</div><p>with <img class="math" src="../../_images/math/27d463da4622be5b3ef1d4176ced7d7a323c6425.png" alt="p"/> being a power parameter that when increased will increase the
 relative influence of a closest point.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -963,8 +963,8 @@ is <code class="docutils literal"><span class="pre">mesh.shape[0]</span></code>.
 <dl class="function">
 <dt id="desicos.conecylDB.read_write.read_theta_z_imp">
 <code class="descclassname">desicos.conecylDB.read_write.</code><code class="descname">read_theta_z_imp</code><span class="sig-paren">(</span><em>path</em>, <em>H_measured=None</em>, <em>stretch_H=False</em>, <em>z_offset_bot=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/conecylDB/read_write.html#read_theta_z_imp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.conecylDB.read_write.read_theta_z_imp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read an imperfection file in the format <span class="math">\theta</span>, <span class="math">z</span>, imperfection.</p>
-<p>Where the angles <span class="math">\theta</span> are given in radians.</p>
+<dd><p>Read an imperfection file in the format <img class="math" src="../../_images/math/3be04d4207434584251f6921820c24ac9fa8c6f1.png" alt="\theta"/>, <img class="math" src="../../_images/math/683f2dd9129a91d21aaf1c04afa6f78b39d4cb0a.png" alt="z"/>, imperfection.</p>
+<p>Where the angles <img class="math" src="../../_images/math/3be04d4207434584251f6921820c24ac9fa8c6f1.png" alt="\theta"/> are given in radians.</p>
 <p>Example of input file:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">theta1</span> <span class="n">z1</span> <span class="n">imp1</span>
 <span class="n">theta2</span> <span class="n">z2</span> <span class="n">imp2</span>
@@ -1005,7 +1005,7 @@ to the bottom of the test specimen.</p>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>mps</strong> : np.ndarray</p>
 <blockquote>
-<div><p>A 2-D array with <span class="math">\theta</span>, <span class="math">z</span>, <span class="math">value</span> in the first, second
+<div><p>A 2-D array with <img class="math" src="../../_images/math/3be04d4207434584251f6921820c24ac9fa8c6f1.png" alt="\theta"/>, <img class="math" src="../../_images/math/683f2dd9129a91d21aaf1c04afa6f78b39d4cb0a.png" alt="z"/>, <img class="math" src="../../_images/math/da2988d631866f110d2c133632ae21bb6f8c41c3.png" alt="value"/> in the first, second
 and third columns, respectively.</p>
 </div></blockquote>
 <p><strong>offset_mps</strong> : np.ndarray</p>
@@ -1015,7 +1015,7 @@ measured data according to the inputs given.</p>
 </div></blockquote>
 <p><strong>norm_mps</strong> : np.ndarray</p>
 <blockquote class="last">
-<div><p>A 2-D array similar to <code class="docutils literal"><span class="pre">mps</span></code> but normalized in <span class="math">z</span> by the height.</p>
+<div><p>A 2-D array similar to <code class="docutils literal"><span class="pre">mps</span></code> but normalized in <img class="math" src="../../_images/math/683f2dd9129a91d21aaf1c04afa6f78b39d4cb0a.png" alt="z"/> by the height.</p>
 </div></blockquote>
 </td>
 </tr>
@@ -1026,7 +1026,7 @@ measured data according to the inputs given.</p>
 <dl class="function">
 <dt id="desicos.conecylDB.read_write.read_xyz">
 <code class="descclassname">desicos.conecylDB.read_write.</code><code class="descname">read_xyz</code><span class="sig-paren">(</span><em>path</em>, <em>alphadeg_measured=None</em>, <em>R_best_fit=None</em>, <em>H_measured=None</em>, <em>stretch_H=False</em>, <em>z_offset_bot=None</em>, <em>r_TOL=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/conecylDB/read_write.html#read_xyz"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.conecylDB.read_write.read_xyz" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read an imperfection file in the format <span class="math">x</span>, <span class="math">y</span>, <span class="math">z</span>.</p>
+<dd><p>Read an imperfection file in the format <img class="math" src="../../_images/math/a59f68a4202623bb859a7093f0316bf466e6f75d.png" alt="x"/>, <img class="math" src="../../_images/math/276f7e256cbddeb81eee42e1efc348f3cb4ab5f8.png" alt="y"/>, <img class="math" src="../../_images/math/683f2dd9129a91d21aaf1c04afa6f78b39d4cb0a.png" alt="z"/>.</p>
 <p>Example of input file:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">x1</span> <span class="n">y1</span> <span class="n">z1</span>
 <span class="n">x2</span> <span class="n">y2</span> <span class="n">z2</span>
@@ -1081,7 +1081,7 @@ given in percent.</p>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>mps</strong> : np.ndarray</p>
 <blockquote>
-<div><p>A 2-D array with <span class="math">x</span>, <span class="math">y</span>, <span class="math">z</span> in the first, second
+<div><p>A 2-D array with <img class="math" src="../../_images/math/a59f68a4202623bb859a7093f0316bf466e6f75d.png" alt="x"/>, <img class="math" src="../../_images/math/276f7e256cbddeb81eee42e1efc348f3cb4ab5f8.png" alt="y"/>, <img class="math" src="../../_images/math/683f2dd9129a91d21aaf1c04afa6f78b39d4cb0a.png" alt="z"/> in the first, second
 and third columns, respectively.</p>
 </div></blockquote>
 <p><strong>offset_mps</strong> : np.ndarray</p>
@@ -1091,8 +1091,8 @@ according to the inputs given.</p>
 </div></blockquote>
 <p><strong>norm_mps</strong> : np.ndarray</p>
 <blockquote class="last">
-<div><p>A 2-D array similar to <code class="docutils literal"><span class="pre">mps</span></code> but normalized in <span class="math">z</span> by the height
-and in <span class="math">x</span> and <span class="math">y</span> by the radius.</p>
+<div><p>A 2-D array similar to <code class="docutils literal"><span class="pre">mps</span></code> but normalized in <img class="math" src="../../_images/math/683f2dd9129a91d21aaf1c04afa6f78b39d4cb0a.png" alt="z"/> by the height
+and in <img class="math" src="../../_images/math/a59f68a4202623bb859a7093f0316bf466e6f75d.png" alt="x"/> and <img class="math" src="../../_images/math/276f7e256cbddeb81eee42e1efc348f3cb4ab5f8.png" alt="y"/> by the radius.</p>
 </div></blockquote>
 </td>
 </tr>
@@ -1103,8 +1103,8 @@ and in <span class="math">x</span> and <span class="math">y</span> by the radius
 <dl class="function">
 <dt id="desicos.conecylDB.read_write.xyz2thetazimp">
 <code class="descclassname">desicos.conecylDB.read_write.</code><code class="descname">xyz2thetazimp</code><span class="sig-paren">(</span><em>path</em>, <em>alphadeg_measured</em>, <em>H_measured</em>, <em>R_expected=10.0</em>, <em>use_best_fit=True</em>, <em>sample_size=None</em>, <em>best_fit_output=False</em>, <em>errorRtol=1e-09</em>, <em>stretch_H=False</em>, <em>z_offset_bot=None</em>, <em>r_TOL=1.0</em>, <em>clip_bottom=None</em>, <em>clip_top=None</em>, <em>save=True</em>, <em>fmt='%1.6f'</em>, <em>rotatedeg=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/conecylDB/read_write.html#xyz2thetazimp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.conecylDB.read_write.xyz2thetazimp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Transforms an imperfection file from the format “<span class="math">x</span> <span class="math">y</span> <span class="math">z</span>”
-to the format “<span class="math">\theta</span> <span class="math">z</span> <span class="math">imp</span>“.</p>
+<dd><p>Transforms an imperfection file from the format “<img class="math" src="../../_images/math/a59f68a4202623bb859a7093f0316bf466e6f75d.png" alt="x"/> <img class="math" src="../../_images/math/276f7e256cbddeb81eee42e1efc348f3cb4ab5f8.png" alt="y"/> <img class="math" src="../../_images/math/683f2dd9129a91d21aaf1c04afa6f78b39d4cb0a.png" alt="z"/>”
+to the format “<img class="math" src="../../_images/math/3be04d4207434584251f6921820c24ac9fa8c6f1.png" alt="\theta"/> <img class="math" src="../../_images/math/683f2dd9129a91d21aaf1c04afa6f78b39d4cb0a.png" alt="z"/> <img class="math" src="../../_images/math/2051460041a8834469c5b0637df98f8bc0836056.png" alt="imp"/>“.</p>
 <p>The input file:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">x1</span> <span class="n">y1</span> <span class="n">z1</span>
 <span class="n">x2</span> <span class="n">y2</span> <span class="n">z2</span>
@@ -1202,13 +1202,13 @@ top edge.</p>
 <p><strong>rotatedeg</strong> : float or None, optional</p>
 <blockquote>
 <div><p>Rotation angle in degrees telling how much the imperfection pattern
-should be rotated about the <span class="math">X_3</span> (or <span class="math">Z</span>) axis.</p>
+should be rotated about the <img class="math" src="../../_images/math/d2f7e91d2812e21e755633c53252f816f6598415.png" alt="X_3"/> (or <img class="math" src="../../_images/math/bcb2457ac9d8995a4f34d57cadac7ecbbe58f3bd.png" alt="Z"/>) axis.</p>
 </div></blockquote>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>mps</strong> : np.ndarray</p>
 <blockquote>
-<div><p>A 2-D array with <span class="math">\theta</span>, <span class="math">z</span>, <span class="math">imp</span> in the first, second
+<div><p>A 2-D array with <img class="math" src="../../_images/math/3be04d4207434584251f6921820c24ac9fa8c6f1.png" alt="\theta"/>, <img class="math" src="../../_images/math/683f2dd9129a91d21aaf1c04afa6f78b39d4cb0a.png" alt="z"/>, <img class="math" src="../../_images/math/2051460041a8834469c5b0637df98f8bc0836056.png" alt="imp"/> in the first, second
 and third columns, respectively.</p>
 </div></blockquote>
 <p><strong>mps, out</strong> : np.ndarray, dict</p>
@@ -1225,8 +1225,8 @@ above.</p>
 <dl class="function">
 <dt id="desicos.conecylDB.read_write.xyzthick2thetazthick">
 <code class="descclassname">desicos.conecylDB.read_write.</code><code class="descname">xyzthick2thetazthick</code><span class="sig-paren">(</span><em>path</em>, <em>alphadeg_measured</em>, <em>H_measured</em>, <em>R_expected=10.0</em>, <em>use_best_fit=True</em>, <em>sample_size=None</em>, <em>stretch_H=False</em>, <em>z_offset_bot=None</em>, <em>r_TOL=1.0</em>, <em>save=True</em>, <em>fmt='%1.6f'</em>, <em>rotatedeg=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/conecylDB/read_write.html#xyzthick2thetazthick"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.conecylDB.read_write.xyzthick2thetazthick" title="Permalink to this definition">¶</a></dt>
-<dd><p>Transforms an imperfection file from the format: “<span class="math">x</span> <span class="math">y</span> <span class="math">z</span> <span class="math">thick</span>”
-to the format “<span class="math">\theta</span> <span class="math">z</span> <span class="math">thick</span>“.</p>
+<dd><p>Transforms an imperfection file from the format: “<img class="math" src="../../_images/math/a59f68a4202623bb859a7093f0316bf466e6f75d.png" alt="x"/> <img class="math" src="../../_images/math/276f7e256cbddeb81eee42e1efc348f3cb4ab5f8.png" alt="y"/> <img class="math" src="../../_images/math/683f2dd9129a91d21aaf1c04afa6f78b39d4cb0a.png" alt="z"/> <img class="math" src="../../_images/math/7eb7e1d4f2989856f296dfc0c6c3413c142dfa7d.png" alt="thick"/>”
+to the format “<img class="math" src="../../_images/math/3be04d4207434584251f6921820c24ac9fa8c6f1.png" alt="\theta"/> <img class="math" src="../../_images/math/683f2dd9129a91d21aaf1c04afa6f78b39d4cb0a.png" alt="z"/> <img class="math" src="../../_images/math/7eb7e1d4f2989856f296dfc0c6c3413c142dfa7d.png" alt="thick"/>“.</p>
 <p>The input file:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">x1</span> <span class="n">y1</span> <span class="n">z1</span> <span class="n">thick1</span>
 <span class="n">x2</span> <span class="n">y2</span> <span class="n">z2</span> <span class="n">thick2</span>
@@ -1300,13 +1300,13 @@ given in percent.</p>
 <p><strong>rotatedeg</strong> : float or None, optional</p>
 <blockquote>
 <div><p>Rotation angle in degrees telling how much the imperfection pattern
-should be rotated about the <span class="math">X_3</span> (or <span class="math">Z</span>) axis.</p>
+should be rotated about the <img class="math" src="../../_images/math/d2f7e91d2812e21e755633c53252f816f6598415.png" alt="X_3"/> (or <img class="math" src="../../_images/math/bcb2457ac9d8995a4f34d57cadac7ecbbe58f3bd.png" alt="Z"/>) axis.</p>
 </div></blockquote>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>mps</strong> : np.ndarray</p>
 <blockquote class="last">
-<div><p>A 2-D array with <span class="math">\theta</span>, <span class="math">z</span>, <span class="math">imp</span> in the first, second
+<div><p>A 2-D array with <img class="math" src="../../_images/math/3be04d4207434584251f6921820c24ac9fa8c6f1.png" alt="\theta"/>, <img class="math" src="../../_images/math/683f2dd9129a91d21aaf1c04afa6f78b39d4cb0a.png" alt="z"/>, <img class="math" src="../../_images/math/2051460041a8834469c5b0637df98f8bc0836056.png" alt="imp"/> in the first, second
 and third columns, respectively.</p>
 </div></blockquote>
 </td>
@@ -1366,7 +1366,7 @@ and third columns, respectively.</p>
       &copy;2012-2017 Desicos Improved Software Team.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
       
     </div>

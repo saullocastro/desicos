@@ -60,9 +60,9 @@
 <span class="sd">    the analysis of conical and cylindrical structures. The tables below show</span>
 <span class="sd">    the attributes grouped by category.</span>
 
-<span class="sd">    =====================  ==================================================</span>
+<span class="sd">    =====================  ====================================================</span>
 <span class="sd">    General Attributes     Description</span>
-<span class="sd">    =====================  ==================================================</span>
+<span class="sd">    =====================  ====================================================</span>
 <span class="sd">    ``name_DB``            ``str``, name of the corresponding</span>
 <span class="sd">                           :mod:`desicos.conecylDB.ccs` entry</span>
 <span class="sd">    ``model_name``         ``str``, Name of the corresponding model in Abaqus</span>
@@ -75,21 +75,21 @@
 <span class="sd">                           :class:`.ImpConf`)</span>
 <span class="sd">    ``stringerconf``       The corresponding stringer configuration (see</span>
 <span class="sd">                           :class:`.StringerConf`)</span>
-<span class="sd">    =====================  ==================================================</span>
+<span class="sd">    =====================  ====================================================</span>
 
-<span class="sd">    =====================  ==================================================</span>
+<span class="sd">    =====================  ====================================================</span>
 <span class="sd">    Geometric Attributes   Description</span>
-<span class="sd">    =====================  ==================================================</span>
+<span class="sd">    =====================  ====================================================</span>
 <span class="sd">    ``rbot``               Radius at the bottom edge</span>
 <span class="sd">    ``rtop``               Radius at the top edge</span>
 <span class="sd">    ``H``                  Height</span>
 <span class="sd">    ``L``                  Meridional length (same as ``H`` for cylinders)</span>
 <span class="sd">    ``alphadeg``           Cone semi-vertex angle in degrees</span>
-<span class="sd">    =====================  ==================================================</span>
+<span class="sd">    =====================  ====================================================</span>
 
-<span class="sd">    =====================  ==================================================</span>
+<span class="sd">    =====================  ====================================================</span>
 <span class="sd">    Laminate Attributes    Description</span>
-<span class="sd">    =====================  ==================================================</span>
+<span class="sd">    =====================  ====================================================</span>
 <span class="sd">    ``stack``              ``list``, stacking sequence with angles in degrees</span>
 <span class="sd">    ``plyt``               ``float``, ply thickness that will be used for all</span>
 <span class="sd">                           plies</span>
@@ -112,11 +112,11 @@
 <span class="sd">                           ``(S11t, S11c, S22t, S22c, S12, S13)``</span>
 <span class="sd">    ``allowables``         ``list`` a list of tuples when different lamina</span>
 <span class="sd">                           allowables should be used for each ply</span>
-<span class="sd">    =====================  ==================================================</span>
+<span class="sd">    =====================  ====================================================</span>
 
-<span class="sd">    =====================  ==================================================</span>
+<span class="sd">    =====================  ====================================================</span>
 <span class="sd">    Load                   Description</span>
-<span class="sd">    =====================  ==================================================</span>
+<span class="sd">    =====================  ====================================================</span>
 <span class="sd">    ``displ_controlled``   ``bool``, if the axial compression is displacement</span>
 <span class="sd">                           controlled</span>
 <span class="sd">    ``pressure_load``      ``float``, the pressure load to be applied (a</span>
@@ -171,14 +171,14 @@
 <span class="sd">                           buckling analysis. If ``True`` the created model</span>
 <span class="sd">                           will have no imperfection and only an unitary axial</span>
 <span class="sd">                           load applied at the top edge</span>
-<span class="sd">    =====================  ==================================================</span>
+<span class="sd">    =====================  ====================================================</span>
 <span class="sd">    .. note:: The routines automatically determine whether the load should be</span>
 <span class="sd">              distributed or applied in a reference point based on the defined</span>
 <span class="sd">              boundary conditions</span>
 
-<span class="sd">    =========================  ==================================================</span>
+<span class="sd">    =========================  ===================================================</span>
 <span class="sd">    Boundary Conditions        Description</span>
-<span class="sd">    =========================  ==================================================</span>
+<span class="sd">    =========================  ===================================================</span>
 <span class="sd">    ``bc_fix_bottom_uR``       ``bool``, if the radial displacement should be</span>
 <span class="sd">                               constrained at the bottom edge (:ref:`cf. Figure 1</span>
 <span class="sd">                               &lt;figure_conecyl&gt;`)</span>
@@ -197,7 +197,7 @@
 <span class="sd">    ``bc_fix_bottom_side_v``   ``bool``, if the circumferential displacement</span>
 <span class="sd">                               should be constrained at the inner / outer side</span>
 <span class="sd">                               faces of the bottom resin rings (when present).</span>
-<span class="sd">    ``bc_fix_bottom_side_u3`` ``bool``, if the vertical displacement should be</span>
+<span class="sd">    ``bc_fix_bottom_side_u3``  ``bool``, if the vertical displacement should be</span>
 <span class="sd">                               should be constrained at the inner / outer side</span>
 <span class="sd">                               faces of the bottom resin rings (when present).</span>
 
@@ -219,15 +219,15 @@
 <span class="sd">    ``bc_fix_top_side_v``      ``bool``, if the circumferential displacement</span>
 <span class="sd">                               should be constrained at the inner / outer side</span>
 <span class="sd">                               faces of the top resin rings (when present).</span>
-<span class="sd">    ``bc_fix_top_side_u3``    ``bool``, if the vertical displacement should be</span>
+<span class="sd">    ``bc_fix_top_side_u3``     ``bool``, if the vertical displacement should be</span>
 <span class="sd">                               should be constrained at the inner / outer side</span>
 <span class="sd">                               faces of the top resin rings (when present).</span>
-<span class="sd">    =========================  ==================================================</span>
+<span class="sd">    =========================  ===================================================</span>
 
-<span class="sd">    =====================  ==================================================</span>
+<span class="sd">    =====================  ====================================================</span>
 <span class="sd">    Resin Rings            Description (:ref:`the attributes are illustrated</span>
 <span class="sd">                           here &lt;resin_rings&gt;`)</span>
-<span class="sd">    =====================  ==================================================</span>
+<span class="sd">    =====================  ====================================================</span>
 <span class="sd">    ``resin_add_BIR``      ``bool``, tells if a resin ring should be added</span>
 <span class="sd">                           to the inner part of the bottom edge</span>
 <span class="sd">    ``resin_add_BOR``      ``bool``, tells if a resin ring should be added</span>
@@ -252,27 +252,27 @@
 <span class="sd">    ``use_DLR_bc``         Apply boundary conditions used at DLR. It consists</span>
 <span class="sd">                           on using all the resin rings plus radial</span>
 <span class="sd">                           constraints only on the side faces of the resin.</span>
-<span class="sd">    =====================  ==================================================</span>
+<span class="sd">    =====================  ====================================================</span>
 
-<span class="sd">    =====================  ==================================================</span>
+<span class="sd">    =====================  ====================================================</span>
 <span class="sd">    Mesh Parameters        Description</span>
-<span class="sd">    =====================  ==================================================</span>
+<span class="sd">    =====================  ====================================================</span>
 <span class="sd">    ``numel_r``            Number of elements around the circumference. This</span>
 <span class="sd">                           is sufficient to define the whole mesh size since</span>
 <span class="sd">                           the algorithms will keep an element aspect-ratio</span>
 <span class="sd">                           close to 1:1</span>
 <span class="sd">    ``elem_type``          Element type. Tested with: ``&#39;S4&#39;``, ``&#39;S4R&#39;``,</span>
 <span class="sd">                           ``&#39;S8R&#39;``, ``&#39;S8R5&#39;``</span>
-<span class="sd">    =====================  ==================================================</span>
+<span class="sd">    =====================  ====================================================</span>
 
 <span class="sd">    The analysis will be divided in one or two steps, and the corresponding</span>
 <span class="sd">    analysis parameters for each step are ending with ``1`` or ``2``. When</span>
 <span class="sd">    only one step is used the parameters corresponding to step 2 will be</span>
 <span class="sd">    applied.</span>
 
-<span class="sd">    =======================  =================================================</span>
+<span class="sd">    =======================  ==================================================</span>
 <span class="sd">    Analysis Parameters      Description</span>
-<span class="sd">    =======================  =================================================</span>
+<span class="sd">    =======================  ==================================================</span>
 <span class="sd">    ``separate_load_steps``  ``bool``, tells if  the load steps should be</span>
 <span class="sd">                             separated into two:</span>
 <span class="sd">                                1) constant loads</span>
@@ -297,7 +297,7 @@
 <span class="sd">                             will be printed in the output</span>
 <span class="sd">    ``ncpus``                Number of CPUs to run the jobs</span>
 
-<span class="sd">    =======================  =================================================</span>
+<span class="sd">    =======================  ==================================================</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -560,9 +560,9 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plyts</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plyts</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stack</span><span class="p">):</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">plyts</span> <span class="o">=</span> <span class="p">[</span><span class="n">plyts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">stack</span><span class="p">]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">plyts</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">plyts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">stack</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">plyts</span> <span class="o">=</span> <span class="p">[</span><span class="n">plyts</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">stack</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">plyts</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">plyts</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">stack</span><span class="p">]</span>
 
         <span class="c1"># calculating ABD matrix</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">direct_ABD_input</span><span class="p">:</span>
@@ -1446,7 +1446,7 @@
       &copy;2012-2017 Desicos Improved Software Team.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
       
     </div>

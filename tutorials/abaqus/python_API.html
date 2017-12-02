@@ -133,7 +133,7 @@ whole domain.</p>
 <p><strong>rotatedeg</strong> : float, optional</p>
 <blockquote>
 <div><p>Rotation angle in degrees telling how much the imperfection pattern
-should be rotated about the <span class="math">X_3</span> (or <span class="math">Z</span>) axis.</p>
+should be rotated about the <img class="math" src="../../_images/math/d2f7e91d2812e21e755633c53252f816f6598415.png" alt="X_3"/> (or <img class="math" src="../../_images/math/bcb2457ac9d8995a4f34d57cadac7ecbbe58f3bd.png" alt="Z"/>) axis.</p>
 </div></blockquote>
 <p><strong>scaling_factor</strong> : float, optional</p>
 <blockquote>
@@ -143,7 +143,7 @@ amplitude.</p>
 <p><strong>r_TOL</strong> : float, optional</p>
 <blockquote>
 <div><p>Parameter to ignore noisy data in the imperfection file, the points
-with a radius higher than <span class="math">r=r_{model} \times (1 + r_{TOL})</span> will not
+with a radius higher than <img class="math" src="../../_images/math/695046ffa57fec7e8fc213b611f7e9f949d45a54.png" alt="r=r_{model} \times (1 + r_{TOL})"/> will not
 be considered in the interpolation.</p>
 </div></blockquote>
 <p><strong>num_closest_points</strong> : int, optional</p>
@@ -205,7 +205,7 @@ model will already be translated.</p>
 </div>
 <div class="section" id="applying-measured-imperfections-using-fourier-series">
 <h2>Applying Measured Imperfections using Fourier Series<a class="headerlink" href="#applying-measured-imperfections-using-fourier-series" title="Permalink to this headline">¶</a></h2>
-<p>Assuming the analyst already has the coefficients <span class="math">\{c_0\}</span> that will build
+<p>Assuming the analyst already has the coefficients <img class="math" src="../../_images/math/a8a3fa29c52d18ae44077c7ce24e64ba07410dab.png" alt="\{c_0\}"/> that will build
 the imperfection function, <span class="xref std std-ref">as explained here</span>, these can
 be directly used to calculate the imperfection amplitude of each node. The
 following example shows how this can be achieved using the module
@@ -241,11 +241,11 @@ Series as detailed in <a class="reference internal" href="../../modules/conecylD
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>m0</strong> : int</p>
 <blockquote>
-<div><p>Number of terms along the <span class="math">x</span> coordinate.</p>
+<div><p>Number of terms along the <img class="math" src="../../_images/math/a59f68a4202623bb859a7093f0316bf466e6f75d.png" alt="x"/> coordinate.</p>
 </div></blockquote>
 <p><strong>n0</strong> : int</p>
 <blockquote>
-<div><p>Number of terms along the <span class="math">\theta</span> coordinate.</p>
+<div><p>Number of terms along the <img class="math" src="../../_images/math/3be04d4207434584251f6921820c24ac9fa8c6f1.png" alt="\theta"/> coordinate.</p>
 </div></blockquote>
 <p><strong>c0</strong> : numpy.ndarray</p>
 <blockquote>
@@ -284,7 +284,7 @@ imperfections.</p>
 </div></blockquote>
 <p><strong>fem_meridian_bot2top</strong> : bool, optional</p>
 <blockquote>
-<div><p>A boolean indicating if the finite element has the <span class="math">x</span> axis starting
+<div><p>A boolean indicating if the finite element has the <img class="math" src="../../_images/math/a59f68a4202623bb859a7093f0316bf466e6f75d.png" alt="x"/> axis starting
 at the bottom or at the top.</p>
 </div></blockquote>
 <p><strong>ignore_bot_h</strong> : None or float, optional</p>
@@ -366,7 +366,7 @@ model will be already translated.</p>
       &copy;2012-2017 Desicos Improved Software Team.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
       
     </div>

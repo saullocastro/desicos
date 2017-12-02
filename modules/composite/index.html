@@ -207,7 +207,7 @@ transverse shear terms.</p>
 <dt id="desicos.composite.laminate.Laminate.force_balanced_LP">
 <code class="descname">force_balanced_LP</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/composite/laminate.html#Laminate.force_balanced_LP"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.composite.laminate.Laminate.force_balanced_LP" title="Permalink to this definition">¶</a></dt>
 <dd><p>Force balanced lamination parameters</p>
-<p>The lamination parameters <span class="math">\xi_{A2}</span> and <span class="math">\xi_{A4}</span> are set to null
+<p>The lamination parameters <img class="math" src="../../_images/math/74e23b35a504fdec666148af8c5c4b7fa356fe4c.png" alt="\xi_{A2}"/> and <img class="math" src="../../_images/math/42ebfb3efbe68805ac568115075dc2200fa766be.png" alt="\xi_{A4}"/> are set to null
 to force a balanced laminate.</p>
 </dd></dl>
 
@@ -216,9 +216,9 @@ to force a balanced laminate.</p>
 <code class="descname">force_orthotropic</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/composite/laminate.html#Laminate.force_orthotropic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.composite.laminate.Laminate.force_orthotropic" title="Permalink to this definition">¶</a></dt>
 <dd><p>Force an orthotropic laminate</p>
 <p>The terms
-<span class="math">A_{13}</span>, <span class="math">A_{23}</span>, <span class="math">A_{31}</span>, <span class="math">A_{32}</span>,
-<span class="math">B_{13}</span>, <span class="math">B_{23}</span>, <span class="math">B_{31}</span>, <span class="math">B_{32}</span>,
-<span class="math">D_{13}</span>, <span class="math">D_{23}</span>, <span class="math">D_{31}</span>, <span class="math">D_{32}</span> are set to zero to force an
+<img class="math" src="../../_images/math/19850d8b21d47eb8141612b4db5cc893450be17c.png" alt="A_{13}"/>, <img class="math" src="../../_images/math/51a1f9b8800206ec3bdb0949f8f3656071595ea9.png" alt="A_{23}"/>, <img class="math" src="../../_images/math/dd971b7a5110a409a377093a26f86a8ecb873f6b.png" alt="A_{31}"/>, <img class="math" src="../../_images/math/7212014a81da53a508b73e684f3484ef111bc2ca.png" alt="A_{32}"/>,
+<img class="math" src="../../_images/math/21ecf3aec8c7aabf1f454c006abbbfc49087d54d.png" alt="B_{13}"/>, <img class="math" src="../../_images/math/29990a7095e64cac5561f10df5499d2869137c38.png" alt="B_{23}"/>, <img class="math" src="../../_images/math/f97816e7a453a7d40245c472f07a47f285275618.png" alt="B_{31}"/>, <img class="math" src="../../_images/math/23b1d0c29639d5b3e192b205d86e608be53c8b4a.png" alt="B_{32}"/>,
+<img class="math" src="../../_images/math/c9d5f81a21cc88d0e854932d67d2070699abdf45.png" alt="D_{13}"/>, <img class="math" src="../../_images/math/50f6141e52ee0483c2c353f53b4af58186bd8656.png" alt="D_{23}"/>, <img class="math" src="../../_images/math/269c613c075f436e139a6686de78419906d97792.png" alt="D_{31}"/>, <img class="math" src="../../_images/math/48f982a58ae59ace6bac4f1a529646741f153e16.png" alt="D_{32}"/> are set to zero to force an
 orthotropic laminate.</p>
 </dd></dl>
 
@@ -226,14 +226,14 @@ orthotropic laminate.</p>
 <dt id="desicos.composite.laminate.Laminate.force_symmetric">
 <code class="descname">force_symmetric</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/composite/laminate.html#Laminate.force_symmetric"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.composite.laminate.Laminate.force_symmetric" title="Permalink to this definition">¶</a></dt>
 <dd><p>Force a symmetric laminate</p>
-<p>The <span class="math">B</span> terms of the constitutive matrix are set to zero.</p>
+<p>The <img class="math" src="../../_images/math/9805f44feec6f81d376d09e88b8236635edbb3c8.png" alt="B"/> terms of the constitutive matrix are set to zero.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="desicos.composite.laminate.Laminate.force_symmetric_LP">
 <code class="descname">force_symmetric_LP</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/composite/laminate.html#Laminate.force_symmetric_LP"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.composite.laminate.Laminate.force_symmetric_LP" title="Permalink to this definition">¶</a></dt>
 <dd><p>Force symmetric lamination parameters</p>
-<p>The lamination parameters <span class="math">\xi_{Bi}</span> are set to null
+<p>The lamination parameters <img class="math" src="../../_images/math/b917f255a8122403b0230ebb5e7c4906094c4d14.png" alt="\xi_{Bi}"/> are set to null
 to force a symmetric laminate.</p>
 </dd></dl>
 
@@ -244,8 +244,8 @@ to force a symmetric laminate.</p>
 <code class="descclassname">desicos.composite.laminate.</code><code class="descname">read_lamination_parameters</code><span class="sig-paren">(</span><em>thickness</em>, <em>laminaprop</em>, <em>xiA1</em>, <em>xiA2</em>, <em>xiA3</em>, <em>xiA4</em>, <em>xiB1</em>, <em>xiB2</em>, <em>xiB3</em>, <em>xiB4</em>, <em>xiD1</em>, <em>xiD2</em>, <em>xiD3</em>, <em>xiD4</em>, <em>xiE1</em>, <em>xiE2</em>, <em>xiE3</em>, <em>xiE4</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/composite/laminate.html#read_lamination_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.composite.laminate.read_lamination_parameters" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates a laminate based on the lamination parameters.</p>
 <p>The lamination parameters:
-<span class="math">\xi_{A1} \cdots \xi_{A4}</span>, <span class="math">\xi_{B1} \cdots \xi_{B4}</span>
-<span class="math">\xi_{C1} \cdots \xi_{C4}</span>, <span class="math">\xi_{D1} \cdots \xi_{D4}</span></p>
+<img class="math" src="../../_images/math/18f69dad0e59268b55b8c4e20afd1b21771e7e89.png" alt="\xi_{A1} \cdots \xi_{A4}"/>, <img class="math" src="../../_images/math/4d0dd7f171cceeedc826484cc2fb5c88b7dd6444.png" alt="\xi_{B1} \cdots \xi_{B4}"/>
+<img class="math" src="../../_images/math/5a57d4ddaefb3fea229f02621bc243b203647e8d.png" alt="\xi_{C1} \cdots \xi_{C4}"/>, <img class="math" src="../../_images/math/8a73b524718167cc066f7f9f2d17c42f09ca17ab.png" alt="\xi_{D1} \cdots \xi_{D4}"/></p>
 <p>are used to calculate the laminate.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -505,10 +505,10 @@ can be supplied.</p>
 </tbody>
 </table>
 <p class="rubric">Notes</p>
-<p>For isotropic materials when the user defines <span class="math">\nu</span> and <span class="math">E</span>, <span class="math">G</span> will be
-recaculated based on equation: <span class="math">G = E/(2 \times (1+\nu))</span>; in a lower
-priority if the user defines <span class="math">\nu</span> and <span class="math">G</span>, <span class="math">E</span> will be recaculated based
-on equation: <span class="math">E = 2 \times (1+\nu) \times G</span>.</p>
+<p>For isotropic materials when the user defines <img class="math" src="../../_images/math/ca3b8fa4180eee2dfc3af9d13fae1da451cd2c31.png" alt="\nu"/> and <img class="math" src="../../_images/math/4b6222b865b812d2a59368cd1629eed6b54454d5.png" alt="E"/>, <img class="math" src="../../_images/math/dee63237674afc3154c2e33b7b68d67f85f2ee0a.png" alt="G"/> will be
+recaculated based on equation: <img class="math" src="../../_images/math/98eab1575922a496d641f2315da25572ba3a2050.png" alt="G = E/(2 \times (1+\nu))"/>; in a lower
+priority if the user defines <img class="math" src="../../_images/math/ca3b8fa4180eee2dfc3af9d13fae1da451cd2c31.png" alt="\nu"/> and <img class="math" src="../../_images/math/dee63237674afc3154c2e33b7b68d67f85f2ee0a.png" alt="G"/>, <img class="math" src="../../_images/math/4b6222b865b812d2a59368cd1629eed6b54454d5.png" alt="E"/> will be recaculated based
+on equation: <img class="math" src="../../_images/math/d54470ed90b3e55877acd781feda4c44d1277726.png" alt="E = 2 \times (1+\nu) \times G"/>.</p>
 <p class="rubric">Methods</p>
 <table border="1" class="longtable docutils">
 <colgroup>
@@ -652,7 +652,7 @@ on equation: <span class="math">E = 2 \times (1+\nu) \times G</span>.</p>
       &copy;2012-2017 Desicos Improved Software Team.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
       
     </div>

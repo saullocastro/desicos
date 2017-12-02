@@ -118,8 +118,8 @@ be executed before.</p>
 </div>
 <p>In order to transform the raw data to the <a class="reference internal" href="../../../modules/abaqus/index.html#figure-conecyl"><span class="std std-ref">finite element coordinate
 system</span></a>, the recommended procedure is the function
-<a class="reference internal" href="../../../modules/conecylDB/index.html#desicos.conecylDB.read_write.xyz2thetazimp" title="desicos.conecylDB.read_write.xyz2thetazimp"><code class="xref py py-func docutils literal"><span class="pre">xyz2thetazimp()</span></code></a>, exemplified below. This function converts the “<span class="math">x</span> <span class="math">y</span>
-<span class="math">z</span>” data to a to convert them to a “<span class="math">\theta</span> <span class="math">z</span> <span class="math">imp</span>” format. This function
+<a class="reference internal" href="../../../modules/conecylDB/index.html#desicos.conecylDB.read_write.xyz2thetazimp" title="desicos.conecylDB.read_write.xyz2thetazimp"><code class="xref py py-func docutils literal"><span class="pre">xyz2thetazimp()</span></code></a>, exemplified below. This function converts the “<img class="math" src="../../../_images/math/a59f68a4202623bb859a7093f0316bf466e6f75d.png" alt="x"/> <img class="math" src="../../../_images/math/276f7e256cbddeb81eee42e1efc348f3cb4ab5f8.png" alt="y"/>
+<img class="math" src="../../../_images/math/683f2dd9129a91d21aaf1c04afa6f78b39d4cb0a.png" alt="z"/>” data to a to convert them to a “<img class="math" src="../../../_images/math/3be04d4207434584251f6921820c24ac9fa8c6f1.png" alt="\theta"/> <img class="math" src="../../../_images/math/683f2dd9129a91d21aaf1c04afa6f78b39d4cb0a.png" alt="z"/> <img class="math" src="../../../_images/math/2051460041a8834469c5b0637df98f8bc0836056.png" alt="imp"/>” format. This function
 is a wrapper that calls funcion <a class="reference internal" href="../../../modules/conecylDB/index.html#desicos.conecylDB.fit_data.best_fit_cylinder" title="desicos.conecylDB.fit_data.best_fit_cylinder"><code class="xref py py-func docutils literal"><span class="pre">best_fit_cylinder()</span></code></a> or
 <a class="reference internal" href="../../../modules/conecylDB/index.html#desicos.conecylDB.fit_data.best_fit_cone" title="desicos.conecylDB.fit_data.best_fit_cone"><code class="xref py py-func docutils literal"><span class="pre">best_fit_cone()</span></code></a>, where the right coordinate transformation is
 calculated.</p>
@@ -143,7 +143,7 @@ imperfection data is stored in the format:</p>
 <span class="n">thetan</span> <span class="n">zn</span> <span class="n">impn</span>
 </pre></div>
 </div>
-<p>where <code class="docutils literal"><span class="pre">thetai</span></code> and <code class="docutils literal"><span class="pre">zi</span></code> are the coordinates <span class="math">\theta</span> and <span class="math">z</span>, while
+<p>where <code class="docutils literal"><span class="pre">thetai</span></code> and <code class="docutils literal"><span class="pre">zi</span></code> are the coordinates <img class="math" src="../../../_images/math/3be04d4207434584251f6921820c24ac9fa8c6f1.png" alt="\theta"/> and <img class="math" src="../../../_images/math/683f2dd9129a91d21aaf1c04afa6f78b39d4cb0a.png" alt="z"/>, while
 <code class="docutils literal"><span class="pre">impi</span></code> represents the imperfection amplitude at this coordinate. An example
 of the transformed imperfection data is given below (first 10 lines), and
 <a class="reference external" href="https://raw.githubusercontent.com/desicos/desicos/master/doc/source/tutorials/conecylDB/processing_measured_imp_data/sample_theta_z_imp.txt">the full output is given here</a>:</p>
@@ -321,7 +321,7 @@ offset of <code class="docutils literal"><span class="pre">-88.5</span></code> d
 <p>Function <a class="reference internal" href="../../../modules/conecylDB/index.html#desicos.conecylDB.fit_data.calc_c0" title="desicos.conecylDB.fit_data.calc_c0"><code class="xref py py-func docutils literal"><span class="pre">calc_c0()</span></code></a> is used to interpolate the measured data using
 Fourier series. The half-cosine function corresponds to the parameter
 <code class="docutils literal"><span class="pre">funcnum</span> <span class="pre">=</span> <span class="pre">2</span></code>, as can be seen in the function’s documentation.</p>
-<p>The following script was used to calculate the coefficients <span class="math">\{c_0\}</span>. Note
+<p>The following script was used to calculate the coefficients <img class="math" src="../../../_images/math/a8a3fa29c52d18ae44077c7ce24e64ba07410dab.png" alt="\{c_0\}"/>. Note
 how the angular offset is applied using the <code class="docutils literal"><span class="pre">rotatedeg</span></code> parameter:</p>
 <p><code class="docutils literal"><span class="pre">interpolate_half_cosine.py</span></code></p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -506,49 +506,49 @@ displacement patterns using different approximation levels:</p>
 </pre></div>
 </div>
 <p>which will result in the following figures for <code class="docutils literal"><span class="pre">funcnum=1</span></code>:</p>
-<p><span class="math">m_0=20</span>, <span class="math">n_0=30</span>:</p>
+<p><img class="math" src="../../../_images/math/e1ba04417b8d53bdf49ea028c723b2909e6fcdcc.png" alt="m_0=20"/>, <img class="math" src="../../../_images/math/68c304b372e00d3d8cb582f123c57bd62fcb26b3.png" alt="n_0=30"/>:</p>
 <div class="figure">
-<img alt="../../../_images/fw0_f1_z25_m_020_n_030.png" src="../../../_images/fw0_f1_z25_m_020_n_030.png" />
+<img alt="tutorials\conecylDB\processing_measured_imp_data\........figuresmodulesconecylDBfit_datafw0_f1_z25_m_020_n_030.png" src="tutorials\conecylDB\processing_measured_imp_data\........figuresmodulesconecylDBfit_datafw0_f1_z25_m_020_n_030.png" />
 </div>
-<p><span class="math">m_0=30</span>, <span class="math">n_0=45</span>:</p>
+<p><img class="math" src="../../../_images/math/d392389e8e430dfff3b5a855e5e8d7d54b92c6b9.png" alt="m_0=30"/>, <img class="math" src="../../../_images/math/227c009d9130cce75aeedb75d4616c405b86bf73.png" alt="n_0=45"/>:</p>
 <div class="figure">
-<img alt="../../../_images/fw0_f1_z25_m_030_n_045.png" src="../../../_images/fw0_f1_z25_m_030_n_045.png" />
+<img alt="tutorials\conecylDB\processing_measured_imp_data\........figuresmodulesconecylDBfit_datafw0_f1_z25_m_030_n_045.png" src="tutorials\conecylDB\processing_measured_imp_data\........figuresmodulesconecylDBfit_datafw0_f1_z25_m_030_n_045.png" />
 </div>
-<p><span class="math">m_0=40</span>, <span class="math">n_0=60</span>:</p>
+<p><img class="math" src="../../../_images/math/0a4b43866a238f422b803114e34bbe14687a5491.png" alt="m_0=40"/>, <img class="math" src="../../../_images/math/1370096e1b574ea936055228ba7444866bd2d7f4.png" alt="n_0=60"/>:</p>
 <div class="figure">
-<img alt="../../../_images/fw0_f1_z25_m_040_n_060.png" src="../../../_images/fw0_f1_z25_m_040_n_060.png" />
+<img alt="tutorials\conecylDB\processing_measured_imp_data\........figuresmodulesconecylDBfit_datafw0_f1_z25_m_040_n_060.png" src="tutorials\conecylDB\processing_measured_imp_data\........figuresmodulesconecylDBfit_datafw0_f1_z25_m_040_n_060.png" />
 </div>
-<p><span class="math">m_0=50</span>, <span class="math">n_0=75</span>:</p>
+<p><img class="math" src="../../../_images/math/dce7c0c19a166049d6c7cd25fe5ad847e1754478.png" alt="m_0=50"/>, <img class="math" src="../../../_images/math/544ee0ad24e9716ce10a3502780d3c55a51766dd.png" alt="n_0=75"/>:</p>
 <div class="figure">
-<img alt="../../../_images/fw0_f1_z25_m_050_n_075.png" src="../../../_images/fw0_f1_z25_m_050_n_075.png" />
+<img alt="tutorials\conecylDB\processing_measured_imp_data\........figuresmodulesconecylDBfit_datafw0_f1_z25_m_050_n_075.png" src="tutorials\conecylDB\processing_measured_imp_data\........figuresmodulesconecylDBfit_datafw0_f1_z25_m_050_n_075.png" />
 </div>
 <p>and for <code class="docutils literal"><span class="pre">funcnum=2</span></code>:</p>
-<p><span class="math">m_0=20</span>, <span class="math">n_0=30</span>:</p>
+<p><img class="math" src="../../../_images/math/e1ba04417b8d53bdf49ea028c723b2909e6fcdcc.png" alt="m_0=20"/>, <img class="math" src="../../../_images/math/68c304b372e00d3d8cb582f123c57bd62fcb26b3.png" alt="n_0=30"/>:</p>
 <div class="figure">
-<img alt="../../../_images/fw0_f2_z25_m_020_n_030.png" src="../../../_images/fw0_f2_z25_m_020_n_030.png" />
+<img alt="tutorials\conecylDB\processing_measured_imp_data\........figuresmodulesconecylDBfit_datafw0_f2_z25_m_020_n_030.png" src="tutorials\conecylDB\processing_measured_imp_data\........figuresmodulesconecylDBfit_datafw0_f2_z25_m_020_n_030.png" />
 </div>
-<p><span class="math">m_0=30</span>, <span class="math">n_0=45</span>:</p>
+<p><img class="math" src="../../../_images/math/d392389e8e430dfff3b5a855e5e8d7d54b92c6b9.png" alt="m_0=30"/>, <img class="math" src="../../../_images/math/227c009d9130cce75aeedb75d4616c405b86bf73.png" alt="n_0=45"/>:</p>
 <div class="figure">
-<img alt="../../../_images/fw0_f2_z25_m_030_n_045.png" src="../../../_images/fw0_f2_z25_m_030_n_045.png" />
+<img alt="tutorials\conecylDB\processing_measured_imp_data\........figuresmodulesconecylDBfit_datafw0_f2_z25_m_030_n_045.png" src="tutorials\conecylDB\processing_measured_imp_data\........figuresmodulesconecylDBfit_datafw0_f2_z25_m_030_n_045.png" />
 </div>
-<p><span class="math">m_0=40</span>, <span class="math">n_0=60</span>:</p>
+<p><img class="math" src="../../../_images/math/0a4b43866a238f422b803114e34bbe14687a5491.png" alt="m_0=40"/>, <img class="math" src="../../../_images/math/1370096e1b574ea936055228ba7444866bd2d7f4.png" alt="n_0=60"/>:</p>
 <div class="figure">
-<img alt="../../../_images/fw0_f2_z25_m_040_n_060.png" src="../../../_images/fw0_f2_z25_m_040_n_060.png" />
+<img alt="tutorials\conecylDB\processing_measured_imp_data\........figuresmodulesconecylDBfit_datafw0_f2_z25_m_040_n_060.png" src="tutorials\conecylDB\processing_measured_imp_data\........figuresmodulesconecylDBfit_datafw0_f2_z25_m_040_n_060.png" />
 </div>
-<p><span class="math">m_0=50</span>, <span class="math">n_0=75</span>:</p>
+<p><img class="math" src="../../../_images/math/dce7c0c19a166049d6c7cd25fe5ad847e1754478.png" alt="m_0=50"/>, <img class="math" src="../../../_images/math/544ee0ad24e9716ce10a3502780d3c55a51766dd.png" alt="n_0=75"/>:</p>
 <div class="figure">
-<img alt="../../../_images/fw0_f2_z25_m_050_n_075.png" src="../../../_images/fw0_f2_z25_m_050_n_075.png" />
+<img alt="tutorials\conecylDB\processing_measured_imp_data\........figuresmodulesconecylDBfit_datafw0_f2_z25_m_050_n_075.png" src="tutorials\conecylDB\processing_measured_imp_data\........figuresmodulesconecylDBfit_datafw0_f2_z25_m_050_n_075.png" />
 </div>
-<p>It can be seen how the <span class="math">w_0</span> function approximates the measured imperfection
-pattern with the increase of <span class="math">m_0</span> and <span class="math">m_0</span>. The measured imperfection
+<p>It can be seen how the <img class="math" src="../../../_images/math/faafb19d9d95d41a5554bd1b8d8ca2e16a89935d.png" alt="w_0"/> function approximates the measured imperfection
+pattern with the increase of <img class="math" src="../../../_images/math/0a0d4e1462cb9df8a971118a41677b23cf719a59.png" alt="m_0"/> and <img class="math" src="../../../_images/math/0a0d4e1462cb9df8a971118a41677b23cf719a59.png" alt="m_0"/>. The measured imperfection
 pattern is shown below, and it was plotted after performing the
 inverse-weighted interpolation already described.</p>
 <div class="figure">
-<img alt="../../../_images/measured_z25.png" src="../../../_images/measured_z25.png" />
+<img alt="tutorials\conecylDB\processing_measured_imp_data\........figuresmodulesconecylDBfit_datameasured_z25.png" src="tutorials\conecylDB\processing_measured_imp_data\........figuresmodulesconecylDBfit_datameasured_z25.png" />
 </div>
 <p>Comparing the results using <code class="docutils literal"><span class="pre">funcnum=1</span></code> and <code class="docutils literal"><span class="pre">funcnum=2</span></code>, one see that
 the latter approaches closer the real measurements, since it relaxes the
-condition <span class="math">w_0 = 0</span> at the edges.</p>
+condition <img class="math" src="../../../_images/math/175abbfdf527283122b0b4b156c0a91339d11484.png" alt="w_0 = 0"/> at the edges.</p>
 </div>
 </div>
 <div class="section" id="processing-measured-thickness-imperfection-data">
@@ -556,7 +556,7 @@ condition <span class="math">w_0 = 0</span> at the edges.</p>
 <p>The procedure described for geometric imperfections is also applicable for
 thickness imperfections. The measured imperfection data usually
 comes in a 4 columns format where the thickness measurement is given for each
-spatial position: <span class="math">x_i</span>, <span class="math">y_i</span>, <span class="math">z_i</span>:</p>
+spatial position: <img class="math" src="../../../_images/math/7720e563212e11bf72de255ab82c2a3b97c1a7f5.png" alt="x_i"/>, <img class="math" src="../../../_images/math/07f6018e00c747406442bb3912e0209766fc9090.png" alt="y_i"/>, <img class="math" src="../../../_images/math/6de62736d8aa90101801d7a1416e97e921d1620f.png" alt="z_i"/>:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">x1</span> <span class="n">y1</span> <span class="n">z1</span> <span class="n">thick1</span>
 <span class="n">x2</span> <span class="n">y2</span> <span class="n">z2</span> <span class="n">thick2</span>
 <span class="o">...</span>
@@ -628,7 +628,7 @@ in other ways, as detailed in the corresponding documentation</p>
       &copy;2012-2017 Desicos Improved Software Team.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
       
     </div>
