@@ -87,7 +87,7 @@ Uneven Edges (:mod:`desicos.abaqus.imperfections.uneven_edges`)
     :members:
 
 Cutout (:mod:`desicos.abaqus.imperfections.cutout`)
----------------------------------------------------
+-------------------------------------------------------------------
 .. automodule:: desicos.abaqus.imperfections.cutout
     :members:
 
@@ -97,7 +97,7 @@ Ply Piece Imperfection (:mod:`desicos.abaqus.imperfections.ppi`)
     :members:
 
 Fiber Fraction Imperfection (:mod:`desicos.abaqus.imperfections.ffi`)
----------------------------------------------------
+------------------------------------------------------------------------
 .. automodule:: desicos.abaqus.imperfections.ffi
     :members:
 

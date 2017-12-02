@@ -19,9 +19,9 @@ class ConeCyl(object):
     the analysis of conical and cylindrical structures. The tables below show
     the attributes grouped by category.
 
-    =====================  ==================================================
+    =====================  ====================================================
     General Attributes     Description
-    =====================  ==================================================
+    =====================  ====================================================
     ``name_DB``            ``str``, name of the corresponding
                            :mod:`desicos.conecylDB.ccs` entry
     ``model_name``         ``str``, Name of the corresponding model in Abaqus
@@ -34,21 +34,21 @@ class ConeCyl(object):
                            :class:`.ImpConf`)
     ``stringerconf``       The corresponding stringer configuration (see
                            :class:`.StringerConf`)
-    =====================  ==================================================
+    =====================  ====================================================
 
-    =====================  ==================================================
+    =====================  ====================================================
     Geometric Attributes   Description
-    =====================  ==================================================
+    =====================  ====================================================
     ``rbot``               Radius at the bottom edge
     ``rtop``               Radius at the top edge
     ``H``                  Height
     ``L``                  Meridional length (same as ``H`` for cylinders)
     ``alphadeg``           Cone semi-vertex angle in degrees
-    =====================  ==================================================
+    =====================  ====================================================
 
-    =====================  ==================================================
+    =====================  ====================================================
     Laminate Attributes    Description
-    =====================  ==================================================
+    =====================  ====================================================
     ``stack``              ``list``, stacking sequence with angles in degrees
     ``plyt``               ``float``, ply thickness that will be used for all
                            plies
@@ -71,11 +71,11 @@ class ConeCyl(object):
                            ``(S11t, S11c, S22t, S22c, S12, S13)``
     ``allowables``         ``list`` a list of tuples when different lamina
                            allowables should be used for each ply
-    =====================  ==================================================
+    =====================  ====================================================
 
-    =====================  ==================================================
+    =====================  ====================================================
     Load                   Description
-    =====================  ==================================================
+    =====================  ====================================================
     ``displ_controlled``   ``bool``, if the axial compression is displacement
                            controlled
     ``pressure_load``      ``float``, the pressure load to be applied (a
@@ -130,14 +130,14 @@ class ConeCyl(object):
                            buckling analysis. If ``True`` the created model
                            will have no imperfection and only an unitary axial
                            load applied at the top edge
-    =====================  ==================================================
+    =====================  ====================================================
     .. note:: The routines automatically determine whether the load should be
               distributed or applied in a reference point based on the defined
               boundary conditions
 
-    =========================  ==================================================
+    =========================  ===================================================
     Boundary Conditions        Description
-    =========================  ==================================================
+    =========================  ===================================================
     ``bc_fix_bottom_uR``       ``bool``, if the radial displacement should be
                                constrained at the bottom edge (:ref:`cf. Figure 1
                                <figure_conecyl>`)
@@ -156,7 +156,7 @@ class ConeCyl(object):
     ``bc_fix_bottom_side_v``   ``bool``, if the circumferential displacement
                                should be constrained at the inner / outer side
                                faces of the bottom resin rings (when present).
-    ``bc_fix_bottom_side_u3`` ``bool``, if the vertical displacement should be
+    ``bc_fix_bottom_side_u3``  ``bool``, if the vertical displacement should be
                                should be constrained at the inner / outer side
                                faces of the bottom resin rings (when present).
 
@@ -178,15 +178,15 @@ class ConeCyl(object):
     ``bc_fix_top_side_v``      ``bool``, if the circumferential displacement
                                should be constrained at the inner / outer side
                                faces of the top resin rings (when present).
-    ``bc_fix_top_side_u3``    ``bool``, if the vertical displacement should be
+    ``bc_fix_top_side_u3``     ``bool``, if the vertical displacement should be
                                should be constrained at the inner / outer side
                                faces of the top resin rings (when present).
-    =========================  ==================================================
+    =========================  ===================================================
 
-    =====================  ==================================================
+    =====================  ====================================================
     Resin Rings            Description (:ref:`the attributes are illustrated
                            here <resin_rings>`)
-    =====================  ==================================================
+    =====================  ====================================================
     ``resin_add_BIR``      ``bool``, tells if a resin ring should be added
                            to the inner part of the bottom edge
     ``resin_add_BOR``      ``bool``, tells if a resin ring should be added
@@ -211,27 +211,27 @@ class ConeCyl(object):
     ``use_DLR_bc``         Apply boundary conditions used at DLR. It consists
                            on using all the resin rings plus radial
                            constraints only on the side faces of the resin.
-    =====================  ==================================================
+    =====================  ====================================================
 
-    =====================  ==================================================
+    =====================  ====================================================
     Mesh Parameters        Description
-    =====================  ==================================================
+    =====================  ====================================================
     ``numel_r``            Number of elements around the circumference. This
                            is sufficient to define the whole mesh size since
                            the algorithms will keep an element aspect-ratio
                            close to 1:1
     ``elem_type``          Element type. Tested with: ``'S4'``, ``'S4R'``,
                            ``'S8R'``, ``'S8R5'``
-    =====================  ==================================================
+    =====================  ====================================================
 
     The analysis will be divided in one or two steps, and the corresponding
     analysis parameters for each step are ending with ``1`` or ``2``. When
     only one step is used the parameters corresponding to step 2 will be
     applied.
 
-    =======================  =================================================
+    =======================  ==================================================
     Analysis Parameters      Description
-    =======================  =================================================
+    =======================  ==================================================
     ``separate_load_steps``  ``bool``, tells if  the load steps should be
                              separated into two:
                                 1) constant loads
@@ -256,7 +256,7 @@ class ConeCyl(object):
                              will be printed in the output
     ``ncpus``                Number of CPUs to run the jobs
 
-    =======================  =================================================
+    =======================  ==================================================
 
     """
     def __init__(self):
@@ -519,9 +519,9 @@ class ConeCyl(object):
         else:
             if isinstance(self.plyts, list):
                 if len(self.plyts) != len(self.stack):
-                    self.plyts = [plyts[0] for i in self.stack]
+                    self.plyts = [self.plyts[0] for i in self.stack]
             else:
-                self.plyts = [plyts for i in self.stack]
+                self.plyts = [self.plyts for i in self.stack]
 
         # calculating ABD matrix
         if self.direct_ABD_input:
