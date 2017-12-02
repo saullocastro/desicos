@@ -50,7 +50,6 @@
 <span class="c1"># The PlyPiece class was located here in some development versions of the</span>
 <span class="c1"># PPI imperfection and CPPOT tool. Import it here (though it is not needed</span>
 <span class="c1"># per se) to maintain save/load compatibility with then-created studies</span>
-<span class="kn">from</span> <span class="nn">desicos.cppot.core.ply_model</span> <span class="k">import</span> <span class="n">PlyPiece</span>
 <span class="kn">from</span> <span class="nn">.imperfection</span> <span class="k">import</span> <span class="n">Imperfection</span>
 
 
@@ -62,13 +61,14 @@
 <span class="sd">    which varies with the location on the cone. This imperfection can be used</span>
 <span class="sd">    to include that effect in the simulation.</span>
 
-<span class="sd">    =====================  ==================================================</span>
+<span class="sd">    =====================  ====================================================</span>
 <span class="sd">    Attributes             Description</span>
-<span class="sd">    =====================  ==================================================</span>
+<span class="sd">    =====================  ====================================================</span>
 <span class="sd">    ``info``               ``list`` with info about the layup of this cone.</span>
 <span class="sd">                           Length of the list should be at least equal to the</span>
 <span class="sd">                           number of plies. Each entry is a ``dict``,</span>
 <span class="sd">                           containing:</span>
+
 <span class="sd">                            - ``starting_position``: ``float``, Radius in the</span>
 <span class="sd">                              flattened cone ((s, phi)-coordinate system)</span>
 <span class="sd">                              where the origin line (L0) of the basic ply</span>
@@ -88,10 +88,11 @@
 <span class="sd">                                a) 0.5 if ``cc.stack[i] == 0``</span>
 <span class="sd">                                b) 0.0 if ``cc.stack[i] &gt; 0``</span>
 <span class="sd">                                c) 1.0 if ``cc.stack[i] &lt; 0``</span>
+
 <span class="sd">    ``extra_height``       ``float``, extra height above and below the cone</span>
 <span class="sd">                           height (`cc.H`) to consider in the ply placement</span>
 <span class="sd">                           model.</span>
-<span class="sd">    =====================  ==================================================</span>
+<span class="sd">    =====================  ====================================================</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
@@ -308,7 +309,7 @@
         <span class="k">if</span> <span class="n">cylindrical</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">r</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">z</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">r</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span> <span class="n">r</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span> <span class="n">z</span></div>
+            <span class="k">return</span> <span class="n">r</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span> <span class="n">r</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span> <span class="n">z</span></div>
 
 <div class="viewcode-block" id="PPI.get_ply_lines"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.ppi.PPI.get_ply_lines">[docs]</a>    <span class="k">def</span> <span class="nf">get_ply_lines</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ply_index</span><span class="p">,</span> <span class="n">center_theta_zero</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Obtain a series of lines that can be used to draw all ply pieces.</span>
@@ -348,7 +349,7 @@
         <div class="sphinxsidebarwrapper">
 <p class="logo">
   <a href="../../../../index.html">
-    <img class="logo" src="../../../../_static/../../../logo/desicos.png" alt="Logo"/>
+    <img class="logo" src="../../../../_static/desicos.png" alt="Logo"/>
     
   </a>
 </p>

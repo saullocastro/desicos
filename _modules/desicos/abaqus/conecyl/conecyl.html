@@ -47,7 +47,7 @@
 
 <span class="kn">import</span> <span class="nn">desicos.conecylDB</span> <span class="k">as</span> <span class="nn">conecylDB</span>
 <span class="kn">from</span> <span class="nn">desicos.logger</span> <span class="k">import</span> <span class="n">log</span><span class="p">,</span> <span class="n">warn</span><span class="p">,</span> <span class="n">error</span>
-<span class="kn">from</span> <span class="nn">desicos.abaqus.constants</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">desicos.abaqus.constants</span> <span class="k">import</span> <span class="n">TMP_DIR</span>
 <span class="kn">from</span> <span class="nn">desicos.composite.laminate</span> <span class="k">import</span> <span class="n">read_stack</span>
 <span class="kn">from</span> <span class="nn">desicos.conecylDB</span> <span class="k">import</span> <span class="n">fetch</span>
 <span class="kn">from</span> <span class="nn">desicos.abaqus.utils</span> <span class="k">import</span> <span class="n">make_uniform_cells</span>
@@ -141,6 +141,7 @@
 <span class="sd">                           common functions like ``cos``, ``sin``, ``tan``,</span>
 <span class="sd">                           ``acos``, ``asin``, ``atan``, ``pow`` and constants</span>
 <span class="sd">                           like ``pi``, ``e`` etc can be used. Example::</span>
+
 <span class="sd">                               cc.Nxxtop = &quot;cos(Th)+sin(Th)&quot;</span>
 
 <span class="sd">                           .. note:: If ``Nxxtop`` is not given, the formula:</span>
@@ -148,6 +149,7 @@
 <span class="sd">                                     .. math::</span>
 <span class="sd">                                           {N_{xx}}_{top} = \frac{F_C}{2 \pi</span>
 <span class="sd">                                           R_{top} cos(\alpha)}</span>
+
 <span class="sd">                                     will be adopted, where `F_C` is the</span>
 <span class="sd">                                     ``axial_load`` attribute</span>
 
@@ -172,6 +174,7 @@
 <span class="sd">                           will have no imperfection and only an unitary axial</span>
 <span class="sd">                           load applied at the top edge</span>
 <span class="sd">    =====================  ====================================================</span>
+
 <span class="sd">    .. note:: The routines automatically determine whether the load should be</span>
 <span class="sd">              distributed or applied in a reference point based on the defined</span>
 <span class="sd">              boundary conditions</span>
@@ -465,6 +468,7 @@
 <span class="sd">            cc : :class:`.ConeCyl` object with the updated properties.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">desicos.abaqus.imperfections</span> <span class="k">as</span> <span class="nn">imperfections</span>
         <span class="k">if</span> <span class="n">name_DB</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">name_DB</span> <span class="o">=</span> <span class="n">name_DB</span>
         <span class="n">ccs</span> <span class="o">=</span> <span class="n">conecylDB</span><span class="o">.</span><span class="n">ccs</span><span class="o">.</span><span class="n">ccs</span>
@@ -1406,7 +1410,7 @@
         <div class="sphinxsidebarwrapper">
 <p class="logo">
   <a href="../../../../index.html">
-    <img class="logo" src="../../../../_static/../../../logo/desicos.png" alt="Logo"/>
+    <img class="logo" src="../../../../_static/desicos.png" alt="Logo"/>
     
   </a>
 </p>

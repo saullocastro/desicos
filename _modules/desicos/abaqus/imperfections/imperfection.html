@@ -41,6 +41,7 @@
   <h1>Source code for desicos.abaqus.imperfections.imperfection</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
 
+<span class="kn">from</span> <span class="nn">desicos.abaqus.abaqus_functions</span> <span class="k">import</span> <span class="n">create_sketch_plane</span>
 <span class="kn">from</span> <span class="nn">desicos.abaqus.utils</span> <span class="k">import</span> <span class="n">cyl2rec</span>
 
 <div class="viewcode-block" id="Imperfection"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.imperfection.Imperfection">[docs]</a><span class="k">class</span> <span class="nc">Imperfection</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -61,7 +62,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">sketch_plane</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">create_sketch_plane</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">sketch_plane</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">create_sketch_plane</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">conecyl</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sketch_plane</span> <span class="o">=</span> <span class="n">create_sketch_plane</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">conecyl</span><span class="p">,</span>
                                                       <span class="bp">self</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">get_xyz</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">r</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">conecyl</span><span class="o">.</span><span class="n">r_z_from_pt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pt</span><span class="p">)</span>
@@ -75,7 +76,7 @@
         <div class="sphinxsidebarwrapper">
 <p class="logo">
   <a href="../../../../index.html">
-    <img class="logo" src="../../../../_static/../../../logo/desicos.png" alt="Logo"/>
+    <img class="logo" src="../../../../_static/desicos.png" alt="Logo"/>
     
   </a>
 </p>

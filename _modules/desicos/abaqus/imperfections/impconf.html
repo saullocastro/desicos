@@ -44,7 +44,7 @@
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">desicos.logger</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">desicos.logger</span> <span class="k">import</span> <span class="n">warn</span>
 <span class="kn">from</span> <span class="nn">.uneven_edges</span> <span class="k">import</span> <span class="n">Shim</span><span class="p">,</span> <span class="n">UnevenBottomEdge</span><span class="p">,</span> <span class="n">UnevenTopEdge</span>
 <span class="kn">from</span> <span class="nn">.axisymmetric</span> <span class="k">import</span> <span class="n">Axisymmetric</span>
 <span class="kn">from</span> <span class="nn">.dimple</span> <span class="k">import</span> <span class="n">Dimple</span>
@@ -76,9 +76,9 @@
 
 <span class="sd">    The imperfections are grouped in the attributes detailed below.</span>
 
-<span class="sd">    ================== ======================================================</span>
+<span class="sd">    ================== ========================================================</span>
 <span class="sd">    Attributes         Description</span>
-<span class="sd">    ================== ======================================================</span>
+<span class="sd">    ================== ========================================================</span>
 <span class="sd">    uneven_bottom_edge :class:`.UnevenBottomEdge` object</span>
 <span class="sd">    uneven_top_edge    :class:`.UnevenTopEdge` object</span>
 <span class="sd">    ploads             ``list`` of :class:`.PLoad` (Perturbation Load) objects</span>
@@ -97,7 +97,7 @@
 <span class="sd">                       ``None`` if not set</span>
 <span class="sd">    ffi                :class:`.FFI` (Fiber Fraction Imperfection) object or</span>
 <span class="sd">                       ``None`` if not set</span>
-<span class="sd">    ================== ======================================================</span>
+<span class="sd">    ================== ========================================================</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -573,9 +573,11 @@
 <span class="sd">        extra_height : float</span>
 <span class="sd">            Extra height above and below the cone height (`cc.H`) to consider</span>
 <span class="sd">            in the ply placement model.</span>
+
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        ppi : :class:`.PPI` object.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ppi</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">warn</span><span class="p">(</span><span class="s1">&#39;PPI object already set, overriding...&#39;</span><span class="p">)</span>
@@ -722,7 +724,7 @@
         <div class="sphinxsidebarwrapper">
 <p class="logo">
   <a href="../../../../index.html">
-    <img class="logo" src="../../../../_static/../../../logo/desicos.png" alt="Logo"/>
+    <img class="logo" src="../../../../_static/desicos.png" alt="Logo"/>
     
   </a>
 </p>

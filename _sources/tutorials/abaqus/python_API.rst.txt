@@ -31,7 +31,7 @@ Applying Measured Imperfections using Fourier Series
 ----------------------------------------------------
 
 Assuming the analyst already has the coefficients `\{c_0\}` that will build
-the imperfection function, :ref:`as explained here <fitting_data>`, these can
+the imperfection function, :ref:`as explained here <tutorials_conecylDB>`, these can
 be directly used to calculate the imperfection amplitude of each node. The
 following example shows how this can be achieved using the module
 :mod:`desicos.conecylDB.fit_data` (it must be run inside Abaqus)::
