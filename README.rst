@@ -10,7 +10,7 @@ Documentation
 
 Please, access the documentation here:
 
-http://desicos.github.io/desicos/
+http://saullocastro.github.io/desicos/
 
 
 Plug-in for Abaqus
@@ -48,7 +48,7 @@ Semi-analytical tools
 The content of this repository dealing with semi-analytical models 
 has been moved to: 
 
-https://github.com/compmech/compmech/blob/master/README.rst
+https://github.com/saullocastro/compmech/blob/master/README.rst
 
 And the modules previously accessed using::
 
@@ -73,5 +73,5 @@ Licensing
 ---------
 
 The new BSD License (`see the LICENSE file for details 
-<https://raw.github.com/desicos/desicos/master/LICENSE>`_)
+<https://raw.github.com/saullocastro/desicos/master/LICENSE>`_)
 covers all files in the compmech repository unless stated otherwise.
