@@ -29,6 +29,18 @@ To access all and more fuctionalities from the Python IDE in Abaqus::
     >>> cc = ConeCyl()
     >>> cc.fromDB('huehne_2008_z07')
     >>> cc.create_model()
+    
+    
+Cone Ply Piece Optimization Tool
+--------------------------------
+
+Finds the optimal ply piece shape for laminated cones. There are four different tools that can be used:
+
+The Input-Tool
+The Cone Geometry-Tool
+The Plot Ply Piece-Tool
+The Evaluation-Tool
+
 
 Semi-analytical tools
 ---------------------
@@ -56,13 +68,6 @@ Developed by Pavel Schor (schor.pavel@gmail.com), this package brings
 algorithms to create new imperfection data based on initially given samples.
 This module is contained inside the "stochastic" folder.
 
-More information in:
-
-https://github.com/desicos/desicos/blob/master/doc/source/firstEx.rst
-
-Known issues:
-
-https://github.com/desicos/desicos/blob/master/doc/source/overview.rst
 
 Licensing
 ---------
