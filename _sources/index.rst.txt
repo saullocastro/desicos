@@ -5,7 +5,7 @@ DESICOS Improved Sofware Documentation
 ======================================
 
 Tools developed in the context of the European Project DESICOS
-(http://www.desicos.eu).
+(https://cordis.europa.eu/project/id/282522).
 
 
 .. toctree::
@@ -22,19 +22,19 @@ Installation
 
 Latest Release:
 
-- `Version 2.4.10 <https://github.com/desicos/desicos/releases/tag/2.4.10>`_
+- `Version 2.4.11 <https://github.com/saullocastro/desicos/releases/tag/2.4.11>`_
 
-`Click here <https://github.com/desicos/desicos/releases>`_ to check all
+`Click here <https://github.com/saullocastro/desicos/releases>`_ to check all
 releases.
 
 The bleeding edge source code version can be downloaded directly `from GitHub
-<https://github.com/desicos/desicos/archive/master.zip>`_ or cloned using `Git
+<https://github.com/saullocastro/desicos/archive/master.zip>`_ or cloned using `Git
 <http://git-scm.com/downloads>`_::
 
-    $ git clone https://github.com/desicos/desicos.git
+    $ git clone https://github.com/saullocastro/desicos.git
 
 You can also
-`visit the source code page here <https://github.com/desicos/desicos>`_.
+`visit the source code page here <https://github.com/saullocastro/desicos>`_.
 
 Requirements
 ------------

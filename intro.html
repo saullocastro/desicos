@@ -1,26 +1,19 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Introduction &#8212; DESICOS 2.4.10 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '2.4.10',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Modules" href="modules/index.html" />
@@ -31,27 +24,28 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-  </head>
-  <body>
+  </head><body>
   
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
   <div class="section" id="introduction">
 <h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="plug-in-for-abaqus">
-<h2>Plug-in for Abaqus<a class="headerlink" href="#plug-in-for-abaqus" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="desicos-plug-in-for-abaqus">
+<h2>DESICOS Plug-in for Abaqus<a class="headerlink" href="#desicos-plug-in-for-abaqus" title="Permalink to this headline">¶</a></h2>
 <p>With the aim to provide fast tools for pre- and post-processing tasks
 using the finite element software Abaqus, one can
 use the user-friendly version of the plug-in with a graphic interface (GUI)
-by executing the file <code class="docutils literal"><span class="pre">START_GUI.bat</span></code>.</p>
-<p>You need Abaqus to be executable by the command line <code class="docutils literal"><span class="pre">abaqus</span> <span class="pre">cae</span></code></p>
+by executing the file <code class="docutils literal notranslate"><span class="pre">START_GUI.bat</span></code>.</p>
+<p>You need Abaqus to be executable by the command line <code class="docutils literal notranslate"><span class="pre">abaqus</span> <span class="pre">cae</span></code></p>
 <p>All (and more) fuctionalities from the GUI can be accessed from the Python IDE
 in Abaqus, one short example to create a model would be:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">desicos.abaqus.conecyl</span> <span class="k">import</span> <span class="n">ConeCyl</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">desicos.abaqus.conecyl</span> <span class="kn">import</span> <span class="n">ConeCyl</span>
 <span class="n">cc</span> <span class="o">=</span> <span class="n">ConeCyl</span><span class="p">()</span>
 <span class="n">cc</span><span class="o">.</span><span class="n">fromDB</span><span class="p">(</span><span class="s1">&#39;huehne_2008_z07&#39;</span><span class="p">)</span>
 <span class="n">cc</span><span class="o">.</span><span class="n">create_model</span><span class="p">()</span>
@@ -59,25 +53,25 @@ in Abaqus, one short example to create a model would be:</p>
 </div>
 <p>See the <a class="reference internal" href="modules/abaqus/index.html#module-abaqus"><span class="std std-ref">desicos.abaqus</span></a> documentation for more details.</p>
 </div>
-<div class="section" id="composite-module">
-<h2>Composite Module<a class="headerlink" href="#composite-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="desicos-composite-module">
+<h2>DESICOS Composite Module<a class="headerlink" href="#desicos-composite-module" title="Permalink to this headline">¶</a></h2>
 <p>Used to calculate laminate properties based on input data of stacking
 sequence and lamina properties.</p>
 <p>Example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">desicos.composite.laminate</span> <span class="k">import</span> <span class="n">read_stack</span>
-<span class="kn">from</span> <span class="nn">desicos.conecylDB.laminaprops</span> <span class="k">import</span> <span class="n">laminaprops</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">desicos.composite.laminate</span> <span class="kn">import</span> <span class="n">read_stack</span>
+<span class="kn">from</span> <span class="nn">desicos.conecylDB.laminaprops</span> <span class="kn">import</span> <span class="n">laminaprops</span>
 
 <span class="n">laminaprop</span> <span class="o">=</span> <span class="n">laminaprops</span><span class="p">[</span><span class="s1">&#39;degenhardt_2010_IM78552_cocomat&#39;</span><span class="p">]</span>
 <span class="n">lam</span> <span class="o">=</span> <span class="n">read_stack</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">45</span><span class="p">,</span> <span class="o">-</span><span class="mi">45</span><span class="p">],</span> <span class="n">plyt</span><span class="o">=</span><span class="mf">0.125</span><span class="p">,</span> <span class="n">laminaprop</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Where <code class="docutils literal"><span class="pre">lam</span></code> is a <code class="xref py py-class docutils literal"><span class="pre">desicos.composite.Laminate</span></code> object and the
-constitutive matrices can be accessed doing <code class="docutils literal"><span class="pre">lam.ABD</span></code> (CLPT) or <code class="docutils literal"><span class="pre">lam.ABDE</span></code>
+<p>Where <code class="docutils literal notranslate"><span class="pre">lam</span></code> is a <code class="xref py py-class docutils literal notranslate"><span class="pre">desicos.composite.Laminate</span></code> object and the
+constitutive matrices can be accessed doing <code class="docutils literal notranslate"><span class="pre">lam.ABD</span></code> (CLPT) or <code class="docutils literal notranslate"><span class="pre">lam.ABDE</span></code>
 (FSDT). See the <a class="reference internal" href="modules/composite/index.html#module-composite"><span class="std std-ref">desicos.composite</span></a> documentation
 for more details.</p>
 </div>
-<div class="section" id="cone-cylinder-database-imperfection-database">
-<h2>Cone / Cylinder Database (Imperfection Database)<a class="headerlink" href="#cone-cylinder-database-imperfection-database" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="desicos-cone-cylinder-database-imperfection-database">
+<h2>DESICOS Cone / Cylinder Database (Imperfection Database)<a class="headerlink" href="#desicos-cone-cylinder-database-imperfection-database" title="Permalink to this headline">¶</a></h2>
 <p>A database containing data from structures studied in previous publications
 and the imperfection database for some samples that had their geometric
 imperfection and/or thickness imperfections measured. See the
@@ -89,11 +83,11 @@ imperfection and/or thickness imperfections measured. See the
 has been moved to:</p>
 <p><a class="reference external" href="http://compmech.github.io/compmech/theory/conecyl/index.html">http://compmech.github.io/compmech/theory/conecyl/index.html</a></p>
 <p>And the modules previously accessed using:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">desicos</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">desicos</span>
 </pre></div>
 </div>
 <p>can now be accessed doing:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">compmech.conecyl</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">compmech.conecyl</span>
 </pre></div>
 </div>
 <p>The aim of this module is to provide a fast and free solver for the linear and
@@ -122,6 +116,7 @@ the manufacture process.</p>
 
 
           </div>
+          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
@@ -151,25 +146,25 @@ the manufacture process.</p>
 
 
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
     </form>
+    </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2012-2017 Desicos Improved Software Team.
+      &copy;2012-2020 Desicos Improved Software Team.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>
 

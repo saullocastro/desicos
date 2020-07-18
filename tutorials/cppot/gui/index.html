@@ -1,26 +1,19 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GUI for the Cone Ply Piece Optimization Tool &#8212; DESICOS 2.4.10 documentation</title>
     <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../../',
-        VERSION:     '2.4.10',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
-    <script type="text/javascript" src="../../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="Virtual Material Model (VMM)" href="../vmmt/index.html" />
@@ -31,13 +24,14 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-  </head>
-  <body>
+  </head><body>
   
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
   <div class="section" id="gui-for-the-cone-ply-piece-optimization-tool">
@@ -45,10 +39,10 @@
 <p>This tool is supposed to support the user by finding the optimal ply piece
 shape for laminated cones. There are four different tools that can be used:</p>
 <ul class="simple">
-<li>The Input-Tool</li>
-<li>The Cone Geometry-Tool</li>
-<li>The Plot Ply Piece-Tool</li>
-<li>The Evaluation-Tool</li>
+<li><p>The Input-Tool</p></li>
+<li><p>The Cone Geometry-Tool</p></li>
+<li><p>The Plot Ply Piece-Tool</p></li>
+<li><p>The Evaluation-Tool</p></li>
 </ul>
 <p>When the program is started, the Input-Tool shows up. All other Tools are
 accessible through the Menu Bar Item ‘Tools’.</p>
@@ -63,9 +57,9 @@ needed.</p>
 <p>The Input-Tool is also the Main Window of this program. The user can use the
 other tools by following the program or by clicking the different items in
 the menu ‘Tools’.</p>
-<div class="figure" id="id1">
+<div class="figure align-default" id="id1">
 <a class="reference internal image-reference" href="../../../_images/fig_011.png"><img alt="../../../_images/fig_011.png" src="../../../_images/fig_011.png" style="width: 700px;" /></a>
-<p class="caption"><span class="caption-text">Figure 1: Input GUI</span></p>
+<p class="caption"><span class="caption-text">Figure 1: Input GUI</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
 </div>
 <p>In Figure 1 is the Input-Tool shown. In the menu bar are two different items
 visible. In the ‘File’-Menu one can save or load a specific study or close
@@ -94,53 +88,53 @@ Shape B is also a trapezoidal shape (called ‘Trapez2’) and allows single
 overlapping of two ply pieces on the free cone area. The last basic shape
 is rectangular. The opposite sides are parallel to each other.
 In Figure 2 are the different basic shapes exemplarily shown.</p>
-<div class="figure" id="id2">
+<div class="figure align-default" id="id2">
 <a class="reference internal image-reference" href="../../../_images/fig_021.png"><img alt="../../../_images/fig_021.png" src="../../../_images/fig_021.png" style="width: 700px;" /></a>
-<p class="caption"><span class="caption-text">Figure 2: Examples of different basic shapes</span></p>
+<p class="caption"><span class="caption-text">Figure 2: Examples of different basic shapes</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
 </div>
 <p>The maximum width parameter determines the largest width of the ply piece.
 For the rectangular shape is the width constant and for the trapezoidal
 shapes can this width be found at the lower end of the cone. In Figure 3
 are three different examples for the maximum width shown.</p>
-<div class="figure" id="id3">
+<div class="figure align-default" id="id3">
 <a class="reference internal image-reference" href="../../../_images/fig_031.png"><img alt="../../../_images/fig_031.png" src="../../../_images/fig_031.png" style="width: 700px;" /></a>
-<p class="caption"><span class="caption-text">Figure 3: Example of the maximum width</span></p>
+<p class="caption"><span class="caption-text">Figure 3: Example of the maximum width</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
 </div>
-<p>The starting position <img class="math" src="../../../_images/math/32cb6b34f4859e8aafaabde874fc3ede97356a56.png" alt="s_{{\Theta}_{nom}}"/> defines at which s-coordinate
+<p>The starting position <img class="math" src="../../../_images/math/0c9c4c4034f8beb63a76be9215df761273b8f62a.png" alt="s_{{\Theta}_{nom}}"/> defines at which s-coordinate
 the nominal fiber angle starts. The smaller the value is,
 the nearer starts the part at the cone vertex. In Figure 4 are two
 different examples shown.</p>
-<div class="figure" id="id4">
+<div class="figure align-default" id="id4">
 <a class="reference internal image-reference" href="../../../_images/fig_041.png"><img alt="../../../_images/fig_041.png" src="../../../_images/fig_041.png" style="width: 700px;" /></a>
-<p class="caption"><span class="caption-text">Figure 4: Examples of the starting position</span></p>
+<p class="caption"><span class="caption-text">Figure 4: Examples of the starting position</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
 </div>
-<p>The fiber angle <img class="math" src="../../../_images/math/cc3daacd796557d5925a3372e946d6009dc2421c.png" alt="{\Theta}_{nom}"/> is measured between the s-coordinate and
+<p>The fiber angle <img class="math" src="../../../_images/math/4904f0c06807d8ecef34a415566a2939e49c5190.png" alt="{\Theta}_{nom}"/> is measured between the s-coordinate and
 the straight lines of the ply piece. In this example the fiber angle lies
 between the lower edge of the unwounded cone area and the upper and longer
 edge of the ply piece. In Figure 5 are examples of different fiber angle
 shown.</p>
-<div class="figure" id="id5">
+<div class="figure align-default" id="id5">
 <a class="reference internal image-reference" href="../../../_images/fig_051.png"><img alt="../../../_images/fig_051.png" src="../../../_images/fig_051.png" style="width: 700px;" /></a>
-<p class="caption"><span class="caption-text">Figure 5: Examples of different fiber angles</span></p>
+<p class="caption"><span class="caption-text">Figure 5: Examples of different fiber angles</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
 </div>
 <p>The width variation is a different parameter. When a ply piece is constructed,
-the program uses a ‘basic line’ which starts at <img class="math" src="../../../_images/math/32cb6b34f4859e8aafaabde874fc3ede97356a56.png" alt="s_{{\Theta}_{nom}}"/> with
-the fiber angle <img class="math" src="../../../_images/math/bf5f70f6b431ca28235cd7c01cef26683ae7738f.png" alt="\Theta"/>. The ending edge of the ply piece is always
+the program uses a ‘basic line’ which starts at <img class="math" src="../../../_images/math/0c9c4c4034f8beb63a76be9215df761273b8f62a.png" alt="s_{{\Theta}_{nom}}"/> with
+the fiber angle <img class="math" src="../../../_images/math/0ca257f28785d0cffe56c42f026168041226fc32.png" alt="\Theta"/>. The ending edge of the ply piece is always
 perpendicular to the basic line. The width variation defines the position
 of the vertices of the ply piece polygon on the ending edge relative to
 the basic line.</p>
-<p>For a value of <img class="math" src="../../../_images/math/3130e25e90c4cdcb5f1457a9b2647e7fabd23ac3.png" alt="a_w=0"/> the basic line is also the upper edge of the ply
-piece polygon, see Figure 6 (a). When <img class="math" src="../../../_images/math/de315520674a4aea30220fb29f0d1d42e8920ec3.png" alt="a_w"/> is <img class="math" src="../../../_images/math/e42f9359918eae0301e59f831a7908e650bf126b.png" alt="0.5"/> the basic line is the
+<p>For a value of <img class="math" src="../../../_images/math/7c136bccd89e417b236b28aab293cd6c47b1b289.png" alt="a_w=0"/> the basic line is also the upper edge of the ply
+piece polygon, see Figure 6 (a). When <img class="math" src="../../../_images/math/6e2ae35242113efe15fac1b50c04c940ad1bc515.png" alt="a_w"/> is <img class="math" src="../../../_images/math/b44fd1b6dc8c77975b68a57eb25231239a15d7b5.png" alt="0.5"/> the basic line is the
 axis symmetry for the upper and lower ply piece edges (Figure 6 (b)).
-The upper limit of <img class="math" src="../../../_images/math/de315520674a4aea30220fb29f0d1d42e8920ec3.png" alt="a_w"/> is <img class="math" src="../../../_images/math/d0c00b8daa835b34d5295761ff33cb7dcc84a5fe.png" alt="1.0"/> and then the basic line is also the lower
+The upper limit of <img class="math" src="../../../_images/math/6e2ae35242113efe15fac1b50c04c940ad1bc515.png" alt="a_w"/> is <img class="math" src="../../../_images/math/e7475d28f8578ee4f176064e0c6e31ecd80a6564.png" alt="1.0"/> and then the basic line is also the lower
 edge of the ply piece (Figure 6 (c)).</p>
-<p>This parameter is important for fiber angles smaller than <img class="math" src="../../../_images/math/65297703d5fc0ab5b3551266994b055d9338e2fe.png" alt="15°"/>.
-For larger angles the optimum is always <img class="math" src="../../../_images/math/6a02f27e4db1816c88bb8ef8b83c918d45585e9c.png" alt="a_{w, opt}=0"/>. For <img class="math" src="../../../_images/math/f18804318c6dd588d3b57a45a2d7ba488cf3df31.png" alt="0°"/> the
-optimum value is <img class="math" src="../../../_images/math/ca58e082a4f10e82e8a9022d4c3b168d85b4f5e6.png" alt="a_w=0.5"/>. This variable can only be used for the Shapes A
+<p>This parameter is important for fiber angles smaller than <img class="math" src="../../../_images/math/353bf569d03bbe7275242124ba42f8588fa39030.png" alt="15°"/>.
+For larger angles the optimum is always <img class="math" src="../../../_images/math/104c78ff66996794868f9d6bceee9bd4aa207d7d.png" alt="a_{w, opt}=0"/>. For <img class="math" src="../../../_images/math/5c7da69be658985c000e9938e5ca3c31cce431ec.png" alt="0°"/> the
+optimum value is <img class="math" src="../../../_images/math/8c9717d0d2fb134e6abde6017c40fc5472234b1c.png" alt="a_w=0.5"/>. This variable can only be used for the Shapes A
 and C.</p>
-<div class="figure" id="id6">
+<div class="figure align-default" id="id6">
 <a class="reference internal image-reference" href="../../../_images/fig_061.png"><img alt="../../../_images/fig_061.png" src="../../../_images/fig_061.png" style="width: 700px;" /></a>
-<p class="caption"><span class="caption-text">Figure 6: Examples of different width variations</span></p>
+<p class="caption"><span class="caption-text">Figure 6: Examples of different width variations</span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
 </div>
 </div>
 <div class="section" id="using-the-input-tool">
@@ -167,17 +161,17 @@ in the Menu ‘Tools’ in the menu bar.</p>
 <p>When started, the window in Figure 7 will be opened. On the left side are four
 changeable lines and some further information about the cone geometry. It is
 possible to change the the half-cone angle and the dimensions of the cone. The
-parts between <img class="math" src="../../../_images/math/4c189c36050b2f7045ea511faa58140b4c274b16.png" alt="r1"/> and <img class="math" src="../../../_images/math/f22e4d22e924b476fab98aa7c373feee88142184.png" alt="r2"/> and between <img class="math" src="../../../_images/math/7c2e89a3478f9a85936a55cdc282ae16f8e17616.png" alt="r3"/> and <img class="math" src="../../../_images/math/450e8b6659104ec3dce0de4b3728082ed2f9692f.png" alt="r4"/> are auxiliary
-parts used for cutting and molding the edges of the cone. Between <img class="math" src="../../../_images/math/f22e4d22e924b476fab98aa7c373feee88142184.png" alt="r2"/> and
-<img class="math" src="../../../_images/math/7c2e89a3478f9a85936a55cdc282ae16f8e17616.png" alt="r3"/> (each with height <img class="math" src="../../../_images/math/44d4c3f22452acebfb3ac644e23508b67500be90.png" alt="H"/>) is the so called <em>free cone area</em>.</p>
+parts between <img class="math" src="../../../_images/math/443a56368aa4faa671430dbb2597ae45aa4c3a79.png" alt="r1"/> and <img class="math" src="../../../_images/math/58a4203525ab662aab699cabd1995bffcbe32223.png" alt="r2"/> and between <img class="math" src="../../../_images/math/bd4a5031d0b2ff931f10657172cac7549671ac4e.png" alt="r3"/> and <img class="math" src="../../../_images/math/b24a138295584ff656165d4785ea1ee6b291ca40.png" alt="r4"/> are auxiliary
+parts used for cutting and molding the edges of the cone. Between <img class="math" src="../../../_images/math/58a4203525ab662aab699cabd1995bffcbe32223.png" alt="r2"/> and
+<img class="math" src="../../../_images/math/bd4a5031d0b2ff931f10657172cac7549671ac4e.png" alt="r3"/> (each with height <img class="math" src="../../../_images/math/cb5de54f699cf4b3c7c1a3e87313d11d536c0d88.png" alt="H"/>) is the so called <em>free cone area</em>.</p>
 <p>The algorithm of the ply piece design will try to cover the whole cone, but
 the investigation and evaluation of the fiber angle deviation will be only
 applied to the free cone.</p>
 <p>On the right side of the window is a dynamic drawing, which will change with
 the entered values. There is also the definition of the coordinate system.</p>
-<div class="figure" id="id7">
+<div class="figure align-default" id="id7">
 <a class="reference internal image-reference" href="../../../_images/fig_071.png"><img alt="../../../_images/fig_071.png" src="../../../_images/fig_071.png" style="width: 700px;" /></a>
-<p class="caption"><span class="caption-text">Figure 7: Cone Geometry Tool</span></p>
+<p class="caption"><span class="caption-text">Figure 7: Cone Geometry Tool</span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
 </div>
 <p>New cone designs can be saved to a file and in a later session recovered. The
 save and load functions can be found in the File-Menu. The cone geometry set
@@ -205,62 +199,62 @@ examples for the 2D and the 3D-Result drawing shown.</p>
 <p>It is possible that the export function fails if there are too many results.
 In this case one can simply save the results and afterwards import the file as
 a csv-file to Excel.</p>
-<div class="figure" id="id8">
+<div class="figure align-default" id="id8">
 <a class="reference internal image-reference" href="../../../_images/fig_081.png"><img alt="../../../_images/fig_081.png" src="../../../_images/fig_081.png" style="width: 350px;" /></a>
-<p class="caption"><span class="caption-text">Figure 8: Evaluation Tool</span></p>
+<p class="caption"><span class="caption-text">Figure 8: Evaluation Tool</span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
 </div>
-<div class="figure" id="id9">
+<div class="figure align-default" id="id9">
 <a class="reference internal image-reference" href="../../../_images/fig_091.png"><img alt="../../../_images/fig_091.png" src="../../../_images/fig_091.png" style="width: 700px;" /></a>
-<p class="caption"><span class="caption-text">Figure 9: 2D-Result Drawing</span></p>
+<p class="caption"><span class="caption-text">Figure 9: 2D-Result Drawing</span><a class="headerlink" href="#id9" title="Permalink to this image">¶</a></p>
 </div>
-<div class="figure" id="id10">
+<div class="figure align-default" id="id10">
 <a class="reference internal image-reference" href="../../../_images/fig_101.png"><img alt="../../../_images/fig_101.png" src="../../../_images/fig_101.png" style="width: 700px;" /></a>
-<p class="caption"><span class="caption-text">Figure 10: 3D-Results Drawing</span></p>
+<p class="caption"><span class="caption-text">Figure 10: 3D-Results Drawing</span><a class="headerlink" href="#id10" title="Permalink to this image">¶</a></p>
 </div>
 <div class="section" id="evaluation-parameters">
 <h3>Evaluation Parameters<a class="headerlink" href="#evaluation-parameters" title="Permalink to this headline">¶</a></h3>
 <p>There are five different parameters used to evaluate the different shapes of
 the ply pieces:</p>
-<p>The degree of coverage <img class="math" src="../../../_images/math/e8b322d9c13d6b880b8fecbdf33c0bc894ed6cb8.png" alt="R_{DoC}"/> is the ratio of the area of a ply piece on
-the free cone area <img class="math" src="../../../_images/math/47ae04b084b449fc3fec2933d65ecd9b20bc22d1.png" alt="A_{piece}"/> times the number of pieces per ply <img class="math" src="../../../_images/math/f03639bf07184d8cb499defce3e73ad8cf4fb9a3.png" alt="N_{pieces}"/>
-and the free cone area <img class="math" src="../../../_images/math/3454c3ae0fd4782c8cea09b5ee0131e88e277e15.png" alt="A_{cone}"/>:</p>
+<p>The degree of coverage <img class="math" src="../../../_images/math/9dfbcaeb7373630b780727c0bcf98aa66d578cce.png" alt="R_{DoC}"/> is the ratio of the area of a ply piece on
+the free cone area <img class="math" src="../../../_images/math/f897b323fcaa5555f82b68373760c0a3dcf14f60.png" alt="A_{piece}"/> times the number of pieces per ply <img class="math" src="../../../_images/math/a6927eb5ac926f3d3998dec2d240e9d415e62c88.png" alt="N_{pieces}"/>
+and the free cone area <img class="math" src="../../../_images/math/61a84c041c84914e5be61aeae7848228cdb72ed9.png" alt="A_{cone}"/>:</p>
 <div class="math">
-<p><img src="../../../_images/math/5912a67a5eab5dbcfdf6aaf04e6ce801e439cc0d.png" alt="R_{DoC}=\frac{A_{piece} \cdot N_{pieces}}{A_{cone}}"/></p>
-</div><p>The optimal value is <img class="math" src="../../../_images/math/3bb1183938fc09ffa95b17601a1c590c214937a1.png" alt="100\%"/>. The value can be higher due to overlapping ply
+<p><img src="../../../_images/math/fff59914913868a89f350f2b005664a41697e2dc.png" alt="R_{DoC}=\frac{A_{piece} \cdot N_{pieces}}{A_{cone}}"/></p>
+</div><p>The optimal value is <img class="math" src="../../../_images/math/fec32361ad5a94a12048045c09317006f5b6d5fe.png" alt="100\%"/>. The value can be higher due to overlapping ply
 pieces.</p>
-<div class="figure" id="id11">
+<div class="figure align-default" id="id11">
 <a class="reference internal image-reference" href="../../../_images/fig_111.png"><img alt="../../../_images/fig_111.png" src="../../../_images/fig_111.png" style="width: 700px;" /></a>
-<p class="caption"><span class="caption-text">Figure 11: Definition of the effective area</span></p>
+<p class="caption"><span class="caption-text">Figure 11: Definition of the effective area</span><a class="headerlink" href="#id11" title="Permalink to this image">¶</a></p>
 </div>
 <p>The effective area of a ply piece is the area in which the fibers have a fiber
 deviation smaller than 2°. This area is used twice in evaluation
-parameters: For the ratio of a single ply piece <img class="math" src="../../../_images/math/92a800f0db31390164555fa0cd46058c2442adfc.png" alt="R_{A_{eff}}"/> and for the
-ratio for the whole cone <img class="math" src="../../../_images/math/8731ca2a531eb2fe6326af62da5a68d4c77dacac.png" alt="R_{\sum{A_{eff}}}"/>, called the ratio of total
+parameters: For the ratio of a single ply piece <img class="math" src="../../../_images/math/7fe271663eb14382b8bed4f9a19ebd093136bfbc.png" alt="R_{A_{eff}}"/> and for the
+ratio for the whole cone <img class="math" src="../../../_images/math/bee90db71c185bf9dc93a722c12bd6d8c8ed3da9.png" alt="R_{\sum{A_{eff}}}"/>, called the ratio of total
 effective area.</p>
 <div class="math">
-<p><img src="../../../_images/math/106000dd803d9cc4cec2133a58389bb021bc8b92.png" alt="R_{A_{eff}}=\frac{A_{eff}}{A_{piece}}
+<p><img src="../../../_images/math/dbe47f9732a281f9df15d7b6019aafafd985f63a.png" alt="R_{A_{eff}}=\frac{A_{eff}}{A_{piece}}
 \\
 R_{\sum{A_{eff}}}=\frac{A_{eff} \cdot N_{pieces}}{A_{cone}}"/></p>
 </div><p>In the drawings of the ‘Plot Ply Piece’-Tool is the effective area drawn as
-orange polygons. The optimum value is also <img class="math" src="../../../_images/math/3bb1183938fc09ffa95b17601a1c590c214937a1.png" alt="100\%"/>, but is achievable only for
+orange polygons. The optimum value is also <img class="math" src="../../../_images/math/fec32361ad5a94a12048045c09317006f5b6d5fe.png" alt="100\%"/>, but is achievable only for
 very small fiber angles.</p>
 <p>When trapezoidal shapes are used, not all fibers starting at the bottom reach
 the upper edge of the cone. The ratio of continuous fibers estimates the
-amount of continuous fibers. Therefore are two lengths <img class="math" src="../../../_images/math/4bbb5a71ffe45b6a6e76796e19c65cbd9c66dcbf.png" alt="l_{cont,1}"/> and
-<img class="math" src="../../../_images/math/619ed006b2a1d3d23ca45090b1f12301e447b9f2.png" alt="l_{cont,2}"/> are defined and their ratio calculated:</p>
+amount of continuous fibers. Therefore are two lengths <img class="math" src="../../../_images/math/8ee476e0d4bba9fddb323112a31136f3e82cd6c0.png" alt="l_{cont,1}"/> and
+<img class="math" src="../../../_images/math/c4cbb4a406f18e6192cab082e7575ee5e56bc2c7.png" alt="l_{cont,2}"/> are defined and their ratio calculated:</p>
 <div class="math">
-<p><img src="../../../_images/math/2d89a61e3342c477a2b847152edfba61821b409e.png" alt="R_{cont}=\frac{l_{cont,1}}{l_{cont,2}}"/></p>
-</div><div class="figure" id="id12">
+<p><img src="../../../_images/math/3ab2b7c9c410bc67c2616e4f3453b7376953477c.png" alt="R_{cont}=\frac{l_{cont,1}}{l_{cont,2}}"/></p>
+</div><div class="figure align-default" id="id12">
 <a class="reference internal image-reference" href="../../../_images/fig_121.png"><img alt="../../../_images/fig_121.png" src="../../../_images/fig_121.png" style="width: 700px;" /></a>
-<p class="caption"><span class="caption-text">Figure 12: Ratio of continuous fibers</span></p>
+<p class="caption"><span class="caption-text">Figure 12: Ratio of continuous fibers</span><a class="headerlink" href="#id12" title="Permalink to this image">¶</a></p>
 </div>
-<p>For the rectangular shape this values should be always <img class="math" src="../../../_images/math/3bb1183938fc09ffa95b17601a1c590c214937a1.png" alt="100\%"/>.</p>
+<p>For the rectangular shape this values should be always <img class="math" src="../../../_images/math/fec32361ad5a94a12048045c09317006f5b6d5fe.png" alt="100\%"/>.</p>
 <p>The ratio of total effectiveness combines all ratios of the single ply pieces:</p>
 <div class="math">
-<p><img src="../../../_images/math/c231560bdb6c1c2bc1e752126c9ec3470f016341.png" alt="R_{total}=R_{DoC} \cdot R_{A_{eff}} \cdot R_{cont}"/></p>
+<p><img src="../../../_images/math/d1b4db1c60c0661ca7ac6fa56d5e52c579d1755f.png" alt="R_{total}=R_{DoC} \cdot R_{A_{eff}} \cdot R_{cont}"/></p>
 </div><p>This ratio can be thought of the amount of free cone area covered with fibers
 with a fiber deviation smaller than 2° and continuous from top to
-bottom.  The optimum is <img class="math" src="../../../_images/math/3bb1183938fc09ffa95b17601a1c590c214937a1.png" alt="100\%"/>.</p>
+bottom.  The optimum is <img class="math" src="../../../_images/math/fec32361ad5a94a12048045c09317006f5b6d5fe.png" alt="100\%"/>.</p>
 </div>
 </div>
 <div class="section" id="plot-ply-piece-tool">
@@ -269,9 +263,9 @@ bottom.  The optimum is <img class="math" src="../../../_images/math/3bb1183938f
 design parameters. In  is the Tool window shown. If the ‘Plot with/without
 explanations’-box is set, the drawing contains further information about the
 input parameters.</p>
-<div class="figure" id="id13">
+<div class="figure align-default" id="id13">
 <a class="reference internal image-reference" href="../../../_images/fig_131.png"><img alt="../../../_images/fig_131.png" src="../../../_images/fig_131.png" style="width: 250px;" /></a>
-<p class="caption"><span class="caption-text">Figure 13: Plot Ply Piece Tool</span></p>
+<p class="caption"><span class="caption-text">Figure 13: Plot Ply Piece Tool</span><a class="headerlink" href="#id13" title="Permalink to this image">¶</a></p>
 </div>
 <p>By clicking the ‘Plot Ply Pieces’-Button two new windows are opened, see
 Figure 14. In the left side of the window is a table with the input
@@ -282,12 +276,12 @@ and the ply piece.</p>
 effective area of each ply piece are drawn as orange polygons. The blue lines
 are the outer edges of the cone geometry. The green radial lines are the lines
 of the conical coordinate s. The radial angle difference between the lines is
-<img class="math" src="../../../_images/math/67736715a66b4bfeb2b31b7ce974292d9cd0dcaa.png" alt="10°"/> in the conical coordinate system.</p>
+<img class="math" src="../../../_images/math/4e836b86b629aa99c9f894d744c2b3265c158440.png" alt="10°"/> in the conical coordinate system.</p>
 <p>The image of the ply piece can be saved by clicking the save item in the menu
 bar.</p>
-<div class="figure" id="id14">
+<div class="figure align-default" id="id14">
 <a class="reference internal image-reference" href="../../../_images/fig_141.png"><img alt="../../../_images/fig_141.png" src="../../../_images/fig_141.png" style="width: 700px;" /></a>
-<p class="caption"><span class="caption-text">Figure 14: Example of ply piece plot</span></p>
+<p class="caption"><span class="caption-text">Figure 14: Example of ply piece plot</span><a class="headerlink" href="#id14" title="Permalink to this image">¶</a></p>
 </div>
 </div>
 <div class="section" id="python-programming">
@@ -298,7 +292,7 @@ program and the basic ideas behind the programming.</p>
 <h3>Data Handling<a class="headerlink" href="#data-handling" title="Permalink to this headline">¶</a></h3>
 <p>To handle the design and cone geometry parameters a python class called
 ‘DataHandle’ and the ‘ResultHandle’ for the results of the study. Both can be
-fined in <code class="docutils literal"><span class="pre">GUIHandle.py</span></code>.</p>
+fined in <code class="docutils literal notranslate"><span class="pre">GUIHandle.py</span></code>.</p>
 </div>
 <div class="section" id="gui-programming">
 <h3>GUI Programming<a class="headerlink" href="#gui-programming" title="Permalink to this headline">¶</a></h3>
@@ -306,10 +300,10 @@ fined in <code class="docutils literal"><span class="pre">GUIHandle.py</span></c
 <a class="reference external" href="https://wiki.python.org/moin/PyQt4">PyQt4</a>. The following list connects
 the python files and the GUI-Tools:</p>
 <ul class="simple">
-<li>Input-Tool: <code class="docutils literal"><span class="pre">GUIInput.py</span></code></li>
-<li>Cone Geometry Tool: <code class="docutils literal"><span class="pre">GUIConeGeo.py</span></code></li>
-<li>Evaluation Tool: <code class="docutils literal"><span class="pre">GUIEval.py</span></code></li>
-<li>Plot Ply Piece Tool: <code class="docutils literal"><span class="pre">GUIPlot.py</span></code></li>
+<li><p>Input-Tool: <code class="docutils literal notranslate"><span class="pre">GUIInput.py</span></code></p></li>
+<li><p>Cone Geometry Tool: <code class="docutils literal notranslate"><span class="pre">GUIConeGeo.py</span></code></p></li>
+<li><p>Evaluation Tool: <code class="docutils literal notranslate"><span class="pre">GUIEval.py</span></code></p></li>
+<li><p>Plot Ply Piece Tool: <code class="docutils literal notranslate"><span class="pre">GUIPlot.py</span></code></p></li>
 </ul>
 </div>
 <div class="section" id="backbone-programming">
@@ -317,11 +311,11 @@ the python files and the GUI-Tools:</p>
 <p>In the following list are the Python files used to calculate the shapes and
 draw the graphs:</p>
 <ul class="simple">
-<li><code class="docutils literal"><span class="pre">GUICalc.py</span></code> Contains the class used to make all variations of the study.
+<li><p><code class="docutils literal notranslate"><span class="pre">GUICalc.py</span></code> Contains the class used to make all variations of the study.
 Is called by Input-Tool, calls afterwards the evaluation tool and shows a
-progress bar.</li>
-<li><code class="docutils literal"><span class="pre">GUIPrint.py</span></code> Contains the functions and classes used to draw the evaluation
-graphs. Uses matplotlib.</li>
+progress bar.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GUIPrint.py</span></code> Contains the functions and classes used to draw the evaluation
+graphs. Uses matplotlib.</p></li>
 </ul>
 </div>
 </div>
@@ -329,6 +323,7 @@ graphs. Uses matplotlib.</li>
 
 
           </div>
+          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
@@ -358,25 +353,25 @@ graphs. Uses matplotlib.</li>
 
 
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../../../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
     </form>
+    </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2012-2017 Desicos Improved Software Team.
+      &copy;2012-2020 Desicos Improved Software Team.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>
 

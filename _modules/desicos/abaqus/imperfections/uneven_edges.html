@@ -1,26 +1,19 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>desicos.abaqus.imperfections.uneven_edges &#8212; DESICOS 2.4.10 documentation</title>
     <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../../../',
-        VERSION:     '2.4.10',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
-    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css" />
+    <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
    
@@ -29,22 +22,23 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-  </head>
-  <body>
+  </head><body>
   
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
   <h1>Source code for desicos.abaqus.imperfections.uneven_edges</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="n">deg2rad</span><span class="p">,</span> <span class="n">rad2deg</span><span class="p">,</span> <span class="n">pi</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">deg2rad</span><span class="p">,</span> <span class="n">rad2deg</span><span class="p">,</span> <span class="n">pi</span>
 
-<span class="kn">from</span> <span class="nn">desicos.conecylDB.interpolate</span> <span class="k">import</span> <span class="n">interp</span>
+<span class="kn">from</span> <span class="nn">desicos.conecylDB.interpolate</span> <span class="kn">import</span> <span class="n">interp</span>
 
 
 <div class="viewcode-block" id="Shim"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.uneven_edges.Shim">[docs]</a><span class="k">class</span> <span class="nc">Shim</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -60,7 +54,7 @@
 <span class="sd">    ============== =========================================================</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">thetadeg</span><span class="p">,</span> <span class="n">thick</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">edge</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">thetadeg</span><span class="p">,</span> <span class="n">thick</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">edge</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">thetadeg</span> <span class="o">=</span> <span class="n">thetadeg</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">thick</span> <span class="o">=</span> <span class="n">thick</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span>
@@ -89,7 +83,7 @@
 <span class="sd">    ============== =========================================================</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">betadeg</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">omegadeg</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">betadeg</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">omegadeg</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;uneven_bottom_edge&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">impconf</span> <span class="o">=</span> <span class="kc">None</span>
@@ -108,7 +102,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__bool__</span><span class="p">()</span>
 
 
-    <span class="k">def</span> <span class="nf">__bool__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__bool__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">cc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">conecyl</span>
         <span class="k">return</span> <span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shims</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">measured_u3s</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span>
                 <span class="nb">bool</span><span class="p">(</span><span class="n">cc</span><span class="o">.</span><span class="n">bc_gaps_bottom_edge</span><span class="p">))</span>
@@ -197,11 +191,11 @@
 <span class="sd">        .. note:: Must be called from Abaqus</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">abaqus</span> <span class="k">import</span> <span class="n">mdb</span>
-        <span class="kn">from</span> <span class="nn">abaqusConstants</span> <span class="k">import</span> <span class="p">(</span><span class="n">PIN_MPC</span><span class="p">,</span> <span class="n">DOF_MODE_MPC</span><span class="p">)</span>
-        <span class="kn">from</span> <span class="nn">regionToolset</span> <span class="k">import</span> <span class="n">Region</span>
+        <span class="kn">from</span> <span class="nn">abaqus</span> <span class="kn">import</span> <span class="n">mdb</span>
+        <span class="kn">from</span> <span class="nn">abaqusConstants</span> <span class="kn">import</span> <span class="p">(</span><span class="n">PIN_MPC</span><span class="p">,</span> <span class="n">DOF_MODE_MPC</span><span class="p">)</span>
+        <span class="kn">from</span> <span class="nn">regionToolset</span> <span class="kn">import</span> <span class="n">Region</span>
 
-        <span class="kn">from</span> <span class="nn">desicos.abaqus.abaqus_functions</span> <span class="k">import</span> <span class="n">edit_keywords</span>
+        <span class="kn">from</span> <span class="nn">desicos.abaqus.abaqus_functions</span> <span class="kn">import</span> <span class="n">edit_keywords</span>
 
         <span class="n">cc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">conecyl</span>
         <span class="n">mod</span> <span class="o">=</span> <span class="n">mdb</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="n">cc</span><span class="o">.</span><span class="n">model_name</span><span class="p">]</span>
@@ -370,7 +364,7 @@
 <span class="sd">    ============== ==========================================================</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">betadeg</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">omegadeg</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">betadeg</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">omegadeg</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;uneven_top_edge&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">impconf</span> <span class="o">=</span> <span class="kc">None</span>
@@ -391,7 +385,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__bool__</span><span class="p">()</span>
 
 
-    <span class="k">def</span> <span class="nf">__bool__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__bool__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">cc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">conecyl</span>
         <span class="k">return</span> <span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">betadeg</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shims</span><span class="p">)</span> <span class="ow">or</span>
                 <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">measured_u3s</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span>
@@ -488,11 +482,11 @@
 <span class="sd">        .. note:: Must be called from Abaqus</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">abaqus</span> <span class="k">import</span> <span class="n">mdb</span>
-        <span class="kn">from</span> <span class="nn">abaqusConstants</span> <span class="k">import</span> <span class="p">(</span><span class="n">PIN_MPC</span><span class="p">,</span> <span class="n">DOF_MODE_MPC</span><span class="p">)</span>
-        <span class="kn">from</span> <span class="nn">regionToolset</span> <span class="k">import</span> <span class="n">Region</span>
+        <span class="kn">from</span> <span class="nn">abaqus</span> <span class="kn">import</span> <span class="n">mdb</span>
+        <span class="kn">from</span> <span class="nn">abaqusConstants</span> <span class="kn">import</span> <span class="p">(</span><span class="n">PIN_MPC</span><span class="p">,</span> <span class="n">DOF_MODE_MPC</span><span class="p">)</span>
+        <span class="kn">from</span> <span class="nn">regionToolset</span> <span class="kn">import</span> <span class="n">Region</span>
 
-        <span class="kn">from</span> <span class="nn">desicos.abaqus.abaqus_functions</span> <span class="k">import</span> <span class="n">edit_keywords</span>
+        <span class="kn">from</span> <span class="nn">desicos.abaqus.abaqus_functions</span> <span class="kn">import</span> <span class="n">edit_keywords</span>
 
         <span class="n">cc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">conecyl</span>
         <span class="n">mod</span> <span class="o">=</span> <span class="n">mdb</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="n">cc</span><span class="o">.</span><span class="n">model_name</span><span class="p">]</span>
@@ -666,6 +660,7 @@
 </pre></div>
 
           </div>
+          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
@@ -695,25 +690,25 @@
 
 
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../../../../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
     </form>
+    </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2012-2017 Desicos Improved Software Team.
+      &copy;2012-2020 Desicos Improved Software Team.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>
 

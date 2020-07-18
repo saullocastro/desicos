@@ -1,26 +1,19 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>desicos.cppot.core.ply_model &#8212; DESICOS 2.4.10 documentation</title>
     <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../../../',
-        VERSION:     '2.4.10',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
-    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css" />
+    <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
    
@@ -29,13 +22,14 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-  </head>
-  <body>
+  </head><body>
   
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
   <h1>Source code for desicos.cppot.core.ply_model</h1><div class="highlight"><pre>
@@ -52,9 +46,9 @@
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">desicos.constants</span> <span class="k">import</span> <span class="n">TOL</span>
-<span class="kn">from</span> <span class="nn">desicos.cppot.core.geom</span> <span class="k">import</span> <span class="n">Point2D</span><span class="p">,</span> <span class="n">Line2D</span><span class="p">,</span> <span class="n">Polygon2D</span>
-<span class="kn">from</span> <span class="nn">desicos.cppot.core.geom</span> <span class="k">import</span> <span class="n">wrap_to_pi</span><span class="p">,</span> <span class="n">angle_in_range</span><span class="p">,</span> <span class="n">circle_segment_area</span>
+<span class="kn">from</span> <span class="nn">desicos.constants</span> <span class="kn">import</span> <span class="n">TOL</span>
+<span class="kn">from</span> <span class="nn">desicos.cppot.core.geom</span> <span class="kn">import</span> <span class="n">Point2D</span><span class="p">,</span> <span class="n">Line2D</span><span class="p">,</span> <span class="n">Polygon2D</span>
+<span class="kn">from</span> <span class="nn">desicos.cppot.core.geom</span> <span class="kn">import</span> <span class="n">wrap_to_pi</span><span class="p">,</span> <span class="n">angle_in_range</span><span class="p">,</span> <span class="n">circle_segment_area</span>
 
 
 <div class="viewcode-block" id="PlyPieceModel"><a class="viewcode-back" href="../../../../modules/cppot/index.html#desicos.cppot.core.ply_model.PlyPieceModel">[docs]</a><span class="k">class</span> <span class="nc">PlyPieceModel</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -99,7 +93,7 @@
 <span class="sd">    ====================  ==================================================</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cg</span><span class="p">,</span> <span class="n">fiber_angle</span><span class="p">,</span> <span class="n">starting_position</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cg</span><span class="p">,</span> <span class="n">fiber_angle</span><span class="p">,</span> <span class="n">starting_position</span><span class="p">,</span>
                  <span class="n">max_width</span><span class="p">,</span> <span class="n">rel_ang_offset</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">eccentricity</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cg</span> <span class="o">=</span> <span class="n">cg</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fiber_angle</span> <span class="o">=</span> <span class="n">fiber_angle</span>
@@ -679,7 +673,7 @@
 <span class="sd">    ``phi_limit_min &lt;= phi &lt;= phi_limit_max`` should hold.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">polygon</span><span class="p">,</span> <span class="n">phi_nom</span><span class="p">,</span> <span class="n">phi_nom_min</span><span class="p">,</span> <span class="n">phi_nom_max</span><span class="p">,</span> <span class="n">phi_limit_min</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">phi_limit_max</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">polygon</span><span class="p">,</span> <span class="n">phi_nom</span><span class="p">,</span> <span class="n">phi_nom_min</span><span class="p">,</span> <span class="n">phi_nom_max</span><span class="p">,</span> <span class="n">phi_limit_min</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">phi_limit_max</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">polygon</span> <span class="o">=</span> <span class="n">polygon</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">phi_nom</span> <span class="o">=</span> <span class="n">phi_nom</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">phi_nom_min</span> <span class="o">=</span> <span class="n">phi_nom_min</span>
@@ -762,6 +756,7 @@
 </pre></div>
 
           </div>
+          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
@@ -791,25 +786,25 @@
 
 
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../../../../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
     </form>
+    </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2012-2017 Desicos Improved Software Team.
+      &copy;2012-2020 Desicos Improved Software Team.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>
 

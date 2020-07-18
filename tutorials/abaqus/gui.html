@@ -1,26 +1,19 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GUI &#8212; DESICOS 2.4.10 documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../',
-        VERSION:     '2.4.10',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Python API" href="python_API.html" />
@@ -31,126 +24,127 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-  </head>
-  <body>
+  </head><body>
   
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
   <div class="section" id="gui">
 <span id="id1"></span><h1>GUI<a class="headerlink" href="#gui" title="Permalink to this headline">¶</a></h1>
 <p>The user-friendly way to use the plug-in is through the graphic interface.
-Just execute the file <code class="docutils literal"><span class="pre">START_GUI.bat</span></code>.
-You need Abaqus to be executable by the command line <code class="docutils literal"><span class="pre">abaqus</span> <span class="pre">cae</span></code>
+Just execute the file <code class="docutils literal notranslate"><span class="pre">START_GUI.bat</span></code>.
+You need Abaqus to be executable by the command line <code class="docutils literal notranslate"><span class="pre">abaqus</span> <span class="pre">cae</span></code>
 for this to work.</p>
 <p>The plug-in for Abaqus looks like this:</p>
-<div class="figure">
+<div class="figure align-default">
 <img alt="../../_images/fig_01.png" src="../../_images/fig_01.png" />
 </div>
 <div class="section" id="loading-and-configuring-a-model">
 <h2>Loading and configuring a model<a class="headerlink" href="#loading-and-configuring-a-model" title="Permalink to this headline">¶</a></h2>
-<p>Where the <code class="docutils literal"><span class="pre">desicos.conecylDB</span></code> is embedded, and the existing models
+<p>Where the <code class="docutils literal notranslate"><span class="pre">desicos.conecylDB</span></code> is embedded, and the existing models
 easily chosen from the <a class="reference internal" href="../conecylDB/static.html#static-database"><span class="std std-ref">Static Database</span></a> or from the
 <a class="reference internal" href="../conecylDB/dynamic.html#dynamic-database"><span class="std std-ref">Dynamic database</span></a>. When the option
-<code class="docutils literal"><span class="pre">Enter</span> <span class="pre">New</span></code> is active, the buttons <code class="docutils literal"><span class="pre">Save</span></code> is activated and
+<code class="docutils literal notranslate"><span class="pre">Enter</span> <span class="pre">New</span></code> is active, the buttons <code class="docutils literal notranslate"><span class="pre">Save</span></code> is activated and
 the user may save a new configuration into the database, which can
-be deleted afterwards using the <code class="docutils literal"><span class="pre">Delete</span></code> button.</p>
-<div class="figure">
+be deleted afterwards using the <code class="docutils literal notranslate"><span class="pre">Delete</span></code> button.</p>
+<div class="figure align-default">
 <img alt="../../_images/fig_02.png" src="../../_images/fig_02.png" />
 </div>
 <p>Geometric parameters easily changed:</p>
-<div class="figure">
+<div class="figure align-default">
 <img alt="../../_images/fig_03.png" src="../../_images/fig_03.png" />
 </div>
 <p>Material properties taken from the database and easily changed. Note that the
 <a class="reference internal" href="../conecylDB/dynamic.html#dynamic-database"><span class="std std-ref">Dynamic database</span></a> is implemented here through the use
-of the buttons <code class="docutils literal"><span class="pre">Save</span></code> (when the <code class="docutils literal"><span class="pre">Enter</span> <span class="pre">New</span></code> option is active)
-and <code class="docutils literal"><span class="pre">Delete</span></code>.</p>
-<div class="figure">
+of the buttons <code class="docutils literal notranslate"><span class="pre">Save</span></code> (when the <code class="docutils literal notranslate"><span class="pre">Enter</span> <span class="pre">New</span></code> option is active)
+and <code class="docutils literal notranslate"><span class="pre">Delete</span></code>.</p>
+<div class="figure align-default">
 <img alt="../../_images/fig_04.png" src="../../_images/fig_04.png" />
 </div>
 <p>The laminate is defined giving a different material and thickness to each
 ply or defining only for the first ply when all the others should have the
 same material and thicknesses.</p>
-<div class="figure">
+<div class="figure align-default">
 <img alt="../../_images/fig_05.png" src="../../_images/fig_05.png" />
 </div>
 <p>The mesh parameters are defined as shown below, and this data can also be
 saved and loaded in the database.</p>
-<div class="figure">
+<div class="figure align-default">
 <img alt="../../_images/fig_06.png" src="../../_images/fig_06.png" />
 </div>
 <p>The analysis parameters are summarized as shown below. After the models
 are created the user may change those. This analysis’ configuration has
 been optimized for the Single Perturbation Load Approach (SPLA).</p>
-<div class="figure">
+<div class="figure align-default">
 <img alt="../../_images/fig_07.png" src="../../_images/fig_07.png" />
 </div>
 <p>The number of output frames can be changed here, allowing some control
-in the size of the output files. The <code class="docutils literal"><span class="pre">Request</span> <span class="pre">stress</span> <span class="pre">output</span></code> checkbox
+in the size of the output files. The <code class="docutils literal notranslate"><span class="pre">Request</span> <span class="pre">stress</span> <span class="pre">output</span></code> checkbox
 must be activated if one intents to perform a stress analysis:</p>
-<div class="figure">
+<div class="figure align-default">
 <img alt="../../_images/fig_08.png" src="../../_images/fig_08.png" />
 </div>
 </div>
 <div class="section" id="applying-imperfections">
 <h2>Applying imperfections<a class="headerlink" href="#applying-imperfections" title="Permalink to this headline">¶</a></h2>
 <p>The perturbation loads can be applied using:</p>
-<div class="figure">
+<div class="figure align-default">
 <img alt="../../_images/fig_09.png" src="../../_images/fig_09.png" />
 </div>
 <p>The geometric dimples using:</p>
-<div class="figure">
+<div class="figure align-default">
 <img alt="../../_images/fig_10.png" src="../../_images/fig_10.png" />
 </div>
 <p>Axisymmetric imperfections:</p>
-<div class="figure">
+<div class="figure align-default">
 <img alt="../../_images/fig_11.png" src="../../_images/fig_11.png" />
 </div>
 <p>Imperfections from Linear buckling modes:</p>
-<div class="figure">
+<div class="figure align-default">
 <img alt="../../_images/fig_12.png" src="../../_images/fig_12.png" />
 </div>
 <p>Cutouts:</p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">The cutouts module needs improvement!</p>
+<p class="admonition-title">Note</p>
+<p>The cutouts module needs improvement!</p>
 </div>
-<div class="figure">
+<div class="figure align-default">
 <img alt="../../_images/fig_13.png" src="../../_images/fig_13.png" />
 </div>
 <p>Measured geometric imperfections that represent the normal displacement of
 the shell mid-surface can be applied too. This <strong>must</strong> be
-applied after creating the study (click on <code class="docutils literal"><span class="pre">Create</span> <span class="pre">Study</span></code>):</p>
-<div class="figure">
+applied after creating the study (click on <code class="docutils literal notranslate"><span class="pre">Create</span> <span class="pre">Study</span></code>):</p>
+<div class="figure align-default">
 <img alt="../../_images/fig_14.png" src="../../_images/fig_14.png" />
 </div>
 <p>Similarly, thickness imperfections can be applied. If the study has not yet
-been created, click on <code class="docutils literal"><span class="pre">Create</span> <span class="pre">Study</span></code> before applying the thickness
+been created, click on <code class="docutils literal notranslate"><span class="pre">Create</span> <span class="pre">Study</span></code> before applying the thickness
 imperfections:</p>
-<div class="figure">
+<div class="figure align-default">
 <img alt="../../_images/fig_15.png" src="../../_images/fig_15.png" />
 </div>
 <p>Load imperfections can also be considered:</p>
-<div class="figure">
+<div class="figure align-default">
 <img alt="../../_images/fig_16.png" src="../../_images/fig_16.png" />
 </div>
 </div>
 <div class="section" id="running-the-analysis">
 <h2>Running the analysis<a class="headerlink" href="#running-the-analysis" title="Permalink to this headline">¶</a></h2>
 <p>It allows running the jobs in the structure of folders used by the plug-in
-in order to keep the models organized. You can <code class="docutils literal"><span class="pre">use</span> <span class="pre">multiple</span> <span class="pre">cpus</span></code> or
-use the <code class="docutils literal"><span class="pre">job</span> <span class="pre">stopper</span></code>, which significantly accelerates the analysis time
+in order to keep the models organized. You can <code class="docutils literal notranslate"><span class="pre">use</span> <span class="pre">multiple</span> <span class="pre">cpus</span></code> or
+use the <code class="docutils literal notranslate"><span class="pre">job</span> <span class="pre">stopper</span></code>, which significantly accelerates the analysis time
 by stopping the analysis after buckling.</p>
 <p>If the post-buckled pattern have to be studied, it may be better to run one
-analysis with the <code class="docutils literal"><span class="pre">job</span> <span class="pre">stopper</span></code> activated, obtain the axial compression
+analysis with the <code class="docutils literal notranslate"><span class="pre">job</span> <span class="pre">stopper</span></code> activated, obtain the axial compression
 level that caused the buckling and then run another analysis disabling the
-<code class="docutils literal"><span class="pre">job</span> <span class="pre">stopper</span></code> in order to achieve the desired post-buckled pattern.</p>
+<code class="docutils literal notranslate"><span class="pre">job</span> <span class="pre">stopper</span></code> in order to achieve the desired post-buckled pattern.</p>
 <p>The run log file will be printed on the plug-in screen.</p>
-<div class="figure">
+<div class="figure align-default">
 <img alt="../../_images/fig_17.png" src="../../_images/fig_17.png" />
 </div>
 </div>
@@ -159,20 +153,20 @@ level that caused the buckling and then run another analysis disabling the
 <p>For all the options you can add the results to an Excel file or
 even open the Excel after finished.</p>
 <p>The load-shortening curves can be easily plotted:</p>
-<div class="figure">
+<div class="figure align-default">
 <img alt="../../_images/fig_18.png" src="../../_images/fig_18.png" />
 </div>
 <p>Or the knock-down curves:</p>
-<div class="figure">
+<div class="figure align-default">
 <img alt="../../_images/fig_19.png" src="../../_images/fig_19.png" />
 </div>
 <p>Or the stress analysis results:</p>
-<div class="figure">
+<div class="figure align-default">
 <img alt="../../_images/fig_20.png" src="../../_images/fig_20.png" />
 </div>
 <p>An extra options has been added to allow an opened representation of the
 cylinder or cone, convinient for publications:</p>
-<div class="figure">
+<div class="figure align-default">
 <img alt="../../_images/fig_21.png" src="../../_images/fig_21.png" />
 </div>
 </div>
@@ -180,6 +174,7 @@ cylinder or cone, convinient for publications:</p>
 
 
           </div>
+          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
@@ -209,25 +204,25 @@ cylinder or cone, convinient for publications:</p>
 
 
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
     </form>
+    </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2012-2017 Desicos Improved Software Team.
+      &copy;2012-2020 Desicos Improved Software Team.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>
 

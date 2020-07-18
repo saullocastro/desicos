@@ -1,26 +1,19 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>desicos.abaqus.abaqus_functions &#8212; DESICOS 2.4.10 documentation</title>
     <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../../',
-        VERSION:     '2.4.10',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
-    <script type="text/javascript" src="../../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
    
@@ -29,13 +22,14 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-  </head>
-  <body>
+  </head><body>
   
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
   <h1>Source code for desicos.abaqus.abaqus_functions</h1><div class="highlight"><pre>
@@ -49,22 +43,22 @@
 <span class="sd">Includes all utilities functions that must be executed from Abaqus.</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
 <span class="kn">import</span> <span class="nn">math</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">.constants</span> <span class="k">import</span> <span class="p">(</span><span class="n">TOL</span><span class="p">,</span> <span class="n">FLOAT</span><span class="p">,</span> <span class="n">COLORS</span><span class="p">,</span> <span class="n">COLOR_WHINE</span><span class="p">,</span> <span class="n">COLOR_DARK_BLUE</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">.constants</span> <span class="kn">import</span> <span class="p">(</span><span class="n">TOL</span><span class="p">,</span> <span class="n">FLOAT</span><span class="p">,</span> <span class="n">COLORS</span><span class="p">,</span> <span class="n">COLOR_WHINE</span><span class="p">,</span> <span class="n">COLOR_DARK_BLUE</span><span class="p">,</span>
         <span class="n">COLOR_BLACK</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">utils</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">utils</span>
 
 
 <div class="viewcode-block" id="configure_session"><a class="viewcode-back" href="../../../modules/abaqus/index.html#desicos.abaqus.abaqus_functions.configure_session">[docs]</a><span class="k">def</span> <span class="nf">configure_session</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Improve layout and colors of the current figures in visualization</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">abaqus</span> <span class="k">import</span> <span class="n">session</span>
-    <span class="kn">from</span> <span class="nn">abaqusConstants</span> <span class="k">import</span> <span class="p">(</span><span class="n">ON</span><span class="p">,</span> <span class="n">OFF</span><span class="p">,</span> <span class="n">SMALL</span><span class="p">,</span> <span class="n">DASHED</span><span class="p">,</span> <span class="n">OUTSIDE</span><span class="p">,</span>
+    <span class="kn">from</span> <span class="nn">abaqus</span> <span class="kn">import</span> <span class="n">session</span>
+    <span class="kn">from</span> <span class="nn">abaqusConstants</span> <span class="kn">import</span> <span class="p">(</span><span class="n">ON</span><span class="p">,</span> <span class="n">OFF</span><span class="p">,</span> <span class="n">SMALL</span><span class="p">,</span> <span class="n">DASHED</span><span class="p">,</span> <span class="n">OUTSIDE</span><span class="p">,</span>
             <span class="n">HOLLOW_CIRCLE</span><span class="p">,</span> <span class="n">DECIMAL</span><span class="p">,</span> <span class="n">INCREMENT</span><span class="p">)</span>
 
     <span class="n">plot_names</span><span class="o">=</span><span class="n">session</span><span class="o">.</span><span class="n">xyDataObjects</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
@@ -179,8 +173,8 @@
 <span class="sd">        The name of the output png file.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">abaqus</span> <span class="k">import</span> <span class="n">session</span>
-    <span class="kn">from</span> <span class="nn">abaqusConstants</span> <span class="k">import</span> <span class="n">PNG</span>
+    <span class="kn">from</span> <span class="nn">abaqus</span> <span class="kn">import</span> <span class="n">session</span>
+    <span class="kn">from</span> <span class="nn">abaqusConstants</span> <span class="kn">import</span> <span class="n">PNG</span>
 
     <span class="n">viewport</span><span class="o">=</span><span class="n">session</span><span class="o">.</span><span class="n">viewports</span><span class="p">[</span><span class="n">session</span><span class="o">.</span><span class="n">currentViewportName</span><span class="p">]</span>
     <span class="n">session</span><span class="o">.</span><span class="n">printToFile</span><span class="p">(</span><span class="n">fileName</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span>
@@ -196,7 +190,7 @@
 <span class="sd">    cc : :class:`.ConeCyl` object</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">abaqusConstants</span> <span class="k">import</span> <span class="p">(</span><span class="n">USER_SPECIFIED</span><span class="p">,</span> <span class="n">NODAL</span><span class="p">,</span> <span class="n">COMPONENT</span><span class="p">,</span> <span class="n">EXTRA_FINE</span><span class="p">,</span>
+    <span class="kn">from</span> <span class="nn">abaqusConstants</span> <span class="kn">import</span> <span class="p">(</span><span class="n">USER_SPECIFIED</span><span class="p">,</span> <span class="n">NODAL</span><span class="p">,</span> <span class="n">COMPONENT</span><span class="p">,</span> <span class="n">EXTRA_FINE</span><span class="p">,</span>
             <span class="n">FREE</span><span class="p">,</span> <span class="n">UNIFORM</span><span class="p">,</span> <span class="n">CONTINUOUS</span><span class="p">,</span> <span class="n">ON</span><span class="p">,</span> <span class="n">OFF</span><span class="p">)</span>
     <span class="n">odb</span><span class="o">=</span><span class="n">cc</span><span class="o">.</span><span class="n">attach_results</span><span class="p">()</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">odb</span><span class="p">:</span>
@@ -317,7 +311,7 @@
 <span class="sd">        Reference</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">abaqusConstants</span> <span class="k">import</span> <span class="p">(</span><span class="n">MIDDLE_SURFACE</span><span class="p">,</span> <span class="n">FROM_SECTION</span><span class="p">,</span> <span class="n">SHELL</span><span class="p">,</span> <span class="n">ON</span><span class="p">,</span> <span class="n">OFF</span><span class="p">,</span>
+    <span class="kn">from</span> <span class="nn">abaqusConstants</span> <span class="kn">import</span> <span class="p">(</span><span class="n">MIDDLE_SURFACE</span><span class="p">,</span> <span class="n">FROM_SECTION</span><span class="p">,</span> <span class="n">SHELL</span><span class="p">,</span> <span class="n">ON</span><span class="p">,</span> <span class="n">OFF</span><span class="p">,</span>
             <span class="n">DEFAULT</span><span class="p">,</span> <span class="n">UNIFORM</span><span class="p">,</span> <span class="n">SIMPSON</span><span class="p">,</span> <span class="n">GRADIENT</span><span class="p">,</span> <span class="n">SYSTEM</span><span class="p">,</span> <span class="n">ROTATION_NONE</span><span class="p">,</span>
             <span class="n">AXIS_1</span><span class="p">,</span> <span class="n">AXIS_2</span><span class="p">,</span> <span class="n">AXIS_3</span><span class="p">,</span> <span class="n">SPECIFY_THICKNESS</span><span class="p">,</span> <span class="n">SPECIFY_ORIENT</span><span class="p">,</span>
             <span class="n">SINGLE_VALUE</span><span class="p">)</span>
@@ -370,7 +364,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="kn">from</span> <span class="nn">abaqusConstants</span> <span class="k">import</span> <span class="p">(</span><span class="n">MIDDLE_SURFACE</span><span class="p">,</span> <span class="n">FROM_SECTION</span><span class="p">,</span> <span class="n">SHELL</span><span class="p">,</span> <span class="n">ON</span><span class="p">,</span> <span class="n">OFF</span><span class="p">,</span>
+    <span class="kn">from</span> <span class="nn">abaqusConstants</span> <span class="kn">import</span> <span class="p">(</span><span class="n">MIDDLE_SURFACE</span><span class="p">,</span> <span class="n">FROM_SECTION</span><span class="p">,</span> <span class="n">SHELL</span><span class="p">,</span> <span class="n">ON</span><span class="p">,</span> <span class="n">OFF</span><span class="p">,</span>
             <span class="n">DEFAULT</span><span class="p">,</span> <span class="n">UNIFORM</span><span class="p">,</span> <span class="n">SIMPSON</span><span class="p">,</span> <span class="n">GRADIENT</span><span class="p">,</span> <span class="n">SYSTEM</span><span class="p">,</span> <span class="n">ROTATION_NONE</span><span class="p">,</span>
             <span class="n">AXIS_1</span><span class="p">,</span> <span class="n">AXIS_2</span><span class="p">,</span> <span class="n">AXIS_3</span><span class="p">,</span> <span class="n">SPECIFY_THICKNESS</span><span class="p">,</span> <span class="n">SPECIFY_ORIENT</span><span class="p">,</span><span class="n">NO_IDEALIZATION</span><span class="p">,</span>
             <span class="n">SINGLE_VALUE</span><span class="p">)</span>
@@ -416,7 +410,7 @@
 <span class="sd">        The returned dictionary will then be used to create the new ply.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">abaqusConstants</span> <span class="k">import</span> <span class="n">SPECIFY_ORIENT</span><span class="p">,</span> <span class="n">CSYS</span>
+    <span class="kn">from</span> <span class="nn">abaqusConstants</span> <span class="kn">import</span> <span class="n">SPECIFY_ORIENT</span><span class="p">,</span> <span class="n">CSYS</span>
     <span class="n">layup</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">compositeLayups</span><span class="p">[</span><span class="n">layup_name</span><span class="p">]</span>
 
     <span class="n">ply_data</span> <span class="o">=</span> <span class="p">[]</span>
@@ -439,7 +433,7 @@
 
 
 <span class="k">def</span> <span class="nf">createDiscreteField</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="n">odb</span><span class="p">,</span> <span class="n">step_name</span><span class="p">,</span> <span class="n">frame_num</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">abaqusConstants</span> <span class="k">import</span> <span class="p">(</span><span class="n">NODES</span><span class="p">,</span> <span class="n">PRESCRIBEDCONDITION_DOF</span><span class="p">)</span>
+    <span class="kn">from</span> <span class="nn">abaqusConstants</span> <span class="kn">import</span> <span class="p">(</span><span class="n">NODES</span><span class="p">,</span> <span class="n">PRESCRIBEDCONDITION_DOF</span><span class="p">)</span>
     <span class="n">u</span><span class="o">=</span><span class="n">odb</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="n">step_name</span><span class="p">]</span><span class="o">.</span><span class="n">frames</span><span class="p">[</span><span class="n">frame_num</span><span class="p">]</span><span class="o">.</span><span class="n">fieldOutputs</span><span class="p">[</span><span class="s1">&#39;U&#39;</span><span class="p">]</span>
     <span class="n">ur</span><span class="o">=</span><span class="n">odb</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="n">step_name</span><span class="p">]</span><span class="o">.</span><span class="n">frames</span><span class="p">[</span><span class="n">frame_num</span><span class="p">]</span><span class="o">.</span><span class="n">fieldOutputs</span><span class="p">[</span><span class="s1">&#39;UR&#39;</span><span class="p">]</span>
     <span class="n">datas</span><span class="o">=</span><span class="p">[]</span>
@@ -481,9 +475,9 @@
 <span class="sd">    plane : :class:`.Plane` object</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">abaqus</span> <span class="k">import</span> <span class="n">mdb</span>
+    <span class="kn">from</span> <span class="nn">abaqus</span> <span class="kn">import</span> <span class="n">mdb</span>
 
-    <span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span> <span class="n">geom</span>
+    <span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">geom</span>
 
     <span class="n">part</span> <span class="o">=</span> <span class="n">mdb</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="n">cc</span><span class="o">.</span><span class="n">model_name</span><span class="p">]</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="n">cc</span><span class="o">.</span><span class="n">part_name_shell</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">plane</span> <span class="ow">in</span> <span class="n">cc</span><span class="o">.</span><span class="n">sketch_planes</span><span class="p">:</span>
@@ -517,8 +511,8 @@
 
 
 <span class="k">def</span> <span class="nf">set_colors_ti</span><span class="p">(</span><span class="n">cc</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">abaqus</span> <span class="k">import</span> <span class="n">mdb</span><span class="p">,</span> <span class="n">session</span>
-    <span class="kn">from</span> <span class="nn">abaqusConstants</span> <span class="k">import</span> <span class="n">ON</span>
+    <span class="kn">from</span> <span class="nn">abaqus</span> <span class="kn">import</span> <span class="n">mdb</span><span class="p">,</span> <span class="n">session</span>
+    <span class="kn">from</span> <span class="nn">abaqusConstants</span> <span class="kn">import</span> <span class="n">ON</span>
 
     <span class="n">part</span> <span class="o">=</span> <span class="n">mdb</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="n">cc</span><span class="o">.</span><span class="n">model_name</span><span class="p">]</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="n">cc</span><span class="o">.</span><span class="n">part_name_shell</span><span class="p">]</span>
     <span class="n">viewport</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">viewports</span><span class="p">[</span><span class="n">session</span><span class="o">.</span><span class="n">currentViewportName</span><span class="p">]</span>
@@ -551,8 +545,8 @@
 
 
 <span class="k">def</span> <span class="nf">printLBmodes</span><span class="p">():</span>
-    <span class="kn">from</span> <span class="nn">abaqus</span> <span class="k">import</span> <span class="n">session</span>
-    <span class="kn">from</span> <span class="nn">abaqusConstants</span> <span class="k">import</span> <span class="n">DPI_1200</span><span class="p">,</span> <span class="n">EXTRA_FINE</span><span class="p">,</span> <span class="n">OFF</span><span class="p">,</span> <span class="n">PNG</span>
+    <span class="kn">from</span> <span class="nn">abaqus</span> <span class="kn">import</span> <span class="n">session</span>
+    <span class="kn">from</span> <span class="nn">abaqusConstants</span> <span class="kn">import</span> <span class="n">DPI_1200</span><span class="p">,</span> <span class="n">EXTRA_FINE</span><span class="p">,</span> <span class="n">OFF</span><span class="p">,</span> <span class="n">PNG</span>
 
     <span class="n">vp</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">viewports</span><span class="p">[</span><span class="n">session</span><span class="o">.</span><span class="n">currentViewportName</span><span class="p">]</span>
     <span class="n">session</span><span class="o">.</span><span class="n">psOptions</span><span class="o">.</span><span class="n">setValues</span><span class="p">(</span><span class="n">logo</span><span class="o">=</span><span class="n">OFF</span><span class="p">,</span>
@@ -567,7 +561,7 @@
 
 
 <span class="k">def</span> <span class="nf">get_current_odbdisplay</span><span class="p">():</span>
-    <span class="kn">from</span> <span class="nn">abaqus</span> <span class="k">import</span> <span class="n">session</span>
+    <span class="kn">from</span> <span class="nn">abaqus</span> <span class="kn">import</span> <span class="n">session</span>
 
     <span class="n">viewport</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">viewports</span><span class="p">[</span><span class="n">session</span><span class="o">.</span><span class="n">currentViewportName</span><span class="p">]</span>
     <span class="k">try</span><span class="p">:</span>
@@ -579,7 +573,7 @@
 
 
 <span class="k">def</span> <span class="nf">get_current_odb</span><span class="p">():</span>
-    <span class="kn">from</span> <span class="nn">abaqus</span> <span class="k">import</span> <span class="n">session</span>
+    <span class="kn">from</span> <span class="nn">abaqus</span> <span class="kn">import</span> <span class="n">session</span>
 
     <span class="n">viewport</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">viewports</span><span class="p">[</span><span class="n">session</span><span class="o">.</span><span class="n">currentViewportName</span><span class="p">]</span>
     <span class="n">odbdisplay</span> <span class="o">=</span> <span class="n">get_current_odbdisplay</span><span class="p">()</span>
@@ -610,6 +604,7 @@
 </pre></div>
 
           </div>
+          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
@@ -639,25 +634,25 @@
 
 
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../../../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
     </form>
+    </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2012-2017 Desicos Improved Software Team.
+      &copy;2012-2020 Desicos Improved Software Team.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>
 

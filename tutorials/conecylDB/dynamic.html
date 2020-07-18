@@ -1,26 +1,19 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dynamic Database &#8212; DESICOS 2.4.10 documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../',
-        VERSION:     '2.4.10',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Processing Geometric Imperfection Data" href="processing_measured_imp_data/processing_measured_imp_data.html" />
@@ -31,30 +24,31 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-  </head>
-  <body>
+  </head><body>
   
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
   <div class="section" id="dynamic-database">
 <span id="id1"></span><h1>Dynamic Database<a class="headerlink" href="#dynamic-database" title="Permalink to this headline">¶</a></h1>
 <p>One can store or delete entries in the dynamic database. This database
 will be created in the path stored in:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">localDB_path</span><span class="o">.</span><span class="n">json</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">localDB_path</span><span class="o">.</span><span class="n">json</span>
 </pre></div>
 </div>
 <p>Two functions are used to work on this database:
-<a class="reference internal" href="../../modules/conecylDB/index.html#desicos.conecylDB.conecylDB.save" title="desicos.conecylDB.conecylDB.save"><code class="xref py py-func docutils literal"><span class="pre">desicos.conecylDB.conecylDB.save()</span></code></a> and
-<a class="reference internal" href="../../modules/conecylDB/index.html#desicos.conecylDB.conecylDB.delete" title="desicos.conecylDB.conecylDB.delete"><code class="xref py py-func docutils literal"><span class="pre">desicos.conecylDB.conecylDB.delete()</span></code></a>.  The following sections bring
+<a class="reference internal" href="../../modules/conecylDB/index.html#desicos.conecylDB.conecylDB.save" title="desicos.conecylDB.conecylDB.save"><code class="xref py py-func docutils literal notranslate"><span class="pre">desicos.conecylDB.conecylDB.save()</span></code></a> and
+<a class="reference internal" href="../../modules/conecylDB/index.html#desicos.conecylDB.conecylDB.delete" title="desicos.conecylDB.conecylDB.delete"><code class="xref py py-func docutils literal notranslate"><span class="pre">desicos.conecylDB.conecylDB.delete()</span></code></a>.  The following sections bring
 examples about how to use these functions.</p>
 <div class="section" id="creating-a-material">
 <h2>Creating a material<a class="headerlink" href="#creating-a-material" title="Permalink to this headline">¶</a></h2>
 <p>Example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">desicos.conecylDB</span> <span class="k">import</span> <span class="n">save</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">desicos.conecylDB</span> <span class="kn">import</span> <span class="n">save</span>
 
 <span class="n">laminaprop</span> <span class="o">=</span> <span class="p">(</span><span class="mf">125.774e3</span><span class="p">,</span> <span class="mf">10.03e3</span><span class="p">,</span> <span class="mf">0.271</span><span class="p">,</span> <span class="mf">5.555e3</span><span class="p">,</span> <span class="mf">5.555e3</span><span class="p">,</span> <span class="mf">3.4e3</span><span class="p">)</span>
 <span class="n">save</span><span class="p">(</span><span class="s1">&#39;laminaprops&#39;</span><span class="p">,</span> <span class="s1">&#39;new_material&#39;</span><span class="p">,</span> <span class="n">laminaprop</span><span class="p">)</span>
@@ -64,7 +58,7 @@ examples about how to use these functions.</p>
 <div class="section" id="creating-an-allowable">
 <h2>Creating an allowable<a class="headerlink" href="#creating-an-allowable" title="Permalink to this headline">¶</a></h2>
 <p>Example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">desicos.conecylDB</span> <span class="k">import</span> <span class="n">save</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">desicos.conecylDB</span> <span class="kn">import</span> <span class="n">save</span>
 
 <span class="n">allowables</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1741.</span><span class="p">,</span> <span class="o">-</span><span class="mf">855.</span><span class="p">,</span> <span class="mf">29.</span><span class="p">,</span> <span class="o">-</span><span class="mf">283.</span><span class="p">,</span> <span class="mf">98.</span><span class="p">,</span> <span class="mf">90.</span><span class="p">)</span>
 <span class="n">save</span><span class="p">(</span><span class="s1">&#39;allowables&#39;</span><span class="p">,</span> <span class="s1">&#39;new_allowable&#39;</span><span class="p">,</span> <span class="n">allowables</span><span class="p">)</span>
@@ -74,7 +68,7 @@ examples about how to use these functions.</p>
 <div class="section" id="creating-a-cone-cylinder-sample">
 <h2>Creating a cone / cylinder sample<a class="headerlink" href="#creating-a-cone-cylinder-sample" title="Permalink to this headline">¶</a></h2>
 <p>Example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cc</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;r&#39;</span><span class="p">:</span> <span class="mf">250.</span><span class="p">,</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cc</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;r&#39;</span><span class="p">:</span> <span class="mf">250.</span><span class="p">,</span>
       <span class="s1">&#39;h&#39;</span><span class="p">:</span> <span class="mf">510.</span><span class="p">,</span>
       <span class="s1">&#39;plyt&#39;</span><span class="p">:</span> <span class="mf">0.125</span><span class="p">,</span>
       <span class="s1">&#39;laminapropKey&#39;</span><span class="p">,}</span>
@@ -88,7 +82,7 @@ file in the database.</p>
 <div class="section" id="deleting">
 <h2>Deleting<a class="headerlink" href="#deleting" title="Permalink to this headline">¶</a></h2>
 <p>Example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">desicos.conecylDB</span> <span class="k">import</span> <span class="n">delete</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">desicos.conecylDB</span> <span class="kn">import</span> <span class="n">delete</span>
 
 <span class="n">delete</span><span class="p">(</span><span class="s1">&#39;ccs&#39;</span><span class="p">,</span> <span class="s1">&#39;new_conecyl&#39;</span><span class="p">)</span>
 <span class="n">delete</span><span class="p">(</span><span class="s1">&#39;laminaprops&#39;</span><span class="p">,</span> <span class="s1">&#39;new_material&#39;</span><span class="p">)</span>
@@ -100,6 +94,7 @@ file in the database.</p>
 
 
           </div>
+          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
@@ -129,25 +124,25 @@ file in the database.</p>
 
 
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
     </form>
+    </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2012-2017 Desicos Improved Software Team.
+      &copy;2012-2020 Desicos Improved Software Team.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>
 

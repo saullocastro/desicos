@@ -1,26 +1,19 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Static Databases &#8212; DESICOS 2.4.10 documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../',
-        VERSION:     '2.4.10',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Dynamic Database" href="dynamic.html" />
@@ -31,25 +24,26 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-  </head>
-  <body>
+  </head><body>
   
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
   <div class="section" id="static-databases">
 <span id="static-database"></span><h1>Static Databases<a class="headerlink" href="#static-databases" title="Permalink to this headline">¶</a></h1>
 <p>Since many partners may contribute to this database, a list of all the
 available databases is included in:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">databases</span><span class="o">.</span><span class="n">json</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">databases</span><span class="o">.</span><span class="n">json</span>
 </pre></div>
 </div>
 <p>Data for the structures, material properties and allowables are stored
 respectively in:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ccs</span><span class="o">.</span><span class="n">py</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ccs</span><span class="o">.</span><span class="n">py</span>
 <span class="n">laminaprops</span><span class="o">.</span><span class="n">py</span>
 <span class="n">allowables</span><span class="o">.</span><span class="n">py</span>
 </pre></div>
@@ -57,9 +51,9 @@ respectively in:</p>
 <div class="section" id="ccs-py">
 <h2>ccs.py<a class="headerlink" href="#ccs-py" title="Permalink to this headline">¶</a></h2>
 <p>These are static components that one can change in order to add
-more samples. In <code class="docutils literal"><span class="pre">ccs.py</span></code> the <code class="docutils literal"><span class="pre">ccs</span></code> dictionary contains all the samples
+more samples. In <code class="docutils literal notranslate"><span class="pre">ccs.py</span></code> the <code class="docutils literal notranslate"><span class="pre">ccs</span></code> dictionary contains all the samples
 in a format like:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="s1">&#39;zimmermann_1992_z33&#39;</span><span class="p">:</span> <span class="p">{</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;zimmermann_1992_z33&#39;</span><span class="p">:</span> <span class="p">{</span>
     <span class="s1">&#39;msi&#39;</span><span class="p">:</span> <span class="s1">&#39;zimmermann_1992_z33&#39;</span><span class="p">,</span>
     <span class="s1">&#39;r&#39;</span><span class="p">:</span> <span class="mf">250.</span><span class="p">,</span>
     <span class="s1">&#39;h&#39;</span><span class="p">:</span> <span class="mf">510.</span><span class="p">,</span>
@@ -74,12 +68,12 @@ in a format like:</p>
     <span class="s1">&#39;database&#39;</span><span class="p">:</span><span class="s1">&#39;dlr&#39;</span><span class="p">,</span>
 </pre></div>
 </div>
-<p>where <code class="docutils literal"><span class="pre">database</span></code> indicates from which database the sample belongs to. When
+<p>where <code class="docutils literal notranslate"><span class="pre">database</span></code> indicates from which database the sample belongs to. When
 geometric imperfection measurements are available for a sample, the key
-<code class="docutils literal"><span class="pre">msi</span></code> is defined with the name of the imperfection file.
-When thickness imperfections are available, the key <code class="docutils literal"><span class="pre">ti</span></code> is defined, as in
+<code class="docutils literal notranslate"><span class="pre">msi</span></code> is defined with the name of the imperfection file.
+When thickness imperfections are available, the key <code class="docutils literal notranslate"><span class="pre">ti</span></code> is defined, as in
 the example below:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="s1">&#39;degenhardt_2010_z15&#39;</span><span class="p">:</span> <span class="p">{</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;degenhardt_2010_z15&#39;</span><span class="p">:</span> <span class="p">{</span>
     <span class="s1">&#39;msi&#39;</span><span class="p">:</span> <span class="s1">&#39;degenhardt_2010_z15&#39;</span><span class="p">,</span>
     <span class="s1">&#39;ti&#39;</span><span class="p">:</span> <span class="s1">&#39;degenhardt_2010_z15&#39;</span><span class="p">,</span>
     <span class="s1">&#39;r&#39;</span><span class="p">:</span> <span class="mf">250.27</span><span class="p">,</span>
@@ -96,36 +90,36 @@ the example below:</p>
     <span class="p">},</span>
 </pre></div>
 </div>
-<p>The material properties are given by names stored in the <code class="docutils literal"><span class="pre">laminapropKey</span></code>
+<p>The material properties are given by names stored in the <code class="docutils literal notranslate"><span class="pre">laminapropKey</span></code>
 key. If a different material is used for each ply, then a
-<code class="docutils literal"><span class="pre">laminapropKeys</span></code> key should be defined, containing a <code class="docutils literal"><span class="pre">list</span></code> with
-a <code class="docutils literal"><span class="pre">laminapropKey</span></code> for each ply, and the length of this list must
-be the same as the length of the stacking sequence, given by the <code class="docutils literal"><span class="pre">stack</span></code>
-key. If the plies have the same thickness, only the <code class="docutils literal"><span class="pre">plyt</span></code> key has to
-be defined, otherwise a key <code class="docutils literal"><span class="pre">plyts</span></code> has to defined with a list of
-ply thicknesses, with the same length as <code class="docutils literal"><span class="pre">stack</span></code>. For the <code class="docutils literal"><span class="pre">allowablesKey</span></code>
-the same explanation of the <code class="docutils literal"><span class="pre">laminapropKey</span></code> applies.</p>
+<code class="docutils literal notranslate"><span class="pre">laminapropKeys</span></code> key should be defined, containing a <code class="docutils literal notranslate"><span class="pre">list</span></code> with
+a <code class="docutils literal notranslate"><span class="pre">laminapropKey</span></code> for each ply, and the length of this list must
+be the same as the length of the stacking sequence, given by the <code class="docutils literal notranslate"><span class="pre">stack</span></code>
+key. If the plies have the same thickness, only the <code class="docutils literal notranslate"><span class="pre">plyt</span></code> key has to
+be defined, otherwise a key <code class="docutils literal notranslate"><span class="pre">plyts</span></code> has to defined with a list of
+ply thicknesses, with the same length as <code class="docutils literal notranslate"><span class="pre">stack</span></code>. For the <code class="docutils literal notranslate"><span class="pre">allowablesKey</span></code>
+the same explanation of the <code class="docutils literal notranslate"><span class="pre">laminapropKey</span></code> applies.</p>
 </div>
 <div class="section" id="laminaprops-py">
 <h2>laminaprops.py<a class="headerlink" href="#laminaprops-py" title="Permalink to this headline">¶</a></h2>
-<p>Keeps the material properties, the dictionary <code class="docutils literal"><span class="pre">laminaprops</span></code> has
-in each key a <code class="docutils literal"><span class="pre">tuple</span></code> or <code class="docutils literal"><span class="pre">list</span></code> with the properties:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">E11</span><span class="p">,</span> <span class="n">E22</span><span class="p">,</span> <span class="n">nu12</span><span class="p">,</span> <span class="n">G12</span><span class="p">,</span> <span class="n">G13</span><span class="p">,</span> <span class="n">G23</span><span class="p">)</span>
+<p>Keeps the material properties, the dictionary <code class="docutils literal notranslate"><span class="pre">laminaprops</span></code> has
+in each key a <code class="docutils literal notranslate"><span class="pre">tuple</span></code> or <code class="docutils literal notranslate"><span class="pre">list</span></code> with the properties:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">E11</span><span class="p">,</span> <span class="n">E22</span><span class="p">,</span> <span class="n">nu12</span><span class="p">,</span> <span class="n">G12</span><span class="p">,</span> <span class="n">G13</span><span class="p">,</span> <span class="n">G23</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>for orthotropic materials or:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">E11</span><span class="p">,</span> <span class="n">E11</span><span class="p">,</span> <span class="n">nu</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">E11</span><span class="p">,</span> <span class="n">E11</span><span class="p">,</span> <span class="n">nu</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>for isotropic materials. Each key in <code class="docutils literal"><span class="pre">laminaprops</span></code> corresponds to a
-<code class="docutils literal"><span class="pre">laminapropKey</span></code> in the <code class="docutils literal"><span class="pre">ccs.py</span></code>.</p>
+<p>for isotropic materials. Each key in <code class="docutils literal notranslate"><span class="pre">laminaprops</span></code> corresponds to a
+<code class="docutils literal notranslate"><span class="pre">laminapropKey</span></code> in the <code class="docutils literal notranslate"><span class="pre">ccs.py</span></code>.</p>
 </div>
 <div class="section" id="allowables-py">
 <h2>allowables.py<a class="headerlink" href="#allowables-py" title="Permalink to this headline">¶</a></h2>
-<p>Keeps the allowables’ for the materials in the dictionary <code class="docutils literal"><span class="pre">allowables</span></code>,
-where each key corresponds to a <code class="docutils literal"><span class="pre">allowablesKey</span></code> in <code class="docutils literal"><span class="pre">ccs.py</span></code>. Each value
-is a <code class="docutils literal"><span class="pre">tuple</span></code> or <code class="docutils literal"><span class="pre">list</span></code> with:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">S11t</span><span class="p">,</span> <span class="n">S11c</span><span class="p">,</span> <span class="n">S22t</span><span class="p">,</span> <span class="n">S22c</span><span class="p">,</span> <span class="n">S12</span><span class="p">,</span> <span class="n">S13</span><span class="p">)</span>
+<p>Keeps the allowables’ for the materials in the dictionary <code class="docutils literal notranslate"><span class="pre">allowables</span></code>,
+where each key corresponds to a <code class="docutils literal notranslate"><span class="pre">allowablesKey</span></code> in <code class="docutils literal notranslate"><span class="pre">ccs.py</span></code>. Each value
+is a <code class="docutils literal notranslate"><span class="pre">tuple</span></code> or <code class="docutils literal notranslate"><span class="pre">list</span></code> with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">S11t</span><span class="p">,</span> <span class="n">S11c</span><span class="p">,</span> <span class="n">S22t</span><span class="p">,</span> <span class="n">S22c</span><span class="p">,</span> <span class="n">S12</span><span class="p">,</span> <span class="n">S13</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -133,6 +127,7 @@ is a <code class="docutils literal"><span class="pre">tuple</span></code> or <co
 
 
           </div>
+          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
@@ -162,25 +157,25 @@ is a <code class="docutils literal"><span class="pre">tuple</span></code> or <co
 
 
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
     </form>
+    </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2012-2017 Desicos Improved Software Team.
+      &copy;2012-2020 Desicos Improved Software Team.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>
 

@@ -1,26 +1,19 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Old / new best fit radii &#8212; DESICOS 2.4.10 documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../',
-        VERSION:     '2.4.10',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Cone Ply Piece Optimization Tool (CPPOT)" href="../cppot/index.html" />
@@ -31,177 +24,178 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-  </head>
-  <body>
+  </head><body>
   
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
   <div class="section" id="old-new-best-fit-radii">
 <h1>Old / new best fit radii<a class="headerlink" href="#old-new-best-fit-radii" title="Permalink to this headline">¶</a></h1>
-<p>The implementation of <a class="reference internal" href="../../modules/conecylDB/index.html#module-desicos.conecylDB.fit_data" title="desicos.conecylDB.fit_data"><code class="xref py py-mod docutils literal"><span class="pre">the</span> <span class="pre">new</span> <span class="pre">best</span> <span class="pre">fit</span> <span class="pre">algorithms</span></code></a> allowed
+<p>The implementation of <a class="reference internal" href="../../modules/conecylDB/index.html#module-desicos.conecylDB.fit_data" title="desicos.conecylDB.fit_data"><code class="xref py py-mod docutils literal notranslate"><span class="pre">the</span> <span class="pre">new</span> <span class="pre">best</span> <span class="pre">fit</span> <span class="pre">algorithms</span></code></a> allowed
 an improvement of the database by storing the mid-surface imperfections in a
-“<img class="math" src="../../_images/math/3be04d4207434584251f6921820c24ac9fa8c6f1.png" alt="\theta"/> <img class="math" src="../../_images/math/683f2dd9129a91d21aaf1c04afa6f78b39d4cb0a.png" alt="z"/> <img class="math" src="../../_images/math/e55a761f3e91d23869f8137bd16f92dfadf3ba70.png" alt="imperfection"/>” format instead of a “<img class="math" src="../../_images/math/a59f68a4202623bb859a7093f0316bf466e6f75d.png" alt="x"/> <img class="math" src="../../_images/math/276f7e256cbddeb81eee42e1efc348f3cb4ab5f8.png" alt="y"/> <img class="math" src="../../_images/math/683f2dd9129a91d21aaf1c04afa6f78b39d4cb0a.png" alt="z"/>” format and the
-thickness imperfections in a “<img class="math" src="../../_images/math/3be04d4207434584251f6921820c24ac9fa8c6f1.png" alt="\theta"/> <img class="math" src="../../_images/math/683f2dd9129a91d21aaf1c04afa6f78b39d4cb0a.png" alt="z"/> <img class="math" src="../../_images/math/bead67810fe1d7603b6271952ecbe2e7b4ef26ca.png" alt="thickness"/>” format instead of a
-“<img class="math" src="../../_images/math/a59f68a4202623bb859a7093f0316bf466e6f75d.png" alt="x"/> <img class="math" src="../../_images/math/276f7e256cbddeb81eee42e1efc348f3cb4ab5f8.png" alt="y"/> <img class="math" src="../../_images/math/683f2dd9129a91d21aaf1c04afa6f78b39d4cb0a.png" alt="z"/> <img class="math" src="../../_images/math/bead67810fe1d7603b6271952ecbe2e7b4ef26ca.png" alt="thickness"/>” file. This showed to be more convenient to
+“<img class="math" src="../../_images/math/8a87f04e7d7cca18343c084cceca5237fae62491.png" alt="\theta"/> <img class="math" src="../../_images/math/8d051150f8669295ecdbe92367941012175a824d.png" alt="z"/> <img class="math" src="../../_images/math/2e82ba367a9d446309b862586df154e441fcd986.png" alt="imperfection"/>” format instead of a “<img class="math" src="../../_images/math/888f7c323ac0341871e867220ae2d76467d74d6e.png" alt="x"/> <img class="math" src="../../_images/math/1b5e577d6216dca3af7d87aa122a0b9b360d6cb3.png" alt="y"/> <img class="math" src="../../_images/math/8d051150f8669295ecdbe92367941012175a824d.png" alt="z"/>” format and the
+thickness imperfections in a “<img class="math" src="../../_images/math/8a87f04e7d7cca18343c084cceca5237fae62491.png" alt="\theta"/> <img class="math" src="../../_images/math/8d051150f8669295ecdbe92367941012175a824d.png" alt="z"/> <img class="math" src="../../_images/math/c686c25c8a6433b22482f302ea4b1575716f3513.png" alt="thickness"/>” format instead of a
+“<img class="math" src="../../_images/math/888f7c323ac0341871e867220ae2d76467d74d6e.png" alt="x"/> <img class="math" src="../../_images/math/1b5e577d6216dca3af7d87aa122a0b9b360d6cb3.png" alt="y"/> <img class="math" src="../../_images/math/8d051150f8669295ecdbe92367941012175a824d.png" alt="z"/> <img class="math" src="../../_images/math/c686c25c8a6433b22482f302ea4b1575716f3513.png" alt="thickness"/>” file. This showed to be more convenient to
 interchange imperfections between cones and cylinders and requires less stored
 information.</p>
-<p>The previous files with  “<img class="math" src="../../_images/math/a59f68a4202623bb859a7093f0316bf466e6f75d.png" alt="x"/> <img class="math" src="../../_images/math/276f7e256cbddeb81eee42e1efc348f3cb4ab5f8.png" alt="y"/> <img class="math" src="../../_images/math/683f2dd9129a91d21aaf1c04afa6f78b39d4cb0a.png" alt="z"/>” had been compared with the new
+<p>The previous files with  “<img class="math" src="../../_images/math/888f7c323ac0341871e867220ae2d76467d74d6e.png" alt="x"/> <img class="math" src="../../_images/math/1b5e577d6216dca3af7d87aa122a0b9b360d6cb3.png" alt="y"/> <img class="math" src="../../_images/math/8d051150f8669295ecdbe92367941012175a824d.png" alt="z"/>” had been compared with the new
 generated files and the respective best fit radius, which <strong>for
 cones</strong> should be taken as <strong>the radius at the bottom</strong>. Below the old
 radius is compared with the new radius, showing that the files that
 were in the database had already been treated by a best fit algorithm.</p>
 <div class="section" id="for-mid-surface-imperfection-msi">
 <h2>For Mid-Surface Imperfection (MSI)<a class="headerlink" href="#for-mid-surface-imperfection-msi" title="Permalink to this headline">¶</a></h2>
-<table border="1" class="docutils">
+<table class="docutils align-default">
 <colgroup>
-<col width="51%" />
-<col width="24%" />
-<col width="24%" />
+<col style="width: 51%" />
+<col style="width: 24%" />
+<col style="width: 24%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Name</th>
-<th class="head">old (mm)</th>
-<th class="head">new (mm)</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>old (mm)</p></th>
+<th class="head"><p>new (mm)</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td>degenhardt_2010_z15</td>
-<td>250.78039</td>
-<td>250.77990</td>
+<tbody>
+<tr class="row-even"><td><p>degenhardt_2010_z15</p></td>
+<td><p>250.78039</p></td>
+<td><p>250.77990</p></td>
 </tr>
-<tr class="row-odd"><td>degenhardt_2010_z17</td>
-<td>250.77277</td>
-<td>250.77294</td>
+<tr class="row-odd"><td><p>degenhardt_2010_z17</p></td>
+<td><p>250.77277</p></td>
+<td><p>250.77294</p></td>
 </tr>
-<tr class="row-even"><td>degenhardt_2010_z18</td>
-<td>250.77991</td>
-<td>250.77989</td>
+<tr class="row-even"><td><p>degenhardt_2010_z18</p></td>
+<td><p>250.77991</p></td>
+<td><p>250.77989</p></td>
 </tr>
-<tr class="row-odd"><td>degenhardt_2010_z20</td>
-<td>250.72453</td>
-<td>250.72452</td>
+<tr class="row-odd"><td><p>degenhardt_2010_z20</p></td>
+<td><p>250.72453</p></td>
+<td><p>250.72452</p></td>
 </tr>
-<tr class="row-even"><td>degenhardt_2010_z21</td>
-<td>250.71667</td>
-<td>250.71765</td>
+<tr class="row-even"><td><p>degenhardt_2010_z21</p></td>
+<td><p>250.71667</p></td>
+<td><p>250.71765</p></td>
 </tr>
-<tr class="row-odd"><td>degenhardt_2010_z22</td>
-<td>250.78368</td>
-<td>250.78307</td>
+<tr class="row-odd"><td><p>degenhardt_2010_z22</p></td>
+<td><p>250.78368</p></td>
+<td><p>250.78307</p></td>
 </tr>
-<tr class="row-even"><td>degenhardt_2010_z23</td>
-<td>250.70771</td>
-<td>250.70775</td>
+<tr class="row-even"><td><p>degenhardt_2010_z23</p></td>
+<td><p>250.70771</p></td>
+<td><p>250.70775</p></td>
 </tr>
-<tr class="row-odd"><td>degenhardt_2010_z24</td>
-<td>250.71796</td>
-<td>250.71792</td>
+<tr class="row-odd"><td><p>degenhardt_2010_z24</p></td>
+<td><p>250.71796</p></td>
+<td><p>250.71792</p></td>
 </tr>
-<tr class="row-even"><td>degenhardt_2010_z25</td>
-<td>250.70585</td>
-<td>250.70509</td>
+<tr class="row-even"><td><p>degenhardt_2010_z25</p></td>
+<td><p>250.70585</p></td>
+<td><p>250.70509</p></td>
 </tr>
-<tr class="row-odd"><td>degenhardt_2010_z26</td>
-<td>250.74842</td>
-<td>250.74841</td>
+<tr class="row-odd"><td><p>degenhardt_2010_z26</p></td>
+<td><p>250.74842</p></td>
+<td><p>250.74841</p></td>
 </tr>
-<tr class="row-even"><td>zimmermann_1992_z33</td>
-<td>250.00000</td>
-<td>250.00015</td>
+<tr class="row-even"><td><p>zimmermann_1992_z33</p></td>
+<td><p>250.00000</p></td>
+<td><p>250.00015</p></td>
 </tr>
-<tr class="row-odd"><td>awcyl111</td>
-<td>203.34475</td>
-<td>203.34541</td>
+<tr class="row-odd"><td><p>awcyl111</p></td>
+<td><p>203.34475</p></td>
+<td><p>203.34541</p></td>
 </tr>
-<tr class="row-even"><td>awcyl9201</td>
-<td>203.20508</td>
-<td>202.06214</td>
+<tr class="row-even"><td><p>awcyl9201</p></td>
+<td><p>203.20508</p></td>
+<td><p>202.06214</p></td>
 </tr>
-<tr class="row-odd"><td>awcyl9202</td>
-<td>201.95339</td>
-<td>202.04195</td>
+<tr class="row-odd"><td><p>awcyl9202</p></td>
+<td><p>201.95339</p></td>
+<td><p>202.04195</p></td>
 </tr>
-<tr class="row-even"><td>awcyl9203</td>
-<td>202.14465</td>
-<td>202.18147</td>
+<tr class="row-even"><td><p>awcyl9203</p></td>
+<td><p>202.14465</p></td>
+<td><p>202.18147</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="section" id="for-thickness-imperfection-ti">
 <h2>For Thickness Imperfection (TI)<a class="headerlink" href="#for-thickness-imperfection-ti" title="Permalink to this headline">¶</a></h2>
-<table border="1" class="docutils">
+<table class="docutils align-default">
 <colgroup>
-<col width="51%" />
-<col width="24%" />
-<col width="24%" />
+<col style="width: 51%" />
+<col style="width: 24%" />
+<col style="width: 24%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Name</th>
-<th class="head">old (mm)</th>
-<th class="head">new (mm)</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>old (mm)</p></th>
+<th class="head"><p>new (mm)</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td>degenhardt_2010_z15</td>
-<td>250.27002</td>
-<td>250.26986</td>
+<tbody>
+<tr class="row-even"><td><p>degenhardt_2010_z15</p></td>
+<td><p>250.27002</p></td>
+<td><p>250.26986</p></td>
 </tr>
-<tr class="row-odd"><td>degenhardt_2010_z17</td>
-<td>250.35001</td>
-<td>250.34982</td>
+<tr class="row-odd"><td><p>degenhardt_2010_z17</p></td>
+<td><p>250.35001</p></td>
+<td><p>250.34982</p></td>
 </tr>
-<tr class="row-even"><td>degenhardt_2010_z18</td>
-<td>250.30003</td>
-<td>250.29986</td>
+<tr class="row-even"><td><p>degenhardt_2010_z18</p></td>
+<td><p>250.30003</p></td>
+<td><p>250.29986</p></td>
 </tr>
-<tr class="row-odd"><td>degenhardt_2010_z20</td>
-<td>250.30000</td>
-<td>250.29983</td>
+<tr class="row-odd"><td><p>degenhardt_2010_z20</p></td>
+<td><p>250.30000</p></td>
+<td><p>250.29983</p></td>
 </tr>
-<tr class="row-even"><td>degenhardt_2010_z21</td>
-<td>250.23999</td>
-<td>250.23985</td>
+<tr class="row-even"><td><p>degenhardt_2010_z21</p></td>
+<td><p>250.23999</p></td>
+<td><p>250.23985</p></td>
 </tr>
-<tr class="row-odd"><td>degenhardt_2010_z22</td>
-<td>250.29997</td>
-<td>250.29979</td>
+<tr class="row-odd"><td><p>degenhardt_2010_z22</p></td>
+<td><p>250.29997</p></td>
+<td><p>250.29979</p></td>
 </tr>
-<tr class="row-even"><td>degenhardt_2010_z23</td>
-<td>250.23001</td>
-<td>250.22987</td>
+<tr class="row-even"><td><p>degenhardt_2010_z23</p></td>
+<td><p>250.23001</p></td>
+<td><p>250.22987</p></td>
 </tr>
-<tr class="row-odd"><td>degenhardt_2010_z24</td>
-<td>250.21999</td>
-<td>250.21986</td>
+<tr class="row-odd"><td><p>degenhardt_2010_z24</p></td>
+<td><p>250.21999</p></td>
+<td><p>250.21986</p></td>
 </tr>
-<tr class="row-even"><td>degenhardt_2010_z25</td>
-<td>250.23999</td>
-<td>250.23985</td>
+<tr class="row-even"><td><p>degenhardt_2010_z25</p></td>
+<td><p>250.23999</p></td>
+<td><p>250.23985</p></td>
 </tr>
-<tr class="row-odd"><td>degenhardt_2010_z26</td>
-<td>250.27000</td>
-<td>250.26985</td>
+<tr class="row-odd"><td><p>degenhardt_2010_z26</p></td>
+<td><p>250.27000</p></td>
+<td><p>250.26985</p></td>
 </tr>
-<tr class="row-even"><td>awcyl111</td>
-<td>203.34464</td>
-<td>250.34530</td>
+<tr class="row-even"><td><p>awcyl111</p></td>
+<td><p>203.34464</p></td>
+<td><p>250.34530</p></td>
 </tr>
-<tr class="row-odd"><td>awcyl9201</td>
-<td>202.05996</td>
-<td>202.06213</td>
+<tr class="row-odd"><td><p>awcyl9201</p></td>
+<td><p>202.05996</p></td>
+<td><p>202.06213</p></td>
 </tr>
-<tr class="row-even"><td>awcyl9202</td>
-<td>201.95397</td>
-<td>202.04193</td>
+<tr class="row-even"><td><p>awcyl9202</p></td>
+<td><p>201.95397</p></td>
+<td><p>202.04193</p></td>
 </tr>
-<tr class="row-odd"><td>awcyl9203</td>
-<td>202.14463</td>
-<td>202.18145</td>
+<tr class="row-odd"><td><p>awcyl9203</p></td>
+<td><p>202.14463</p></td>
+<td><p>202.18145</p></td>
 </tr>
 </tbody>
 </table>
@@ -210,6 +204,7 @@ were in the database had already been treated by a best fit algorithm.</p>
 
 
           </div>
+          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
@@ -239,25 +234,25 @@ were in the database had already been treated by a best fit algorithm.</p>
 
 
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
     </form>
+    </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2012-2017 Desicos Improved Software Team.
+      &copy;2012-2020 Desicos Improved Software Team.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>
 

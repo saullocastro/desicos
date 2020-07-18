@@ -1,26 +1,19 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>desicos.abaqus.imperfections.cutout &#8212; DESICOS 2.4.10 documentation</title>
     <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../../../',
-        VERSION:     '2.4.10',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
-    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css" />
+    <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
    
@@ -29,24 +22,25 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-  </head>
-  <body>
+  </head><body>
   
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
   <h1>Source code for desicos.abaqus.imperfections.cutout</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="n">sin</span><span class="p">,</span> <span class="n">cos</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">sin</span><span class="p">,</span> <span class="n">cos</span>
 
-<span class="kn">from</span> <span class="nn">desicos.abaqus.utils</span> <span class="k">import</span> <span class="n">cyl2rec</span>
-<span class="kn">from</span> <span class="nn">desicos.logger</span> <span class="k">import</span> <span class="n">warn</span>
-<span class="kn">from</span> <span class="nn">desicos.abaqus</span> <span class="k">import</span> <span class="n">abaqus_functions</span>
+<span class="kn">from</span> <span class="nn">desicos.abaqus.utils</span> <span class="kn">import</span> <span class="n">cyl2rec</span>
+<span class="kn">from</span> <span class="nn">desicos.logger</span> <span class="kn">import</span> <span class="n">warn</span>
+<span class="kn">from</span> <span class="nn">desicos.abaqus</span> <span class="kn">import</span> <span class="n">abaqus_functions</span>
 
 
 <div class="viewcode-block" id="Cutout"><a class="viewcode-back" href="../../../../modules/abaqus/index.html#desicos.abaqus.imperfections.cutout.Cutout">[docs]</a><span class="k">class</span> <span class="nc">Cutout</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -107,7 +101,7 @@
 <span class="sd">                  the current model in Abaqus</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thetadeg</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">drill_offset_deg</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thetadeg</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">drill_offset_deg</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span>
                  <span class="n">clearance_factor</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span> <span class="n">numel_radial_edge</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
                  <span class="n">prop_around_cutout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">thetadeg</span> <span class="o">=</span> <span class="n">thetadeg</span>
@@ -159,10 +153,10 @@
 
 
     <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="kn">from</span> <span class="nn">abaqus</span> <span class="k">import</span> <span class="n">mdb</span>
-        <span class="kn">from</span> <span class="nn">abaqusConstants</span> <span class="k">import</span> <span class="p">(</span><span class="n">SIDE1</span><span class="p">,</span> <span class="n">SUPERIMPOSE</span><span class="p">,</span> <span class="n">COPLANAR_EDGES</span><span class="p">,</span>
+        <span class="kn">from</span> <span class="nn">abaqus</span> <span class="kn">import</span> <span class="n">mdb</span>
+        <span class="kn">from</span> <span class="nn">abaqusConstants</span> <span class="kn">import</span> <span class="p">(</span><span class="n">SIDE1</span><span class="p">,</span> <span class="n">SUPERIMPOSE</span><span class="p">,</span> <span class="n">COPLANAR_EDGES</span><span class="p">,</span>
                 <span class="n">MIDDLE</span><span class="p">,</span> <span class="n">XZPLANE</span><span class="p">,</span> <span class="n">SWEEP</span><span class="p">,</span> <span class="n">FIXED</span><span class="p">)</span>
-        <span class="kn">from</span> <span class="nn">regionToolset</span> <span class="k">import</span> <span class="n">Region</span>
+        <span class="kn">from</span> <span class="nn">regionToolset</span> <span class="kn">import</span> <span class="n">Region</span>
 
         <span class="n">cc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">conecyl</span>
         <span class="n">mod</span> <span class="o">=</span> <span class="n">mdb</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="n">cc</span><span class="o">.</span><span class="n">model_name</span><span class="p">]</span>
@@ -363,8 +357,8 @@
 
     <span class="k">def</span> <span class="nf">create_prop_around_cutout</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prop_around_cutout</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">abaqus</span> <span class="k">import</span> <span class="n">mdb</span>
-            <span class="kn">from</span> <span class="nn">abaqusConstants</span> <span class="k">import</span> <span class="n">CYLINDRICAL</span>
+            <span class="kn">from</span> <span class="nn">abaqus</span> <span class="kn">import</span> <span class="n">mdb</span>
+            <span class="kn">from</span> <span class="nn">abaqusConstants</span> <span class="kn">import</span> <span class="n">CYLINDRICAL</span>
 
             <span class="n">cc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">impconf</span><span class="o">.</span><span class="n">conecyl</span>
             <span class="n">mod</span> <span class="o">=</span> <span class="n">mdb</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="n">cc</span><span class="o">.</span><span class="n">model_name</span><span class="p">]</span>
@@ -414,7 +408,7 @@
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">desicos.abaqus.conecyl</span> <span class="k">import</span> <span class="n">ConeCyl</span>
+    <span class="kn">from</span> <span class="nn">desicos.abaqus.conecyl</span> <span class="kn">import</span> <span class="n">ConeCyl</span>
 
     <span class="n">cc</span> <span class="o">=</span> <span class="n">ConeCyl</span><span class="p">()</span>
     <span class="n">cc</span><span class="o">.</span><span class="n">from_DB</span><span class="p">(</span><span class="s1">&#39;desicos_2014_c17&#39;</span><span class="p">)</span>
@@ -426,6 +420,7 @@
 </pre></div>
 
           </div>
+          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
@@ -455,25 +450,25 @@
 
 
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../../../../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
     </form>
+    </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2012-2017 Desicos Improved Software Team.
+      &copy;2012-2020 Desicos Improved Software Team.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>
 
