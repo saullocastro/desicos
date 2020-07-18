@@ -606,6 +606,9 @@ def plot_field_data(self, x, y, field, create_npz_only, ax, figsize, save_png,
         f.write("import os\n")
         f.write("\n")
         f.write("import numpy as np\n")
+        f.write("import matplotlib\n")
+        f.write("matplotlib.use('TkAgg')\n")
+        f.write("from matplotlib import cm\n")
         f.write("import matplotlib.pyplot as plt\n")
         f.write("from mpl_toolkits.axes_grid1 import make_axes_locatable\n")
         f.write("\n")
@@ -622,7 +625,7 @@ def plot_field_data(self, x, y, field, create_npz_only, ax, figsize, save_png,
         f.write("ax = plt.gca()\n")
         f.write("levels = np.linspace(field.min(), field.max(), {0})\n".format(
                 num_levels))
-        f.write("contours = ax.contourf(x, y, field, levels=levels)\n")
+        f.write("contours = ax.contourf(x, y, field, levels=levels, cmap=cm.jet)\n")
         f.write("if show_colorbar:\n")
         f.write("    divider = make_axes_locatable(ax)\n")
         f.write("    cax = divider.append_axes('right', size='5%', pad=0.05)\n")
