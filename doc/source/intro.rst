@@ -2,8 +2,8 @@
 Introduction
 ============
 
-Plug-in for Abaqus
-==================
+DESICOS Plug-in for Abaqus
+===========================
 
 With the aim to provide fast tools for pre- and post-processing tasks
 using the finite element software Abaqus, one can
@@ -22,8 +22,8 @@ in Abaqus, one short example to create a model would be::
 
 See the :ref:`desicos.abaqus <module_abaqus>` documentation for more details.
 
-Composite Module
-================
+DESICOS Composite Module
+========================
 
 Used to calculate laminate properties based on input data of stacking
 sequence and lamina properties.
@@ -41,8 +41,8 @@ constitutive matrices can be accessed doing ``lam.ABD`` (CLPT) or ``lam.ABDE``
 (FSDT). See the :ref:`desicos.composite <module_composite>` documentation
 for more details.
 
-Cone / Cylinder Database (Imperfection Database)
-================================================
+DESICOS Cone / Cylinder Database (Imperfection Database)
+========================================================
 
 A database containing data from structures studied in previous publications
 and the imperfection database for some samples that had their geometric
