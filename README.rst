@@ -3,7 +3,7 @@ DESICOS
 =======
 
 Tools developed in the context of the European Project DESICOS 
-(http://www.desicos.eu).
+(https://cordis.europa.eu/project/id/282522).
 
 Documentation
 -------------
