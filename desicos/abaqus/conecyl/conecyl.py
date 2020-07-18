@@ -1162,22 +1162,21 @@ class ConeCyl(object):
                     continue
                 if len(lines) < 2:
                     continue
-                if lines[-2].find('End Abaqus/Standard Analysis') > -1:
-                    if print_found:
-                        log('RUN COMPLETED for model {0}'.format(
-                            self.model_name))
-                    return True
-                elif lines[-1].find('Abaqus/Analysis exited with errors') > -1:
-                    if print_found:
-                        log('RUN COMPLETED WITH ERRORS for model {0}'.format(
-                            self.model_name))
-                    return True
-
-                else:
-                    if not wait:
-                        warn('RUN NOT COMPLETED for model {0}'.format(
-                             self.model_name))
-                        return False
+                for line in lines:
+                    if line.find('COMPLETED') > -1:
+                        if print_found:
+                            log('RUN COMPLETED for model {0}'.format(
+                                self.model_name))
+                        return True
+                    elif line.find('exited with errors') > -1:
+                        if print_found:
+                            log('RUN COMPLETED WITH ERRORS for model {0}'.format(
+                                self.model_name))
+                        return True
+                if not wait:
+                    warn('RUN NOT COMPLETED for model {0}'.format(
+                         self.model_name))
+                    return False
             else:
                 if not wait:
                     warn('RUN NOT STARTED for model {0}'.format(
