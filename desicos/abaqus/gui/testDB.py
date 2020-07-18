@@ -1329,6 +1329,9 @@ class TestDB(AFXDataDialog):
                     outpath))
             message(' ')
             form.loaded_study = True
+            outputs = os.path.join(outpath, 'outputs')
+            if not os.path.isdir(outputs):
+                os.makedirs(outputs)
             os.chdir(outpath)
             return
 
@@ -1410,8 +1413,7 @@ class TestDB(AFXDataDialog):
             put_in_Excel = form.post_put_in_ExcelKw.getValue()
             open_Excel = form.post_open_ExcelKw.getValue()
             std_name = form.std_to_postKw.getValue()
-            gui_plot.plot_ls_curve(std_name,
-                                   put_in_Excel, open_Excel)
+            gui_plot.plot_ls_curve(std_name, put_in_Excel, open_Excel)
 
         # post knock-down curves
         if self.post_kdf_button.getState() == STATE_DOWN:
