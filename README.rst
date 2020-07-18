@@ -5,6 +5,14 @@ DESICOS
 Tools developed in the context of the 7th European Framework Project DESICOS 
 (https://cordis.europa.eu/project/id/282522).
 
+Cite as
+--------
+
+
+Saullo G P Castro, Jasper Reichardt, Florian Burau, & Emilio Lozano. (2020, July 18). DESICOS Plug-in for Abaqus (Version 2.4.11). Zenodo. http://doi.org/10.5281/zenodo.3951176
+
+
+
 Documentation
 -------------
 
