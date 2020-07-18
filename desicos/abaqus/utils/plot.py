@@ -82,7 +82,7 @@ def plot_opened_conecyl(cc, displ_vec='w',
             if not frame:
                 raise ValueError('A frame must be selected!')
             frame_num = int(frame.frameValue)
-            print 'DEBUG, len(cc.part.nodes)', len(cc.part.nodes)
+            print('DEBUG, len(cc.part.nodes)', len(cc.part.nodes))
             coords = np.array([n.coordinates for n in cc.part.nodes])
             #TODO include more outputs like stress etc
             try:
@@ -111,11 +111,11 @@ def plot_opened_conecyl(cc, displ_vec='w',
 
             zs = coords[:, 2]
 
-            print 'DEBUG - cc.numel_r', cc.numel_r
+            print('DEBUG - cc.numel_r', cc.numel_r)
             nt = cc.numel_r
 
             if 'S8' in cc.elem_type:
-                print 'WARNING - S8xx elements'
+                print('WARNING - S8xx elements')
                 nt *= 2
 
             #first sort
@@ -151,7 +151,7 @@ def plot_opened_conecyl(cc, displ_vec='w',
                 else:
                     r_plot_max = r2/sina + L
                 y = r_plot_max - r_plot*cos(thetas*sina)
-                print 'HERE', y.min(), y.max()
+                print('HERE', y.min(), y.max())
                 x = r_plot*sin(thetas*sina)
             elif plot_type==2:
                 r_plot = fr(zs)
