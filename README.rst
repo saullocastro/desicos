@@ -13,8 +13,8 @@ Please, access the documentation here:
 http://saullocastro.github.io/desicos/
 
 
-Plug-in for Abaqus
-------------------
+DESICOS Plug-in for Abaqus
+---------------------------
 
 With the aim to provide fast tools for pre- and post-processing tasks
 using the finite element software Abaqus, one can 
@@ -31,8 +31,8 @@ To access all and more fuctionalities from the Python IDE in Abaqus::
     >>> cc.create_model()
     
     
-Cone Ply Piece Optimization Tool
---------------------------------
+DESICOS Cone Ply Piece Optimization Tool
+-----------------------------------------
 
 Finds the optimal ply piece shape for laminated cones. There are four different tools that can be used:
 
