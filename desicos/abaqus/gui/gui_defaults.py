@@ -1,5 +1,3 @@
-import multiprocessing
-
 defaults = {
             'std_name': 'desicos_study',
             'ccKey': 'None',
@@ -70,7 +68,7 @@ defaults = {
             'ax_num': 0,
             'lbmi_num': 0,
             'cut_num': 0,
-            'ncpus': multiprocessing.cpu_count()-1,
+            'ncpus': 1,
             'stress_output': False,
             'laminapropKey': 'degenhardt_2010_IM78552_cocomat',
             'allowablesKey': 'degenhardt_2010_IM78552_cocomat',
