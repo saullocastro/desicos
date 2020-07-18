@@ -11,6 +11,7 @@ import os
 
 from desicos.logger import *
 from .ccs import ccs as default_ccs
+from .ccs import include_in_GUI
 from .allowables import allowables as default_allowables
 from .laminaprops import laminaprops as default_laminaprops
 from desicos.constants import DESHOME
