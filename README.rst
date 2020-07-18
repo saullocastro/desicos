@@ -2,7 +2,7 @@
 DESICOS
 =======
 
-Tools developed in the context of the European Project DESICOS 
+Tools developed in the context of the 7th European Framework Project DESICOS 
 (https://cordis.europa.eu/project/id/282522).
 
 Documentation
