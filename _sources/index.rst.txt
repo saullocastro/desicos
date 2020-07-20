@@ -22,7 +22,7 @@ Installation
 
 Latest Release:
 
-- `Version 2.4.11 <https://github.com/saullocastro/desicos/releases/tag/2.4.11>`_
+- `Version 2.4.12 <https://github.com/saullocastro/desicos/releases/tag/2.4.12>`_
 
 `Click here <https://github.com/saullocastro/desicos/releases>`_ to check all
 releases.
