@@ -38,7 +38,6 @@ def calc_translations_ABAQUS(imperfection_file_name,
                              r_TOL=1.,
                              num_closest_points=5,
                              power_parameter=2,
-                             num_sec_z=50,
                              use_theta_z_format=True,
                              ignore_bot_h=None,
                              ignore_top_h=None,
@@ -89,9 +88,6 @@ def calc_translations_ABAQUS(imperfection_file_name,
     power_parameter : float, optional
         See :func:`the inverse-weighted interpolation algorithm
         <.inv_weighted>`.
-    num_sec_z : int, optional
-        Number of spatial sections used to classify the measured data in order
-        to accelerate the searching algorithms
     use_theta_z_format : bool, optional
         If the new format `\theta, Z, imp` should be used instead of the old
         `X, Y, Z`.
@@ -170,9 +166,7 @@ def calc_translations_ABAQUS(imperfection_file_name,
         data3D[:, 2] = z
         data3D[:, 3] = data[:, 2]
 
-        w0 = inv_weighted(data3D, coords,
-                          num_sub = num_sec_z,
-                          col = 2,
+        dist, w0 = inv_weighted(data3D, coords,
                           ncp = num_closest_points,
                           power_parameter = power_parameter)
 
@@ -206,7 +200,6 @@ def calc_translations_ABAQUS(imperfection_file_name,
                                 r_TOL = r_TOL,
                                 num_closest_points = num_closest_points,
                                 power_parameter = power_parameter,
-                                num_sec_z = num_sec_z,
                                 sample_size = sample_size)
         trans = trans[:, :3]
 
@@ -228,7 +221,6 @@ def translate_nodes_ABAQUS(imperfection_file_name,
                            r_TOL=1.,
                            num_closest_points=5,
                            power_parameter=2,
-                           num_sec_z=50,
                            nodal_translations=None,
                            use_theta_z_format=False,
                            ignore_bot_h=None,
@@ -296,9 +288,6 @@ def translate_nodes_ABAQUS(imperfection_file_name,
     power_parameter : int, optional
         See :func:`the inverse-weighted interpolation algorithm
         <.inv_weighted>`.
-    num_sec_z : int, optional
-        Number of cross sections that will be used to classify the points
-        spatially in the inverse-weighted algorithm.
     nodal_translations : None or numpy.ndarray, optional
         An array containing the interpolated traslations, which is passed to
         avoid repeated calls to the interpolation functions.
@@ -378,7 +367,6 @@ def translate_nodes_ABAQUS(imperfection_file_name,
                         r_TOL = r_TOL,
                         num_closest_points = num_closest_points,
                         power_parameter = power_parameter,
-                        num_sec_z = num_sec_z,
                         use_theta_z_format = use_theta_z_format,
                         ignore_bot_h = ignore_bot_h,
                         ignore_top_h = ignore_top_h,
@@ -441,7 +429,6 @@ def translate_nodes_ABAQUS(imperfection_file_name,
                          r_TOL = r_TOL,
                          num_closest_points = num_closest_points,
                          power_parameter = power_parameter,
-                         num_sec_z = num_sec_z,
                          use_theta_z_format = use_theta_z_format,
                          ignore_bot_h = ignore_bot_h,
                          ignore_top_h = ignore_top_h,
@@ -651,7 +638,6 @@ def change_thickness_ABAQUS(imperfection_file_name,
                             scaling_factor = 1.,
                             num_closest_points = 5,
                             power_parameter = 2,
-                            num_sec_z = 100,
                             elems_t = None,
                             t_set = None,
                             use_theta_z_format = False):
@@ -712,9 +698,6 @@ def change_thickness_ABAQUS(imperfection_file_name,
     power_parameter : float, optional
         See :func:`the inverse-weighted interpolation algorithm
         <.inv_weighted>`.
-    num_sec_z : int, optional
-        Number of spatial sections used to classify the measured data in order
-        to accelerate the searching algorithms
     elems_t : np.ndarray, optional
         Interpolated thickness for each element. Can be used to avoid the same
         interpolation to be performed twice.
@@ -759,9 +742,7 @@ def change_thickness_ABAQUS(imperfection_file_name,
             data3D[:, 2] = z
             data3D[:, 3] = data[:, 2]
 
-            ans = inv_weighted(data3D, elements[:, :3],
-                               num_sub = num_sec_z,
-                               col = 2,
+            dist, ans = inv_weighted(data3D, elements[:, :3],
                                ncp = num_closest_points,
                                power_parameter = power_parameter)
 
@@ -794,8 +775,8 @@ def change_thickness_ABAQUS(imperfection_file_name,
                                 stretch_H = stretch_H,
                                 z_offset_bot = z_offset_bot,
                                 num_closest_points = num_closest_points,
-                                power_parameter = power_parameter,
-                                num_sec_z = num_sec_z)
+                                power_parameter = power_parameter
+                                )
         else:
             log('Thickness differences already calculated!')
     # creating sets
@@ -889,8 +870,8 @@ if __name__ == '__main__':
 
     import desicos.conecylDB.interpolate
     reload(desicos.conecylDB.interpolate)
-    ans = desicos.conecylDB.interpolate.inv_weighted(
-            data, mesh_norm, num_sub=100, col=1, ncp=10, power_parameter=1.5)
+    dist, ans = desicos.conecylDB.interpolate.inv_weighted(
+            data, mesh_norm, ncp=10, power_parameter=1.5)
 
     alpharad = deg2rad(0.)
     trans = np.zeros_like(coords)

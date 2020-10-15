@@ -698,8 +698,6 @@ class TestDB(AFXDataDialog):
         AFXTextField(impVA, 8,  'Number of closest points to use in the inverse weighted interpolation:', form.imp_ms_ncpKw, opts=AFXTEXTFIELD_INTEGER)
         AFXTextField(impVA, 8,  'Power parameter to use in the inverse weighted interpolation:\n'+\
                                 '(when increased, increases the influence of the closest points)', form.imp_ms_power_parameterKw, opts=AFXTEXTFIELD_FLOAT)
-        AFXTextField(impVA, 8,  'Number of sections along Z axis to classify the measured data\n'+\
-                                '(to speed up the search algorithm):', form.imp_ms_num_sec_zKw, opts=AFXTEXTFIELD_INTEGER)
         FXLabel(impHF, '    ')
         impVF2 = FXVerticalFrame(impHF)
         FXLabel(impVF2, 'scaling factor=0 will NOT\napply the imperfection', opts=LAYOUT_CENTER_X)
@@ -762,8 +760,6 @@ class TestDB(AFXDataDialog):
         AFXTextField(impVA, 8,  'Number of closest points to use in the inverse weighted interpolation:', form.imp_t_ncpKw, opts=AFXTEXTFIELD_INTEGER)
         AFXTextField(impVA, 8,  'Power parameter to use in the inverse weighted interpolation:\n'+\
                                 '(when increased, increases the influence of the closest points)', form.imp_t_power_parameterKw, opts=AFXTEXTFIELD_FLOAT)
-        AFXTextField(impVA, 8,  'Number of sections along Z axis to classify the measured data\n'+\
-                                '(to speed up the search algorithm):', form.imp_t_num_sec_zKw, opts=AFXTEXTFIELD_INTEGER)
         FXLabel(impHF, '    ')
         impVF2 = FXVerticalFrame(impHF)
         FXLabel(impVF2, 'scaling factor=0 will NOT\napply the imperfection', opts=LAYOUT_CENTER_X)

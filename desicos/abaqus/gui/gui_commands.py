@@ -67,7 +67,6 @@ def apply_imp_ms(
              imp_r_TOL,
              imp_ms_ncp,
              imp_ms_power_parameter,
-             imp_ms_num_sec_z,
              imp_ms_theta_z_format,
              imp_ms_rotatedeg,
              ):
@@ -93,7 +92,6 @@ def apply_imp_ms(
             msi.r_TOL = imp_r_TOL
             msi.ncp = imp_ms_ncp
             msi.power_parameter = imp_ms_power_parameter
-            msi.num_sec_z = imp_ms_num_sec_z
             msi.nodal_translations = nodal_translations
             nodal_translations = msi.create()
 
@@ -107,7 +105,6 @@ def apply_imp_t(
              imp_t_scalings,
              imp_t_ncp,
              imp_t_power_parameter,
-             imp_t_num_sec_z,
              imp_t_theta_z_format,
              imp_t_rotatedeg):
     std = __main__.stds[std_name]
@@ -129,7 +126,6 @@ def apply_imp_t(
             ti.use_theta_z_format = imp_t_theta_z_format
             ti.ncp = imp_t_ncp
             ti.power_parameter = imp_t_power_parameter
-            ti.num_sec_z = imp_t_num_sec_z
             ti.elems_t = elems_t
             ti.t_set = t_set
             elems_t, t_set = ti.create()
@@ -559,7 +555,6 @@ def reconstruct_params_from_gui(std):
         params['imp_{0}_stretch_H'.format(imp_type)] = imp.stretch_H
         params['imp_{0}_ncp'.format(imp_type)] = imp.ncp
         params['imp_{0}_power_parameter'.format(imp_type)] = imp.power_parameter
-        params['imp_{0}_num_sec_z'.format(imp_type)] = imp.num_sec_z
         # rotatedeg seems not yet implemented in GUI ?!
         # params['imp_{0}_rotatedeg'.format(imp_type)] = imp.rotatedeg
         name_attr = 'imp_ms' if imp_type == 'ms' else 'imp_thick'

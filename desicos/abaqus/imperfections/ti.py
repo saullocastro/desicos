@@ -23,7 +23,6 @@ class TI(object):
         self.stretch_H = False
         self.ncp = 5
         self.power_parameter = 2
-        self.num_sec_z = 50
         self.scaling_factor = 1.
         self.thetadeg = 0.
         self.thetadegs = []
@@ -132,7 +131,6 @@ class TI(object):
                       scaling_factor = self.scaling_factor,
                       num_closest_points = self.ncp,
                       power_parameter = self.power_parameter,
-                      num_sec_z = self.num_sec_z,
                       elems_t = self.elems_t,
                       t_set = self.t_set,
                       use_theta_z_format = self.use_theta_z_format)

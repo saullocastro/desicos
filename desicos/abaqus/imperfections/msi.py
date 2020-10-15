@@ -61,9 +61,6 @@ class MSI(object):
     ===================  =====================================================
     ``ncp``              ``int``, number of closest points
     ``power_parameter``  ``float``, power parameter
-    ``num_sec_z``        ``int``, number of sections used to spatially
-                         classify the measured points in order to
-                         accelerate the searching routines
     ``r_TOL``            ``float``, percentage tolerance to ignore noisy
                          data, for example, when ``r_TOL=1.`` the points
                          with a radius `r > 1.1 R_{bot}`
@@ -149,7 +146,6 @@ class MSI(object):
         self.ncp = 5
         self.rotatedeg = 0.
         self.power_parameter = 2
-        self.num_sec_z = 100
         self.scaling_factor = 1.
         self.use_theta_z_format = True
         self.path = None
@@ -264,7 +260,6 @@ class MSI(object):
                               r_TOL = self.r_TOL,
                               num_closest_points = self.ncp,
                               power_parameter = self.power_parameter,
-                              num_sec_z = self.num_sec_z,
                               nodal_translations = self.nodal_translations,
                               use_theta_z_format = self.use_theta_z_format,
                               ignore_bot_h = self.ignore_bot_h,

@@ -85,8 +85,6 @@ defaults = {
             'imp_t_ncp': 5,
             'imp_ms_power_parameter': 2,
             'imp_t_power_parameter': 2,
-            'imp_ms_num_sec_z': 100,
-            'imp_t_num_sec_z': 100,
             'imp_ms_rotatedeg': 0.,
             'imp_t_rotatedeg': 0.,
             'ppi_enabled': False,

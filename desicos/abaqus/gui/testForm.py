@@ -61,7 +61,6 @@ params = ['rbot', 'H', 'alphadeg','betadeg','omegadeg',
 'imp_ms_scalings', 'imp_t_scalings',
 'imp_r_TOL', 'imp_ms_ncp', 'imp_t_ncp',
 'imp_ms_power_parameter', 'imp_t_power_parameter',
-'imp_ms_num_sec_z', 'imp_t_num_sec_z',
 'imp_ms_rotatedeg', 'imp_t_rotatedeg',
 'imp_num_sets']
 
@@ -210,7 +209,6 @@ class TestForm(AFXForm):
         self.imp_r_TOLKw = AFXFloatKeyword(self.apply_imp_ms, 'imp_r_TOL', TRUE)
         self.imp_ms_ncpKw = AFXIntKeyword(self.apply_imp_ms, 'imp_ms_ncp', TRUE)
         self.imp_ms_power_parameterKw = AFXFloatKeyword(self.apply_imp_ms, 'imp_ms_power_parameter', TRUE)
-        self.imp_ms_num_sec_zKw = AFXFloatKeyword(self.apply_imp_ms, 'imp_ms_num_sec_z', TRUE)
         self.imp_ms_theta_z_formatKw = AFXBoolKeyword(self.apply_imp_ms, 'imp_ms_theta_z_format', TRUE_FALSE, TRUE)
         self.imp_ms_rotatedegKw = AFXFloatKeyword(self.apply_imp_ms, 'imp_ms_rotatedeg', TRUE)
         #
@@ -221,7 +219,6 @@ class TestForm(AFXForm):
         self.imp_t_scalingsKw = AFXTableKeyword(self.apply_imp_t, 'imp_t_scalings', TRUE, 0, -1, AFXTABLE_TYPE_FLOAT)
         self.imp_t_ncpKw = AFXIntKeyword(self.apply_imp_t, 'imp_t_ncp', TRUE)
         self.imp_t_power_parameterKw = AFXFloatKeyword(self.apply_imp_t, 'imp_t_power_parameter', TRUE)
-        self.imp_t_num_sec_zKw = AFXFloatKeyword(self.apply_imp_t, 'imp_t_num_sec_z', TRUE)
         self.imp_t_theta_z_formatKw = AFXBoolKeyword(self.apply_imp_t, 'imp_t_theta_z_format', TRUE_FALSE, TRUE)
         self.imp_t_rotatedegKw = AFXFloatKeyword(self.apply_imp_t, 'imp_t_rotatedeg', TRUE)
         self.loaded_study = False
