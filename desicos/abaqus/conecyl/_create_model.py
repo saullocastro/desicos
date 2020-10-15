@@ -1460,7 +1460,7 @@ def _create_loads_bcs(cc):
         text += '\n**'
         text += '\n*NODE OUTPUT'
         text += '\nUT,'
-        text += '\n*MODAL FILE'
+        text += '\n*NODE FILE'
         abaqus_functions.edit_keywords(mod=mod, text=text,
                                        before_pattern=None)
 
