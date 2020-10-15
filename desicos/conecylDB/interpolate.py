@@ -19,7 +19,31 @@ from desicos.constants import FLOAT
 from .read_write import read_theta_z_imp
 
 
-def inv_weighted(data, mesh, num_sub, col, ncp=5, power_parameter=2):
+def nearest_neighbors(x, y, k):
+    """inspired by
+    https://stackoverflow.com/a/15366296/832621
+    and
+    https://stackoverflow.com/a/6913178/832621
+    """
+    x, y = map(np.asarray, (x, y))
+    y = y.copy()
+    y_idx = np.arange(len(y))
+    nearest_neighbor = np.empty((len(x), k), dtype=np.intp)
+    distances = np.empty((len(x), k), dtype=float)
+    #TODO after numpy 1.8 we can use np.argpartition(dist, kth=k-1)
+    #TODO ABAQUS 2020 comes with scipy, then we can use cKDTree
+    for j, xj in enumerate(x) :
+        dist = ((y - xj[None, :])**2).sum(axis=1)
+        for i in range(k):
+            idx = np.argmin(dist)
+            nearest_neighbor[j, i] = idx
+            distances[j, i] = dist[idx]
+            dist[idx] = 1e6
+    distances = np.sqrt(distances)
+    return distances, nearest_neighbor
+
+
+def inv_weighted(data, mesh, ncp=5, power_parameter=2):
     r"""Interpolates the values taken at one group of points into
     another using an inverse-weighted algorithm
 
@@ -49,12 +73,6 @@ def inv_weighted(data, mesh, num_sub, col, ncp=5, power_parameter=2):
         to be interpolated must be in the last column.
     mesh : numpy.ndarray, shape (M, ndim)
         The new coordinates where the values will be interpolated to.
-    num_sub : int
-        The number of sub-sets used during the interpolation. The points
-        are divided in sub-sets to increase the algorithm's efficiency.
-    col : int
-        The index of the column to be used in order to divide the data
-        in sub-sets. Note that the first column index is ``0``.
     ncp : int, optional
         Number of closest points used in the inverse-weighted interpolation.
     power_parameter : float, optional
@@ -71,98 +89,21 @@ def inv_weighted(data, mesh, num_sub, col, ncp=5, power_parameter=2):
         raise ValueError('Invalid input: mesh.shape[1] != data.shape[1]')
 
     log('Interpolating... ')
-    num_sub = int(num_sub)
-    mesh_size = mesh.shape[0]
+    dist, indices = nearest_neighbors(mesh, data[:, :-1], k=ncp)
 
-    # memory control
-    mem_limit = 1024*1024*1024*8*2    # 2 GB
-    mem_entries = int(mem_limit / 64) # if float64 is used
-    sec_size = int(mesh_size/num_sub)
-    while sec_size**2*10 > mem_entries:
-        num_sub +=1
-        sec_size = int(mesh_size/num_sub)
-        if sec_size**2*10 <= mem_entries:
-            warn('New num_sub: {0}'.format(int(mesh_size/float(sec_size))))
-            break
-
-    mesh_seq = np.arange(mesh.shape[0])
-
-    mesh_argsort = np.argsort(mesh[:, col])
-    mesh_seq = mesh_seq[mesh_argsort]
-    back_argsort = np.argsort(mesh_seq)
-
-    mesh = np.asarray(mesh[mesh_argsort], order='F')
-
-    length = mesh[:, col].max() - mesh[:, col].min()
-
-    data = np.asarray(data[np.argsort(data[:, col])], order='F')
-
-    ans = np.zeros(mesh.shape[0], dtype=mesh.dtype)
-
-    # max_num_limits defines how many times the log will print
-    # "processed ... out of ... entries"
-    max_num_limits = 10
-    for den in range(max_num_limits, 0, -1):
-        if num_sub % den == 0:
-            limit = int(num_sub/den)
-            break
-
-    for i in range(num_sub+1):
-        i_inf = sec_size*i
-        i_sup = sec_size*(i+1)
-
-        if i % limit == 0:
-            log('\t processed {0:7d} out of {1:7d} entries'.format(
-                  min(i_sup, mesh_size), mesh_size))
-        sub_mesh = mesh[i_inf : i_sup]
-        if not np.any(sub_mesh):
-            continue
-        inf = sub_mesh[:, col].min()
-        sup = sub_mesh[:, col].max()
-
-        tol = 0.03
-        if i == 0 or i == num_sub:
-            tol = 0.06
-
-        while True:
-            cond1 = data[:, col] >= inf - tol*length
-            cond2 = data[:, col] <= sup + tol*length
-            cond = np.all(np.array((cond1, cond2)), axis=0)
-            sub_data = data[cond]
-            if not np.any(sub_data):
-                tol += 0.01
-            else:
-                break
-
-        dist = np.subtract.outer(sub_mesh[:, 0], sub_data[:, 0])**2
-        for j in range(1, sub_mesh.shape[1]):
-            dist += np.subtract.outer(sub_mesh[:, j], sub_data[:, j])**2
-        asort = np.argsort(dist, axis=1)
-        lenn = sub_mesh.shape[0]
-        lenp = sub_data.shape[0]
-        asort_mesh = asort + np.meshgrid(np.arange(lenn)*lenp,
-                                         np.arange(lenp))[0].transpose()
-        # getting the distance of the closest points
-        dist_cp = np.take(dist, asort_mesh[:, :ncp])
-        # avoiding division by zero
-        dist_cp[(dist_cp==0)] == 1.e-12
-        # fetching the imperfection of the sub-data
-        imp = sub_data[:, -1]
-        # taking only the imperfection of the closest points
-        imp_cp = np.take(imp, asort[:, :ncp])
-        # weight calculation
-        total_weight = np.sum(1./(dist_cp**power_parameter), axis=1)
-        weight = 1./(dist_cp**power_parameter)
-        # computing the new imp
-        imp_new = np.sum(imp_cp*weight, axis=1)/total_weight
-        # updating the answer array
-        ans[i_inf : i_sup] = imp_new
-
-    ans = ans[back_argsort]
+    # avoiding division by zero
+    dist[dist < 1.e-15] = 1.e-15
+    # fetching the imperfection
+    imp = data[:, -1][indices]
+    # weight calculation
+    total_weight = np.sum(1./(dist**power_parameter), axis=1)
+    weight = 1./(dist**power_parameter)
+    # computing the new imp
+    imp_new = np.sum(imp*weight, axis=1)/total_weight
 
     log('Interpolation completed!')
 
-    return ans
+    return dist, imp_new
 
 
 def interp(x, xp, fp, left=None, right=None, period=None):
@@ -375,8 +316,7 @@ def interp_theta_z_imp(data, mesh, alphadeg, H_measured, H_model, R_bottom,
         tmp = np.vstack((mesh.T, np.ones((1, mesh.shape[0]))))
         mesh = np.dot(T, tmp).T
         del tmp
-    ans = inv_weighted(data3D, mesh, col=2, ncp=ncp, num_sub=num_sub,
-            power_parameter=power_parameter)
+    dist, ans = inv_weighted(data3D, mesh, ncp=ncp, power_parameter=power_parameter)
 
     z_mesh = mesh[:, 2]
     if ignore_bot_h is not None:
@@ -411,5 +351,5 @@ if __name__=='__main__':
                   [4., 4.],
                   [5., 5.]])
 
-    print(inv_weighted(a, b, num_sub=1, col=1, ncp=10))
+    print(inv_weighted(a, b, ncp=10))
 
