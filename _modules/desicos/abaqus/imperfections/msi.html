@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>desicos.abaqus.imperfections.msi &#8212; DESICOS 2.4.12 documentation</title>
+    <title>desicos.abaqus.imperfections.msi &#8212; DESICOS 2.4.13 documentation</title>
     <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css" />
@@ -96,9 +96,6 @@
 <span class="sd">    ===================  =====================================================</span>
 <span class="sd">    ``ncp``              ``int``, number of closest points</span>
 <span class="sd">    ``power_parameter``  ``float``, power parameter</span>
-<span class="sd">    ``num_sec_z``        ``int``, number of sections used to spatially</span>
-<span class="sd">                         classify the measured points in order to</span>
-<span class="sd">                         accelerate the searching routines</span>
 <span class="sd">    ``r_TOL``            ``float``, percentage tolerance to ignore noisy</span>
 <span class="sd">                         data, for example, when ``r_TOL=1.`` the points</span>
 <span class="sd">                         with a radius `r &gt; 1.1 R_{bot}`</span>
@@ -184,7 +181,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">ncp</span> <span class="o">=</span> <span class="mi">5</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rotatedeg</span> <span class="o">=</span> <span class="mf">0.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">power_parameter</span> <span class="o">=</span> <span class="mi">2</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">num_sec_z</span> <span class="o">=</span> <span class="mi">100</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">scaling_factor</span> <span class="o">=</span> <span class="mf">1.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">use_theta_z_format</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="kc">None</span>
@@ -299,7 +295,6 @@
                               <span class="n">r_TOL</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_TOL</span><span class="p">,</span>
                               <span class="n">num_closest_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ncp</span><span class="p">,</span>
                               <span class="n">power_parameter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">power_parameter</span><span class="p">,</span>
-                              <span class="n">num_sec_z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_sec_z</span><span class="p">,</span>
                               <span class="n">nodal_translations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodal_translations</span><span class="p">,</span>
                               <span class="n">use_theta_z_format</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_theta_z_format</span><span class="p">,</span>
                               <span class="n">ignore_bot_h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ignore_bot_h</span><span class="p">,</span>
@@ -392,7 +387,7 @@
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2012-2020 Desicos Improved Software Team.
+      &copy;2012-2021 Desicos Improved Software Team.
       
       |
       Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.2</a>

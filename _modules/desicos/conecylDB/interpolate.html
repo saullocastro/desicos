@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>desicos.conecylDB.interpolate &#8212; DESICOS 2.4.12 documentation</title>
+    <title>desicos.conecylDB.interpolate &#8212; DESICOS 2.4.13 documentation</title>
     <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css" />
@@ -54,7 +54,31 @@
 <span class="kn">from</span> <span class="nn">.read_write</span> <span class="kn">import</span> <span class="n">read_theta_z_imp</span>
 
 
-<div class="viewcode-block" id="inv_weighted"><a class="viewcode-back" href="../../../modules/conecylDB/index.html#desicos.conecylDB.interpolate.inv_weighted">[docs]</a><span class="k">def</span> <span class="nf">inv_weighted</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">num_sub</span><span class="p">,</span> <span class="n">col</span><span class="p">,</span> <span class="n">ncp</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">power_parameter</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+<div class="viewcode-block" id="nearest_neighbors"><a class="viewcode-back" href="../../../modules/conecylDB/index.html#desicos.conecylDB.interpolate.nearest_neighbors">[docs]</a><span class="k">def</span> <span class="nf">nearest_neighbors</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;inspired by</span>
+<span class="sd">    https://stackoverflow.com/a/15366296/832621</span>
+<span class="sd">    and</span>
+<span class="sd">    https://stackoverflow.com/a/6913178/832621</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">y_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+    <span class="n">nearest_neighbor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">k</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">intp</span><span class="p">)</span>
+    <span class="n">distances</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">k</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="c1">#TODO after numpy 1.8 we can use np.argpartition(dist, kth=k-1)</span>
+    <span class="c1">#TODO ABAQUS 2020 comes with scipy, then we can use cKDTree</span>
+    <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">xj</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">dist</span> <span class="o">=</span> <span class="p">((</span><span class="n">y</span> <span class="o">-</span> <span class="n">xj</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:])</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">k</span><span class="p">):</span>
+            <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span>
+            <span class="n">nearest_neighbor</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">idx</span>
+            <span class="n">distances</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">dist</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+            <span class="n">dist</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1e6</span>
+    <span class="n">distances</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">distances</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">distances</span><span class="p">,</span> <span class="n">nearest_neighbor</span></div>
+
+
+<div class="viewcode-block" id="inv_weighted"><a class="viewcode-back" href="../../../modules/conecylDB/index.html#desicos.conecylDB.interpolate.inv_weighted">[docs]</a><span class="k">def</span> <span class="nf">inv_weighted</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">ncp</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">power_parameter</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Interpolates the values taken at one group of points into</span>
 <span class="sd">    another using an inverse-weighted algorithm</span>
 
@@ -84,12 +108,6 @@
 <span class="sd">        to be interpolated must be in the last column.</span>
 <span class="sd">    mesh : numpy.ndarray, shape (M, ndim)</span>
 <span class="sd">        The new coordinates where the values will be interpolated to.</span>
-<span class="sd">    num_sub : int</span>
-<span class="sd">        The number of sub-sets used during the interpolation. The points</span>
-<span class="sd">        are divided in sub-sets to increase the algorithm&#39;s efficiency.</span>
-<span class="sd">    col : int</span>
-<span class="sd">        The index of the column to be used in order to divide the data</span>
-<span class="sd">        in sub-sets. Note that the first column index is ``0``.</span>
 <span class="sd">    ncp : int, optional</span>
 <span class="sd">        Number of closest points used in the inverse-weighted interpolation.</span>
 <span class="sd">    power_parameter : float, optional</span>
@@ -106,98 +124,21 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Invalid input: mesh.shape[1] != data.shape[1]&#39;</span><span class="p">)</span>
 
     <span class="n">log</span><span class="p">(</span><span class="s1">&#39;Interpolating... &#39;</span><span class="p">)</span>
-    <span class="n">num_sub</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">num_sub</span><span class="p">)</span>
-    <span class="n">mesh_size</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">dist</span><span class="p">,</span> <span class="n">indices</span> <span class="o">=</span> <span class="n">nearest_neighbors</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">data</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">k</span><span class="o">=</span><span class="n">ncp</span><span class="p">)</span>
 
-    <span class="c1"># memory control</span>
-    <span class="n">mem_limit</span> <span class="o">=</span> <span class="mi">1024</span><span class="o">*</span><span class="mi">1024</span><span class="o">*</span><span class="mi">1024</span><span class="o">*</span><span class="mi">8</span><span class="o">*</span><span class="mi">2</span>    <span class="c1"># 2 GB</span>
-    <span class="n">mem_entries</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">mem_limit</span> <span class="o">/</span> <span class="mi">64</span><span class="p">)</span> <span class="c1"># if float64 is used</span>
-    <span class="n">sec_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">mesh_size</span><span class="o">/</span><span class="n">num_sub</span><span class="p">)</span>
-    <span class="k">while</span> <span class="n">sec_size</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="mi">10</span> <span class="o">&gt;</span> <span class="n">mem_entries</span><span class="p">:</span>
-        <span class="n">num_sub</span> <span class="o">+=</span><span class="mi">1</span>
-        <span class="n">sec_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">mesh_size</span><span class="o">/</span><span class="n">num_sub</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">sec_size</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="mi">10</span> <span class="o">&lt;=</span> <span class="n">mem_entries</span><span class="p">:</span>
-            <span class="n">warn</span><span class="p">(</span><span class="s1">&#39;New num_sub: </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">mesh_size</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">sec_size</span><span class="p">))))</span>
-            <span class="k">break</span>
-
-    <span class="n">mesh_seq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-
-    <span class="n">mesh_argsort</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">mesh</span><span class="p">[:,</span> <span class="n">col</span><span class="p">])</span>
-    <span class="n">mesh_seq</span> <span class="o">=</span> <span class="n">mesh_seq</span><span class="p">[</span><span class="n">mesh_argsort</span><span class="p">]</span>
-    <span class="n">back_argsort</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">mesh_seq</span><span class="p">)</span>
-
-    <span class="n">mesh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">mesh</span><span class="p">[</span><span class="n">mesh_argsort</span><span class="p">],</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
-
-    <span class="n">length</span> <span class="o">=</span> <span class="n">mesh</span><span class="p">[:,</span> <span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">mesh</span><span class="p">[:,</span> <span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
-
-    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">data</span><span class="p">[:,</span> <span class="n">col</span><span class="p">])],</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
-
-    <span class="n">ans</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">mesh</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
-
-    <span class="c1"># max_num_limits defines how many times the log will print</span>
-    <span class="c1"># &quot;processed ... out of ... entries&quot;</span>
-    <span class="n">max_num_limits</span> <span class="o">=</span> <span class="mi">10</span>
-    <span class="k">for</span> <span class="n">den</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_num_limits</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">num_sub</span> <span class="o">%</span> <span class="n">den</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">limit</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">num_sub</span><span class="o">/</span><span class="n">den</span><span class="p">)</span>
-            <span class="k">break</span>
-
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_sub</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
-        <span class="n">i_inf</span> <span class="o">=</span> <span class="n">sec_size</span><span class="o">*</span><span class="n">i</span>
-        <span class="n">i_sup</span> <span class="o">=</span> <span class="n">sec_size</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="n">limit</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">log</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1"> processed </span><span class="si">{0:7d}</span><span class="s1"> out of </span><span class="si">{1:7d}</span><span class="s1"> entries&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                  <span class="nb">min</span><span class="p">(</span><span class="n">i_sup</span><span class="p">,</span> <span class="n">mesh_size</span><span class="p">),</span> <span class="n">mesh_size</span><span class="p">))</span>
-        <span class="n">sub_mesh</span> <span class="o">=</span> <span class="n">mesh</span><span class="p">[</span><span class="n">i_inf</span> <span class="p">:</span> <span class="n">i_sup</span><span class="p">]</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">sub_mesh</span><span class="p">):</span>
-            <span class="k">continue</span>
-        <span class="n">inf</span> <span class="o">=</span> <span class="n">sub_mesh</span><span class="p">[:,</span> <span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
-        <span class="n">sup</span> <span class="o">=</span> <span class="n">sub_mesh</span><span class="p">[:,</span> <span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
-
-        <span class="n">tol</span> <span class="o">=</span> <span class="mf">0.03</span>
-        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">i</span> <span class="o">==</span> <span class="n">num_sub</span><span class="p">:</span>
-            <span class="n">tol</span> <span class="o">=</span> <span class="mf">0.06</span>
-
-        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">cond1</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="n">col</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">inf</span> <span class="o">-</span> <span class="n">tol</span><span class="o">*</span><span class="n">length</span>
-            <span class="n">cond2</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="n">col</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">sup</span> <span class="o">+</span> <span class="n">tol</span><span class="o">*</span><span class="n">length</span>
-            <span class="n">cond</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">cond1</span><span class="p">,</span> <span class="n">cond2</span><span class="p">)),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-            <span class="n">sub_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">cond</span><span class="p">]</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">sub_data</span><span class="p">):</span>
-                <span class="n">tol</span> <span class="o">+=</span> <span class="mf">0.01</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">break</span>
-
-        <span class="n">dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">subtract</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">sub_mesh</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">sub_data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span>
-        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">sub_mesh</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
-            <span class="n">dist</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">subtract</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">sub_mesh</span><span class="p">[:,</span> <span class="n">j</span><span class="p">],</span> <span class="n">sub_data</span><span class="p">[:,</span> <span class="n">j</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span>
-        <span class="n">asort</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">dist</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">lenn</span> <span class="o">=</span> <span class="n">sub_mesh</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">lenp</span> <span class="o">=</span> <span class="n">sub_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">asort_mesh</span> <span class="o">=</span> <span class="n">asort</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">lenn</span><span class="p">)</span><span class="o">*</span><span class="n">lenp</span><span class="p">,</span>
-                                         <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">lenp</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
-        <span class="c1"># getting the distance of the closest points</span>
-        <span class="n">dist_cp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">dist</span><span class="p">,</span> <span class="n">asort_mesh</span><span class="p">[:,</span> <span class="p">:</span><span class="n">ncp</span><span class="p">])</span>
-        <span class="c1"># avoiding division by zero</span>
-        <span class="n">dist_cp</span><span class="p">[(</span><span class="n">dist_cp</span><span class="o">==</span><span class="mi">0</span><span class="p">)]</span> <span class="o">==</span> <span class="mf">1.e-12</span>
-        <span class="c1"># fetching the imperfection of the sub-data</span>
-        <span class="n">imp</span> <span class="o">=</span> <span class="n">sub_data</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-        <span class="c1"># taking only the imperfection of the closest points</span>
-        <span class="n">imp_cp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">imp</span><span class="p">,</span> <span class="n">asort</span><span class="p">[:,</span> <span class="p">:</span><span class="n">ncp</span><span class="p">])</span>
-        <span class="c1"># weight calculation</span>
-        <span class="n">total_weight</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mf">1.</span><span class="o">/</span><span class="p">(</span><span class="n">dist_cp</span><span class="o">**</span><span class="n">power_parameter</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">weight</span> <span class="o">=</span> <span class="mf">1.</span><span class="o">/</span><span class="p">(</span><span class="n">dist_cp</span><span class="o">**</span><span class="n">power_parameter</span><span class="p">)</span>
-        <span class="c1"># computing the new imp</span>
-        <span class="n">imp_new</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">imp_cp</span><span class="o">*</span><span class="n">weight</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="n">total_weight</span>
-        <span class="c1"># updating the answer array</span>
-        <span class="n">ans</span><span class="p">[</span><span class="n">i_inf</span> <span class="p">:</span> <span class="n">i_sup</span><span class="p">]</span> <span class="o">=</span> <span class="n">imp_new</span>
-
-    <span class="n">ans</span> <span class="o">=</span> <span class="n">ans</span><span class="p">[</span><span class="n">back_argsort</span><span class="p">]</span>
+    <span class="c1"># avoiding division by zero</span>
+    <span class="n">dist</span><span class="p">[</span><span class="n">dist</span> <span class="o">&lt;</span> <span class="mf">1.e-15</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.e-15</span>
+    <span class="c1"># fetching the imperfection</span>
+    <span class="n">imp</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">indices</span><span class="p">]</span>
+    <span class="c1"># weight calculation</span>
+    <span class="n">total_weight</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mf">1.</span><span class="o">/</span><span class="p">(</span><span class="n">dist</span><span class="o">**</span><span class="n">power_parameter</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">weight</span> <span class="o">=</span> <span class="mf">1.</span><span class="o">/</span><span class="p">(</span><span class="n">dist</span><span class="o">**</span><span class="n">power_parameter</span><span class="p">)</span>
+    <span class="c1"># computing the new imp</span>
+    <span class="n">imp_new</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">imp</span><span class="o">*</span><span class="n">weight</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="n">total_weight</span>
 
     <span class="n">log</span><span class="p">(</span><span class="s1">&#39;Interpolation completed!&#39;</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">ans</span></div>
+    <span class="k">return</span> <span class="n">dist</span><span class="p">,</span> <span class="n">imp_new</span></div>
 
 
 <div class="viewcode-block" id="interp"><a class="viewcode-back" href="../../../modules/conecylDB/index.html#desicos.conecylDB.interpolate.interp">[docs]</a><span class="k">def</span> <span class="nf">interp</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">xp</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">period</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -410,8 +351,7 @@
         <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">mesh</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))))</span>
         <span class="n">mesh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">tmp</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
         <span class="k">del</span> <span class="n">tmp</span>
-    <span class="n">ans</span> <span class="o">=</span> <span class="n">inv_weighted</span><span class="p">(</span><span class="n">data3D</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ncp</span><span class="o">=</span><span class="n">ncp</span><span class="p">,</span> <span class="n">num_sub</span><span class="o">=</span><span class="n">num_sub</span><span class="p">,</span>
-            <span class="n">power_parameter</span><span class="o">=</span><span class="n">power_parameter</span><span class="p">)</span>
+    <span class="n">dist</span><span class="p">,</span> <span class="n">ans</span> <span class="o">=</span> <span class="n">inv_weighted</span><span class="p">(</span><span class="n">data3D</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">ncp</span><span class="o">=</span><span class="n">ncp</span><span class="p">,</span> <span class="n">power_parameter</span><span class="o">=</span><span class="n">power_parameter</span><span class="p">)</span>
 
     <span class="n">z_mesh</span> <span class="o">=</span> <span class="n">mesh</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">ignore_bot_h</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -446,7 +386,7 @@
                   <span class="p">[</span><span class="mf">4.</span><span class="p">,</span> <span class="mf">4.</span><span class="p">],</span>
                   <span class="p">[</span><span class="mf">5.</span><span class="p">,</span> <span class="mf">5.</span><span class="p">]])</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="n">inv_weighted</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">num_sub</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ncp</span><span class="o">=</span><span class="mi">10</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">inv_weighted</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">ncp</span><span class="o">=</span><span class="mi">10</span><span class="p">))</span>
 
 </pre></div>
 
@@ -495,7 +435,7 @@
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2012-2020 Desicos Improved Software Team.
+      &copy;2012-2021 Desicos Improved Software Team.
       
       |
       Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.2</a>

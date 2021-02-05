@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cone / Cylinder DataBase (desicos.conecylDB) &#8212; DESICOS 2.4.12 documentation</title>
+    <title>Cone / Cylinder DataBase (desicos.conecylDB) &#8212; DESICOS 2.4.13 documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
@@ -721,7 +721,7 @@ mesh is not in the <a class="reference internal" href="../abaqus/index.html#figu
 
 <dl class="py function">
 <dt id="desicos.conecylDB.interpolate.inv_weighted">
-<code class="sig-prename descclassname">desicos.conecylDB.interpolate.</code><code class="sig-name descname">inv_weighted</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">mesh</span></em>, <em class="sig-param"><span class="n">num_sub</span></em>, <em class="sig-param"><span class="n">col</span></em>, <em class="sig-param"><span class="n">ncp</span><span class="o">=</span><span class="default_value">5</span></em>, <em class="sig-param"><span class="n">power_parameter</span><span class="o">=</span><span class="default_value">2</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/conecylDB/interpolate.html#inv_weighted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.conecylDB.interpolate.inv_weighted" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">desicos.conecylDB.interpolate.</code><code class="sig-name descname">inv_weighted</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">mesh</span></em>, <em class="sig-param"><span class="n">ncp</span><span class="o">=</span><span class="default_value">5</span></em>, <em class="sig-param"><span class="n">power_parameter</span><span class="o">=</span><span class="default_value">2</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/conecylDB/interpolate.html#inv_weighted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.conecylDB.interpolate.inv_weighted" title="Permalink to this definition">¶</a></dt>
 <dd><p>Interpolates the values taken at one group of points into
 another using an inverse-weighted algorithm</p>
 <p>In the inverse-weighted algorithm a number of <img class="math" src="../../_images/math/cc3563c01833ed65727af548f93b42f5a4a5c5b5.png" alt="n_{CP}"/> measured points
@@ -746,12 +746,6 @@ to be interpolated must be in the last column.</p>
 </dd>
 <dt><strong>mesh</strong><span class="classifier">numpy.ndarray, shape (M, ndim)</span></dt><dd><p>The new coordinates where the values will be interpolated to.</p>
 </dd>
-<dt><strong>num_sub</strong><span class="classifier">int</span></dt><dd><p>The number of sub-sets used during the interpolation. The points
-are divided in sub-sets to increase the algorithm’s efficiency.</p>
-</dd>
-<dt><strong>col</strong><span class="classifier">int</span></dt><dd><p>The index of the column to be used in order to divide the data
-in sub-sets. Note that the first column index is <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p>
-</dd>
 <dt><strong>ncp</strong><span class="classifier">int, optional</span></dt><dd><p>Number of closest points used in the inverse-weighted interpolation.</p>
 </dd>
 <dt><strong>power_parameter</strong><span class="classifier">float, optional</span></dt><dd><p>Power of inverse weighted interpolation function.</p>
@@ -766,6 +760,15 @@ is <code class="docutils literal notranslate"><span class="pre">mesh.shape[0]</s
 </dl>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="desicos.conecylDB.interpolate.nearest_neighbors">
+<code class="sig-prename descclassname">desicos.conecylDB.interpolate.</code><code class="sig-name descname">nearest_neighbors</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">k</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/desicos/conecylDB/interpolate.html#nearest_neighbors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desicos.conecylDB.interpolate.nearest_neighbors" title="Permalink to this definition">¶</a></dt>
+<dd><p>inspired by
+<a class="reference external" href="https://stackoverflow.com/a/15366296/832621">https://stackoverflow.com/a/15366296/832621</a>
+and
+<a class="reference external" href="https://stackoverflow.com/a/6913178/832621">https://stackoverflow.com/a/6913178/832621</a></p>
 </dd></dl>
 
 </div>
@@ -1084,7 +1087,7 @@ and third columns, respectively.</p>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2012-2020 Desicos Improved Software Team.
+      &copy;2012-2021 Desicos Improved Software Team.
       
       |
       Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.2</a>

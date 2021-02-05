@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>desicos.abaqus.apply_imperfections &#8212; DESICOS 2.4.12 documentation</title>
+    <title>desicos.abaqus.apply_imperfections &#8212; DESICOS 2.4.13 documentation</title>
     <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css" />
@@ -73,7 +73,6 @@
                              <span class="n">r_TOL</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span>
                              <span class="n">num_closest_points</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
                              <span class="n">power_parameter</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-                             <span class="n">num_sec_z</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
                              <span class="n">use_theta_z_format</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                              <span class="n">ignore_bot_h</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                              <span class="n">ignore_top_h</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -124,9 +123,6 @@
 <span class="sd">    power_parameter : float, optional</span>
 <span class="sd">        See :func:`the inverse-weighted interpolation algorithm</span>
 <span class="sd">        &lt;.inv_weighted&gt;`.</span>
-<span class="sd">    num_sec_z : int, optional</span>
-<span class="sd">        Number of spatial sections used to classify the measured data in order</span>
-<span class="sd">        to accelerate the searching algorithms</span>
 <span class="sd">    use_theta_z_format : bool, optional</span>
 <span class="sd">        If the new format `\theta, Z, imp` should be used instead of the old</span>
 <span class="sd">        `X, Y, Z`.</span>
@@ -136,7 +132,7 @@
 <span class="sd">        Used to ignore nodes from the top resin ring.</span>
 <span class="sd">    sample_size : int, optional</span>
 <span class="sd">        If the input file containing the measured data is too large it may be</span>
-<span class="sd">        required to limit the sample size in order to avoid memory errors.</span>
+<span class="sd">        required to limit the sample size.</span>
 <span class="sd">    T : None or np.ndarray, optional</span>
 <span class="sd">        A transformation matrix (cf. :func:`.transf_matrix`) required when the</span>
 <span class="sd">        mesh is not in the :ref:`default coordinate system &lt;figure_conecyl&gt;`.</span>
@@ -205,9 +201,7 @@
         <span class="n">data3D</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">z</span>
         <span class="n">data3D</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span>
 
-        <span class="n">w0</span> <span class="o">=</span> <span class="n">inv_weighted</span><span class="p">(</span><span class="n">data3D</span><span class="p">,</span> <span class="n">coords</span><span class="p">,</span>
-                          <span class="n">num_sub</span> <span class="o">=</span> <span class="n">num_sec_z</span><span class="p">,</span>
-                          <span class="n">col</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="n">dist</span><span class="p">,</span> <span class="n">w0</span> <span class="o">=</span> <span class="n">inv_weighted</span><span class="p">(</span><span class="n">data3D</span><span class="p">,</span> <span class="n">coords</span><span class="p">,</span>
                           <span class="n">ncp</span> <span class="o">=</span> <span class="n">num_closest_points</span><span class="p">,</span>
                           <span class="n">power_parameter</span> <span class="o">=</span> <span class="n">power_parameter</span><span class="p">)</span>
 
@@ -241,7 +235,6 @@
                                 <span class="n">r_TOL</span> <span class="o">=</span> <span class="n">r_TOL</span><span class="p">,</span>
                                 <span class="n">num_closest_points</span> <span class="o">=</span> <span class="n">num_closest_points</span><span class="p">,</span>
                                 <span class="n">power_parameter</span> <span class="o">=</span> <span class="n">power_parameter</span><span class="p">,</span>
-                                <span class="n">num_sec_z</span> <span class="o">=</span> <span class="n">num_sec_z</span><span class="p">,</span>
                                 <span class="n">sample_size</span> <span class="o">=</span> <span class="n">sample_size</span><span class="p">)</span>
         <span class="n">trans</span> <span class="o">=</span> <span class="n">trans</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span>
 
@@ -263,7 +256,6 @@
                            <span class="n">r_TOL</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span>
                            <span class="n">num_closest_points</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
                            <span class="n">power_parameter</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-                           <span class="n">num_sec_z</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
                            <span class="n">nodal_translations</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                            <span class="n">use_theta_z_format</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                            <span class="n">ignore_bot_h</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -331,9 +323,6 @@
 <span class="sd">    power_parameter : int, optional</span>
 <span class="sd">        See :func:`the inverse-weighted interpolation algorithm</span>
 <span class="sd">        &lt;.inv_weighted&gt;`.</span>
-<span class="sd">    num_sec_z : int, optional</span>
-<span class="sd">        Number of cross sections that will be used to classify the points</span>
-<span class="sd">        spatially in the inverse-weighted algorithm.</span>
 <span class="sd">    nodal_translations : None or numpy.ndarray, optional</span>
 <span class="sd">        An array containing the interpolated traslations, which is passed to</span>
 <span class="sd">        avoid repeated calls to the interpolation functions.</span>
@@ -346,7 +335,7 @@
 <span class="sd">        Used to ignore nodes from the top resin ring.</span>
 <span class="sd">    sample_size : int, optional</span>
 <span class="sd">        If the input file containing the measured data is too large it may be</span>
-<span class="sd">        required to limit the sample size in order to avoid memory errors.</span>
+<span class="sd">        required to limit the sample size.</span>
 <span class="sd">    T : None or np.ndarray, optional</span>
 <span class="sd">        A transformation matrix (cf. :func:`.transf_matrix`) required when the</span>
 <span class="sd">        mesh is not in the :ref:`default coordinate system &lt;figure_conecyl&gt;`.</span>
@@ -413,7 +402,6 @@
                         <span class="n">r_TOL</span> <span class="o">=</span> <span class="n">r_TOL</span><span class="p">,</span>
                         <span class="n">num_closest_points</span> <span class="o">=</span> <span class="n">num_closest_points</span><span class="p">,</span>
                         <span class="n">power_parameter</span> <span class="o">=</span> <span class="n">power_parameter</span><span class="p">,</span>
-                        <span class="n">num_sec_z</span> <span class="o">=</span> <span class="n">num_sec_z</span><span class="p">,</span>
                         <span class="n">use_theta_z_format</span> <span class="o">=</span> <span class="n">use_theta_z_format</span><span class="p">,</span>
                         <span class="n">ignore_bot_h</span> <span class="o">=</span> <span class="n">ignore_bot_h</span><span class="p">,</span>
                         <span class="n">ignore_top_h</span> <span class="o">=</span> <span class="n">ignore_top_h</span><span class="p">,</span>
@@ -476,7 +464,6 @@
                          <span class="n">r_TOL</span> <span class="o">=</span> <span class="n">r_TOL</span><span class="p">,</span>
                          <span class="n">num_closest_points</span> <span class="o">=</span> <span class="n">num_closest_points</span><span class="p">,</span>
                          <span class="n">power_parameter</span> <span class="o">=</span> <span class="n">power_parameter</span><span class="p">,</span>
-                         <span class="n">num_sec_z</span> <span class="o">=</span> <span class="n">num_sec_z</span><span class="p">,</span>
                          <span class="n">use_theta_z_format</span> <span class="o">=</span> <span class="n">use_theta_z_format</span><span class="p">,</span>
                          <span class="n">ignore_bot_h</span> <span class="o">=</span> <span class="n">ignore_bot_h</span><span class="p">,</span>
                          <span class="n">ignore_top_h</span> <span class="o">=</span> <span class="n">ignore_top_h</span><span class="p">,</span>
@@ -686,7 +673,6 @@
                             <span class="n">scaling_factor</span> <span class="o">=</span> <span class="mf">1.</span><span class="p">,</span>
                             <span class="n">num_closest_points</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
                             <span class="n">power_parameter</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
-                            <span class="n">num_sec_z</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
                             <span class="n">elems_t</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                             <span class="n">t_set</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                             <span class="n">use_theta_z_format</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
@@ -747,9 +733,6 @@
 <span class="sd">    power_parameter : float, optional</span>
 <span class="sd">        See :func:`the inverse-weighted interpolation algorithm</span>
 <span class="sd">        &lt;.inv_weighted&gt;`.</span>
-<span class="sd">    num_sec_z : int, optional</span>
-<span class="sd">        Number of spatial sections used to classify the measured data in order</span>
-<span class="sd">        to accelerate the searching algorithms</span>
 <span class="sd">    elems_t : np.ndarray, optional</span>
 <span class="sd">        Interpolated thickness for each element. Can be used to avoid the same</span>
 <span class="sd">        interpolation to be performed twice.</span>
@@ -794,14 +777,12 @@
             <span class="n">data3D</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">z</span>
             <span class="n">data3D</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span>
 
-            <span class="n">ans</span> <span class="o">=</span> <span class="n">inv_weighted</span><span class="p">(</span><span class="n">data3D</span><span class="p">,</span> <span class="n">elements</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span>
-                               <span class="n">num_sub</span> <span class="o">=</span> <span class="n">num_sec_z</span><span class="p">,</span>
-                               <span class="n">col</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="n">dist</span><span class="p">,</span> <span class="n">ans</span> <span class="o">=</span> <span class="n">inv_weighted</span><span class="p">(</span><span class="n">data3D</span><span class="p">,</span> <span class="n">elements</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span>
                                <span class="n">ncp</span> <span class="o">=</span> <span class="n">num_closest_points</span><span class="p">,</span>
                                <span class="n">power_parameter</span> <span class="o">=</span> <span class="n">power_parameter</span><span class="p">)</span>
 
             <span class="n">t_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">ans</span><span class="p">)</span>
-            <span class="n">t_set</span><span class="o">.</span><span class="n">discard</span><span class="p">(</span><span class="mf">0.</span><span class="p">)</span> <span class="c1">#TODO why inv_weighted returns an array with 0.</span>
+            <span class="n">t_set</span><span class="o">.</span><span class="n">discard</span><span class="p">(</span><span class="mf">0.</span><span class="p">)</span> <span class="c1">#TODO why does inv_weighted return an array with 0.?</span>
             <span class="n">elems_t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">elements</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">2</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">FLOAT</span><span class="p">)</span>
             <span class="n">elems_t</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">elements</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">]</span>
             <span class="n">elems_t</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">ans</span>
@@ -829,8 +810,8 @@
                                 <span class="n">stretch_H</span> <span class="o">=</span> <span class="n">stretch_H</span><span class="p">,</span>
                                 <span class="n">z_offset_bot</span> <span class="o">=</span> <span class="n">z_offset_bot</span><span class="p">,</span>
                                 <span class="n">num_closest_points</span> <span class="o">=</span> <span class="n">num_closest_points</span><span class="p">,</span>
-                                <span class="n">power_parameter</span> <span class="o">=</span> <span class="n">power_parameter</span><span class="p">,</span>
-                                <span class="n">num_sec_z</span> <span class="o">=</span> <span class="n">num_sec_z</span><span class="p">)</span>
+                                <span class="n">power_parameter</span> <span class="o">=</span> <span class="n">power_parameter</span>
+                                <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">log</span><span class="p">(</span><span class="s1">&#39;Thickness differences already calculated!&#39;</span><span class="p">)</span>
     <span class="c1"># creating sets</span>
@@ -924,8 +905,8 @@
 
     <span class="kn">import</span> <span class="nn">desicos.conecylDB.interpolate</span>
     <span class="n">reload</span><span class="p">(</span><span class="n">desicos</span><span class="o">.</span><span class="n">conecylDB</span><span class="o">.</span><span class="n">interpolate</span><span class="p">)</span>
-    <span class="n">ans</span> <span class="o">=</span> <span class="n">desicos</span><span class="o">.</span><span class="n">conecylDB</span><span class="o">.</span><span class="n">interpolate</span><span class="o">.</span><span class="n">inv_weighted</span><span class="p">(</span>
-            <span class="n">data</span><span class="p">,</span> <span class="n">mesh_norm</span><span class="p">,</span> <span class="n">num_sub</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ncp</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">power_parameter</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
+    <span class="n">dist</span><span class="p">,</span> <span class="n">ans</span> <span class="o">=</span> <span class="n">desicos</span><span class="o">.</span><span class="n">conecylDB</span><span class="o">.</span><span class="n">interpolate</span><span class="o">.</span><span class="n">inv_weighted</span><span class="p">(</span>
+            <span class="n">data</span><span class="p">,</span> <span class="n">mesh_norm</span><span class="p">,</span> <span class="n">ncp</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">power_parameter</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
 
     <span class="n">alpharad</span> <span class="o">=</span> <span class="n">deg2rad</span><span class="p">(</span><span class="mf">0.</span><span class="p">)</span>
     <span class="n">trans</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">coords</span><span class="p">)</span>
@@ -984,7 +965,7 @@
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2012-2020 Desicos Improved Software Team.
+      &copy;2012-2021 Desicos Improved Software Team.
       
       |
       Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.2</a>
