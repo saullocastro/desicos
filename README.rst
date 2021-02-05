@@ -9,7 +9,7 @@ Cite as
 --------
 
 
-Saullo G P Castro, Jasper Reichardt, Florian Burau, & Emilio Lozano. (2020, July 20). DESICOS Plug-in for Abaqus (Version 2.4.12). Zenodo. http://doi.org/10.5281/zenodo.3951965
+Saullo G P Castro, Jasper Reichardt, Florian Burau, & Emilio Lozano. (2021, February 5th). DESICOS Plug-in for Abaqus (Version 2.4.13). Zenodo. `DOI 10.5281/zenodo.3951175 <http://doi.org/10.5281/zenodo.3951175>`_.
 
 
 
