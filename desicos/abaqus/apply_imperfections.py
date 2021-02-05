@@ -97,7 +97,7 @@ def calc_translations_ABAQUS(imperfection_file_name,
         Used to ignore nodes from the top resin ring.
     sample_size : int, optional
         If the input file containing the measured data is too large it may be
-        required to limit the sample size in order to avoid memory errors.
+        required to limit the sample size.
     T : None or np.ndarray, optional
         A transformation matrix (cf. :func:`.transf_matrix`) required when the
         mesh is not in the :ref:`default coordinate system <figure_conecyl>`.
@@ -300,7 +300,7 @@ def translate_nodes_ABAQUS(imperfection_file_name,
         Used to ignore nodes from the top resin ring.
     sample_size : int, optional
         If the input file containing the measured data is too large it may be
-        required to limit the sample size in order to avoid memory errors.
+        required to limit the sample size.
     T : None or np.ndarray, optional
         A transformation matrix (cf. :func:`.transf_matrix`) required when the
         mesh is not in the :ref:`default coordinate system <figure_conecyl>`.
@@ -747,7 +747,7 @@ def change_thickness_ABAQUS(imperfection_file_name,
                                power_parameter = power_parameter)
 
             t_set = set(ans)
-            t_set.discard(0.) #TODO why inv_weighted returns an array with 0.
+            t_set.discard(0.) #TODO why does inv_weighted return an array with 0.?
             elems_t = np.zeros((elements.shape[0], 2), dtype=FLOAT)
             elems_t[:, 0] = elements[:, 3]
             elems_t[:, 1] = ans

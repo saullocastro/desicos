@@ -147,8 +147,8 @@ def calc_nodal_translations(imperfection_file_name,
                             r_TOL,
                             num_closest_points,
                             power_parameter,
-                            num_sec_z,
-                            sample_size):
+                            num_sec_z=100,
+                            sample_size=None):
     # reading imperfection file
     m, o, mps = read_file(file_name = imperfection_file_name,
                           H_measured = H_measured,

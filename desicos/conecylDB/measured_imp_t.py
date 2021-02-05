@@ -72,7 +72,7 @@ def calc_elems_t(imperfection_file_name,
                  z_offset_bot,
                  num_closest_points,
                  power_parameter,
-                 num_sec_z):
+                 num_sec_z=100):
     # reading imperfection file
     m, mps, t_set_norm = read_file(file_name     = imperfection_file_name,
                                    R_best_fit    = R_best_fit,
