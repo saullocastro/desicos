@@ -118,7 +118,6 @@ class TI(object):
                       imperfection_file_name = imperfection_file_name,
                       model_name = cc.model_name,
                       part_name = cc.part_name_shell,
-                      stack = cc.stack,
                       t_model = sum(cc.plyts),
                       t_measured = t_measured,
                       H_model = cc.H,

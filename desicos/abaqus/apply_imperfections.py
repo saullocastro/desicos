@@ -624,7 +624,6 @@ def translate_nodes_ABAQUS_c0(m0, n0, c0, funcnum,
 def change_thickness_ABAQUS(imperfection_file_name,
                             model_name,
                             part_name,
-                            stack,
                             t_model,
                             t_measured,
                             H_model,
@@ -657,9 +656,6 @@ def change_thickness_ABAQUS(imperfection_file_name,
         Model name.
     part_name : str
         Part name.
-    stack : list
-        The stacking sequence of the current model with each angle given in
-        degrees.
     t_model : float
         The nominal shell thickness of the current model.
     t_measured : float
