@@ -905,7 +905,7 @@ def change_thickness_per_element_ABAQUS(
             # there may be empty set_ids at the end
             continue
         elements = part.elements.sequenceFromLabels(labels=set_ids)
-        suffix = 'measured_imp_t_{0:03d}'.format(i)
+        suffix = 'measured_imp_t_{0:07d}'.format(i)
         set_name = 'Set_' + suffix
         log('Creating set ({0: 7d} elements): {1}'.format(
             len(set_ids), set_name))
@@ -929,8 +929,9 @@ def change_thickness_per_element_ABAQUS(
             layup_name=layup_name, modify_func=modify_ply)
     # suppress needed to put the new properties to the input file
     for name, composite_layup in part.compositeLayups.items():
-        if len(comp_layup_elems[name]) > 0:
-            composite_layup.suppress()
+        if name in comp_layup_elems:
+            if len(comp_layup_elems[name]) > 0:
+                composite_layup.suppress()
 
 
 if __name__ == '__main__':
