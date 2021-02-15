@@ -836,6 +836,103 @@ def change_thickness_ABAQUS(imperfection_file_name,
     return elems_t, t_set
 
 
+def change_thickness_per_element_ABAQUS(
+                            elems_t,
+                            model_name,
+                            part_name,
+                            scaling_factor=1.,
+                            ):
+    r"""Applies a given thickness imperfection to the finite element model
+
+    Assumes that a percentage variation of the laminate thickness can be
+    represented by the same percentage veriation of each ply, i.e., each
+    ply thickness is varied in order to reflect a given measured thickness
+    imperfection field.
+
+    Parameters
+    ----------
+
+    elems_t : np.ndarray, optional
+        Interpolated thickness for each element. Can be used to avoid the same
+        interpolation to be performed twice.
+    model_name : str
+        Model name.
+    part_name : str
+        Part name.
+    scaling_factor : float, optional
+        A scaling factor that can be used to study the imperfection
+        sensitivity.
+
+    """
+    from abaqus import mdb
+
+    import desicos.abaqus.abaqus_functions as abaqus_functions
+
+    mod = mdb.models[model_name]
+    part = mod.parts[part_name]
+    part_cyl_csys = part.features['part_cyl_csys']
+    part_cyl_csys = part.datums[part_cyl_csys.id]
+
+    # creating sets
+    t_list = elems_t[:, 1]
+    # grouping elements
+    sets_ids = [[] for i in range(len(t_list))]
+    for i, entry in enumerate(elems_t):
+        elem_id, t = entry
+        sets_ids[i].append(int(elem_id))
+    # finding original layup for each element
+    comp_layup_elems = {}
+    for name, composite_layup in part.compositeLayups.items():
+        comp_layup_elems[name] = set()
+        for ply in composite_layup.plies.values():
+            for e in part.sets[ply.region[0]].elements:
+                comp_layup_elems[name].add(e.label)
+    elem_layup = {}
+    for eid in elems_t[:, 0].astype(int):
+        found = False
+        for name, eids in comp_layup_elems.items():
+            if eid in eids:
+                elem_layup[elem_id] = name
+                found = True
+                break
+        if not found:
+            raise RuntimeError('Element ID %d not assigned to any composite layup' % eid)
+
+    # putting elements in sets
+    for i, set_ids in enumerate(sets_ids):
+        if len(set_ids) == 0:
+            # since t_set_norm * t_model <> t_set originally measured
+            # there may be empty set_ids at the end
+            continue
+        elements = part.elements.sequenceFromLabels(labels=set_ids)
+        suffix = 'measured_imp_t_{0:03d}'.format(i)
+        set_name = 'Set_' + suffix
+        log('Creating set ({0: 7d} elements): {1}'.format(
+            len(set_ids), set_name))
+        part.Set(name = set_name, elements = elements)
+        region = part.sets[set_name]
+        layup_name = 'CLayup_' + suffix
+        compositeLayup = part.compositeLayups[name]
+        t_model = sum([ply.thickness for ply in compositeLayup.plies.values()])
+        t_diff = (float(t_list[i]) - t_model) * scaling_factor
+        t_scaling_factor = (t_model + t_diff)/t_model
+
+        def modify_ply(index, kwargs):
+            kwargs['thickness'] *= t_scaling_factor
+            kwargs['region'] = region
+            return kwargs
+
+        layup = part.CompositeLayup(name=layup_name,
+                                    objectToCopy=compositeLayup)
+        layup.resume()
+        abaqus_functions.modify_composite_layup(part=part,
+            layup_name=layup_name, modify_func=modify_ply)
+    # suppress needed to put the new properties to the input file
+    for name, composite_layup in part.compositeLayups.items():
+        if len(comp_layup_elems[name]) > 0:
+            composite_layup.suppress()
+
+
 if __name__ == '__main__':
     cc = stds['desicos_study'].ccs[1]
     cc.created_model = False
